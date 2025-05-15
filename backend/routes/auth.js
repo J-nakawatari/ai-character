@@ -49,6 +49,7 @@ router.post('/register', async (req, res) => {
           secure: false // 開発環境用
         });
         
+        res.header('Access-Control-Allow-Credentials', 'true');
         res.json({ token });
       }
     );
@@ -93,6 +94,7 @@ router.post('/login', async (req, res) => {
           secure: false // 開発環境用
         });
         
+        res.header('Access-Control-Allow-Credentials', 'true');
         res.json({ token });
       }
     );
