@@ -4,9 +4,14 @@ require('dotenv').config();
 const JWT_SECRET = process.env.JWT_SECRET;
 
 module.exports = (req, res, next) => {
+  console.log('=== Auth Middleware ===');
+  console.log('Request path:', req.path);
+  console.log('Request headers:', JSON.stringify(req.headers, null, 2));
+  console.log('All cookies:', JSON.stringify(req.cookies, null, 2));
+  
   const token = req.cookies.token;
   
-  console.log('Cookie received:', req.cookies);
+  console.log('Token from cookies:', token ? 'Found' : 'Not found');
   
   if (!token) {
     return res.status(401).json({ msg: 'No token, authorization denied' });
@@ -14,6 +19,7 @@ module.exports = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
+    console.log('Token verified successfully:', decoded.user.id);
     req.user = decoded.user;
     next();
   } catch (err) {
