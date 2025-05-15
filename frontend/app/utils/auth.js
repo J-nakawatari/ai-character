@@ -20,7 +20,9 @@ export const AuthProvider = ({ children }) => {
         console.error('Failed to load user:', err);
         console.log('Response status:', err.response?.status);
         console.log('Response data:', err.response?.data);
+        setUser(null);
       } finally {
+        console.log('Setting loading to false');
         setLoading(false);
       }
     };
@@ -34,6 +36,7 @@ export const AuthProvider = ({ children }) => {
       setUser(res.data.user);
       return { success: true };
     } catch (err) {
+      console.error('Registration failed:', err);
       return { 
         success: false, 
         error: err.response?.data?.msg || 'Registration failed' 
