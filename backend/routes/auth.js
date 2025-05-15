@@ -50,7 +50,15 @@ router.post('/register', async (req, res) => {
         });
         
         res.header('Access-Control-Allow-Credentials', 'true');
-        res.json({ token });
+        res.json({ 
+          token,
+          user: {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            hasCompletedSetup: user.hasCompletedSetup
+          }
+        });
       }
     );
   } catch (err) {

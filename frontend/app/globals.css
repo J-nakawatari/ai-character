@@ -1,26 +1,422 @@
-@import "tailwindcss";
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --primary-color: #3b82f6;
+  --primary-hover: #2563eb;
+  --background-color: #f9fafb;
+  --text-color: #1f2937;
+  --error-color: #ef4444;
+  --success-color: #10b981;
+  --border-color: #e5e7eb;
+  --card-background: #ffffff;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+body, html {
+  overflow-x: hidden;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'M PLUS Rounded 1c', 'Yu Gothic', 'Meiryo', sans-serif;
+  font-weight: 500;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.5;
+}
+
+/* Layout */
+.container {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  color: white;
+}
+
+/* Typography */
+.title {
+  font-family: 'Orbitron', 'M PLUS Rounded 1c', 'Yu Gothic', 'Meiryo', sans-serif !important;
+  font-size: 72px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.subtitle {
+  font-size: 24px;
+  margin-bottom: 80px;
+  text-align: center;
+  max-width: 448px;
+}
+
+.description {
+  font-size: 16px;
+  margin-bottom: 48px;
+  text-align: center;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Components */
+.card {
+  background-color: var(--card-background);
+  border-radius: 8px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+  padding: 40px 24px;
+  width: 100%;
+  max-width: 512px;
+}
+
+.button, .button *, .button:active, .button:focus, .button span, .button a {
+  text-decoration: none !important;
+}
+
+.button {
+  font-family: 'M PLUS Rounded 1c', 'Yu Gothic', 'Meiryo', sans-serif;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 36px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #43eafc 0%, #fa7be6 100%);
+  color: #fff;
+  font-size: 20px;
+  border: none;
+  box-shadow: 0 4px 16px 0 rgba(250, 123, 230, 0.2), 0 2px 8px 0 rgba(67, 234, 252, 0.15);
+  transition: box-shadow 0.2s, transform 0.2s;
+  cursor: pointer;
+  letter-spacing: 2px;
+  outline: none;
+  overflow: hidden;
+}
+
+.button:focus, .button:active {
+  outline: none;
+  border: none;
+  box-shadow: 0 2px 4px rgba(67, 234, 252, 0.15);
+}
+
+.button::-moz-focus-inner {
+  border: 0;
+}
+
+.button:hover {
+  box-shadow: 0 6px 24px 0 rgba(250, 123, 230, 0.3), 0 4px 12px 0 rgba(67, 234, 252, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.button::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(120deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0) 100%);
+  transform: skewX(-20deg);
+  pointer-events: none;
+  opacity: 0;
+  transition: left 0.5s, opacity 0.3s;
+  z-index: 1;
+}
+
+.button:hover::after {
+  left: 100%;
+  opacity: 1;
+  transition: left 0.5s, opacity 0.3s;
+}
+
+.button:active {
+  transform: scale(0.98);
+}
+
+.button-group {
+  display: flex;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.input-group {
+  margin-bottom: 24px;
+}
+
+.input-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #333;
+}
+
+.input {
+  width: 100%;
+  padding: 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.error-message {
+  color: #fff;
+  background: linear-gradient(90deg, #ff5f6d 0%, #ffc371 100%);
+  border-left: 6px solid #ff5f6d;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: bold;
+  padding: 12px 16px 12px 40px;
+  margin-top: 8px;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(255, 95, 109, 0.12);
+}
+
+.error-message::before {
+  content: '';
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  background: url('/images/warning.svg') no-repeat center center;
+  background-size: contain;
+  filter: brightness(0) invert(1);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .title {
+    font-size: 32px;
+  }
+  
+  .subtitle {
+    font-size: 18px;
+  }
+  
+  .button-group {
+    flex-direction: column;
+  }
+  
+  .button {
+    width: 100%;
+  }
+}
+
+.login-form {
+  width: 100%;
+}
+
+.login-form .button {
+  width: 100%;
+  margin-top: 16px;
+}
+
+.register-link-container {
+  text-align: center;
+  margin-top: 24px;
+}
+
+.register-link-text {
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: var(--text-color);
+}
+
+.register-link {
+  color: #ff69b4;
+  font-weight: bold;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.register-link:hover {
+  color: #ffe0fa;
+  text-decoration: underline;
+}
+
+/* Background */
+.background-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 1920px;
+  height: 1080px;
+  z-index: -1;
+  overflow: hidden;
+  background-color: #000;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.background-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1920px;
+  height: 1080px;
+  object-fit: cover;
+  object-position: center 20%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+  z-index: 0;
+}
+
+.background-video.active {
+  opacity: 1;
+  z-index: 1;
+}
+
+.background-video.fading {
+  transition: opacity 1s ease-in-out;
+}
+
+.background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Overlay */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 1920px;
+  height: 1080px;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: -1;
+  pointer-events: none;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.button span, .button svg {
+  position: relative;
+  z-index: 2;
+}
+
+.arrow-svg {
+  opacity: 1;
+  transition: opacity 0.3s;
+}
+.arrow-hide {
+  opacity: 0;
+}
+.heart-svg {
+  opacity: 0 !important;
+  transition: opacity 0.3s, transform 0.3s;
+}
+.heart-show {
+  opacity: 1 !important;
+  transform: translate(-50%, -50%) scale(1.2) !important;
+}
+
+.chat-bubble {
+  min-width: 340px;
+  max-width: 360px;
+  background: #fff;
+  color: #222;
+  font-size: 22px;
+  font-weight: bold;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+  padding: 20px 28px;
+  position: relative;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.6s;
+}
+
+.chat-bubble.show {
+  opacity: 1;
+}
+
+.chat-bubble.hide {
+  opacity: 0;
+}
+
+.chat-bubble::after {
+  content: '';
+  position: absolute;
+  left: 32px;
+  bottom: -24px;
+  width: 0;
+  height: 0;
+  border-width: 30px 30px 0 0;
+  border-style: solid;
+  border-color: #fff transparent transparent transparent;
+  opacity: 1;
+  transition: opacity 0.6s;
+}
+
+.chat-bubble.right::after {
+  content: '';
+  position: absolute;
+  left: 240px;
+  bottom: -24px;
+  width: 0;
+  height: 0;
+  border-width: 30px 0 0 30px;
+  border-style: solid;
+  border-color: #fff transparent transparent transparent;
+}
+
+/* 吹き出しが非表示の時は尻尾も非表示 */
+.chat-bubble.hide::after {
+  opacity: 0;
+}
+
+.chat-bubble.show::after {
+  opacity: 1;
+}
+
+.back-button {
+  background: #e0e0e0;
+  color: #333;
+  border-radius: 6px;
+  font-family: 'M PLUS Rounded 1c', 'Yu Gothic', 'Meiryo', sans-serif;
+  font-weight: 500;
+  font-size: 18px;
+  padding: 14px 0;
+  border: none;
+  box-shadow: none;
+  text-align: center;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+  cursor: pointer;
+  display: inline-block;
+}
+.back-button:hover {
+  background: #cccccc;
+  color: #111;
+}
+
+.back-link {
+  color: #666;
+  text-decoration: underline;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.back-link:hover {
+  color: #fa7be6;
+  text-decoration: underline;
 }

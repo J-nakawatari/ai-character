@@ -7,9 +7,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '../utils/auth';
-import Card from '../components/Card';
-import Input from '../components/Input';
-import Button from '../components/Button';
+import styles from './login.module.css';
 
 const schema = z.object({
   email: z.string().email('Invalid email address'),
@@ -46,51 +44,69 @@ export default function Login() {
   };
   
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-      <Card className="w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-6 text-center">Login</h1>
+    <div className="container">
+      <div className="card">
+        {/* <h1 className={styles.loginTitle}>ログイン</h1> */}
         
         {serverError && (
-          <div className="mb-4 p-3 bg-red-100 text-red-800 rounded-md">
-            {serverError}
+          <div className="error-message" style={{ marginBottom: '16px' }}>
+            {serverError === 'Invalid credentials'
+              ? 'メールアドレスまたはパスワードが正しくありません'
+              : serverError === 'Login failed'
+                ? 'ログインに失敗しました'
+                : serverError}
           </div>
         )}
         
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Input
-            label="Email"
-            id="email"
-            type="email"
-            placeholder="Enter your email"
-            error={errors.email?.message}
-            {...register('email')}
-          />
+        <form onSubmit={handleSubmit(onSubmit)} className="login-form">
+          <div className="input-group">
+            <label className="input-label">メールアドレス</label>
+            <input
+              className="input"
+              type="email"
+              placeholder="メールアドレスを入力してください"
+              {...register('email')}
+            />
+            {errors.email && (
+              <p className="error-message">{errors.email.message === 'Invalid email address' ? '有効なメールアドレスを入力してください' : errors.email.message}</p>
+            )}
+          </div>
           
-          <Input
-            label="Password"
-            id="password"
-            type="password"
-            placeholder="Enter your password"
-            error={errors.password?.message}
-            {...register('password')}
-          />
+          <div className="input-group">
+            <label className="input-label">パスワード</label>
+            <input
+              className="input"
+              type="password"
+              placeholder="パスワードを入力してください"
+              {...register('password')}
+            />
+            {errors.password && (
+              <p className="error-message">{errors.password.message === 'Password is required' ? 'パスワードを入力してください' : errors.password.message}</p>
+            )}
+          </div>
           
-          <Button
+          <button
             type="submit"
-            className="w-full mt-2"
+            className="button"
             disabled={isSubmitting}
           >
-            {isSubmitting ? 'Logging in...' : 'Login'}
-          </Button>
+            {isSubmitting ? 'ログイン中...' : 'ログイン'}
+          </button>
         </form>
         
-        <p className="mt-4 text-center text-sm">
-          Don't have an account?{' '}
-          <Link href="/register" className="text-blue-600 hover:underline">
-            Register
-          </Link>
-        </p>
-      </Card>
+        <div className="register-link-container">
+          <p className="register-link-text">
+            アカウントをお持ちでない方は
+            <Link href="/register" className="register-link">こちら</Link>
+            から新規登録できます
+          </p>
+        </div>
+      </div>
+      <div style={{ textAlign: 'center', marginTop: '32px' }}>
+        <a href="/" className="back-link">
+          TOPに戻る
+        </a>
+      </div>
     </div>
   );
 }
