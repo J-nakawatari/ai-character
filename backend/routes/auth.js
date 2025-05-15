@@ -45,7 +45,8 @@ router.post('/register', async (req, res) => {
           httpOnly: true,
           sameSite: 'lax',
           maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-          domain: 'localhost'
+          domain: 'localhost',
+          secure: false // 開発環境用
         });
         
         res.json({ token });
@@ -88,7 +89,8 @@ router.post('/login', async (req, res) => {
           httpOnly: true,
           sameSite: 'lax',
           maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-          domain: 'localhost'
+          domain: 'localhost',
+          secure: false // 開発環境用
         });
         
         res.json({ token });
@@ -111,7 +113,11 @@ router.get('/user', auth, async (req, res) => {
 });
 
 router.post('/logout', auth, (req, res) => {
-  res.clearCookie('token');
+  res.clearCookie('token', { 
+    domain: 'localhost', 
+    sameSite: 'lax', 
+    secure: false 
+  });
   res.json({ msg: 'Logged out successfully' });
 });
 
