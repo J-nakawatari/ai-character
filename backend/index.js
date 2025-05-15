@@ -1,11 +1,16 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const cookieParser = require('cookie-parser');
 require('dotenv').config();
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true
+}));
 app.use(express.json());
+app.use(cookieParser());
 
 const uri = process.env.MONGO_URI;
 
@@ -15,6 +20,10 @@ mongoose.connect(uri, {
 })
 .then(() => console.log('✅ MongoDB connected'))
 .catch(err => console.error('❌ MongoDB connection error:', err));
+
+app.use('/api/auth', require('./routes/auth'));
+app.use('/api/characters', require('./routes/characters'));
+app.use('/api/users', require('./routes/users'));
 
 app.get('/api/ping', (req, res) => {
   res.json({ message: 'pong' });
