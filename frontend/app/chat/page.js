@@ -119,33 +119,27 @@ export default function Chat() {
   }
   
   return (
-
     <div className="chat-container">
       {/* Header */}
       <header className="chat-header">
         <div className="chat-header-content">
           <h1 className="chat-title">AI Character Chat</h1>
-main
           <Button onClick={handleLogout}>ログアウト</Button>
         </div>
       </header>
       
-
       <main className="chat-main">
         {/* Character info */}
         <div className="chat-character-info">
           <div className="chat-character-avatar">
-main
             {user.selectedCharacter?.imageUrl ? (
               <Image
                 src={user.selectedCharacter.imageUrl}
                 alt={user.selectedCharacter.name}
-
                 width={64}
                 height={64}
                 className="object-cover rounded-full"
                 priority
-main
               />
             ) : (
               <div className="absolute inset-0 flex items-center justify-center text-gray-500 text-xl">
@@ -153,21 +147,17 @@ main
               </div>
             )}
           </div>
-
           <div className="chat-character-details">
             <h2 className="chat-character-name">{user.selectedCharacter?.name || 'AI Character'}</h2>
             <p className="chat-character-personality">{user.selectedCharacter?.personality}</p>
- main
           </div>
         </div>
         
         {/* Chat messages */}
-
         <div className="chat-messages-container">
           <div className="chat-messages-list">
             {messages.length === 0 ? (
               <div className="chat-welcome">
-main
                 <p>{`${user.name}さん、おかえりなさい！ チャットを始めましょう。`}</p>
               </div>
             ) : (
@@ -180,7 +170,6 @@ main
                   />
                 ))}
                 {isTyping && (
-
                   <div className="chat-typing">
                     <div className="chat-typing-bubble">
                       <div className="chat-typing-dots">
@@ -188,7 +177,6 @@ main
                         <span className="chat-typing-dot"></span>
                         <span className="chat-typing-dot"></span>
                       </div>
-main
                     </div>
                   </div>
                 )}
@@ -198,7 +186,6 @@ main
           </div>
           
           {/* Message input */}
-
           <form onSubmit={handleSendMessage} className="chat-input-container">
             {error && (
               <div className="chat-input-error">
@@ -228,7 +215,6 @@ main
                 送信: Enter  |  改行: Shift + Enter
               </p>
             </div>
-main
           </form>
         </div>
       </main>
