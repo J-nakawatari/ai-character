@@ -80,6 +80,15 @@ export default function Dashboard() {
             </div>
           </div>
         </Card>
+        
+        <div className="mt-6">
+          <Button 
+            onClick={() => router.push('/chat')} 
+            className="bg-blue-600 hover:bg-blue-700 w-full"
+          >
+            チャットを始める
+          </Button>
+        </div>
       </div>
     </div>
   );
