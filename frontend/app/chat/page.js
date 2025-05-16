@@ -136,8 +136,9 @@ export default function Chat() {
               <Image
                 src={user.selectedCharacter.imageUrl}
                 alt={user.selectedCharacter.name}
-                fill
-                className="object-cover"
+                width={64}
+                height={64}
+                className="object-cover rounded-full"
               />
             ) : (
               <div className="absolute inset-0 flex items-center justify-center text-gray-500 text-xl">
