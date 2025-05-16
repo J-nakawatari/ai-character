@@ -26,6 +26,7 @@ mongoose.connect(uri, {
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/characters', require('./routes/characters'));
 app.use('/api/users', require('./routes/users'));
+app.use('/api/chat', require('./routes/chat'));
 
 app.get('/api/ping', (req, res) => {
   res.json({ message: 'pong' });
