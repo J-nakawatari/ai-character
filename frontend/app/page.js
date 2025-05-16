@@ -19,14 +19,19 @@ const chatMessages = [
 
 const orbitron = Orbitron({ weight: '700', subsets: ['latin'] });
 
+const videoFiles = [
+  '/videos/hero-videos_01.mp4',
+  '/videos/hero-videos_02.mp4',
+  '/videos/hero-videos_03.mp4',
+];
+
 export default function Home() {
   const { user, loading } = useAuth();
   const router = useRouter();
   const [isMobile, setIsMobile] = useState(false);
-  const [currentVideo, setCurrentVideo] = useState(1);
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [isFading, setIsFading] = useState(false);
-  const videoRef1 = useRef(null);
-  const videoRef2 = useRef(null);
+  const videoRef = useRef(null);
   const [arrowHover, setArrowHover] = useState(false);
   const [chatIndex, setChatIndex] = useState(0);
   const [displayedText, setDisplayedText] = useState('');
@@ -72,32 +77,20 @@ export default function Home() {
   
   useEffect(() => {
     const switchVideo = () => {
-      console.log('Switching video...');
-      setIsFading(true);
-      setTimeout(() => {
-        setCurrentVideo(prev => {
-          const next = prev === 1 ? 2 : 1;
-          console.log('Switching to video:', next);
-          return next;
-        });
-        setIsFading(false);
-      }, 1000);
+      setCurrentVideoIndex(prev => (prev + 1) % videoFiles.length);
     };
-
     const interval = setInterval(switchVideo, 10000);
     return () => clearInterval(interval);
   }, []);
   
   // 動画の読み込み状態を監視
   useEffect(() => {
-    if (videoRef1.current) {
-      videoRef1.current.addEventListener('loadeddata', () => {
-        console.log('Video 1 loaded');
+    if (videoRef.current) {
+      videoRef.current.addEventListener('loadeddata', () => {
+        console.log('Video loaded successfully');
       });
-    }
-    if (videoRef2.current) {
-      videoRef2.current.addEventListener('loadeddata', () => {
-        console.log('Video 2 loaded');
+      videoRef.current.addEventListener('error', (e) => {
+        console.error('Video loading error:', e);
       });
     }
   }, []);
@@ -240,41 +233,40 @@ export default function Home() {
   
   return (
     <>
-      <div className="background-container">
+      <div className="background-container" style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', overflow: 'hidden' }}>
         {isMobile ? (
           <img
             src="/images/background-mobile.jpg"
             alt="Background"
             className="background-image"
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
           />
         ) : (
-          <>
-            <video
-              ref={videoRef1}
-              autoPlay
-              muted
-              loop
-              playsInline
-              className={`background-video ${currentVideo === 1 ? 'active' : ''} ${isFading ? 'fading' : ''}`}
-            >
-              <source src="/videos/hero-videos_01.mp4?v=2" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-            <video
-              ref={videoRef2}
-              autoPlay
-              muted
-              loop
-              playsInline
-              className={`background-video ${currentVideo === 2 ? 'active' : ''} ${isFading ? 'fading' : ''}`}
-            >
-              <source src="/videos/hero-videos_02.mp4?v=2" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          </>
+          <video
+            ref={videoRef}
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="background-video"
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              transition: 'opacity 1s ease-in-out',
+              zIndex: 1
+            }}
+            key={videoFiles[currentVideoIndex]}
+            onError={(e) => console.error('Video error:', e)}
+          >
+            <source src={videoFiles[currentVideoIndex]} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
         )}
       </div>
-      <div className="overlay" />
       <div className="container">
         <div style={{ width: '100%', margin: '0 auto', textAlign: 'center', position: 'relative' }}>
           <div style={{ display: 'inline-block', textAlign: 'left', position: 'relative' }}>
@@ -309,7 +301,7 @@ export default function Home() {
                 marginRight: '0px',
                 position: 'absolute',
                 top: '158px',
-                right: '420px',
+                right: '450px',
                 opacity: rightText ? 1 : 0,
                 transition: 'opacity 0.6s, top 0.3s',
               }}
@@ -388,6 +380,7 @@ export default function Home() {
           </div>
         </div>
       </div>
+      <div className="overlay" />
     </>
   );
 }

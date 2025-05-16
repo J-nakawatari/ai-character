@@ -49,9 +49,24 @@ export default function Register() {
   };
   
   return (
-    <div className="container">
+    <div className="container" style={{ position: 'relative', overflow: 'hidden' }}>
+      <img
+        src="/images/room_02.jpg"
+        alt="background"
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          zIndex: -1,
+          pointerEvents: 'none',
+          opacity: 0.2
+        }}
+      />
       <div className="card">
-        <h1 className="text-2xl font-bold mb-6 text-center">新規登録</h1>
+        <h1 className="register-title">新規登録</h1>
         
         {serverError && (
           <div className="error-message" style={{ marginBottom: '16px' }}>

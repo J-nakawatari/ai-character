@@ -38,8 +38,8 @@ export default function Dashboard() {
     <div className="min-h-screen bg-gray-50 p-4">
       <div className="max-w-4xl mx-auto">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-2xl font-bold">AI Character Dashboard</h1>
-          <Button onClick={handleLogout}>Logout</Button>
+          <h1 className="text-2xl font-bold">AIキャラクターダッシュボード</h1>
+          <Button onClick={handleLogout}>ログアウト</Button>
         </div>
         
         <Card>
@@ -53,18 +53,18 @@ export default function Dashboard() {
             
             <div className="flex-1 text-center sm:text-left">
               <div className="mb-4">
-                <h2 className="text-xl font-semibold">Welcome, {user.name}!</h2>
+                <h2 className="text-xl font-semibold">{user.name}さん、ようこそ！</h2>
                 <p className="text-gray-600">
-                  You're interacting with {user.selectedCharacter?.name || 'your AI character'}
+                  {user.selectedCharacter?.name || 'あなたのAIキャラクター'}と交流中です
                 </p>
               </div>
               
               {user.selectedCharacter && (
                 <div className="bg-gray-100 p-4 rounded-lg">
-                  <h3 className="font-medium mb-2">Character Details</h3>
+                  <h3 className="font-medium mb-2">キャラクター詳細</h3>
                   <p className="mb-2">{user.selectedCharacter.description}</p>
                   <p className="text-sm text-gray-600">
-                    <span className="font-medium">Personality:</span> {user.selectedCharacter.personality}
+                    <span className="font-medium">性格：</span> {user.selectedCharacter.personality}
                   </p>
                 </div>
               )}
