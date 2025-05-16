@@ -44,7 +44,23 @@ export default function Login() {
   };
   
   return (
-    <div className="container">
+    <div className="container" style={{ position: 'relative', overflow: 'hidden' }}>
+      {/* 背景画像を追加 */}
+      <img
+        src="/images/room_01.jpg"
+        alt="background"
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          zIndex: -1,
+          pointerEvents: 'none',
+          opacity: 0.2
+        }}
+      />
       <div className="card">
         {/* <h1 className={styles.loginTitle}>ログイン</h1> */}
         
