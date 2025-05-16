@@ -1,7 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
+import { M_PLUS_Rounded_1c, Orbitron } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "./utils/auth";
-import Head from 'next/head';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,6 +13,18 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const mPlusRounded = M_PLUS_Rounded_1c({
+  weight: ['400', '700'],
+  subsets: ['latin'],
+  variable: '--font-m-plus-rounded',
+});
+
+const orbitron = Orbitron({
+  weight: ['700'],
+  subsets: ['latin'],
+  variable: '--font-orbitron',
+});
+
 export const metadata = {
   title: "AI Character App",
   description: "An AI character membership site",
@@ -20,19 +32,14 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <>
-      <Head>
-        <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&family=Orbitron:wght@700&display=swap" rel="stylesheet" />
-      </Head>
-      <html lang="en">
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-          <AuthProvider>
-            {children}
-          </AuthProvider>
-        </body>
-      </html>
-    </>
+    <html lang="en">
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} ${mPlusRounded.variable} ${orbitron.variable} antialiased`}
+      >
+        <AuthProvider>
+          {children}
+        </AuthProvider>
+      </body>
+    </html>
   );
 }
