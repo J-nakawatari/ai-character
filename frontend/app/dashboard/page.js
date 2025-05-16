@@ -35,61 +35,67 @@ export default function Dashboard() {
   }
   
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
-      <div className="max-w-4xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-2xl font-bold">AIキャラクターダッシュボード</h1>
+    <div className="chat-container">
+      {/* Header */}
+      <header className="chat-header">
+        <div className="chat-header-content">
+          <h1 className="chat-title">AIキャラクターダッシュボード</h1>
           <Button onClick={handleLogout}>ログアウト</Button>
         </div>
-        
-        <Card>
-          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
-            <div className="w-32 h-32 relative rounded-full overflow-hidden bg-gray-200">
-              {/* Placeholder for character image */}
-              <div className="absolute inset-0 flex items-center justify-center text-gray-500 text-4xl">
+      </header>
+      
+      <main className="chat-main">
+        <div className="chat-character-info">
+          <div className="chat-character-avatar">
+            {user.selectedCharacter?.imageUrl ? (
+              <Image
+                src={user.selectedCharacter.imageUrl}
+                alt={user.selectedCharacter.name}
+                width={64}
+                height={64}
+                className="object-cover rounded-full"
+                priority
+              />
+            ) : (
+              <div className="absolute inset-0 flex items-center justify-center text-gray-500 text-xl">
                 {user.selectedCharacter?.name?.charAt(0) || '?'}
               </div>
-            </div>
-            
-            <div className="flex-1 text-center sm:text-left">
-              <div className="mb-4">
-                <h2 className="text-xl font-semibold">{user.name}さん、ようこそ！</h2>
-                <p className="text-gray-600">
-                  {user.selectedCharacter?.name || 'あなたのAIキャラクター'}と交流中です
+            )}
+          </div>
+          
+          <div className="chat-character-details">
+            <h2 className="chat-character-name">{user.name}さん、ようこそ！</h2>
+            <p className="chat-character-personality">
+              {user.selectedCharacter?.name || 'あなたのAIキャラクター'}と交流中です
+            </p>
+          </div>
+        </div>
+        
+        <div className="chat-messages-container">
+          <div className="chat-messages-list">
+            {user.selectedCharacter && (
+              <div className="chat-welcome">
+                <h3 className="font-medium mb-2">キャラクター詳細</h3>
+                <p className="mb-2">{user.selectedCharacter.description}</p>
+                <p className="text-sm text-gray-600">
+                  <span className="font-medium">性格：</span> {user.selectedCharacter.personality}
                 </p>
               </div>
-              
-              {user.selectedCharacter && (
-                <div className="bg-gray-100 p-4 rounded-lg">
-                  <h3 className="font-medium mb-2">キャラクター詳細</h3>
-                  <p className="mb-2">{user.selectedCharacter.description}</p>
-                  <p className="text-sm text-gray-600">
-                    <span className="font-medium">性格：</span> {user.selectedCharacter.personality}
-                  </p>
-                </div>
-              )}
-              
-              <div className="mt-6">
-                <Button 
-                  onClick={() => router.push('/chat')} 
-                  className="bg-blue-600 hover:bg-blue-700 w-full"
-                >
-                  チャットを始める
-                </Button>
-              </div>
+            )}
+          </div>
+          
+          <div className="chat-input-container">
+            <div className="chat-input-form">
+              <Button 
+                onClick={() => router.push('/chat')} 
+                className="chat-send-button w-full"
+              >
+                チャットを始める
+              </Button>
             </div>
           </div>
-        </Card>
-        
-        <div className="mt-6">
-          <Button 
-            onClick={() => router.push('/chat')} 
-            className="bg-blue-600 hover:bg-blue-700 w-full"
-          >
-            チャットを始める
-          </Button>
         </div>
-      </div>
+      </main>
     </div>
   );
 }
