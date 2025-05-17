@@ -29,11 +29,11 @@ export const AdminAuthProvider = ({ children }) => {
 
   const adminLogin = async (adminData) => {
     try {
-      console.log('管理者ログイン試行中...');
+      console.log('管理者ログイン試行中...', adminData.email);
       const res = await api.post('/admin/auth/login', adminData);
       console.log('ログイン結果:', res.data);
       
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise(resolve => setTimeout(resolve, 300));
       
       try {
         console.log('ログイン後の管理者データ取得中...');
@@ -42,11 +42,13 @@ export const AdminAuthProvider = ({ children }) => {
         setAdmin(adminRes.data);
       } catch (adminErr) {
         console.error('ログイン後の管理者データ取得に失敗:', adminErr);
+        console.error('エラー詳細:', adminErr.response?.data);
       }
       
       return { success: true };
     } catch (err) {
       console.error('管理者ログイン失敗:', err);
+      console.error('エラー詳細:', err.response?.data);
       return { 
         success: false, 
         error: err.response?.data?.msg || 'ログイン失敗' 

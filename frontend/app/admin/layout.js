@@ -44,13 +44,13 @@ export default function AdminLayout({ children }) {
   return (
     <div className="min-h-screen flex flex-col">
       {/* ヘッダー */}
-      <header className="bg-black text-white p-4">
+      <header className="bg-gradient-to-r from-[#1a1a2e] to-[#121626] text-white p-4 shadow-md">
         <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-xl font-bold">Charactier 管理画面</h1>
+          <h1 className="text-xl font-bold font-['M_PLUS_Rounded_1c']">Charactier 管理画面</h1>
           
           <button
             onClick={handleLogout}
-            className="text-white hover:underline"
+            className="text-white hover:bg-white/10 px-3 py-1 rounded transition-colors"
           >
             ログアウト
           </button>
@@ -60,14 +60,16 @@ export default function AdminLayout({ children }) {
       {/* メインコンテンツ */}
       <div className="flex flex-1">
         {/* サイドバー */}
-        <aside className="w-64 bg-gray-800 text-white p-4">
+        <aside className="w-64 bg-gradient-to-b from-[#2a2a4a] to-[#1a1a2e] text-white p-4 shadow-lg">
           <nav>
             <ul className="space-y-2">
               <li>
                 <Link
                   href="/admin/dashboard"
-                  className={`block p-2 rounded ${
-                    pathname === '/admin/dashboard' ? 'bg-gray-700' : 'hover:bg-gray-700'
+                  className={`block p-2 rounded transition-colors ${
+                    pathname === '/admin/dashboard' 
+                    ? 'bg-gradient-to-r from-[#43eafc]/20 to-[#fa7be6]/20 text-white' 
+                    : 'hover:bg-white/10'
                   }`}
                 >
                   ダッシュボード
@@ -76,8 +78,10 @@ export default function AdminLayout({ children }) {
               <li>
                 <Link
                   href="/admin/users"
-                  className={`block p-2 rounded ${
-                    pathname === '/admin/users' ? 'bg-gray-700' : 'hover:bg-gray-700'
+                  className={`block p-2 rounded transition-colors ${
+                    pathname === '/admin/users' 
+                    ? 'bg-gradient-to-r from-[#43eafc]/20 to-[#fa7be6]/20 text-white' 
+                    : 'hover:bg-white/10'
                   }`}
                 >
                   ユーザー管理
@@ -86,8 +90,10 @@ export default function AdminLayout({ children }) {
               <li>
                 <Link
                   href="/admin/characters"
-                  className={`block p-2 rounded ${
-                    pathname.startsWith('/admin/characters') ? 'bg-gray-700' : 'hover:bg-gray-700'
+                  className={`block p-2 rounded transition-colors ${
+                    pathname.startsWith('/admin/characters') 
+                    ? 'bg-gradient-to-r from-[#43eafc]/20 to-[#fa7be6]/20 text-white' 
+                    : 'hover:bg-white/10'
                   }`}
                 >
                   キャラクター管理
@@ -98,8 +104,10 @@ export default function AdminLayout({ children }) {
         </aside>
         
         {/* メインコンテンツエリア */}
-        <main className="flex-1 p-6 bg-gray-100">
-          {children}
+        <main className="flex-1 p-6 bg-gradient-to-br from-gray-50 to-gray-100">
+          <div className="container mx-auto">
+            {children}
+          </div>
         </main>
       </div>
     </div>

@@ -6,6 +6,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 module.exports = (req, res, next) => {
   console.log('=== Admin Auth Middleware ===');
   console.log('Request path:', req.path);
+  console.log('JWT_SECRET exists:', !!JWT_SECRET);
   
   const token = req.cookies.adminToken;
   

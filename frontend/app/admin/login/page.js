@@ -62,16 +62,18 @@ export default function AdminLogin() {
   
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <Card className="w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-6 text-center">管理者ログイン</h1>
+      <div className="fixed top-0 left-0 w-full h-full pointer-events-none bg-gradient-to-br from-[#000000] to-[#1a1a2e] opacity-90 z-0"></div>
+      
+      <Card className="w-full max-w-md z-10 backdrop-blur-sm bg-white/95">
+        <h1 className="text-2xl font-bold mb-6 text-center text-gray-800 font-['M_PLUS_Rounded_1c']">管理者ログイン</h1>
         
         {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          <div className="error-message mb-4">
             {error}
           </div>
         )}
         
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="login-form">
           <Input
             label="メールアドレス"
             id="email"
