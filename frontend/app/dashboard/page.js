@@ -45,15 +45,17 @@ export default function Dashboard() {
             e.stopPropagation();
             router.push('/setup?reselect=true');
           }}
-          aria-label="ホームに戻る"
+          aria-label="戻る"
+          style={{ position: 'fixed', left: '20px', top: '20px' }}
         >
           <span className="nav-icon">←</span>
-          <span className="nav-text">ホームに戻る</span>
+          <span className="nav-text">戻る</span>
         </button>
         <button 
           className="floating-nav-button logout-button" 
           onClick={handleLogout}
           aria-label="ログアウト"
+          style={{ position: 'fixed', right: '20px', top: '20px' }}
         >
           <span className="nav-icon">⏻</span>
           <span className="nav-text">ログアウト</span>
