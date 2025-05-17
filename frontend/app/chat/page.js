@@ -121,22 +121,29 @@ export default function Chat() {
   
   return (
     <div className="chat-container">
-      {/* Header */}
-      <header className="chat-header">
-        <div className="chat-header-content">
-          <div className="chat-header-nav">
-            <button 
-              className="nav-back-button" 
-              onClick={() => router.push('/dashboard')}
-            >
-              <span className="nav-back-icon">←</span>
-              <span>戻る</span>
-            </button>
-            <h1 className="chat-title">AI Character Chat</h1>
-          </div>
-          <Button onClick={handleLogout} className="logout-button">ログアウト</Button>
-        </div>
-      </header>
+      {/* Stylish navigation buttons */}
+      <div className="floating-nav-buttons">
+        <button 
+          className="floating-nav-button back-button" 
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            router.push('/dashboard');
+          }}
+          aria-label="戻る"
+        >
+          <span className="nav-icon">←</span>
+          <span className="nav-text">戻る</span>
+        </button>
+        <button 
+          className="floating-nav-button logout-button" 
+          onClick={handleLogout}
+          aria-label="ログアウト"
+        >
+          <span className="nav-icon">⏻</span>
+          <span className="nav-text">ログアウト</span>
+        </button>
+      </div>
       
       <main className="chat-main">
         {/* Character info */}
@@ -169,6 +176,7 @@ export default function Chat() {
             <img 
               src={user.selectedCharacter.imageUrl} 
               alt={user.selectedCharacter.name} 
+              className="chat-character-bg-image"
             />
           </div>
         )}
