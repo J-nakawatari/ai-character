@@ -43,7 +43,7 @@ export default function Dashboard() {
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            router.push('/');
+            router.push('/setup?reselect=true');
           }}
           aria-label="ホームに戻る"
         >
@@ -87,7 +87,7 @@ export default function Dashboard() {
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  router.push('/setup');
+                  router.push('/setup?reselect=true');
                 }}
               >
                 キャラクターを変更する

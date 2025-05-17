@@ -38,7 +38,10 @@ export default function Setup() {
   const selectedCharacterId = watch('characterId');
 
   useEffect(() => {
-    if (!loading && user?.hasCompletedSetup) {
+    const queryParams = new URLSearchParams(window.location.search);
+    const isReselect = queryParams.get('reselect') === 'true';
+    
+    if (!loading && user?.hasCompletedSetup && !isReselect) {
       router.push('/dashboard');
     }
   }, [user, loading, router]);
