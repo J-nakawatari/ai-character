@@ -780,8 +780,38 @@ body {
 
 .chat-message {
   display: flex;
+  align-items: flex-start;
   margin-bottom: 1.25rem;
   animation: messageAppear 0.3s ease-out;
+}
+
+.chat-message-avatar {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  margin: 0 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chat-avatar-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.chat-avatar-user-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
 }
 
 @keyframes messageAppear {
@@ -1463,6 +1493,71 @@ body {
   vertical-align: middle;
   cursor: pointer;
   font-weight: 500;
+}
+
+.nav-back-button {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #333;
+  font-weight: 500;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.nav-back-button:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.nav-back-icon {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chat-header-nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.chat-character-background {
+  position: absolute;
+  right: 10%;
+  bottom: 10%;
+  width: 300px;
+  height: 300px;
+  opacity: 0.15;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.chat-messages-container {
+  position: relative;
+  z-index: 1;
+}
+
+.character-reselect-button {
+  background: transparent;
+  border: 1px solid #e5e7eb;
+  color: #333;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 12px;
+}
+
+.character-reselect-button:hover {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: #d1d5db;
 }
 
 /* ダッシュボード用レイアウト */
