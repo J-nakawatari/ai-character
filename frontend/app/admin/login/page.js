@@ -6,6 +6,7 @@ import { useAdminAuth } from '../../utils/adminAuth';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import Card from '../../components/Card';
+import '../../globals.css';
 
 export default function AdminLogin() {
   const [formData, setFormData] = useState({
@@ -54,7 +55,7 @@ export default function AdminLogin() {
   
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center text-gray-800">
         <p>読み込み中...</p>
       </div>
     );
@@ -72,23 +73,33 @@ export default function AdminLogin() {
         )}
         
         <form onSubmit={handleSubmit} className="text-gray-800">
-          <Input
-            label="メールアドレス"
-            id="email"
-            type="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
+          <div className="mb-4">
+            <label htmlFor="email" className="block text-sm font-medium mb-1 text-gray-700">
+              メールアドレス
+            </label>
+            <input
+              id="email"
+              type="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              className="w-full p-2 border rounded-md text-gray-800 border-gray-300"
+            />
+          </div>
           
-          <Input
-            label="パスワード"
-            id="password"
-            type="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
+          <div className="mb-4">
+            <label htmlFor="password" className="block text-sm font-medium mb-1 text-gray-700">
+              パスワード
+            </label>
+            <input
+              id="password"
+              type="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+              className="w-full p-2 border rounded-md text-gray-800 border-gray-300"
+            />
+          </div>
           
           <Button
             type="submit"
