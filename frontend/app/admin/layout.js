@@ -98,7 +98,7 @@ export default function AdminLayout({ children }) {
         </aside>
         
         {/* メインコンテンツエリア */}
-        <main className="flex-1 p-6 bg-gray-100">
+        <main className="flex-1 p-6 bg-gray-100 text-gray-800">
           {children}
         </main>
       </div>
