@@ -44,30 +44,27 @@ export default function Dashboard() {
   return (
     <div className="chat-container">
       {/* Stylish navigation buttons */}
-      <div className="floating-nav-buttons">
-        <button 
-          className="floating-nav-button back-button" 
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            router.push('/setup?reselect=true');
-          }}
-          aria-label="戻る"
-          style={{ position: 'fixed', left: '20px', top: '20px' }}
-        >
-          <span className="nav-icon">←</span>
-          <span className="nav-text">戻る</span>
-        </button>
-        <button 
-          className="floating-nav-button logout-button" 
-          onClick={handleLogout}
-          aria-label="ログアウト"
-          style={{ position: 'fixed', right: '20px', top: '20px' }}
-        >
-          <span className="nav-icon">⏻</span>
-          <span className="nav-text">ログアウト</span>
-        </button>
-      </div>
+      <button 
+        className="floating-nav-button back-button" 
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          router.push('/setup?reselect=true');
+        }}
+        aria-label="戻る"
+      >
+        <span className="nav-icon">←</span>
+        <span className="nav-text">戻る</span>
+      </button>
+      <button 
+        className="floating-nav-button logout-button" 
+        onClick={handleLogout}
+        aria-label="ログアウト"
+      >
+        <span className="nav-icon">⏻</span>
+        <span className="nav-text">ログアウト</span>
+      </button>
+      
       <main className="chat-main" style={{ height: 'calc(100vh - 64px)', padding: '1.5rem' }}>
         <div className="dashboard-card card">
           <div className="dashboard-character-name">
@@ -91,16 +88,6 @@ export default function Dashboard() {
                 alt={user.selectedCharacter?.name || 'AIキャラクター'}
                 className="dashboard-character-img"
               />
-              <button 
-                className="character-reselect-button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  router.push('/setup?reselect=true');
-                }}
-              >
-                キャラクターを変更する
-              </button>
             </div>
           </div>
           {/* 下部ボタン */}

@@ -233,19 +233,6 @@ export default function Setup() {
     <div className="setup-root" style={{ position: 'relative', overflow: 'hidden' }}>
       <canvas ref={canvasRef} id="bg-canvas"></canvas>
       <form className="setup-form" onSubmit={handleSubmit(onSubmit)}>
-        <h1 className="setup-main-title">
-          あなたのニックネームを入力してください
-        </h1>
-        <div className="input-group">
-          <input
-            className="setup-name-input"
-            type="text"
-            placeholder="お名前を入力してください"
-            {...register('name')}
-          />
-          {errors.name && <p className="error-message">{errors.name.message}</p>}
-        </div>
-
         <h2 className="setup-section-title">
           AIキャラクターを選択してください
         </h2>

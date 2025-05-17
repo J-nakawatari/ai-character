@@ -403,7 +403,7 @@ body {
   border-radius: 6px;
   font-family: 'M PLUS Rounded 1c', 'Yu Gothic', 'Meiryo', sans-serif;
   font-weight: 500;
-  font-size: 18px;
+  font-size: 16px;
   padding: 14px 0;
   border: none;
   box-shadow: none;
@@ -412,10 +412,39 @@ body {
   transition: background 0.2s, color 0.2s;
   cursor: pointer;
   display: inline-block;
+  position: fixed;
+  top: 16px;
+  left: 16px;
 }
+
 .back-button:hover {
-  background: #cccccc;
-  color: #111;
+  background: #fff;
+  color: #fa7be6;
+}
+
+.logout-button {
+  background: #e0e0e0;
+  color: #e91e63;
+  border-radius: 6px;
+  font-family: 'M PLUS Rounded 1c', 'Yu Gothic', 'Meiryo', sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  padding: 14px 0;
+  border: none;
+  box-shadow: none;
+  text-align: center;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+  cursor: pointer;
+  display: inline-block;
+  position: fixed;
+  top: 16px;
+  right: 16px;
+}
+
+.logout-button:hover {
+  background: #fff;
+  color: #c2185b;
 }
 
 .back-link {
@@ -426,9 +455,15 @@ body {
   cursor: pointer;
   transition: color 0.2s;
 }
+
 .back-link:hover {
   color: #fa7be6;
   text-decoration: underline;
+}
+
+.logout-button {
+  top: 16px;
+  right: 16px;
 }
 
 /* Setup Page Styles */
@@ -774,6 +809,8 @@ body {
   padding: 0 2rem;
   line-height: 1.6;
   animation: fadeIn 0.5s ease-in-out;
+  color: #fa7be6;
+  font-weight: bold;
 }
 
 @keyframes fadeIn {
@@ -1568,16 +1605,8 @@ body {
 }
 
 /* Floating navigation buttons */
-.floating-nav-buttons {
-  position: fixed;
-  top: 16px;
-  right: 16px;
-  display: flex;
-  gap: 8px;
-  z-index: 100;
-}
-
 .floating-nav-button {
+  position: fixed;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1592,36 +1621,34 @@ body {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   transition: all 0.2s ease;
   cursor: pointer;
-}
-
-.floating-nav-button:hover {
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.floating-nav-button .nav-icon {
-  font-size: 18px;
-  line-height: 1;
+  font-size: 16px;
+  z-index: 100;
 }
 
 .back-button {
-  color: #555;
+  top: 16px;
+  left: 16px;
 }
 
 .logout-button {
-  color: #e91e63;
+  top: 16px;
+  right: 16px;
 }
 
 @media (max-width: 640px) {
-  .floating-nav-buttons {
-    top: 12px;
-    right: 12px;
-    gap: 6px;
-  }
-  
   .floating-nav-button {
     padding: 6px 12px;
     font-size: 14px;
+  }
+  
+  .back-button {
+    top: 12px;
+    left: 12px;
+  }
+  
+  .logout-button {
+    top: 12px;
+    right: 12px;
   }
   
   .floating-nav-button .nav-text {
@@ -1646,7 +1673,7 @@ body {
   display: flex;
   flex-direction: row;
   align-items: stretch;
-  gap: 40px;
+  gap: 80px;
   padding: 0 16px 0 32px;
   height: 528px;
   margin-top: auto;

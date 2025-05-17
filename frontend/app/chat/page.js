@@ -126,28 +126,26 @@ export default function Chat() {
   return (
     <div className="chat-container">
       {/* Stylish navigation buttons */}
-      <div className="floating-nav-buttons">
-        <button 
-          className="floating-nav-button back-button" 
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            router.push('/dashboard');
-          }}
-          aria-label="戻る"
-        >
-          <span className="nav-icon">←</span>
-          <span className="nav-text">戻る</span>
-        </button>
-        <button 
-          className="floating-nav-button logout-button" 
-          onClick={handleLogout}
-          aria-label="ログアウト"
-        >
-          <span className="nav-icon">⏻</span>
-          <span className="nav-text">ログアウト</span>
-        </button>
-      </div>
+      <button 
+        className="floating-nav-button back-button" 
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          router.push('/dashboard');
+        }}
+        aria-label="戻る"
+      >
+        <span className="nav-icon">←</span>
+        <span className="nav-text">戻る</span>
+      </button>
+      <button 
+        className="floating-nav-button logout-button" 
+        onClick={handleLogout}
+        aria-label="ログアウト"
+      >
+        <span className="nav-icon">⏻</span>
+        <span className="nav-text">ログアウト</span>
+      </button>
       
       <main className="chat-main">
         {/* Character info */}
