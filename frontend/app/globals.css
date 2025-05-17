@@ -736,6 +736,7 @@ body {
 }
 
 .chat-messages-container {
+  position: relative;
   background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
@@ -748,6 +749,8 @@ body {
 }
 
 .chat-messages-list {
+  position: relative;
+  z-index: 1;
   flex: 1;
   overflow-y: auto;
   padding: 1.5rem;
@@ -789,7 +792,7 @@ body {
   width: 40px;
   height: 40px;
   flex-shrink: 0;
-  margin: 0 8px;
+  margin: 8px 16px 0 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -836,9 +839,10 @@ body {
 }
 
 .chat-message-user .chat-message-bubble {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.5), rgba(139, 92, 246, 0.6));
   color: white;
-  border-bottom-right-radius: 0.25rem;
+  border-bottom-right-radius: 0;
+  backdrop-filter: blur(4px);
 }
 
 .chat-message-user .chat-message-bubble::after {
@@ -846,26 +850,27 @@ body {
   position: absolute;
   bottom: 0;
   right: -8px;
-  width: 16px;
+  width: 8px;
   height: 16px;
-  background: linear-gradient(135deg, #8b5cf6, #8b5cf6);
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.6), rgba(139, 92, 246, 0.5));
   clip-path: polygon(0 0, 0% 100%, 100% 100%);
 }
 
 .chat-message-ai .chat-message-bubble {
-  background-color: #f3f4f6;
+  background-color: rgba(243, 244, 246, 0.1);
   color: #1f2937;
   border-bottom-left-radius: 0.25rem;
+  backdrop-filter: blur(4px);
 }
 
 .chat-message-ai .chat-message-bubble::after {
   content: '';
   position: absolute;
-  bottom: 0;
+  top: 0;
   left: -8px;
   width: 16px;
   height: 16px;
-  background-color: #f3f4f6;
+  background-color: rgba(243, 244, 246, 0.8);
   clip-path: polygon(100% 0, 0% 100%, 100% 100%);
 }
 
@@ -1709,5 +1714,18 @@ body {
   margin-bottom: 16px;
   text-align: center;
   padding-top: 21px;
+}
+
+.chat-bg-character-image {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 62%;
+  height: 85%;
+  object-fit: cover;
+  transform: translate(-209px, -422px);
+  opacity: 0.8;
+  z-index: 0;
+  pointer-events: none;
 }
 }

@@ -187,6 +187,11 @@ export default function Chat() {
         
         {/* Chat messages container */}
         <div className="chat-messages-container">
+          <img
+            src="/images/character_01.png"
+            alt="背景キャラクター"
+            className="chat-bg-character-image"
+          />
           <div className="chat-messages-list">
             {messages.length === 0 ? (
               <div className="chat-welcome">
