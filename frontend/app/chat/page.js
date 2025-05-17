@@ -100,6 +100,7 @@ export default function Chat() {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage(e);
+    } else if (e.key === 'Enter' && e.shiftKey) {
     }
   };
   
@@ -123,7 +124,16 @@ export default function Chat() {
       {/* Header */}
       <header className="chat-header">
         <div className="chat-header-content">
-          <h1 className="chat-title">AI Character Chat</h1>
+          <div className="chat-header-nav">
+            <button 
+              className="nav-back-button" 
+              onClick={() => router.push('/dashboard')}
+            >
+              <span className="nav-back-icon">←</span>
+              <span>戻る</span>
+            </button>
+            <h1 className="chat-title">AI Character Chat</h1>
+          </div>
           <Button onClick={handleLogout} className="logout-button">ログアウト</Button>
         </div>
       </header>
@@ -153,6 +163,16 @@ export default function Chat() {
           </div>
         </div>
         
+        {/* Character background image */}
+        {user.selectedCharacter?.imageUrl && (
+          <div className="chat-character-background">
+            <img 
+              src={user.selectedCharacter.imageUrl} 
+              alt={user.selectedCharacter.name} 
+            />
+          </div>
+        )}
+        
         {/* Chat messages container */}
         <div className="chat-messages-container">
           <div className="chat-messages-list">
@@ -167,6 +187,7 @@ export default function Chat() {
                     key={index}
                     message={msg}
                     isUser={msg.sender === 'user'}
+                    characterImageUrl={user.selectedCharacter?.imageUrl}
                   />
                 ))}
                 {isTyping && (
@@ -194,14 +215,15 @@ export default function Chat() {
             )}
             <div className="chat-input-form">
               <div className="chat-input-wrapper">
-                <input
-                  type="text"
+                <textarea
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder="メッセージを入力..."
                   className="chat-input"
                   ref={inputRef}
+                  rows={1}
+                  style={{ resize: 'none', overflow: 'auto', minHeight: '44px', maxHeight: '120px' }}
                 />
                 <Button
                   type="submit"
