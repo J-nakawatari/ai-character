@@ -39,13 +39,24 @@ export default function Dashboard() {
       {/* Header */}
       <header className="chat-header">
         <div className="chat-header-content">
-          <h1 className="chat-title">AIキャラクターダッシュボード</h1>
+          <div className="chat-header-nav">
+            <button 
+              className="nav-back-button" 
+              onClick={() => router.push('/')}
+            >
+              <span className="nav-back-icon">←</span>
+              <span>ホームに戻る</span>
+            </button>
+            <h1 className="chat-title">AIキャラクターダッシュボード</h1>
+          </div>
           <Button onClick={handleLogout} className="logout-button">ログアウト</Button>
         </div>
       </header>
       <main className="chat-main" style={{ height: 'calc(100vh - 64px)', padding: '1.5rem' }}>
         <div className="dashboard-card card">
-          <div className="dashboard-character-name">MAKI</div>
+          <div className="dashboard-character-name">
+            {user.selectedCharacter?.name || 'AIキャラクター'}
+          </div>
           <div className="dashboard-main-row">
             {/* 左カラム：テキスト */}
             <div className="dashboard-col-text">
@@ -60,10 +71,16 @@ export default function Dashboard() {
             {/* 右カラム：画像 */}
             <div className="dashboard-col-image">
               <img
-                src="/images/character_01.png"
+                src={user.selectedCharacter?.imageUrl || '/images/character_01.png'}
                 alt={user.selectedCharacter?.name || 'AIキャラクター'}
                 className="dashboard-character-img"
               />
+              <button 
+                className="character-reselect-button"
+                onClick={() => router.push('/setup')}
+              >
+                キャラクターを変更する
+              </button>
             </div>
           </div>
           {/* 下部ボタン */}
