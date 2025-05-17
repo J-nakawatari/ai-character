@@ -31,15 +31,19 @@ export default function Chat() {
   
   useEffect(() => {
     const loadChatHistory = async () => {
-      if (user?.selectedCharacter) {
+      if (user?.selectedCharacter?._id) {
         try {
           const res = await api.get(`/chat?characterId=${user.selectedCharacter._id}`);
           setMessages(res.data.messages || []);
           setChatId(res.data._id);
+          setError(''); // Clear any previous errors
         } catch (err) {
           setError('Failed to load chat history');
-          console.error(err);
+          console.error('Failed to load chat history:', err);
         }
+      } else if (user?.selectedCharacter) {
+        console.error('selectedCharacter exists but _id is missing:', user.selectedCharacter);
+        setError('Character data is incomplete, please refresh');
       }
     };
     

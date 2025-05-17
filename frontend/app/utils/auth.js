@@ -73,10 +73,15 @@ export const AuthProvider = ({ children }) => {
 
   const completeSetup = async (setupData) => {
     try {
+      console.log('Completing setup with data:', setupData);
       const res = await api.put('/users/setup', setupData);
+      console.log('Setup completed successfully, user data:', res.data);
       setUser(res.data);
       return { success: true };
     } catch (err) {
+      console.error('Setup failed:', err);
+      console.log('Response status:', err.response?.status);
+      console.log('Response data:', err.response?.data);
       return { 
         success: false, 
         error: err.response?.data?.msg || 'Setup failed' 

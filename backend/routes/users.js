@@ -19,7 +19,11 @@ router.put('/setup', auth, async (req, res) => {
     
     await user.save();
     
-    res.json(user);
+    const populatedUser = await User.findById(user._id)
+      .select('-password')
+      .populate('selectedCharacter');
+    
+    res.json(populatedUser);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');

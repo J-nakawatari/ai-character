@@ -19,6 +19,13 @@ export default function Dashboard() {
     }
   }, [user, loading, router]);
   
+  useEffect(() => {
+    if (!loading && user) {
+      console.log('Dashboard user data:', user);
+      console.log('Selected character:', user.selectedCharacter);
+    }
+  }, [user, loading]);
+  
   const handleLogout = async () => {
     const result = await logout();
     if (result.success) {
