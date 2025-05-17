@@ -40,59 +40,40 @@ export default function Dashboard() {
       <header className="chat-header">
         <div className="chat-header-content">
           <h1 className="chat-title">AIキャラクターダッシュボード</h1>
-          <Button onClick={handleLogout}>ログアウト</Button>
+          <Button onClick={handleLogout} className="logout-button">ログアウト</Button>
         </div>
       </header>
-      
-      <main className="chat-main">
-        <div className="chat-character-info">
-          <div className="chat-character-avatar">
-            {user.selectedCharacter?.imageUrl ? (
-              <Image
-                src={user.selectedCharacter.imageUrl}
-                alt={user.selectedCharacter.name}
-                width={64}
-                height={64}
-                className="object-cover rounded-full"
-                priority
-              />
-            ) : (
-              <div className="absolute inset-0 flex items-center justify-center text-gray-500 text-xl">
-                {user.selectedCharacter?.name?.charAt(0) || '?'}
+      <main className="chat-main" style={{ height: 'calc(100vh - 64px)', padding: '1.5rem' }}>
+        <div className="dashboard-card card">
+          <div className="dashboard-character-name">MAKI</div>
+          <div className="dashboard-main-row">
+            {/* 左カラム：テキスト */}
+            <div className="dashboard-col-text">
+              <h2 className="dashboard-title">キャラクター詳細</h2>
+              <div className="dashboard-section">
+                <div className="dashboard-label">特長</div>
+                <div className="dashboard-desc">{user.selectedCharacter?.description || '明るく元気な性格と創造的な発想を持つ、陽気なAIコンパニオン。'}</div>
+                <div className="dashboard-label">性格</div>
+                <div className="dashboard-personality">{user.selectedCharacter?.personality || 'Cheerful, creative, and engaging'}</div>
               </div>
-            )}
-          </div>
-          
-          <div className="chat-character-details">
-            <h2 className="chat-character-name">{user.name}さん、ようこそ！</h2>
-            <p className="chat-character-personality">
-              {user.selectedCharacter?.name || 'あなたのAIキャラクター'}と交流中です
-            </p>
-          </div>
-        </div>
-        
-        <div className="chat-messages-container">
-          <div className="chat-messages-list">
-            {user.selectedCharacter && (
-              <div className="chat-welcome">
-                <h3 className="font-medium mb-2">キャラクター詳細</h3>
-                <p className="mb-2">{user.selectedCharacter.description}</p>
-                <p className="text-sm text-gray-600">
-                  <span className="font-medium">性格：</span> {user.selectedCharacter.personality}
-                </p>
-              </div>
-            )}
-          </div>
-          
-          <div className="chat-input-container">
-            <div className="chat-input-form">
-              <Button 
-                onClick={() => router.push('/chat')} 
-                className="chat-send-button w-full"
-              >
-                チャットを始める
-              </Button>
             </div>
+            {/* 右カラム：画像 */}
+            <div className="dashboard-col-image">
+              <img
+                src="/images/character_01.png"
+                alt={user.selectedCharacter?.name || 'AIキャラクター'}
+                className="dashboard-character-img"
+              />
+            </div>
+          </div>
+          {/* 下部ボタン */}
+          <div className="dashboard-bottom">
+            <Button 
+              onClick={() => router.push('/chat')} 
+              className="button w-full"
+            >
+              チャットを始める
+            </Button>
           </div>
         </div>
       </main>
