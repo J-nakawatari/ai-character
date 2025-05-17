@@ -28,6 +28,13 @@ app.use('/api/characters', require('./routes/characters'));
 app.use('/api/users', require('./routes/users'));
 app.use('/api/chat', require('./routes/chat'));
 
+app.use('/api/admin/auth', require('./routes/admin/auth'));
+app.use('/api/admin/users', require('./routes/admin/users'));
+app.use('/api/admin/characters', require('./routes/admin/characters'));
+
+const path = require('path');
+app.use('/uploads', express.static(path.join(__dirname, '../frontend/public/uploads')));
+
 app.get('/api/ping', (req, res) => {
   res.json({ message: 'pong' });
 });
