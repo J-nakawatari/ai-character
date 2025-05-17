@@ -1,0 +1,240 @@
+const express = require('express');
+const router = express.Router();
+const adminAuth = require('../../middleware/adminAuth');
+const Character = require('../../models/Character');
+const { uploadImage, uploadVoice } = require('../../utils/fileUpload');
+
+router.get('/', adminAuth, async (req, res) => {
+  try {
+    const characters = await Character.find().sort({ createdAt: -1 });
+    res.json(characters);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('サーバーエラー');
+  }
+});
+
+router.get('/:id', adminAuth, async (req, res) => {
+  try {
+    const character = await Character.findById(req.params.id);
+    
+    if (!character) {
+      return res.status(404).json({ msg: 'キャラクターが見つかりません' });
+    }
+    
+    res.json(character);
+  } catch (err) {
+    console.error(err.message);
+    
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ msg: 'キャラクターが見つかりません' });
+    }
+    
+    res.status(500).send('サーバーエラー');
+  }
+});
+
+router.post('/', adminAuth, async (req, res) => {
+  try {
+    const {
+      name,
+      description,
+      personalityPrompt,
+      isPremium,
+      price,
+      purchaseType,
+      isLimited,
+      voice,
+      defaultMessage,
+      themeColor,
+      isActive
+    } = req.body;
+    
+    const newCharacter = new Character({
+      name,
+      description,
+      personalityPrompt,
+      isPremium: isPremium === 'true',
+      price: parseInt(price) || 0,
+      purchaseType,
+      isLimited: isLimited === 'true',
+      voice,
+      defaultMessage,
+      themeColor,
+      isActive: isActive === 'true'
+    });
+    
+    const character = await newCharacter.save();
+    
+    res.json(character);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('サーバーエラー');
+  }
+});
+
+router.put('/:id', adminAuth, async (req, res) => {
+  try {
+    const {
+      name,
+      description,
+      personalityPrompt,
+      isPremium,
+      price,
+      purchaseType,
+      isLimited,
+      voice,
+      defaultMessage,
+      themeColor,
+      isActive
+    } = req.body;
+    
+    const character = await Character.findById(req.params.id);
+    
+    if (!character) {
+      return res.status(404).json({ msg: 'キャラクターが見つかりません' });
+    }
+    
+    character.name = name || character.name;
+    character.description = description || character.description;
+    character.personalityPrompt = personalityPrompt || character.personalityPrompt;
+    character.isPremium = isPremium === 'true';
+    character.price = parseInt(price) || character.price;
+    character.purchaseType = purchaseType || character.purchaseType;
+    character.isLimited = isLimited === 'true';
+    character.voice = voice || character.voice;
+    character.defaultMessage = defaultMessage || character.defaultMessage;
+    character.themeColor = themeColor || character.themeColor;
+    character.isActive = isActive === 'true';
+    
+    await character.save();
+    
+    res.json(character);
+  } catch (err) {
+    console.error(err.message);
+    
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ msg: 'キャラクターが見つかりません' });
+    }
+    
+    res.status(500).send('サーバーエラー');
+  }
+});
+
+router.delete('/:id', adminAuth, async (req, res) => {
+  try {
+    const character = await Character.findById(req.params.id);
+    
+    if (!character) {
+      return res.status(404).json({ msg: 'キャラクターが見つかりません' });
+    }
+    
+    await character.remove();
+    
+    res.json({ msg: 'キャラクターが削除されました' });
+  } catch (err) {
+    console.error(err.message);
+    
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ msg: 'キャラクターが見つかりません' });
+    }
+    
+    res.status(500).send('サーバーエラー');
+  }
+});
+
+router.post('/upload/image', adminAuth, uploadImage.single('image'), (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ msg: 'アップロードするファイルが選択されていません' });
+    }
+    
+    const imageUrl = `/uploads/images/${req.file.filename}`;
+    res.json({ imageUrl });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('サーバーエラー');
+  }
+});
+
+router.post('/upload/voice', adminAuth, uploadVoice.single('sampleVoice'), (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ msg: 'アップロードするファイルが選択されていません' });
+    }
+    
+    const voiceUrl = `/uploads/voice/${req.file.filename}`;
+    res.json({ voiceUrl });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('サーバーエラー');
+  }
+});
+
+router.put('/:id/image', adminAuth, async (req, res) => {
+  try {
+    const { imageType, imageUrl } = req.body;
+    
+    const character = await Character.findById(req.params.id);
+    
+    if (!character) {
+      return res.status(404).json({ msg: 'キャラクターが見つかりません' });
+    }
+    
+    switch(imageType) {
+      case 'characterSelect':
+        character.imageCharacterSelect = imageUrl;
+        break;
+      case 'dashboard':
+        character.imageDashboard = imageUrl;
+        break;
+      case 'chatBackground':
+        character.imageChatBackground = imageUrl;
+        break;
+      case 'chatAvatar':
+        character.imageChatAvatar = imageUrl;
+        break;
+      default:
+        return res.status(400).json({ msg: '無効な画像タイプです' });
+    }
+    
+    await character.save();
+    
+    res.json(character);
+  } catch (err) {
+    console.error(err.message);
+    
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ msg: 'キャラクターが見つかりません' });
+    }
+    
+    res.status(500).send('サーバーエラー');
+  }
+});
+
+router.put('/:id/voice', adminAuth, async (req, res) => {
+  try {
+    const { voiceUrl } = req.body;
+    
+    const character = await Character.findById(req.params.id);
+    
+    if (!character) {
+      return res.status(404).json({ msg: 'キャラクターが見つかりません' });
+    }
+    
+    character.sampleVoiceUrl = voiceUrl;
+    await character.save();
+    
+    res.json(character);
+  } catch (err) {
+    console.error(err.message);
+    
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ msg: 'キャラクターが見つかりません' });
+    }
+    
+    res.status(500).send('サーバーエラー');
+  }
+});
+
+module.exports = router;

@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { M_PLUS_Rounded_1c, Orbitron } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "./utils/auth";
+import { AdminAuthProvider } from "./utils/adminAuth";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,12 +33,14 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="ja">
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${mPlusRounded.variable} ${orbitron.variable} antialiased`}
       >
         <AuthProvider>
-          {children}
+          <AdminAuthProvider>
+            {children}
+          </AdminAuthProvider>
         </AuthProvider>
       </body>
     </html>
