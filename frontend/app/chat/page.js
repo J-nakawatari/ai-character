@@ -124,7 +124,7 @@ export default function Chat() {
       <header className="chat-header">
         <div className="chat-header-content">
           <h1 className="chat-title">AI Character Chat</h1>
-          <Button onClick={handleLogout}>ログアウト</Button>
+          <Button onClick={handleLogout} className="logout-button">ログアウト</Button>
         </div>
       </header>
       
@@ -153,7 +153,7 @@ export default function Chat() {
           </div>
         </div>
         
-        {/* Chat messages */}
+        {/* Chat messages container */}
         <div className="chat-messages-container">
           <div className="chat-messages-list">
             {messages.length === 0 ? (
@@ -186,7 +186,7 @@ export default function Chat() {
           </div>
           
           {/* Message input */}
-          <form onSubmit={handleSendMessage} className="chat-input-container">
+          <div className="chat-input-container">
             {error && (
               <div className="chat-input-error">
                 {error}
@@ -207,6 +207,7 @@ export default function Chat() {
                   type="submit"
                   className="chat-send-button"
                   disabled={isTyping || !message.trim()}
+                  onClick={handleSendMessage}
                 >
                   送信
                 </Button>
@@ -215,7 +216,7 @@ export default function Chat() {
                 送信: Enter  |  改行: Shift + Enter
               </p>
             </div>
-          </form>
+          </div>
         </div>
       </main>
     </div>
