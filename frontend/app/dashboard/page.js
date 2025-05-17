@@ -43,7 +43,7 @@ export default function Dashboard() {
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            router.push('/');
+            router.push('/setup');
           }}
           aria-label="ホームに戻る"
         >

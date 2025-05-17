@@ -38,9 +38,6 @@ export default function Setup() {
   const selectedCharacterId = watch('characterId');
 
   useEffect(() => {
-    if (!loading && user?.hasCompletedSetup) {
-      router.push('/dashboard');
-    }
   }, [user, loading, router]);
 
   useEffect(() => {
