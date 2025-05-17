@@ -61,11 +61,14 @@ export default function AdminLogin() {
   }
   
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="fixed top-0 left-0 w-full h-full pointer-events-none bg-gradient-to-br from-[#000000] to-[#1a1a2e] opacity-90 z-0"></div>
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="background-container">
+        <div className="fixed top-0 left-0 w-full h-full pointer-events-none bg-gradient-to-br from-[#000000] to-[#1a1a2e] opacity-90 z-0"></div>
+      </div>
+      <div className="overlay"></div>
       
-      <Card className="w-full max-w-md z-10 backdrop-blur-sm bg-white/95">
-        <h1 className="text-2xl font-bold mb-6 text-center text-gray-800 font-['M_PLUS_Rounded_1c']">管理者ログイン</h1>
+      <Card className="w-full max-w-md z-10 backdrop-blur-sm bg-white/95 shadow-[0_8px_32px_rgba(0,0,0,0.2)]">
+        <h1 className="text-2xl font-bold mb-6 text-center bg-gradient-to-r from-[#43eafc] to-[#fa7be6] text-transparent bg-clip-text font-['M_PLUS_Rounded_1c']">管理者ログイン</h1>
         
         {error && (
           <div className="error-message mb-4">

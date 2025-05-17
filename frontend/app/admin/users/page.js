@@ -78,10 +78,10 @@ export default function AdminUsers() {
   
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">ユーザー管理</h1>
+      <h1 className="text-2xl font-bold mb-6 bg-gradient-to-r from-[#43eafc] to-[#fa7be6] text-transparent bg-clip-text font-['M_PLUS_Rounded_1c']">ユーザー管理</h1>
       
       {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        <div className="error-message mb-4">
           {error}
         </div>
       )}
@@ -89,8 +89,8 @@ export default function AdminUsers() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* ユーザー一覧 */}
         <div className="md:col-span-1">
-          <Card className="h-full">
-            <h2 className="text-xl font-semibold mb-4">ユーザー一覧</h2>
+          <Card className="h-full hover:shadow-[0_8px_32px_rgba(67,234,252,0.15)]">
+            <h2 className="text-xl font-semibold mb-4 text-gray-800">ユーザー一覧</h2>
             
             {users.length === 0 ? (
               <p>ユーザーが見つかりません</p>
@@ -99,8 +99,8 @@ export default function AdminUsers() {
                 <table className="w-full">
                   <thead>
                     <tr>
-                      <th className="text-left pb-2">名前</th>
-                      <th className="text-left pb-2">操作</th>
+                      <th className="text-left pb-2 text-gray-600">名前</th>
+                      <th className="text-left pb-2 text-gray-600">操作</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -109,7 +109,7 @@ export default function AdminUsers() {
                         <td className="py-2">
                           <button
                             onClick={() => handleUserSelect(user._id)}
-                            className="text-blue-600 hover:underline text-left"
+                            className="text-[#43eafc] hover:text-[#fa7be6] hover:underline text-left transition-colors"
                           >
                             {user.name || user.email}
                           </button>
@@ -117,7 +117,7 @@ export default function AdminUsers() {
                         <td className="py-2">
                           <button
                             onClick={() => handleUserSelect(user._id)}
-                            className="text-blue-600 hover:underline mr-2"
+                            className="text-[#43eafc] hover:text-[#fa7be6] hover:underline mr-2 transition-colors"
                           >
                             詳細
                           </button>
@@ -134,23 +134,23 @@ export default function AdminUsers() {
         {/* ユーザー詳細 */}
         <div className="md:col-span-2">
           {selectedUser ? (
-            <Card>
-              <h2 className="text-xl font-semibold mb-4">ユーザー詳細</h2>
+            <Card className="hover:shadow-[0_8px_32px_rgba(250,123,230,0.15)]">
+              <h2 className="text-xl font-semibold mb-4 text-gray-800">ユーザー詳細</h2>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                <div>
-                  <h3 className="font-semibold">基本情報</h3>
-                  <p><span className="font-medium">名前:</span> {selectedUser.name}</p>
-                  <p><span className="font-medium">メール:</span> {selectedUser.email}</p>
-                  <p><span className="font-medium">登録日:</span> {new Date(selectedUser.createdAt).toLocaleString('ja-JP')}</p>
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <h3 className="font-semibold text-[#43eafc] mb-2">基本情報</h3>
+                  <p className="mb-2"><span className="font-medium">名前:</span> {selectedUser.name}</p>
+                  <p className="mb-2"><span className="font-medium">メール:</span> {selectedUser.email}</p>
+                  <p className="mb-2"><span className="font-medium">登録日:</span> {new Date(selectedUser.createdAt).toLocaleString('ja-JP')}</p>
                   <p><span className="font-medium">セットアップ完了:</span> {selectedUser.hasCompletedSetup ? 'はい' : 'いいえ'}</p>
                 </div>
                 
-                <div>
-                  <h3 className="font-semibold">選択中キャラクター</h3>
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <h3 className="font-semibold text-[#fa7be6] mb-2">選択中キャラクター</h3>
                   {selectedUser.selectedCharacter ? (
                     <>
-                      <p><span className="font-medium">名前:</span> {selectedUser.selectedCharacter.name}</p>
+                      <p className="mb-2"><span className="font-medium">名前:</span> {selectedUser.selectedCharacter.name}</p>
                       <p><span className="font-medium">説明:</span> {selectedUser.selectedCharacter.description}</p>
                     </>
                   ) : (
@@ -162,22 +162,22 @@ export default function AdminUsers() {
               <div className="flex space-x-4">
                 <Button
                   onClick={() => handleBanUser(selectedUser._id)}
-                  className="bg-yellow-500 hover:bg-yellow-600"
+                  className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:shadow-[0_6px_24px_0_rgba(250,202,21,0.3)]"
                 >
                   無効化
                 </Button>
                 
                 <Button
                   onClick={() => handleDeleteUser(selectedUser._id)}
-                  className="bg-red-500 hover:bg-red-600"
+                  className="bg-gradient-to-r from-red-400 to-red-500 hover:shadow-[0_6px_24px_0_rgba(248,113,113,0.3)]"
                 >
                   削除
                 </Button>
               </div>
             </Card>
           ) : (
-            <Card>
-              <p className="text-gray-500">ユーザーを選択してください</p>
+            <Card className="hover:shadow-[0_8px_32px_rgba(250,123,230,0.15)]">
+              <p className="text-gray-500 text-center py-8">ユーザーを選択してください</p>
             </Card>
           )}
         </div>
