@@ -3,10 +3,74 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAdminAuth } from '../../utils/adminAuth';
-import Input from '../../components/Input';
 import Button from '../../components/Button';
-import Card from '../../components/Card';
-import '../../globals.css';
+
+const styles = {
+  container: {
+    minHeight: '100vh',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    background: 'linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%)',
+    fontFamily: "'M PLUS Rounded 1c', 'Yu Gothic', 'Meiryo', sans-serif"
+  },
+  card: {
+    width: '100%',
+    maxWidth: '480px',
+    padding: '32px',
+    backgroundColor: 'white',
+    borderRadius: '12px',
+    boxShadow: '0 8px 32px rgba(67, 234, 252, 0.15), 0 4px 16px rgba(250, 123, 230, 0.1)',
+    border: '1px solid #e5e7eb'
+  },
+  title: {
+    fontSize: '24px',
+    fontWeight: 'bold',
+    marginBottom: '24px',
+    textAlign: 'center',
+    background: 'linear-gradient(90deg, #43eafc 0%, #fa7be6 100%)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    fontFamily: "'M PLUS Rounded 1c', 'Yu Gothic', 'Meiryo', sans-serif"
+  },
+  form: {
+    color: '#1f2937'
+  },
+  formGroup: {
+    marginBottom: '16px'
+  },
+  label: {
+    display: 'block',
+    fontSize: '14px',
+    fontWeight: '500',
+    marginBottom: '4px',
+    color: '#4b5563'
+  },
+  input: {
+    width: '100%',
+    padding: '12px',
+    border: '1px solid #d1d5db',
+    borderRadius: '6px',
+    fontSize: '16px',
+    color: '#1f2937',
+    backgroundColor: 'white'
+  },
+  error: {
+    backgroundColor: '#fee2e2',
+    borderColor: '#f87171',
+    color: '#b91c1c',
+    padding: '12px 16px',
+    borderRadius: '6px',
+    marginBottom: '16px'
+  },
+  loading: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    minHeight: '100vh',
+    color: '#1f2937'
+  }
+};
 
 export default function AdminLogin() {
   const [formData, setFormData] = useState({
@@ -55,26 +119,26 @@ export default function AdminLogin() {
   
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-gray-800">
+      <div style={styles.loading}>
         <p>読み込み中...</p>
       </div>
     );
   }
   
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
-      <Card className="w-full max-w-md shadow-[0_8px_32px_rgba(67,234,252,0.15),0_4px_16px_rgba(250,123,230,0.1)]">
-        <h1 className="text-2xl font-bold mb-6 text-center bg-gradient-to-r from-[#43eafc] to-[#fa7be6] text-transparent bg-clip-text font-['M_PLUS_Rounded_1c']">管理者ログイン</h1>
+    <div style={styles.container}>
+      <div style={styles.card}>
+        <h1 style={styles.title}>管理者ログイン</h1>
         
         {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          <div style={styles.error}>
             {error}
           </div>
         )}
         
-        <form onSubmit={handleSubmit} className="text-gray-800">
-          <div className="mb-4">
-            <label htmlFor="email" className="block text-sm font-medium mb-1 text-gray-700">
+        <form onSubmit={handleSubmit} style={styles.form}>
+          <div style={styles.formGroup}>
+            <label htmlFor="email" style={styles.label}>
               メールアドレス
             </label>
             <input
@@ -83,12 +147,12 @@ export default function AdminLogin() {
               value={formData.email}
               onChange={handleChange}
               required
-              className="w-full p-2 border rounded-md text-gray-800 border-gray-300"
+              style={styles.input}
             />
           </div>
           
-          <div className="mb-4">
-            <label htmlFor="password" className="block text-sm font-medium mb-1 text-gray-700">
+          <div style={styles.formGroup}>
+            <label htmlFor="password" style={styles.label}>
               パスワード
             </label>
             <input
@@ -97,7 +161,7 @@ export default function AdminLogin() {
               value={formData.password}
               onChange={handleChange}
               required
-              className="w-full p-2 border rounded-md text-gray-800 border-gray-300"
+              style={styles.input}
             />
           </div>
           
@@ -109,7 +173,7 @@ export default function AdminLogin() {
             {isLoading ? 'ログイン中...' : 'ログイン'}
           </Button>
         </form>
-      </Card>
+      </div>
     </div>
   );
 }
