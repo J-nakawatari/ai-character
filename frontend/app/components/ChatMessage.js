@@ -1,6 +1,13 @@
 import Image from 'next/image';
 
 export default function ChatMessage({ message, isUser, characterImageUrl }) {
+  const formattedContent = message.content.split('\n').map((text, i) => (
+    <span key={i}>
+      {text}
+      {i < message.content.split('\n').length - 1 && <br />}
+    </span>
+  ));
+
   return (
     <div className={`chat-message ${isUser ? 'chat-message-user' : 'chat-message-ai'}`}>
       {!isUser && characterImageUrl && (
@@ -9,18 +16,11 @@ export default function ChatMessage({ message, isUser, characterImageUrl }) {
         </div>
       )}
       <div className="chat-message-bubble">
-        <p className="chat-message-content">{message.content}</p>
+        <p className="chat-message-content">{formattedContent}</p>
         <span className="chat-message-time">
           {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
         </span>
       </div>
-      {isUser && (
-        <div className="chat-message-avatar chat-message-avatar-user">
-          <div className="chat-avatar-user-icon">
-            {message.sender === 'user' ? message.content.charAt(0).toUpperCase() : '?'}
-          </div>
-        </div>
-      )}
     </div>
   );
 }

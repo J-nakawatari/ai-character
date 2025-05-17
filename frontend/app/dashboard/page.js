@@ -36,22 +36,29 @@ export default function Dashboard() {
   
   return (
     <div className="chat-container">
-      {/* Header */}
-      <header className="chat-header">
-        <div className="chat-header-content">
-          <div className="chat-header-nav">
-            <button 
-              className="nav-back-button" 
-              onClick={() => router.push('/')}
-            >
-              <span className="nav-back-icon">←</span>
-              <span>ホームに戻る</span>
-            </button>
-            <h1 className="chat-title">AIキャラクターダッシュボード</h1>
-          </div>
-          <Button onClick={handleLogout} className="logout-button">ログアウト</Button>
-        </div>
-      </header>
+      {/* Stylish navigation buttons */}
+      <div className="floating-nav-buttons">
+        <button 
+          className="floating-nav-button back-button" 
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            router.push('/');
+          }}
+          aria-label="ホームに戻る"
+        >
+          <span className="nav-icon">←</span>
+          <span className="nav-text">ホームに戻る</span>
+        </button>
+        <button 
+          className="floating-nav-button logout-button" 
+          onClick={handleLogout}
+          aria-label="ログアウト"
+        >
+          <span className="nav-icon">⏻</span>
+          <span className="nav-text">ログアウト</span>
+        </button>
+      </div>
       <main className="chat-main" style={{ height: 'calc(100vh - 64px)', padding: '1.5rem' }}>
         <div className="dashboard-card card">
           <div className="dashboard-character-name">
@@ -77,7 +84,11 @@ export default function Dashboard() {
               />
               <button 
                 className="character-reselect-button"
-                onClick={() => router.push('/setup')}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  router.push('/setup');
+                }}
               >
                 キャラクターを変更する
               </button>
