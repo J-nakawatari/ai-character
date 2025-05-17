@@ -61,9 +61,9 @@ export default function AdminLogin() {
   }
   
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <Card className="w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-6 text-center">管理者ログイン</h1>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
+      <Card className="w-full max-w-md shadow-[0_8px_32px_rgba(67,234,252,0.15),0_4px_16px_rgba(250,123,230,0.1)]">
+        <h1 className="text-2xl font-bold mb-6 text-center bg-gradient-to-r from-[#43eafc] to-[#fa7be6] text-transparent bg-clip-text font-['M_PLUS_Rounded_1c']">管理者ログイン</h1>
         
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
@@ -71,7 +71,7 @@ export default function AdminLogin() {
           </div>
         )}
         
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="text-gray-800">
           <Input
             label="メールアドレス"
             id="email"
@@ -92,7 +92,7 @@ export default function AdminLogin() {
           
           <Button
             type="submit"
-            className="w-full mt-4"
+            className="w-full mt-6"
             disabled={isLoading}
           >
             {isLoading ? 'ログイン中...' : 'ログイン'}
