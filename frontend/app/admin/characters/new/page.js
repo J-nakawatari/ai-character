@@ -50,7 +50,16 @@ export default function NewCharacter() {
     setLoading(true);
     
     try {
-      const res = await api.post('/admin/characters', formData);
+      console.log('送信するデータ:', formData);
+      const dataToSend = {
+        ...formData,
+        isPremium: formData.isPremium,
+        isLimited: formData.isLimited,
+        isActive: formData.isActive
+      };
+      console.log('実際に送信するデータ:', dataToSend);
+      
+      const res = await api.post('/admin/characters', dataToSend);
       router.push(`/admin/characters/${res.data._id}/edit`);
     } catch (err) {
       console.error('キャラクター作成に失敗:', err);
@@ -88,9 +97,12 @@ export default function NewCharacter() {
       setTimeout(() => {
         setUploadStatus(prev => ({ ...prev, image: '' }));
       }, 3000);
+      
+      return imageUrl;
     } catch (err) {
       console.error('画像アップロードに失敗:', err);
       setUploadStatus({ ...uploadStatus, image: 'アップロード失敗' });
+      return null;
     }
   };
   
@@ -122,9 +134,12 @@ export default function NewCharacter() {
       setTimeout(() => {
         setUploadStatus(prev => ({ ...prev, voice: '' }));
       }, 3000);
+      
+      return voiceUrl;
     } catch (err) {
       console.error('音声アップロードに失敗:', err);
       setUploadStatus({ ...uploadStatus, voice: 'アップロード失敗' });
+      return null;
     }
   };
   

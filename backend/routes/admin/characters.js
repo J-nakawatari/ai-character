@@ -54,14 +54,19 @@ router.post('/', adminAuth, async (req, res) => {
       name,
       description,
       personalityPrompt,
-      isPremium: isPremium === 'true',
+      isPremium: typeof isPremium === 'boolean' ? isPremium : isPremium === 'true',
       price: parseInt(price) || 0,
       purchaseType,
-      isLimited: isLimited === 'true',
+      isLimited: typeof isLimited === 'boolean' ? isLimited : isLimited === 'true',
       voice,
       defaultMessage,
       themeColor,
-      isActive: isActive === 'true'
+      isActive: typeof isActive === 'boolean' ? isActive : isActive === 'true',
+      imageCharacterSelect: req.body.imageCharacterSelect || '',
+      imageDashboard: req.body.imageDashboard || '',
+      imageChatBackground: req.body.imageChatBackground || '',
+      imageChatAvatar: req.body.imageChatAvatar || '',
+      sampleVoiceUrl: req.body.sampleVoiceUrl || ''
     });
     
     const character = await newCharacter.save();
@@ -86,7 +91,12 @@ router.put('/:id', adminAuth, async (req, res) => {
       voice,
       defaultMessage,
       themeColor,
-      isActive
+      isActive,
+      imageCharacterSelect,
+      imageDashboard,
+      imageChatBackground,
+      imageChatAvatar,
+      sampleVoiceUrl
     } = req.body;
     
     const character = await Character.findById(req.params.id);
@@ -98,14 +108,20 @@ router.put('/:id', adminAuth, async (req, res) => {
     character.name = name || character.name;
     character.description = description || character.description;
     character.personalityPrompt = personalityPrompt || character.personalityPrompt;
-    character.isPremium = isPremium === 'true';
+    character.isPremium = typeof isPremium === 'boolean' ? isPremium : isPremium === 'true';
     character.price = parseInt(price) || character.price;
     character.purchaseType = purchaseType || character.purchaseType;
-    character.isLimited = isLimited === 'true';
+    character.isLimited = typeof isLimited === 'boolean' ? isLimited : isLimited === 'true';
     character.voice = voice || character.voice;
     character.defaultMessage = defaultMessage || character.defaultMessage;
     character.themeColor = themeColor || character.themeColor;
-    character.isActive = isActive === 'true';
+    character.isActive = typeof isActive === 'boolean' ? isActive : isActive === 'true';
+    
+    if (imageCharacterSelect) character.imageCharacterSelect = imageCharacterSelect;
+    if (imageDashboard) character.imageDashboard = imageDashboard;
+    if (imageChatBackground) character.imageChatBackground = imageChatBackground;
+    if (imageChatAvatar) character.imageChatAvatar = imageChatAvatar;
+    if (sampleVoiceUrl) character.sampleVoiceUrl = sampleVoiceUrl;
     
     await character.save();
     
@@ -129,7 +145,7 @@ router.delete('/:id', adminAuth, async (req, res) => {
       return res.status(404).json({ msg: 'キャラクターが見つかりません' });
     }
     
-    await character.remove();
+    await Character.deleteOne({ _id: req.params.id });
     
     res.json({ msg: 'キャラクターが削除されました' });
   } catch (err) {
