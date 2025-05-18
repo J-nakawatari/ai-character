@@ -6,6 +6,7 @@ import api from '../../../utils/api';
 import Card from '../../../components/Card';
 import Input from '../../../components/Input';
 import Button from '../../../components/Button';
+import Toast from '../../../components/Toast';
 
 export default function NewCharacter() {
   const [formData, setFormData] = useState({
@@ -33,6 +34,7 @@ export default function NewCharacter() {
     image: '',
     voice: ''
   });
+  const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
   const router = useRouter();
   
   const handleChange = (e) => {
@@ -60,10 +62,14 @@ export default function NewCharacter() {
       console.log('実際に送信するデータ:', dataToSend);
       
       const res = await api.post('/admin/characters', dataToSend);
-      router.push(`/admin/characters/${res.data._id}/edit`);
+      setToast({ show: true, message: 'キャラクターを作成しました', type: 'success' });
+      setTimeout(() => {
+        router.push(`/admin/characters/${res.data._id}/edit`);
+      }, 1500);
     } catch (err) {
       console.error('キャラクター作成に失敗:', err);
       setError(err.response?.data?.msg || 'キャラクター作成に失敗しました');
+      setToast({ show: true, message: err.response?.data?.msg || 'キャラクター作成に失敗しました', type: 'error' });
     } finally {
       setLoading(false);
     }
@@ -161,7 +167,18 @@ export default function NewCharacter() {
             <div className="admin-stats-title">設定</div>
             <label style={{marginRight:'16px'}}><input type="checkbox" id="isPremium" checked={formData.isPremium} onChange={handleChange} /> プレミアムキャラクター</label>
             <label style={{marginRight:'16px'}}><input type="checkbox" id="isLimited" checked={formData.isLimited} onChange={handleChange} /> 限定</label>
-            <label style={{marginRight:'16px'}}><input type="checkbox" id="isActive" checked={formData.isActive} onChange={handleChange} /> 有効</label>
+            <label style={{marginRight:'16px', display: 'flex', alignItems: 'center'}}>
+              <span style={{marginRight: '8px'}}>有効/無効</span>
+              <label className="toggle-switch">
+                <input
+                  type="checkbox"
+                  id="isActive"
+                  checked={formData.isActive}
+                  onChange={handleChange}
+                />
+                <span className="toggle-slider"></span>
+              </label>
+            </label>
           </div>
           <div style={{marginBottom:'24px'}}>
             <div className="admin-stats-title">画像・音声</div>
@@ -222,6 +239,9 @@ export default function NewCharacter() {
           </div>
         </form>
       </div>
+      {toast.show && (
+        <Toast message={toast.message} type={toast.type} onClose={() => setToast({ ...toast, show: false })} />
+      )}
     </div>
   );
 }
