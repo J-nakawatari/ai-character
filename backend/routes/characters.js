@@ -5,11 +5,11 @@ const Character = require('../models/Character');
 
 router.get('/', auth, async (req, res) => {
   try {
-    const characters = await Character.find();
+    const characters = await Character.find({ isActive: true });
     res.json(characters);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server error');
+    res.status(500).send('サーバーエラー');
   }
 });
 
