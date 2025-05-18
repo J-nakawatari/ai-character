@@ -155,7 +155,7 @@ export default function Dashboard() {
             {/* 右カラム：画像 */}
             <div className="dashboard-col-image">
               <img
-                src={user.selectedCharacter?.imageUrl || '/images/character_01.png'}
+                src={user.selectedCharacter?.imageDashboard || '/images/character_01.png'}
                 alt={user.selectedCharacter?.name || 'AIキャラクター'}
                 className="dashboard-character-img"
               />
