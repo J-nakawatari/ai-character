@@ -261,11 +261,11 @@ export default function Setup() {
               </div>
               <div className="setup-character-name">{character.name}</div>
               <div className="setup-character-tags">
-                {character.personality.split(/,| /).map((tag, idx) =>
+                {character.personality ? character.personality.split(/,| /).map((tag, idx) =>
                   tag.trim() && (
                     <span className="setup-character-tag" key={idx}>{tag.trim()}</span>
                   )
-                )}
+                ) : []}
               </div>
               <div className="setup-character-desc">{character.description}</div>
               <button
