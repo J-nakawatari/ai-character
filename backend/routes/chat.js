@@ -4,6 +4,7 @@ const auth = require('../middleware/auth');
 const Chat = require('../models/Chat');
 const User = require('../models/User');
 const Character = require('../models/Character');
+const OpenAI = require('openai');
 
 router.get('/', auth, async (req, res) => {
   try {
@@ -64,7 +65,12 @@ router.post('/', auth, async (req, res) => {
       content: message
     });
     
-    const aiResponse = generateAIResponse(message, user.name, character);
+    const aiResponse = await generateAIResponse(
+      message, 
+      user.name, 
+      character,
+      chat.messages // 会話履歴を渡す
+    );
     
     chat.messages.push({
       sender: 'ai',
@@ -78,47 +84,67 @@ router.post('/', auth, async (req, res) => {
       chatId: chat._id
     });
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server error');
+    console.error('Chat API Error:', err.message);
+    
+    if (err.message && (err.message.includes('API key') || err.message.includes('authentication'))) {
+      return res.status(500).json({ error: 'AIサービスの設定エラーが発生しました。管理者にお問い合わせください。' });
+    }
+    
+    res.status(500).json({ error: 'サーバーエラーが発生しました。しばらく経ってからもう一度お試しください。' });
   }
 });
 
-function generateAIResponse(message, userName, character) {
-  const greetings = ['こんにちは', 'やあ', 'どうも'];
-  const questions = [
-    'どうしましたか？',
-    '何かお手伝いできることはありますか？',
-    '今日はどんな一日でしたか？'
-  ];
-  
-  if (message.toLowerCase().includes('こんにちは') || 
-      message.toLowerCase().includes('はじめまして')) {
-    return `${userName}さん、はじめまして！${character.name}です。${character.description} どうぞよろしくお願いします！`;
+async function generateAIResponse(message, userName, character, chatHistory = []) {
+  if (!process.env.OPENAI_API_KEY) {
+    console.error('OpenAI API key is not configured');
+    return `申し訳ありません、AIサービスの設定が完了していないためチャットができません。管理者にお問い合わせください。`;
   }
-  
-  let response;
-  
-  const personality = character.personality || character.personalityPrompt || '';
-  
-  switch (personality.toLowerCase()) {
-    case '優しい':
-    case 'やさしい':
-    case '親切':
-      response = `${userName}さん、${character.name}です。${message}ですね。私にできることがあれば、なんでも言ってくださいね。`;
-      break;
-    case '論理的':
-    case '冷静':
-      response = `分析しました。${message}については、まず状況を整理しましょう。何か具体的な情報があれば教えてください。`;
-      break;
-    case '元気':
-    case '明るい':
-      response = `やったー！${userName}さん！${message}なんて素敵ですね！一緒に楽しみましょう！`;
-      break;
-    default:
-      response = `${userName}さん、${greetings[Math.floor(Math.random() * greetings.length)]}。${questions[Math.floor(Math.random() * questions.length)]}`;
+
+  try {
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+
+    let systemMessage = `あなたは${character.name}というAIキャラクターです。`;
+    
+    if (character.personalityPrompt && character.personalityPrompt.trim() !== '') {
+      systemMessage += ` ${character.personalityPrompt}`;
+    } else if (character.personality && character.personality.trim() !== '') {
+      systemMessage += ` あなたの性格は「${character.personality}」です。`;
+    }
+    
+    if (character.description && character.description.trim() !== '') {
+      systemMessage += ` ${character.description}`;
+    }
+    
+    systemMessage += ` ユーザーの名前は${userName}さんです。敬語を使って短く返答してください。`;
+
+    const messages = [
+      { role: 'system', content: systemMessage }
+    ];
+    
+    const recentMessages = chatHistory.slice(-5);
+    for (const msg of recentMessages) {
+      messages.push({
+        role: msg.sender === 'user' ? 'user' : 'assistant',
+        content: msg.content
+      });
+    }
+    
+    messages.push({ role: 'user', content: message });
+
+    const response = await openai.chat.completions.create({
+      model: 'gpt-3.5-turbo',
+      messages: messages,
+      max_tokens: 150, // 応答の長さを制限
+      temperature: 0.7,
+    });
+
+    return response.choices[0].message.content.trim();
+  } catch (error) {
+    console.error('OpenAI API Error:', error);
+    return `申し訳ありません、応答の生成中にエラーが発生しました。しばらく経ってからもう一度お試しください。`;
   }
-  
-  return response;
 }
 
 module.exports = router;
