@@ -38,11 +38,17 @@ export default function ImageCropper({
   useEffect(() => {
     if (!canvasRef.current || !imageRef.current) return;
     
-    const ctx = canvasRef.current.getContext('2d');
+    const ctx = canvasRef.current.getContext('2d', { alpha: true });
     ctx.clearRect(0, 0, cropWidth, cropHeight);
     
-    ctx.fillStyle = '#f0f0f0';
-    ctx.fillRect(0, 0, cropWidth, cropHeight);
+    const squareSize = 10;
+    for (let x = 0; x < cropWidth; x += squareSize) {
+      for (let y = 0; y < cropHeight; y += squareSize) {
+        const isEven = (Math.floor(x / squareSize) + Math.floor(y / squareSize)) % 2 === 0;
+        ctx.fillStyle = isEven ? '#f0f0f0' : '#e0e0e0';
+        ctx.fillRect(x, y, squareSize, squareSize);
+      }
+    }
     
     ctx.drawImage(
       imageRef.current,
@@ -98,7 +104,9 @@ export default function ImageCropper({
     const cropCanvas = document.createElement('canvas');
     cropCanvas.width = cropWidth;
     cropCanvas.height = cropHeight;
-    const ctx = cropCanvas.getContext('2d');
+    const ctx = cropCanvas.getContext('2d', { alpha: true });
+    
+    ctx.clearRect(0, 0, cropWidth, cropHeight);
     
     ctx.drawImage(
       imageRef.current,
@@ -108,9 +116,9 @@ export default function ImageCropper({
     
     cropCanvas.toBlob((blob) => {
       if (onCropComplete) {
-        onCropComplete(blob, cropCanvas.toDataURL('image/jpeg'));
+        onCropComplete(blob, cropCanvas.toDataURL('image/png'));
       }
-    }, 'image/jpeg', 0.95);
+    }, 'image/png', 1.0);
   };
   
   return (
