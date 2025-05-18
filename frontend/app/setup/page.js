@@ -245,7 +245,7 @@ export default function Setup() {
               <div className="setup-character-img-wrapper">
                 <img
                   className="setup-character-img"
-                  src={character.imageUrl || '/images/default.png'}
+                  src={character.imageCharacterSelect || '/images/default.png'}
                   alt={character.name}
                 />
                 <img

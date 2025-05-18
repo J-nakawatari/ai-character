@@ -220,9 +220,9 @@ export default function Chat() {
         {/* Character info */}
         <div className="chat-character-info">
           <div className="chat-character-avatar">
-            {user.selectedCharacter?.imageUrl ? (
+            {user.selectedCharacter?.imageChatAvatar ? (
               <Image
-                src={user.selectedCharacter.imageUrl}
+                src={user.selectedCharacter.imageChatAvatar}
                 alt={user.selectedCharacter.name}
                 width={64}
                 height={64}
@@ -253,7 +253,7 @@ export default function Chat() {
         {/* Chat messages container */}
         <div className="chat-messages-container">
           <img
-            src="/images/character_01.png"
+            src={user.selectedCharacter?.imageChatBackground || '/images/character_01.png'}
             alt="背景キャラクター"
             className="chat-bg-character-image"
           />
@@ -269,7 +269,7 @@ export default function Chat() {
                     key={index}
                     message={msg}
                     isUser={msg.sender === 'user'}
-                    characterImageUrl={user.selectedCharacter?.imageUrl}
+                    characterImageUrl={user.selectedCharacter?.imageChatAvatar}
                   />
                 ))}
                 {isTyping && (
