@@ -10,6 +10,7 @@ export default function AdminCharacters() {
   const [characters, setCharacters] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [modalCharacter, setModalCharacter] = useState(null);
   const router = useRouter();
   
   useEffect(() => {
@@ -59,85 +60,87 @@ export default function AdminCharacters() {
   
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold bg-gradient-to-r from-[#43eafc] to-[#fa7be6] text-transparent bg-clip-text font-['M_PLUS_Rounded_1c']">キャラクター管理</h1>
-        
-        <Button onClick={handleCreateCharacter}>
-          新規キャラクター作成
-        </Button>
-      </div>
-      
+      <h1 className="admin-dashboard-title">キャラクター管理</h1>
       {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-          {error}
+        <div className="admin-stats-card" style={{background:'#fff0f3', color:'#c2185b', marginBottom: '24px'}}>{error}</div>
+      )}
+      <div className="admin-stats-cards">
+        <div className="admin-stats-card">
+          <div className="admin-stats-title"><span className="admin-stats-icon">🤖</span>キャラクター数</div>
+          <div className="admin-stats-value">{characters.length}</div>
+          <div className="admin-stats-desc">登録キャラクター数</div>
+        </div>
+        <div style={{flex:1}}></div>
+      </div>
+      <div className="admin-stats-card" style={{padding:'24px 18px', marginBottom:'32px'}}>
+        <div className="admin-stats-title"><span className="admin-stats-icon">📋</span>キャラクター一覧</div>
+        <div style={{width:'100%', overflowX:'auto'}}>
+          <table style={{width:'100%', borderCollapse:'collapse'}}>
+            <thead>
+              <tr style={{background:'#f4f6fa'}}>
+                <th style={{textAlign:'left', padding:'8px 12px'}}>画像</th>
+                <th style={{textAlign:'left', padding:'8px 12px'}}>名前</th>
+                <th style={{textAlign:'left', padding:'8px 12px'}}>説明</th>
+                <th style={{textAlign:'left', padding:'8px 12px'}}>種別</th>
+                <th style={{textAlign:'left', padding:'8px 12px'}}>ステータス</th>
+                <th style={{textAlign:'left', padding:'8px 12px'}}>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              {characters.length === 0 ? (
+                <tr><td colSpan={6} style={{padding:'16px', textAlign:'center'}}>キャラクターが見つかりません</td></tr>
+              ) :
+                characters.map(character => (
+                  <tr key={character._id} style={{borderTop:'1px solid #eee'}}>
+                    <td style={{padding:'8px 12px'}}>
+                      {character.imageChatAvatar ? (
+                        <img src={character.imageChatAvatar} alt={character.name} style={{width:'40px', height:'40px', borderRadius:'50%', objectFit:'cover', background:'#f4f6fa'}} />
+                      ) : (
+                        <span style={{display:'inline-block', width:'40px', height:'40px', borderRadius:'50%', background:'#f4f6fa', textAlign:'center', lineHeight:'40px', color:'#aaa', fontWeight:'bold'}}>{character.name.charAt(0)}</span>
+                      )}
+                    </td>
+                    <td style={{padding:'8px 12px', fontWeight:'bold'}}>{character.name}</td>
+                    <td style={{padding:'8px 12px', maxWidth:'240px', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis'}}>{character.description}</td>
+                    <td style={{padding:'8px 12px'}}>
+                      {character.isPremium ? <span style={{color:'#fa7be6'}}>プレミアム</span> : <span style={{color:'#888'}}>通常</span>}
+                      {character.isLimited && <span style={{color:'#43eafc', marginLeft:'8px'}}>限定</span>}
+                    </td>
+                    <td style={{padding:'8px 12px'}}>{character.isActive ? <span style={{color:'#43eafc'}}>有効</span> : <span style={{color:'#c2185b'}}>無効</span>}</td>
+                    <td style={{padding:'8px 12px'}}>
+                      <button onClick={() => setModalCharacter(character)} className="admin-logout-btn" style={{background:'#eee', color:'#7b1fa2', marginRight:'6px'}}>詳細</button>
+                      <button onClick={() => handleEditCharacter(character._id)} className="admin-logout-btn" style={{background:'#e0f7fa', color:'#7b1fa2', marginRight:'6px'}}>編集</button>
+                      <button onClick={() => handleDeleteCharacter(character._id)} className="admin-logout-btn" style={{background:'#ffb3c6', color:'#c2185b'}}>削除</button>
+                    </td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {modalCharacter && (
+        <div style={{position:'fixed',top:0,left:0,width:'100vw',height:'100vh',background:'rgba(0,0,0,0.25)',zIndex:1000,display:'flex',alignItems:'center',justifyContent:'center'}}>
+          <div className="admin-stats-card" style={{minWidth:'320px',maxWidth:'90vw',padding:'32px 36px',position:'relative'}}>
+            <button onClick={()=>setModalCharacter(null)} style={{position:'absolute',top:'16px',right:'16px',background:'none',border:'none',fontSize:'1.5rem',color:'#888',cursor:'pointer'}}>×</button>
+            <div style={{display:'flex',alignItems:'center',gap:'18px',marginBottom:'18px'}}>
+              {modalCharacter.imageChatAvatar ? (
+                <img src={modalCharacter.imageChatAvatar} alt={modalCharacter.name} style={{width:'56px',height:'56px',borderRadius:'50%',objectFit:'cover',background:'#f4f6fa'}} />
+              ) : (
+                <span style={{display:'inline-block', width:'56px', height:'56px', borderRadius:'50%', background:'#f4f6fa', textAlign:'center', lineHeight:'56px', color:'#aaa', fontWeight:'bold',fontSize:'1.5rem'}}>{modalCharacter.name.charAt(0)}</span>
+              )}
+              <div>
+                <div style={{fontWeight:'bold',fontSize:'1.2rem'}}>{modalCharacter.name}</div>
+                <div style={{color:'#888',fontSize:'0.95rem'}}>{modalCharacter.isPremium ? 'プレミアム' : '通常'}{modalCharacter.isLimited && '・限定'}</div>
+              </div>
+            </div>
+            <div style={{marginBottom:'12px'}}><b>説明:</b> {modalCharacter.description}</div>
+            <div style={{marginBottom:'12px'}}><b>性格:</b> {modalCharacter.personalityPrompt}</div>
+            <div style={{marginBottom:'12px'}}><b>ステータス:</b> {modalCharacter.isActive ? <span style={{color:'#43eafc'}}>有効</span> : <span style={{color:'#c2185b'}}>無効</span>}</div>
+          </div>
         </div>
       )}
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {characters.length === 0 ? (
-          <p className="text-gray-700 text-center py-8">キャラクターが見つかりません</p>
-        ) : (
-          characters.map(character => (
-            <Card key={character._id} className="flex flex-col hover:shadow-[0_8px_32px_rgba(67,234,252,0.15)]">
-              <div className="flex-1">
-                <div className="flex items-center mb-4">
-                  {character.imageChatAvatar ? (
-                    <img
-                      src={character.imageChatAvatar}
-                      alt={character.name}
-                      className="w-16 h-16 rounded-full object-cover mr-4 border-2 border-[#43eafc]/30"
-                    />
-                  ) : (
-                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#43eafc]/20 to-[#fa7be6]/20 flex items-center justify-center mr-4 text-xl font-bold text-gray-700">
-                      {character.name.charAt(0)}
-                    </div>
-                  )}
-                  
-                  <div>
-                    <h2 className="text-xl font-semibold text-gray-800">{character.name}</h2>
-                    <p className="text-sm">
-                      {character.isPremium ? 
-                        <span className="text-[#fa7be6]">プレミアム</span> : 
-                        <span className="text-gray-500">通常</span>
-                      }
-                      {character.isLimited && 
-                        <span className="ml-2 text-[#43eafc]">限定</span>
-                      }
-                    </p>
-                  </div>
-                </div>
-                
-                <p className="text-gray-700 mb-4 line-clamp-3 bg-gray-50 p-3 rounded-lg">{character.description}</p>
-                
-                <div className="mb-4">
-                  <p className="text-sm">
-                    <span className="font-medium">ステータス:</span> 
-                    {character.isActive ? 
-                      <span className="text-green-500 ml-1">有効</span> : 
-                      <span className="text-red-500 ml-1">無効</span>
-                    }
-                  </p>
-                </div>
-              </div>
-              
-              <div className="flex space-x-2 mt-4">
-                <Button
-                  onClick={() => handleEditCharacter(character._id)}
-                  className="flex-1"
-                >
-                  編集
-                </Button>
-                
-                <Button
-                  onClick={() => handleDeleteCharacter(character._id)}
-                  className="flex-1 bg-gradient-to-r from-red-400 to-red-500 hover:shadow-[0_6px_24px_0_rgba(248,113,113,0.3)]"
-                >
-                  削除
-                </Button>
-              </div>
-            </Card>
-          ))
-        )}
+      <div style={{marginTop:'32px'}}>
+        <button onClick={handleCreateCharacter} className="admin-logout-btn" style={{background:'#43eafc', color:'#fff', fontWeight:'bold'}}>新規キャラクター作成</button>
       </div>
     </div>
   );

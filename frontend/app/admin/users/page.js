@@ -78,109 +78,55 @@ export default function AdminUsers() {
   
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6 bg-gradient-to-r from-[#43eafc] to-[#fa7be6] text-transparent bg-clip-text font-['M_PLUS_Rounded_1c']">ユーザー管理</h1>
-      
+      <h1 className="admin-dashboard-title">ユーザー管理</h1>
       {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-          {error}
-        </div>
+        <div className="admin-stats-card" style={{background:'#fff0f3', color:'#c2185b', marginBottom: '24px'}}>{error}</div>
       )}
-      
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* ユーザー一覧 */}
-        <div className="md:col-span-1">
-          <Card className="h-full hover:shadow-[0_8px_32px_rgba(67,234,252,0.15)]">
-            <h2 className="text-xl font-semibold mb-4 text-gray-800">ユーザー一覧</h2>
-            
-            {users.length === 0 ? (
-              <p className="text-gray-700">ユーザーが見つかりません</p>
-            ) : (
-              <div className="overflow-y-auto max-h-[600px]">
-                <table className="w-full">
-                  <thead>
-                    <tr>
-                      <th className="text-left pb-2 text-gray-600">名前</th>
-                      <th className="text-left pb-2 text-gray-600">操作</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {users.map(user => (
-                      <tr key={user._id} className="border-t">
-                        <td className="py-2">
-                          <button
-                            onClick={() => handleUserSelect(user._id)}
-                            className="text-[#43eafc] hover:text-[#fa7be6] hover:underline text-left transition-colors"
-                          >
-                            {user.name || user.email}
-                          </button>
-                        </td>
-                        <td className="py-2">
-                          <button
-                            onClick={() => handleUserSelect(user._id)}
-                            className="text-[#43eafc] hover:text-[#fa7be6] hover:underline mr-2 transition-colors"
-                          >
-                            詳細
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </Card>
+      <div className="admin-stats-cards">
+        <div className="admin-stats-card">
+          <div className="admin-stats-title"><span className="admin-stats-icon">👥</span>ユーザー数</div>
+          <div className="admin-stats-value">{users.length}</div>
+          <div className="admin-stats-desc">登録ユーザー数</div>
         </div>
-        
-        {/* ユーザー詳細 */}
-        <div className="md:col-span-2">
-          {selectedUser ? (
-            <Card className="hover:shadow-[0_8px_32px_rgba(250,123,230,0.15)]">
-              <h2 className="text-xl font-semibold mb-4 text-gray-800">ユーザー詳細</h2>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <h3 className="font-semibold text-[#43eafc] mb-2">基本情報</h3>
-                  <p className="mb-2 text-gray-700"><span className="font-medium">名前:</span> {selectedUser.name}</p>
-                  <p className="mb-2 text-gray-700"><span className="font-medium">メール:</span> {selectedUser.email}</p>
-                  <p className="mb-2 text-gray-700"><span className="font-medium">登録日:</span> {new Date(selectedUser.createdAt).toLocaleString('ja-JP')}</p>
-                  <p className="text-gray-700"><span className="font-medium">セットアップ完了:</span> {selectedUser.hasCompletedSetup ? 'はい' : 'いいえ'}</p>
-                </div>
-                
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <h3 className="font-semibold text-[#fa7be6] mb-2">選択中キャラクター</h3>
-                  {selectedUser.selectedCharacter ? (
-                    <>
-                      <p className="mb-2 text-gray-700"><span className="font-medium">名前:</span> {selectedUser.selectedCharacter.name}</p>
-                      <p className="text-gray-700"><span className="font-medium">説明:</span> {selectedUser.selectedCharacter.description}</p>
-                    </>
-                  ) : (
-                    <p className="text-gray-700">選択されていません</p>
-                  )}
-                </div>
-              </div>
-              
-              <div className="flex space-x-4">
-                <Button
-                  onClick={() => handleBanUser(selectedUser._id)}
-                  className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:shadow-[0_6px_24px_0_rgba(250,202,21,0.3)]"
-                >
-                  無効化
-                </Button>
-                
-                <Button
-                  onClick={() => handleDeleteUser(selectedUser._id)}
-                  className="bg-gradient-to-r from-red-400 to-red-500 hover:shadow-[0_6px_24px_0_rgba(248,113,113,0.3)]"
-                >
-                  削除
-                </Button>
-              </div>
-            </Card>
-          ) : (
-            <Card className="hover:shadow-[0_8px_32px_rgba(250,123,230,0.15)]">
-              <p className="text-gray-500 text-center py-8">ユーザーを選択してください</p>
-            </Card>
-          )}
+      </div>
+      <div className="admin-stats-cards" style={{flexDirection:'column', gap:'18px'}}>
+        <div className="admin-stats-card" style={{padding:'24px 18px'}}>
+          <div className="admin-stats-title"><span className="admin-stats-icon">📋</span>ユーザー一覧</div>
+          <div style={{width:'100%', overflowX:'auto'}}>
+            <table style={{width:'100%', borderCollapse:'collapse'}}>
+              <thead>
+                <tr style={{background:'#f4f6fa'}}>
+                  <th style={{textAlign:'left', padding:'8px 12px'}}>名前</th>
+                  <th style={{textAlign:'left', padding:'8px 12px'}}>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                {users.map(user => (
+                  <tr key={user._id} style={{borderTop:'1px solid #eee'}}>
+                    <td style={{padding:'8px 12px'}}>{user.name || user.email}</td>
+                    <td style={{padding:'8px 12px'}}>
+                      <button onClick={() => handleUserSelect(user._id)} className="admin-logout-btn" style={{padding:'4px 12px', fontSize:'0.95rem'}}>詳細</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
+        {selectedUser && (
+          <div className="admin-stats-card" style={{padding:'24px 18px'}}>
+            <div className="admin-stats-title"><span className="admin-stats-icon">👤</span>ユーザー詳細</div>
+            <div style={{marginBottom:'8px'}}><b>名前:</b> {selectedUser.name}</div>
+            <div style={{marginBottom:'8px'}}><b>メール:</b> {selectedUser.email}</div>
+            <div style={{marginBottom:'8px'}}><b>登録日:</b> {new Date(selectedUser.createdAt).toLocaleString('ja-JP')}</div>
+            <div style={{marginBottom:'8px'}}><b>セットアップ完了:</b> {selectedUser.hasCompletedSetup ? 'はい' : 'いいえ'}</div>
+            <div style={{marginBottom:'8px'}}><b>選択中キャラクター:</b> {selectedUser.selectedCharacter ? selectedUser.selectedCharacter.name : '未選択'}</div>
+            <div style={{display:'flex', gap:'8px', marginTop:'12px'}}>
+              <button onClick={() => handleBanUser(selectedUser._id)} className="admin-logout-btn" style={{background:'#ffe082', color:'#7b1fa2'}}>無効化</button>
+              <button onClick={() => handleDeleteUser(selectedUser._id)} className="admin-logout-btn" style={{background:'#ffb3c6', color:'#c2185b'}}>削除</button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

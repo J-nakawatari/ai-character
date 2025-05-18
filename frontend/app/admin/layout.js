@@ -42,63 +42,33 @@ export default function AdminLayout({ children }) {
   }
   
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="admin-root">
       {/* ヘッダー */}
-      <header className="bg-black text-white p-4">
-        <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-xl font-bold">Charactier 管理画面</h1>
-          
-          <button
-            onClick={handleLogout}
-            className="text-white hover:underline"
-          >
-            ログアウト
-          </button>
+      <header className="admin-header">
+        <div className="admin-header-inner">
+          <h1 className="admin-header-title">Charactier 管理画面</h1>
+          <button onClick={handleLogout} className="admin-logout-btn">ログアウト</button>
         </div>
       </header>
-      
-      {/* メインコンテンツ */}
-      <div className="flex flex-1">
+      <div className="admin-content">
         {/* サイドバー */}
-        <aside className="w-64 bg-gray-800 text-white p-4">
+        <aside className="admin-sidebar">
           <nav>
-            <ul className="space-y-2">
+            <ul>
               <li>
-                <Link
-                  href="/admin/dashboard"
-                  className={`block p-2 rounded ${
-                    pathname === '/admin/dashboard' ? 'bg-gray-700' : 'hover:bg-gray-700'
-                  }`}
-                >
-                  ダッシュボード
-                </Link>
+                <Link href="/admin/dashboard" className={pathname === '/admin/dashboard' ? 'active' : ''}>ダッシュボード</Link>
               </li>
               <li>
-                <Link
-                  href="/admin/users"
-                  className={`block p-2 rounded ${
-                    pathname === '/admin/users' ? 'bg-gray-700' : 'hover:bg-gray-700'
-                  }`}
-                >
-                  ユーザー管理
-                </Link>
+                <Link href="/admin/users" className={pathname === '/admin/users' ? 'active' : ''}>ユーザー管理</Link>
               </li>
               <li>
-                <Link
-                  href="/admin/characters"
-                  className={`block p-2 rounded ${
-                    pathname.startsWith('/admin/characters') ? 'bg-gray-700' : 'hover:bg-gray-700'
-                  }`}
-                >
-                  キャラクター管理
-                </Link>
+                <Link href="/admin/characters" className={pathname.startsWith('/admin/characters') ? 'active' : ''}>キャラクター管理</Link>
               </li>
             </ul>
           </nav>
         </aside>
-        
         {/* メインコンテンツエリア */}
-        <main className="flex-1 p-6 bg-gray-100 text-gray-800">
+        <main className="admin-main">
           {children}
         </main>
       </div>

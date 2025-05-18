@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
 import { useAuth } from '../utils/auth';
 import api from '../utils/api';
@@ -11,6 +11,7 @@ import ChatMessage from '../components/ChatMessage';
 export default function Chat() {
   const { user, loading, logout } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
@@ -18,14 +19,13 @@ export default function Chat() {
   const [error, setError] = useState('');
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+  const canvasRef = useRef(null);
   
   useEffect(() => {
-    if (!loading) {
-      if (!user) {
-        router.push('/login');
-      } else if (!user.hasCompletedSetup) {
-        router.push('/setup');
-      }
+    if (!loading && !user) {
+      router.push('/login');
+    } else if (!loading && user && !user.hasCompletedSetup) {
+      router.push('/setup');
     }
   }, [user, loading, router]);
   
@@ -55,6 +55,74 @@ export default function Chat() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+  
+  useEffect(() => {
+    let animationId;
+    let particles = [];
+    let ctx, width, height, canvas;
+
+    function setupCanvas() {
+      canvas = canvasRef.current;
+      if (!canvas) return;
+      ctx = canvas.getContext('2d');
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+      // パーティクル設定
+      particles = [];
+      const PARTICLE_NUM = 40;
+      for (let i = 0; i < PARTICLE_NUM; i++) {
+        particles.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          r: 60 + Math.random() * 40,
+          dx: (Math.random() - 0.5) * 0.3,
+          dy: (Math.random() - 0.5) * 0.3,
+          alpha: 0.08 + Math.random() * 0.08,
+          color: `hsl(${Math.random() * 360}, 70%, 85%)`
+        });
+      }
+    }
+
+    function draw() {
+      if (!ctx) return;
+      ctx.clearRect(0, 0, width, height);
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2, false);
+        ctx.closePath();
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = p.alpha;
+        ctx.shadowColor = p.color;
+        ctx.shadowBlur = 40;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+        ctx.shadowBlur = 0;
+        p.x += p.dx;
+        p.y += p.dy;
+        if (p.x < -p.r) p.x = width + p.r;
+        if (p.x > width + p.r) p.x = -p.r;
+        if (p.y < -p.r) p.y = height + p.r;
+        if (p.y > height + p.r) p.y = -p.r;
+      }
+      animationId = requestAnimationFrame(draw);
+    }
+
+    function handleResize() {
+      setupCanvas();
+    }
+
+    setupCanvas();
+    draw();
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      cancelAnimationFrame(animationId);
+    };
+  }, [pathname]);
   
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -125,6 +193,7 @@ export default function Chat() {
   
   return (
     <div className="chat-container">
+      <canvas ref={canvasRef} id="bg-canvas" key={pathname}></canvas>
       {/* Stylish navigation buttons */}
       <button 
         className="floating-nav-button back-button" 
@@ -173,15 +242,13 @@ export default function Chat() {
         </div>
         
         {/* Character background image */}
-        {user.selectedCharacter?.imageUrl && (
-          <div className="chat-character-background">
-            <img 
-              src={user.selectedCharacter.imageUrl} 
-              alt={user.selectedCharacter.name} 
-              className="chat-character-bg-image"
-            />
-          </div>
-        )}
+        {/* <div className="chat-character-background">
+          <img 
+            src={user.selectedCharacter.imageUrl} 
+            alt={user.selectedCharacter.name} 
+            className="chat-character-bg-image"
+          />
+        </div> */}
         
         {/* Chat messages container */}
         <div className="chat-messages-container">
