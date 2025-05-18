@@ -20,6 +20,7 @@ export default function Setup() {
   const [serverError, setServerError] = useState('');
   const [loadingCharacters, setLoadingCharacters] = useState(true);
   const canvasRef = useRef(null);
+  const audioRef = useRef(null);
 
   const {
     register,
@@ -254,19 +255,27 @@ export default function Setup() {
                   alt="ボイス"
                   style={{ cursor: 'pointer' }}
                   onClick={() => {
+                    if (audioRef.current) {
+                      audioRef.current.pause();
+                      audioRef.current.currentTime = 0;
+                    }
+                    
                     const audioSrc = character.sampleVoiceUrl || `/voice/voice_0${idx + 1}.wav`;
                     const audio = new Audio(audioSrc);
+                    audioRef.current = audio;
                     audio.play();
                   }}
                 />
               </div>
               <div className="setup-character-name">{character.name}</div>
               <div className="setup-character-tags">
-                {character.personality ? character.personality.split(/,| /).map((tag, idx) =>
-                  tag.trim() && (
-                    <span className="setup-character-tag" key={idx}>{tag.trim()}</span>
-                  )
-                ) : []}
+                {(character.personality || character.personalityPrompt) ? 
+                  (character.personality || character.personalityPrompt).split(/,| /).map((tag, idx) =>
+                    tag.trim() && (
+                      <span className="setup-character-tag" key={idx}>{tag.trim()}</span>
+                    )
+                  ) : []
+                }
               </div>
               <div className="setup-character-desc">{character.description}</div>
               <button
