@@ -7,6 +7,7 @@ import Card from '../../../../components/Card';
 import Input from '../../../../components/Input';
 import Button from '../../../../components/Button';
 import Toast from '../../../../components/Toast';
+import ImageCropper from '../../../../components/ImageCropper';
 
 export default function EditCharacter({ params }) {
   const { id } = params;
@@ -38,6 +39,10 @@ export default function EditCharacter({ params }) {
     voice: ''
   });
   const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imageType, setImageType] = useState('');
+  const [showCropper, setShowCropper] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState('');
   
   const router = useRouter();
   
@@ -96,9 +101,78 @@ export default function EditCharacter({ params }) {
     }
   };
   
-  const handleImageUpload = async (e, imageType) => {
+  const handleImageUpload = async (e, type) => {
     const file = e.target.files[0];
     if (!file) return;
+    
+    if (file.size > 5 * 1024 * 1024) {
+      setError('ファイルサイズは5MB以下である必要があります');
+      setToast({ show: true, message: 'ファイルサイズは5MB以下である必要があります', type: 'error' });
+      return;
+    }
+    
+    if (file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setSelectedImage(e.target.result);
+        setImageType(type);
+        setShowCropper(true);
+      };
+      reader.readAsDataURL(file);
+      return;
+    }
+    
+    if (file.type.startsWith('audio/')) {
+      const formData = new FormData();
+      formData.append('sampleVoice', file);
+      
+      try {
+        setUploadStatus({ ...uploadStatus, voice: 'アップロード中...' });
+        
+        const res = await api.post('/admin/characters/upload/voice', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+        
+        const voiceUrl = res.data.voiceUrl;
+        
+        await api.put(`/admin/characters/${id}/voice`, {
+          voiceUrl
+        });
+        
+        setFormData(prev => ({
+          ...prev,
+          sampleVoiceUrl: voiceUrl
+        }));
+        
+        setUploadStatus({ ...uploadStatus, voice: 'アップロード完了' });
+        setToast({ show: true, message: '音声ファイルがアップロードされました', type: 'success' });
+        
+        setTimeout(() => {
+          setUploadStatus(prev => ({ ...prev, voice: '' }));
+        }, 3000);
+      } catch (err) {
+        console.error('音声アップロードに失敗:', err);
+        setUploadStatus({ ...uploadStatus, voice: 'アップロード失敗' });
+        setToast({ show: true, message: '音声ファイルのアップロードに失敗しました', type: 'error' });
+      }
+    }
+  };
+  
+  const handleCropComplete = async (blob, dataUrl) => {
+    setShowCropper(false);
+    setPreviewUrl(dataUrl);
+    
+    const imageSizes = {
+      characterSelect: '238x260',
+      dashboard: '320x528',
+      chatBackground: '455x745',
+      chatAvatar: '40x40'
+    };
+    
+    const fileName = `cropped_${Date.now()}.jpg`;
+    const file = new File([blob], fileName, { type: 'image/jpeg' });
     
     const formData = new FormData();
     formData.append('image', file);
@@ -125,6 +199,7 @@ export default function EditCharacter({ params }) {
       }));
       
       setUploadStatus({ ...uploadStatus, image: 'アップロード完了' });
+      setToast({ show: true, message: '画像がアップロードされました', type: 'success' });
       
       setTimeout(() => {
         setUploadStatus(prev => ({ ...prev, image: '' }));
@@ -132,6 +207,8 @@ export default function EditCharacter({ params }) {
     } catch (err) {
       console.error('画像アップロードに失敗:', err);
       setUploadStatus({ ...uploadStatus, image: 'アップロード失敗' });
+      setError('画像のアップロードに失敗しました');
+      setToast({ show: true, message: '画像のアップロードに失敗しました', type: 'error' });
     }
   };
   
@@ -212,47 +289,73 @@ export default function EditCharacter({ params }) {
               </label>
             </label>
           </div>
-          <div style={{marginBottom:'24px'}}>
-            <div className="admin-stats-title">画像・音声</div>
-            <div style={{display:'flex',flexDirection:'column',gap:'24px',flexWrap:'wrap'}}>
-              <div style={{marginBottom:'8px'}}>
-                <div style={{marginBottom:'8px'}}>キャラクター選択画面用画像</div>
-                {formData.imageCharacterSelect && (
-                  <img src={formData.imageCharacterSelect} alt="キャラクター選択画像" style={{width:'80px',height:'80px',objectFit:'cover',borderRadius:'8px',marginBottom:'8px'}} />
-                )}
-                <input type="file" accept="image/*" onChange={e => handleImageUpload(e, 'characterSelect')} />
+          <div className="admin-card-section">
+            <div className="admin-stats-title">画像・音声アップロード</div>
+            
+            <div className="image-upload-section">
+              <label>キャラクター選択画面用画像 (238px x 260px)</label>
+              <div className="input-file-wrapper">
+                <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, 'characterSelect')} />
+                <Button type="button">画像を選択</Button>
               </div>
-              <div style={{marginBottom:'8px'}}>
-                <div style={{marginBottom:'8px'}}>ダッシュボード用画像</div>
-                {formData.imageDashboard && (
-                  <img src={formData.imageDashboard} alt="ダッシュボード画像" style={{width:'80px',height:'80px',objectFit:'cover',borderRadius:'8px',marginBottom:'8px'}} />
-                )}
-                <input type="file" accept="image/*" onChange={e => handleImageUpload(e, 'dashboard')} />
+              {formData.imageCharacterSelect && (
+                <div className="input-preview">
+                  <img src={formData.imageCharacterSelect} alt="キャラクター選択プレビュー" className="image-upload-preview" />
+                </div>
+              )}
+            </div>
+            
+            <div className="image-upload-section">
+              <label>ダッシュボード用画像 (320px x 528px)</label>
+              <div className="input-file-wrapper">
+                <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, 'dashboard')} />
+                <Button type="button">画像を選択</Button>
               </div>
-              <div style={{marginBottom:'8px'}}>
-                <div style={{marginBottom:'8px'}}>チャット背景画像 <span className="chat-bg-character-image"></span></div>
-                {formData.imageChatBackground && (
-                  <img src={formData.imageChatBackground} alt="チャット背景画像" style={{width:'80px',height:'80px',objectFit:'cover',borderRadius:'8px',marginBottom:'8px'}} />
-                )}
-                <input type="file" accept="image/*" onChange={e => handleImageUpload(e, 'chatBackground')} />
+              {formData.imageDashboard && (
+                <div className="input-preview">
+                  <img src={formData.imageDashboard} alt="ダッシュボードプレビュー" className="image-upload-preview" />
+                </div>
+              )}
+            </div>
+            
+            <div className="image-upload-section">
+              <label>チャット背景画像 (455px x 745px)</label>
+              <div className="input-file-wrapper">
+                <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, 'chatBackground')} />
+                <Button type="button">画像を選択</Button>
               </div>
-              <div style={{marginBottom:'8px'}}>
-                <div style={{marginBottom:'8px'}}>AIキャラアイコン <span className="chat-avatar-user-icon"></span></div>
-                {formData.imageChatAvatar && (
-                  <img src={formData.imageChatAvatar} alt="AIキャラアイコン" style={{width:'80px',height:'80px',objectFit:'cover',borderRadius:'8px',marginBottom:'8px'}} />
-                )}
-                <input type="file" accept="image/*" onChange={e => handleImageUpload(e, 'chatAvatar')} />
+              {formData.imageChatBackground && (
+                <div className="input-preview">
+                  <img src={formData.imageChatBackground} alt="チャット背景プレビュー" className="image-upload-preview" />
+                </div>
+              )}
+            </div>
+            
+            <div className="image-upload-section">
+              <label>AIキャラアイコン (40px x 40px)</label>
+              <div className="input-file-wrapper">
+                <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, 'chatAvatar')} />
+                <Button type="button">画像を選択</Button>
               </div>
-              <div style={{marginBottom:'8px'}}>
-                <div style={{marginBottom:'8px'}}>音声サンプル <span className="voiceicon"></span></div>
-                {formData.sampleVoiceUrl && (
-                  <audio controls style={{marginBottom:'8px'}}>
-                    <source src={formData.sampleVoiceUrl} type="audio/mpeg" />
-                    お使いのブラウザは音声再生をサポートしていません。
-                  </audio>
-                )}
-                <input type="file" accept="audio/mpeg,audio/mp3" onChange={handleVoiceUpload} />
+              {formData.imageChatAvatar && (
+                <div className="input-preview">
+                  <img src={formData.imageChatAvatar} alt="AIアイコンプレビュー" className="image-upload-preview" />
+                </div>
+              )}
+            </div>
+            
+            <div className="image-upload-section">
+              <label>サンプルボイス</label>
+              <div className="input-file-wrapper">
+                <input type="file" accept="audio/*" onChange={(e) => handleImageUpload(e, 'sampleVoiceUrl')} />
+                <Button type="button">音声を選択</Button>
               </div>
+              {uploadStatus.voice && <div className="upload-status">{uploadStatus.voice}</div>}
+              {formData.sampleVoiceUrl && (
+                <div className="input-preview">
+                  <audio controls src={formData.sampleVoiceUrl} style={{ marginTop: '8px' }}></audio>
+                </div>
+              )}
             </div>
           </div>
           <div style={{marginTop:'32px', width:'100%', display:'flex', gap:'16px', justifyContent:'center', alignItems:'center'}}>
@@ -263,6 +366,22 @@ export default function EditCharacter({ params }) {
       </div>
       {toast.show && (
         <Toast message={toast.message} type={toast.type} onClose={() => setToast({ ...toast, show: false })} />
+      )}
+      
+      {/* 画像トリミングモーダル */}
+      {showCropper && selectedImage && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3>画像のトリミング</h3>
+            <ImageCropper 
+              image={selectedImage}
+              cropWidth={imageType === 'characterSelect' ? 238 : imageType === 'dashboard' ? 320 : imageType === 'chatBackground' ? 455 : 40}
+              cropHeight={imageType === 'characterSelect' ? 260 : imageType === 'dashboard' ? 528 : imageType === 'chatBackground' ? 745 : 40}
+              onCropComplete={handleCropComplete}
+            />
+            <Button onClick={() => setShowCropper(false)} type="button">キャンセル</Button>
+          </div>
+        </div>
       )}
     </div>
   );
