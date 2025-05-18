@@ -71,7 +71,16 @@ export default function EditCharacter({ params }) {
     setSaving(true);
     
     try {
-      await api.put(`/admin/characters/${id}`, formData);
+      console.log('送信するデータ:', formData);
+      const dataToSend = {
+        ...formData,
+        isPremium: formData.isPremium,
+        isLimited: formData.isLimited,
+        isActive: formData.isActive
+      };
+      console.log('実際に送信するデータ:', dataToSend);
+      
+      await api.put(`/admin/characters/${id}`, dataToSend);
       router.push('/admin/characters');
     } catch (err) {
       console.error('キャラクター更新に失敗:', err);
