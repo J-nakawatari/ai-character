@@ -254,7 +254,8 @@ export default function Setup() {
                   alt="ボイス"
                   style={{ cursor: 'pointer' }}
                   onClick={() => {
-                    const audio = new Audio(`/voice/voice_0${idx + 1}.wav`);
+                    const audioSrc = character.sampleVoiceUrl || `/voice/voice_0${idx + 1}.wav`;
+                    const audio = new Audio(audioSrc);
                     audio.play();
                   }}
                 />
