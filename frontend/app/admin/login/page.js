@@ -165,13 +165,9 @@ export default function AdminLogin() {
             />
           </div>
           
-          <Button
-            type="submit"
-            className="w-full mt-6"
-            disabled={isLoading}
-          >
+          <button type="submit" className="admin-logout-btn" style={{width:'100%',background:'linear-gradient(90deg,#43eafc 0%,#fa7be6 100%)',color:'#fff',fontWeight:'bold',fontSize:'1.1rem',padding:'14px 0',borderRadius:'8px',marginTop:'24px',boxShadow:'0 4px 16px rgba(250,123,230,0.10)',transition:'background 0.2s'}} disabled={isLoading}>
             {isLoading ? 'ログイン中...' : 'ログイン'}
-          </Button>
+          </button>
         </form>
       </div>
     </div>

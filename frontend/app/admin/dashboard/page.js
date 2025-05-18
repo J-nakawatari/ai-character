@@ -46,20 +46,18 @@ export default function AdminDashboard() {
   
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6 bg-gradient-to-r from-[#43eafc] to-[#fa7be6] text-transparent bg-clip-text font-['M_PLUS_Rounded_1c']">管理者ダッシュボード</h1>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card className="hover:shadow-[0_8px_32px_rgba(67,234,252,0.15)]">
-          <h2 className="text-xl font-semibold mb-2 text-gray-800">ユーザー統計</h2>
-          <p className="text-4xl font-bold bg-gradient-to-r from-[#43eafc] to-[#fa7be6] text-transparent bg-clip-text">{stats.userCount}</p>
-          <p className="text-gray-500 mt-2">登録ユーザー数</p>
-        </Card>
-        
-        <Card className="hover:shadow-[0_8px_32px_rgba(250,123,230,0.15)]">
-          <h2 className="text-xl font-semibold mb-2 text-gray-800">キャラクター統計</h2>
-          <p className="text-4xl font-bold bg-gradient-to-r from-[#fa7be6] to-[#43eafc] text-transparent bg-clip-text">{stats.characterCount}</p>
-          <p className="text-gray-500 mt-2">登録キャラクター数</p>
-        </Card>
+      <h1 className="admin-dashboard-title">管理者ダッシュボード</h1>
+      <div className="admin-stats-cards">
+        <div className="admin-stats-card">
+          <div className="admin-stats-title"><span className="admin-stats-icon">👤</span>ユーザー統計</div>
+          <div className="admin-stats-value">{stats.userCount}</div>
+          <div className="admin-stats-desc">登録ユーザー数</div>
+        </div>
+        <div className="admin-stats-card">
+          <div className="admin-stats-title"><span className="admin-stats-icon">🤖</span>キャラクター統計</div>
+          <div className="admin-stats-value">{stats.characterCount}</div>
+          <div className="admin-stats-desc">登録キャラクター数</div>
+        </div>
       </div>
     </div>
   );

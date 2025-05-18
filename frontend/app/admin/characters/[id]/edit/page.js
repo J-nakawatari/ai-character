@@ -168,323 +168,49 @@ export default function EditCharacter({ params }) {
   
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">キャラクター編集</h1>
-      
-      {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-          {error}
-        </div>
-      )}
-      
-      <Card>
-        <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* 基本情報 */}
-            <div>
-              <h2 className="text-xl font-semibold mb-4">基本情報</h2>
-              
-              <Input
-                label="キャラクター名"
-                id="name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-              />
-              
-              <div className="mb-4">
-                <label htmlFor="description" className="block text-sm font-medium mb-1">
-                  説明文
-                </label>
-                <textarea
-                  id="description"
-                  value={formData.description}
-                  onChange={handleChange}
-                  className="w-full p-2 border rounded-md border-gray-300"
-                  rows={4}
-                  required
-                />
+      <h1 className="admin-dashboard-title">キャラクター編集</h1>
+      <div className="admin-stats-card" style={{maxWidth:'700px', margin:'0 auto', padding:'32px 36px'}}>
+        <div className="admin-stats-title" style={{marginBottom:'24px'}}><span className="admin-stats-icon">📝</span>キャラクター情報編集</div>
+        <form onSubmit={handleSubmit} style={{width:'100%'}}>
+          <div style={{marginBottom:'24px'}}>
+            <label className="admin-stats-title" htmlFor="name">名前</label>
+            <input id="name" type="text" value={formData.name} onChange={handleChange} style={{width:'100%',padding:'10px',border:'1px solid #eee',borderRadius:'6px',marginTop:'6px',marginBottom:'12px'}} />
+            <label className="admin-stats-title" htmlFor="description">説明</label>
+            <textarea id="description" value={formData.description} onChange={handleChange} style={{width:'100%',padding:'10px',border:'1px solid #eee',borderRadius:'6px',marginTop:'6px',marginBottom:'12px'}} rows={2} />
+            <label className="admin-stats-title" htmlFor="personalityPrompt">性格プロンプト</label>
+            <input id="personalityPrompt" type="text" value={formData.personalityPrompt} onChange={handleChange} style={{width:'100%',padding:'10px',border:'1px solid #eee',borderRadius:'6px',marginTop:'6px',marginBottom:'12px'}} />
+          </div>
+          <div style={{marginBottom:'24px'}}>
+            <div className="admin-stats-title">設定</div>
+            <label style={{marginRight:'16px'}}><input type="checkbox" id="isPremium" checked={formData.isPremium} onChange={handleChange} /> プレミアムキャラクター</label>
+            <label style={{marginRight:'16px'}}><input type="checkbox" id="isLimited" checked={formData.isLimited} onChange={handleChange} /> 限定</label>
+            <label style={{marginRight:'16px'}}><input type="checkbox" id="isActive" checked={formData.isActive} onChange={handleChange} /> 有効</label>
+          </div>
+          <div style={{marginBottom:'24px'}}>
+            <div className="admin-stats-title">画像・音声</div>
+            <div style={{display:'flex',flexDirection:'column',gap:'24px',flexWrap:'wrap'}}>
+              <div style={{marginBottom:'8px'}}>
+                <div style={{marginBottom:'8px'}}>キャラクター選択画面用画像</div>
+                {formData.imageCharacterSelect && (
+                  <img src={formData.imageCharacterSelect} alt="キャラクター選択画像" style={{width:'80px',height:'80px',objectFit:'cover',borderRadius:'8px',marginBottom:'8px'}} />
+                )}
+                <input type="file" accept="image/*" onChange={e => handleImageUpload(e, 'characterSelect')} />
               </div>
-              
-              <div className="mb-4">
-                <label htmlFor="personalityPrompt" className="block text-sm font-medium mb-1">
-                  AIに渡す人格プロンプト
-                </label>
-                <textarea
-                  id="personalityPrompt"
-                  value={formData.personalityPrompt}
-                  onChange={handleChange}
-                  className="w-full p-2 border rounded-md border-gray-300"
-                  rows={4}
-                  required
-                />
-              </div>
-              
-              <div className="mb-4">
-                <label htmlFor="defaultMessage" className="block text-sm font-medium mb-1">
-                  初回ログイン時のあいさつメッセージ
-                </label>
-                <textarea
-                  id="defaultMessage"
-                  value={formData.defaultMessage}
-                  onChange={handleChange}
-                  className="w-full p-2 border rounded-md border-gray-300"
-                  rows={2}
-                />
-              </div>
-            </div>
-            
-            {/* 設定 */}
-            <div>
-              <h2 className="text-xl font-semibold mb-4">設定</h2>
-              
-              <div className="mb-4 flex items-center">
-                <input
-                  type="checkbox"
-                  id="isPremium"
-                  checked={formData.isPremium}
-                  onChange={handleChange}
-                  className="mr-2"
-                />
-                <label htmlFor="isPremium" className="text-sm font-medium">
-                  プレミアムキャラクター
-                </label>
-              </div>
-              
-              {formData.isPremium && (
-                <>
-                  <Input
-                    label="価格"
-                    id="price"
-                    type="number"
-                    value={formData.price}
-                    onChange={handleChange}
-                    min={0}
-                  />
-                  
-                  <div className="mb-4">
-                    <label htmlFor="purchaseType" className="block text-sm font-medium mb-1">
-                      購入タイプ
-                    </label>
-                    <select
-                      id="purchaseType"
-                      value={formData.purchaseType}
-                      onChange={handleChange}
-                      className="w-full p-2 border rounded-md border-gray-300"
-                    >
-                      <option value="buy">買い切り</option>
-                      <option value="subscription">サブスクリプション</option>
-                    </select>
-                  </div>
-                </>
-              )}
-              
-              <div className="mb-4 flex items-center">
-                <input
-                  type="checkbox"
-                  id="isLimited"
-                  checked={formData.isLimited}
-                  onChange={handleChange}
-                  className="mr-2"
-                />
-                <label htmlFor="isLimited" className="text-sm font-medium">
-                  限定キャラクター
-                </label>
-              </div>
-              
-              <Input
-                label="音声名（TTS用）"
-                id="voice"
-                value={formData.voice}
-                onChange={handleChange}
-              />
-              
-              <Input
-                label="テーマカラー"
-                id="themeColor"
-                type="color"
-                value={formData.themeColor}
-                onChange={handleChange}
-              />
-              
-              <div className="mb-4 flex items-center">
-                <input
-                  type="checkbox"
-                  id="isActive"
-                  checked={formData.isActive}
-                  onChange={handleChange}
-                  className="mr-2"
-                />
-                <label htmlFor="isActive" className="text-sm font-medium">
-                  有効（表示対象にする）
-                </label>
+              <div style={{marginBottom:'8px'}}>
+                <div style={{marginBottom:'8px'}}>ダッシュボード用画像</div>
+                {formData.imageDashboard && (
+                  <img src={formData.imageDashboard} alt="ダッシュボード画像" style={{width:'80px',height:'80px',objectFit:'cover',borderRadius:'8px',marginBottom:'8px'}} />
+                )}
+                <input type="file" accept="image/*" onChange={e => handleImageUpload(e, 'dashboard')} />
               </div>
             </div>
           </div>
-          
-          {/* 画像・音声アップロード */}
-          <div className="mt-8">
-            <h2 className="text-xl font-semibold mb-4">画像・音声</h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* 画像アップロード */}
-              <div>
-                <h3 className="font-medium mb-2">キャラクター選択画面用画像</h3>
-                <div className="mb-4">
-                  {formData.imageCharacterSelect && (
-                    <img
-                      src={formData.imageCharacterSelect}
-                      alt="キャラクター選択画像"
-                      className="w-32 h-32 object-cover mb-2 rounded"
-                    />
-                  )}
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => handleImageUpload(e, 'characterSelect')}
-                    className="block w-full text-sm text-gray-500
-                      file:mr-4 file:py-2 file:px-4
-                      file:rounded-md file:border-0
-                      file:text-sm file:font-semibold
-                      file:bg-black file:text-white
-                      hover:file:bg-gray-700"
-                  />
-                </div>
-                
-                <h3 className="font-medium mb-2">ダッシュボード用画像</h3>
-                <div className="mb-4">
-                  {formData.imageDashboard && (
-                    <img
-                      src={formData.imageDashboard}
-                      alt="ダッシュボード画像"
-                      className="w-32 h-32 object-cover mb-2 rounded"
-                    />
-                  )}
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => handleImageUpload(e, 'dashboard')}
-                    className="block w-full text-sm text-gray-500
-                      file:mr-4 file:py-2 file:px-4
-                      file:rounded-md file:border-0
-                      file:text-sm file:font-semibold
-                      file:bg-black file:text-white
-                      hover:file:bg-gray-700"
-                  />
-                </div>
-              </div>
-              
-              <div>
-                <h3 className="font-medium mb-2">チャット背景画像</h3>
-                <div className="mb-4">
-                  {formData.imageChatBackground && (
-                    <img
-                      src={formData.imageChatBackground}
-                      alt="チャット背景画像"
-                      className="w-32 h-32 object-cover mb-2 rounded"
-                    />
-                  )}
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => handleImageUpload(e, 'chatBackground')}
-                    className="block w-full text-sm text-gray-500
-                      file:mr-4 file:py-2 file:px-4
-                      file:rounded-md file:border-0
-                      file:text-sm file:font-semibold
-                      file:bg-black file:text-white
-                      hover:file:bg-gray-700"
-                  />
-                </div>
-                
-                <h3 className="font-medium mb-2">チャットアバター画像</h3>
-                <div className="mb-4">
-                  {formData.imageChatAvatar && (
-                    <img
-                      src={formData.imageChatAvatar}
-                      alt="チャットアバター画像"
-                      className="w-32 h-32 object-cover mb-2 rounded-full"
-                    />
-                  )}
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => handleImageUpload(e, 'chatAvatar')}
-                    className="block w-full text-sm text-gray-500
-                      file:mr-4 file:py-2 file:px-4
-                      file:rounded-md file:border-0
-                      file:text-sm file:font-semibold
-                      file:bg-black file:text-white
-                      hover:file:bg-gray-700"
-                  />
-                </div>
-              </div>
-            </div>
-            
-            {/* 音声アップロード */}
-            <div className="mt-4">
-              <h3 className="font-medium mb-2">サンプルボイス</h3>
-              <div className="mb-4">
-                {formData.sampleVoiceUrl && (
-                  <audio controls className="mb-2 w-full">
-                    <source src={formData.sampleVoiceUrl} type="audio/mpeg" />
-                    お使いのブラウザは音声再生をサポートしていません。
-                  </audio>
-                )}
-                <input
-                  type="file"
-                  accept="audio/mpeg,audio/mp3"
-                  onChange={handleVoiceUpload}
-                  className="block w-full text-sm text-gray-500
-                    file:mr-4 file:py-2 file:px-4
-                    file:rounded-md file:border-0
-                    file:text-sm file:font-semibold
-                    file:bg-black file:text-white
-                    hover:file:bg-gray-700"
-                />
-              </div>
-            </div>
-            
-            {/* アップロードステータス */}
-            {(uploadStatus.image || uploadStatus.voice) && (
-              <div className="mt-2 text-sm">
-                {uploadStatus.image && (
-                  <p className={`${
-                    uploadStatus.image.includes('失敗') ? 'text-red-500' : 
-                    uploadStatus.image.includes('完了') ? 'text-green-500' : 'text-blue-500'
-                  }`}>
-                    画像: {uploadStatus.image}
-                  </p>
-                )}
-                {uploadStatus.voice && (
-                  <p className={`${
-                    uploadStatus.voice.includes('失敗') ? 'text-red-500' : 
-                    uploadStatus.voice.includes('完了') ? 'text-green-500' : 'text-blue-500'
-                  }`}>
-                    音声: {uploadStatus.voice}
-                  </p>
-                )}
-              </div>
-            )}
-          </div>
-          
-          <div className="flex justify-end space-x-4 mt-6">
-            <Button
-              type="button"
-              className="bg-gray-500 hover:bg-gray-600"
-              onClick={() => router.push('/admin/characters')}
-            >
-              キャンセル
-            </Button>
-            
-            <Button
-              type="submit"
-              disabled={saving}
-            >
-              {saving ? '保存中...' : '保存'}
-            </Button>
+          <div style={{marginTop:'32px', width:'100%', display:'flex', gap:'16px', justifyContent:'center', alignItems:'center'}}>
+            <button type="button" onClick={()=>router.push('/admin/characters')} className="admin-logout-btn" style={{background:'#eee',color:'#7b1fa2'}}>キャンセル</button>
+            <button type="submit" className="admin-logout-btn" style={{background:'#43eafc',color:'#fff',fontWeight:'bold'}}>保存</button>
           </div>
         </form>
-      </Card>
+      </div>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, useRef } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
 import { useAuth } from '../utils/auth';
 import Card from '../components/Card';
@@ -10,6 +10,8 @@ import Button from '../components/Button';
 export default function Dashboard() {
   const { user, loading, logout } = useAuth();
   const router = useRouter();
+  const canvasRef = useRef(null);
+  const pathname = usePathname();
   
   useEffect(() => {
     if (!loading && !user) {
@@ -25,6 +27,74 @@ export default function Dashboard() {
       console.log('Selected character:', user.selectedCharacter);
     }
   }, [user, loading]);
+  
+  useEffect(() => {
+    let animationId;
+    let particles = [];
+    let ctx, width, height, canvas;
+
+    function setupCanvas() {
+      canvas = canvasRef.current;
+      if (!canvas) return;
+      ctx = canvas.getContext('2d');
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+      // パーティクル設定
+      particles = [];
+      const PARTICLE_NUM = 40;
+      for (let i = 0; i < PARTICLE_NUM; i++) {
+        particles.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          r: 60 + Math.random() * 40,
+          dx: (Math.random() - 0.5) * 0.3,
+          dy: (Math.random() - 0.5) * 0.3,
+          alpha: 0.08 + Math.random() * 0.08,
+          color: `hsl(${Math.random() * 360}, 70%, 85%)`
+        });
+      }
+    }
+
+    function draw() {
+      if (!ctx) return;
+      ctx.clearRect(0, 0, width, height);
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2, false);
+        ctx.closePath();
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = p.alpha;
+        ctx.shadowColor = p.color;
+        ctx.shadowBlur = 40;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+        ctx.shadowBlur = 0;
+        p.x += p.dx;
+        p.y += p.dy;
+        if (p.x < -p.r) p.x = width + p.r;
+        if (p.x > width + p.r) p.x = -p.r;
+        if (p.y < -p.r) p.y = height + p.r;
+        if (p.y > height + p.r) p.y = -p.r;
+      }
+      animationId = requestAnimationFrame(draw);
+    }
+
+    function handleResize() {
+      setupCanvas();
+    }
+
+    setupCanvas();
+    draw();
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      cancelAnimationFrame(animationId);
+    };
+  }, [pathname]);
   
   const handleLogout = async () => {
     const result = await logout();
@@ -43,6 +113,7 @@ export default function Dashboard() {
   
   return (
     <div className="chat-container">
+      <canvas ref={canvasRef} id="bg-canvas" key={pathname}></canvas>
       {/* Stylish navigation buttons */}
       <button 
         className="floating-nav-button back-button" 
