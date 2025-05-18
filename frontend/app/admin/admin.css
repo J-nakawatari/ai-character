@@ -65,7 +65,7 @@
   flex: 1;
   background: #fff;
   color: #222;
-  padding: 60px 0 0 0;
+  padding: 60px 40px 0 40px;
   min-height: calc(100vh - 64px);
   overflow-x: auto;
   box-sizing: border-box;
