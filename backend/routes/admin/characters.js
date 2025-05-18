@@ -40,6 +40,7 @@ router.post('/', adminAuth, async (req, res) => {
       name,
       description,
       personalityPrompt,
+      adminPrompt,
       isPremium,
       price,
       purchaseType,
@@ -54,6 +55,7 @@ router.post('/', adminAuth, async (req, res) => {
       name,
       description,
       personalityPrompt,
+      adminPrompt,
       isPremium: typeof isPremium === 'boolean' ? isPremium : isPremium === 'true',
       price: parseInt(price) || 0,
       purchaseType,
@@ -84,6 +86,7 @@ router.put('/:id', adminAuth, async (req, res) => {
       name,
       description,
       personalityPrompt,
+      adminPrompt,
       isPremium,
       price,
       purchaseType,
@@ -108,6 +111,7 @@ router.put('/:id', adminAuth, async (req, res) => {
     character.name = name || character.name;
     character.description = description || character.description;
     character.personalityPrompt = personalityPrompt || character.personalityPrompt;
+    character.adminPrompt = adminPrompt || character.adminPrompt;
     character.isPremium = typeof isPremium === 'boolean' ? isPremium : isPremium === 'true';
     character.price = parseInt(price) || character.price;
     character.purchaseType = purchaseType || character.purchaseType;
