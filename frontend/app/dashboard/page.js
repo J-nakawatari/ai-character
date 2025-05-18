@@ -149,7 +149,15 @@ export default function Dashboard() {
                 <div className="dashboard-label">特長</div>
                 <div className="dashboard-desc">{user.selectedCharacter?.description || '明るく元気な性格と創造的な発想を持つ、陽気なAIコンパニオン。'}</div>
                 <div className="dashboard-label">性格</div>
-                <div className="dashboard-personality">{user.selectedCharacter?.personality || user.selectedCharacter?.personalityPrompt || 'Cheerful, creative, and engaging'}</div>
+                <div className="dashboard-personality-tags">
+                  {(user.selectedCharacter?.personality || user.selectedCharacter?.personalityPrompt || 'Cheerful,creative,engaging')
+                    .split(/,| /)
+                    .filter(tag => tag.trim())
+                    .map((tag, idx) => (
+                      <div key={idx} className="dashboard-personality-tag">{tag.trim()}</div>
+                    ))
+                  }
+                </div>
               </div>
             </div>
             {/* 右カラム：画像 */}
