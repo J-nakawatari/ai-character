@@ -255,8 +255,19 @@ export default function NewCharacter() {
             <div className="image-upload-section">
               <label>キャラクター選択画面用画像 (238px x 260px)</label>
               <div className="input-file-wrapper">
-                <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, 'characterSelect')} />
-                <Button type="button">画像を選択</Button>
+                <input 
+                  type="file" 
+                  id="characterSelect" 
+                  accept="image/*" 
+                  onChange={(e) => handleImageUpload(e, 'characterSelect')} 
+                  style={{ display: 'none' }} 
+                />
+                <Button 
+                  type="button" 
+                  onClick={() => document.getElementById('characterSelect').click()}
+                >
+                  ファイルを選択
+                </Button>
               </div>
               {formData.imageCharacterSelect && (
                 <div className="input-preview">
@@ -268,8 +279,19 @@ export default function NewCharacter() {
             <div className="image-upload-section">
               <label>ダッシュボード用画像 (320px x 528px)</label>
               <div className="input-file-wrapper">
-                <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, 'dashboard')} />
-                <Button type="button">画像を選択</Button>
+                <input 
+                  type="file" 
+                  id="dashboard" 
+                  accept="image/*" 
+                  onChange={(e) => handleImageUpload(e, 'dashboard')} 
+                  style={{ display: 'none' }} 
+                />
+                <Button 
+                  type="button" 
+                  onClick={() => document.getElementById('dashboard').click()}
+                >
+                  ファイルを選択
+                </Button>
               </div>
               {formData.imageDashboard && (
                 <div className="input-preview">
@@ -281,8 +303,19 @@ export default function NewCharacter() {
             <div className="image-upload-section">
               <label>チャット背景画像 (455px x 745px)</label>
               <div className="input-file-wrapper">
-                <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, 'chatBackground')} />
-                <Button type="button">画像を選択</Button>
+                <input 
+                  type="file" 
+                  id="chatBackground" 
+                  accept="image/*" 
+                  onChange={(e) => handleImageUpload(e, 'chatBackground')} 
+                  style={{ display: 'none' }} 
+                />
+                <Button 
+                  type="button" 
+                  onClick={() => document.getElementById('chatBackground').click()}
+                >
+                  ファイルを選択
+                </Button>
               </div>
               {formData.imageChatBackground && (
                 <div className="input-preview">
@@ -294,8 +327,19 @@ export default function NewCharacter() {
             <div className="image-upload-section">
               <label>AIキャラアイコン (40px x 40px)</label>
               <div className="input-file-wrapper">
-                <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, 'chatAvatar')} />
-                <Button type="button">画像を選択</Button>
+                <input 
+                  type="file" 
+                  id="chatAvatar" 
+                  accept="image/*" 
+                  onChange={(e) => handleImageUpload(e, 'chatAvatar')} 
+                  style={{ display: 'none' }} 
+                />
+                <Button 
+                  type="button" 
+                  onClick={() => document.getElementById('chatAvatar').click()}
+                >
+                  ファイルを選択
+                </Button>
               </div>
               {formData.imageChatAvatar && (
                 <div className="input-preview">
@@ -307,8 +351,19 @@ export default function NewCharacter() {
             <div className="image-upload-section">
               <label>サンプルボイス</label>
               <div className="input-file-wrapper">
-                <input type="file" accept="audio/*" onChange={(e) => handleImageUpload(e, 'sampleVoiceUrl')} />
-                <Button type="button">音声を選択</Button>
+                <input 
+                  type="file" 
+                  id="sampleVoiceUrl" 
+                  accept="audio/*" 
+                  onChange={(e) => handleImageUpload(e, 'sampleVoiceUrl')} 
+                  style={{ display: 'none' }} 
+                />
+                <Button 
+                  type="button" 
+                  onClick={() => document.getElementById('sampleVoiceUrl').click()}
+                >
+                  ファイルを選択
+                </Button>
               </div>
               {uploadStatus.voice && <div className="upload-status">{uploadStatus.voice}</div>}
               {formData.sampleVoiceUrl && (
