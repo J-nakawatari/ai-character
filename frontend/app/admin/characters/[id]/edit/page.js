@@ -168,7 +168,7 @@ export default function EditCharacter({ params }) {
       characterSelect: '238x260',
       dashboard: '320x528',
       chatBackground: '455x745',
-      chatAvatar: '40x40'
+      chatAvatar: '400x400'
     };
     
     const fileName = `cropped_${Date.now()}.jpg`;
@@ -365,7 +365,7 @@ export default function EditCharacter({ params }) {
             </div>
             
             <div className="image-upload-section">
-              <label>AIキャラアイコン (40px x 40px)</label>
+              <label>AIキャラアイコン (400px x 400px)</label>
               <div className="input-file-wrapper">
                 <input 
                   type="file" 
@@ -430,8 +430,8 @@ export default function EditCharacter({ params }) {
             <h3>画像のトリミング</h3>
             <ImageCropper 
               image={selectedImage}
-              cropWidth={imageType === 'characterSelect' ? 238 : imageType === 'dashboard' ? 320 : imageType === 'chatBackground' ? 455 : 40}
-              cropHeight={imageType === 'characterSelect' ? 260 : imageType === 'dashboard' ? 528 : imageType === 'chatBackground' ? 745 : 40}
+              cropWidth={imageType === 'characterSelect' ? 238 : imageType === 'dashboard' ? 320 : imageType === 'chatBackground' ? 455 : 400}
+              cropHeight={imageType === 'characterSelect' ? 260 : imageType === 'dashboard' ? 528 : imageType === 'chatBackground' ? 745 : 400}
               onCropComplete={handleCropComplete}
             />
             <Button onClick={() => setShowCropper(false)} type="button">キャンセル</Button>
