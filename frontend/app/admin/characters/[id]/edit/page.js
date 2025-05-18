@@ -16,6 +16,7 @@ export default function EditCharacter({ params }) {
     name: '',
     description: '',
     personalityPrompt: '',
+    adminPrompt: '',
     isPremium: false,
     price: 0,
     purchaseType: 'buy',
@@ -277,6 +278,10 @@ export default function EditCharacter({ params }) {
             <div>
               <label className="admin-form-label" htmlFor="personalityPrompt">性格プロンプト</label>
               <input id="personalityPrompt" type="text" value={formData.personalityPrompt} onChange={handleChange} className="admin-form-input" />
+            </div>
+            <div>
+              <label className="admin-form-label" htmlFor="adminPrompt">AIシステムプロンプト (管理者用)</label>
+              <textarea id="adminPrompt" value={formData.adminPrompt} onChange={handleChange} className="admin-form-textarea" rows={4} />
             </div>
           </div>
           <div className="admin-form-section">
