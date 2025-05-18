@@ -203,6 +203,30 @@ export default function EditCharacter({ params }) {
                 )}
                 <input type="file" accept="image/*" onChange={e => handleImageUpload(e, 'dashboard')} />
               </div>
+              <div style={{marginBottom:'8px'}}>
+                <div style={{marginBottom:'8px'}}>チャット背景画像 <span className="chat-bg-character-image"></span></div>
+                {formData.imageChatBackground && (
+                  <img src={formData.imageChatBackground} alt="チャット背景画像" style={{width:'80px',height:'80px',objectFit:'cover',borderRadius:'8px',marginBottom:'8px'}} />
+                )}
+                <input type="file" accept="image/*" onChange={e => handleImageUpload(e, 'chatBackground')} />
+              </div>
+              <div style={{marginBottom:'8px'}}>
+                <div style={{marginBottom:'8px'}}>AIキャラアイコン <span className="chat-avatar-user-icon"></span></div>
+                {formData.imageChatAvatar && (
+                  <img src={formData.imageChatAvatar} alt="AIキャラアイコン" style={{width:'80px',height:'80px',objectFit:'cover',borderRadius:'8px',marginBottom:'8px'}} />
+                )}
+                <input type="file" accept="image/*" onChange={e => handleImageUpload(e, 'chatAvatar')} />
+              </div>
+              <div style={{marginBottom:'8px'}}>
+                <div style={{marginBottom:'8px'}}>音声サンプル <span className="voiceicon"></span></div>
+                {formData.sampleVoiceUrl && (
+                  <audio controls style={{marginBottom:'8px'}}>
+                    <source src={formData.sampleVoiceUrl} type="audio/mpeg" />
+                    お使いのブラウザは音声再生をサポートしていません。
+                  </audio>
+                )}
+                <input type="file" accept="audio/mpeg,audio/mp3" onChange={handleVoiceUpload} />
+              </div>
             </div>
           </div>
           <div style={{marginTop:'32px', width:'100%', display:'flex', gap:'16px', justifyContent:'center', alignItems:'center'}}>

@@ -19,11 +19,20 @@ export default function NewCharacter() {
     voice: '',
     defaultMessage: '',
     themeColor: '#000000',
-    isActive: true
+    isActive: true,
+    imageCharacterSelect: '',
+    imageDashboard: '',
+    imageChatBackground: '',
+    imageChatAvatar: '',
+    sampleVoiceUrl: ''
   });
   
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState({
+    image: '',
+    voice: ''
+  });
   const router = useRouter();
   
   const handleChange = (e) => {
@@ -51,6 +60,74 @@ export default function NewCharacter() {
     }
   };
   
+  const handleImageUpload = async (e, imageType) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    const formDataUpload = new FormData();
+    formDataUpload.append('image', file);
+    
+    try {
+      setUploadStatus({ ...uploadStatus, image: 'アップロード中...' });
+      
+      const res = await api.post('/admin/characters/upload/image', formDataUpload, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      
+      const imageUrl = res.data.imageUrl;
+      
+      setFormData(prev => ({
+        ...prev,
+        [`image${imageType.charAt(0).toUpperCase() + imageType.slice(1)}`]: imageUrl
+      }));
+      
+      setUploadStatus({ ...uploadStatus, image: 'アップロード完了' });
+      
+      setTimeout(() => {
+        setUploadStatus(prev => ({ ...prev, image: '' }));
+      }, 3000);
+    } catch (err) {
+      console.error('画像アップロードに失敗:', err);
+      setUploadStatus({ ...uploadStatus, image: 'アップロード失敗' });
+    }
+  };
+  
+  const handleVoiceUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    const formDataUpload = new FormData();
+    formDataUpload.append('sampleVoice', file);
+    
+    try {
+      setUploadStatus({ ...uploadStatus, voice: 'アップロード中...' });
+      
+      const res = await api.post('/admin/characters/upload/voice', formDataUpload, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      
+      const voiceUrl = res.data.voiceUrl;
+      
+      setFormData(prev => ({
+        ...prev,
+        sampleVoiceUrl: voiceUrl
+      }));
+      
+      setUploadStatus({ ...uploadStatus, voice: 'アップロード完了' });
+      
+      setTimeout(() => {
+        setUploadStatus(prev => ({ ...prev, voice: '' }));
+      }, 3000);
+    } catch (err) {
+      console.error('音声アップロードに失敗:', err);
+      setUploadStatus({ ...uploadStatus, voice: 'アップロード失敗' });
+    }
+  };
+  
   return (
     <div>
       <h1 className="admin-dashboard-title">新規キャラクター作成</h1>
@@ -72,16 +149,56 @@ export default function NewCharacter() {
             <label style={{marginRight:'16px'}}><input type="checkbox" id="isActive" checked={formData.isActive} onChange={handleChange} /> 有効</label>
           </div>
           <div style={{marginBottom:'24px'}}>
-            <div className="admin-stats-title">画像</div>
+            <div className="admin-stats-title">画像・音声</div>
             <div style={{display:'flex',flexDirection:'column',gap:'24px',flexWrap:'wrap'}}>
               <div style={{marginBottom:'8px'}}>
                 <div style={{marginBottom:'8px'}}>キャラクター選択画面用画像</div>
+                {formData.imageCharacterSelect && (
+                  <img src={formData.imageCharacterSelect} alt="キャラクター選択画像" style={{width:'80px',height:'80px',objectFit:'cover',borderRadius:'8px',marginBottom:'8px'}} />
+                )}
                 <input type="file" accept="image/*" onChange={e => handleImageUpload(e, 'characterSelect')} />
               </div>
               <div style={{marginBottom:'8px'}}>
                 <div style={{marginBottom:'8px'}}>ダッシュボード用画像</div>
+                {formData.imageDashboard && (
+                  <img src={formData.imageDashboard} alt="ダッシュボード画像" style={{width:'80px',height:'80px',objectFit:'cover',borderRadius:'8px',marginBottom:'8px'}} />
+                )}
                 <input type="file" accept="image/*" onChange={e => handleImageUpload(e, 'dashboard')} />
               </div>
+              <div style={{marginBottom:'8px'}}>
+                <div style={{marginBottom:'8px'}}>チャット背景画像 <span className="chat-bg-character-image"></span></div>
+                {formData.imageChatBackground && (
+                  <img src={formData.imageChatBackground} alt="チャット背景画像" style={{width:'80px',height:'80px',objectFit:'cover',borderRadius:'8px',marginBottom:'8px'}} />
+                )}
+                <input type="file" accept="image/*" onChange={e => handleImageUpload(e, 'chatBackground')} />
+              </div>
+              <div style={{marginBottom:'8px'}}>
+                <div style={{marginBottom:'8px'}}>AIキャラアイコン <span className="chat-avatar-user-icon"></span></div>
+                {formData.imageChatAvatar && (
+                  <img src={formData.imageChatAvatar} alt="AIキャラアイコン" style={{width:'80px',height:'80px',objectFit:'cover',borderRadius:'8px',marginBottom:'8px'}} />
+                )}
+                <input type="file" accept="image/*" onChange={e => handleImageUpload(e, 'chatAvatar')} />
+              </div>
+              <div style={{marginBottom:'8px'}}>
+                <div style={{marginBottom:'8px'}}>音声サンプル <span className="voiceicon"></span></div>
+                {formData.sampleVoiceUrl && (
+                  <audio controls style={{marginBottom:'8px'}}>
+                    <source src={formData.sampleVoiceUrl} type="audio/mpeg" />
+                    お使いのブラウザは音声再生をサポートしていません。
+                  </audio>
+                )}
+                <input type="file" accept="audio/mpeg,audio/mp3" onChange={handleVoiceUpload} />
+              </div>
+              {uploadStatus.image && (
+                <div style={{color: uploadStatus.image.includes('失敗') ? 'red' : 'green'}}>
+                  {uploadStatus.image}
+                </div>
+              )}
+              {uploadStatus.voice && (
+                <div style={{color: uploadStatus.voice.includes('失敗') ? 'red' : 'green'}}>
+                  {uploadStatus.voice}
+                </div>
+              )}
             </div>
           </div>
           <div style={{marginTop:'32px', width:'100%', display:'flex', gap:'16px', justifyContent:'center', alignItems:'center'}}>
