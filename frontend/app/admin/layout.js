@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAdminAuth } from '../utils/adminAuth';
 import Link from 'next/link';
+import './admin.css';
 
 export default function AdminLayout({ children }) {
   const { admin, loading, adminLogout } = useAdminAuth();

@@ -264,30 +264,51 @@ export default function EditCharacter({ params }) {
       <div className="admin-stats-card" style={{maxWidth:'700px', margin:'0 auto', padding:'32px 36px'}}>
         <div className="admin-stats-title" style={{marginBottom:'24px'}}><span className="admin-stats-icon">📝</span>キャラクター情報編集</div>
         <form onSubmit={handleSubmit} style={{width:'100%'}}>
-          <div style={{marginBottom:'24px'}}>
-            <label className="admin-stats-title" htmlFor="name">名前</label>
-            <input id="name" type="text" value={formData.name} onChange={handleChange} style={{width:'100%',padding:'10px',border:'1px solid #eee',borderRadius:'6px',marginTop:'6px',marginBottom:'12px'}} />
-            <label className="admin-stats-title" htmlFor="description">説明</label>
-            <textarea id="description" value={formData.description} onChange={handleChange} style={{width:'100%',padding:'10px',border:'1px solid #eee',borderRadius:'6px',marginTop:'6px',marginBottom:'12px'}} rows={2} />
-            <label className="admin-stats-title" htmlFor="personalityPrompt">性格プロンプト</label>
-            <input id="personalityPrompt" type="text" value={formData.personalityPrompt} onChange={handleChange} style={{width:'100%',padding:'10px',border:'1px solid #eee',borderRadius:'6px',marginTop:'6px',marginBottom:'12px'}} />
+          <div className="admin-form-section">
+            <h2 className="admin-stats-title">基本情報</h2>
+            <div>
+              <label className="admin-form-label" htmlFor="name">名前</label>
+              <input id="name" type="text" value={formData.name} onChange={handleChange} className="admin-form-input" />
+            </div>
+            <div>
+              <label className="admin-form-label" htmlFor="description">特徴</label>
+              <textarea id="description" value={formData.description} onChange={handleChange} className="admin-form-textarea" rows={2} />
+            </div>
+            <div>
+              <label className="admin-form-label" htmlFor="personalityPrompt">性格プロンプト</label>
+              <input id="personalityPrompt" type="text" value={formData.personalityPrompt} onChange={handleChange} className="admin-form-input" />
+            </div>
           </div>
-          <div style={{marginBottom:'24px'}}>
-            <div className="admin-stats-title">設定</div>
-            <label style={{marginRight:'16px'}}><input type="checkbox" id="isPremium" checked={formData.isPremium} onChange={handleChange} /> プレミアムキャラクター</label>
-            <label style={{marginRight:'16px'}}><input type="checkbox" id="isLimited" checked={formData.isLimited} onChange={handleChange} /> 限定</label>
-            <label style={{marginRight:'16px', display: 'flex', alignItems: 'center'}}>
-              <span style={{marginRight: '8px'}}>有効/無効</span>
-              <label className="toggle-switch">
-                <input
-                  type="checkbox"
-                  id="isActive"
-                  checked={formData.isActive}
-                  onChange={handleChange}
-                />
-                <span className="toggle-slider"></span>
+          <div className="admin-form-section">
+            <h2 className="admin-stats-title">設定</h2>
+            <div>
+              <label className="admin-checkbox">
+                <input type="checkbox" id="isPremium" checked={formData.isPremium} onChange={handleChange} />
+                プレミアムキャラクター
+                <span className="checkmark"></span>
               </label>
-            </label>
+            </div>
+            <div>
+              <label className="admin-checkbox">
+                <input type="checkbox" id="isLimited" checked={formData.isLimited} onChange={handleChange} />
+                限定
+                <span className="checkmark"></span>
+              </label>
+            </div>
+            <div>
+              <label className="admin-form-label" style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
+                <span>有効/無効</span>
+                <span className="toggle-switch">
+                  <input
+                    type="checkbox"
+                    id="isActive"
+                    checked={formData.isActive}
+                    onChange={handleChange}
+                  />
+                  <span className="toggle-slider"></span>
+                </span>
+              </label>
+            </div>
           </div>
           <div className="admin-card-section">
             <div className="admin-stats-title">画像・音声アップロード</div>
@@ -304,6 +325,7 @@ export default function EditCharacter({ params }) {
                 />
                 <Button 
                   type="button" 
+                  className="admin-image-select-btn"
                   onClick={() => document.getElementById('characterSelect').click()}
                 >
                   画像を選択
@@ -328,6 +350,7 @@ export default function EditCharacter({ params }) {
                 />
                 <Button 
                   type="button" 
+                  className="admin-image-select-btn"
                   onClick={() => document.getElementById('dashboard').click()}
                 >
                   画像を選択
@@ -352,6 +375,7 @@ export default function EditCharacter({ params }) {
                 />
                 <Button 
                   type="button" 
+                  className="admin-image-select-btn"
                   onClick={() => document.getElementById('chatBackground').click()}
                 >
                   画像を選択
@@ -376,6 +400,7 @@ export default function EditCharacter({ params }) {
                 />
                 <Button 
                   type="button" 
+                  className="admin-image-select-btn"
                   onClick={() => document.getElementById('chatAvatar').click()}
                 >
                   画像を選択
@@ -400,6 +425,7 @@ export default function EditCharacter({ params }) {
                 />
                 <Button 
                   type="button" 
+                  className="admin-image-select-btn"
                   onClick={() => document.getElementById('sampleVoiceUrl').click()}
                 >
                   音声を選択
@@ -414,8 +440,8 @@ export default function EditCharacter({ params }) {
             </div>
           </div>
           <div style={{marginTop:'32px', width:'100%', display:'flex', gap:'16px', justifyContent:'center', alignItems:'center'}}>
-            <button type="button" onClick={()=>router.push('/admin/characters')} className="admin-logout-btn" style={{background:'#eee',color:'#7b1fa2'}}>キャンセル</button>
-            <button type="submit" className="admin-logout-btn" style={{background:'#43eafc',color:'#fff',fontWeight:'bold'}}>保存</button>
+            <button type="button" onClick={()=>router.push('/admin/characters')} className="admin-form-button admin-form-button-cancel">キャンセル</button>
+            <button type="submit" className="admin-form-button admin-form-button-submit">保存</button>
           </div>
         </form>
       </div>

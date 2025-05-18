@@ -80,7 +80,7 @@ export default function AdminCharacters() {
               <tr style={{background:'#f4f6fa'}}>
                 <th style={{textAlign:'left', padding:'8px 12px'}}>画像</th>
                 <th style={{textAlign:'left', padding:'8px 12px'}}>名前</th>
-                <th style={{textAlign:'left', padding:'8px 12px'}}>説明</th>
+                <th style={{textAlign:'left', padding:'8px 12px'}}>特長</th>
                 <th style={{textAlign:'left', padding:'8px 12px'}}>種別</th>
                 <th style={{textAlign:'left', padding:'8px 12px'}}>ステータス</th>
                 <th style={{textAlign:'left', padding:'8px 12px'}}>操作</th>
@@ -133,7 +133,7 @@ export default function AdminCharacters() {
                 <div style={{color:'#888',fontSize:'0.95rem'}}>{modalCharacter.isPremium ? 'プレミアム' : '通常'}{modalCharacter.isLimited && '・限定'}</div>
               </div>
             </div>
-            <div style={{marginBottom:'12px'}}><b>説明:</b> {modalCharacter.description}</div>
+            <div style={{marginBottom:'12px'}}><b>特長:</b> {modalCharacter.description}</div>
             <div style={{marginBottom:'12px'}}><b>性格:</b> {modalCharacter.personalityPrompt}</div>
             <div style={{marginBottom:'12px'}}><b>ステータス:</b> {modalCharacter.isActive ? <span style={{color:'#43eafc'}}>有効</span> : <span style={{color:'#c2185b'}}>無効</span>}</div>
           </div>
