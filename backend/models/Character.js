@@ -10,13 +10,61 @@ const CharacterSchema = new Schema({
     type: String,
     required: true
   },
-  imageUrl: {
+  personalityPrompt: {
     type: String,
-    required: true
+    default: ''
   },
-  personality: {
+  isPremium: {
+    type: Boolean,
+    default: false
+  },
+  price: {
+    type: Number,
+    default: 0
+  },
+  purchaseType: {
     type: String,
-    required: true
+    default: 'buy'
+  },
+  isLimited: {
+    type: Boolean,
+    default: false
+  },
+  voice: {
+    type: String,
+    default: ''
+  },
+  defaultMessage: {
+    type: String,
+    default: ''
+  },
+  themeColor: {
+    type: String,
+    default: '#000000'
+  },
+  isActive: {
+    type: Boolean,
+    default: true
+  },
+  imageCharacterSelect: {
+    type: String,
+    default: ''
+  },
+  imageDashboard: {
+    type: String,
+    default: ''
+  },
+  imageChatBackground: {
+    type: String,
+    default: ''
+  },
+  imageChatAvatar: {
+    type: String,
+    default: ''
+  },
+  sampleVoiceUrl: {
+    type: String,
+    default: ''
   },
   createdAt: {
     type: Date,
