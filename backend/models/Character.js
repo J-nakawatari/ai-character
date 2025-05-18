@@ -10,6 +10,10 @@ const CharacterSchema = new Schema({
     type: String,
     required: true
   },
+  personality: {
+    type: String,
+    default: ''
+  },
   personalityPrompt: {
     type: String,
     default: ''

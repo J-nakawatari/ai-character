@@ -98,7 +98,9 @@ function generateAIResponse(message, userName, character) {
   
   let response;
   
-  switch (character.personality.toLowerCase()) {
+  const personality = character.personality || character.personalityPrompt || '';
+  
+  switch (personality.toLowerCase()) {
     case '優しい':
     case 'やさしい':
     case '親切':
