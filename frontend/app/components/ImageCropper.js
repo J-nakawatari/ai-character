@@ -15,18 +15,9 @@ export default function ImageCropper({
   const [dragging, setDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
-  const [imageLoaded, setImageLoaded] = useState(false);
   
   const canvasRef = useRef(null);
   const imageRef = useRef(null);
-  
-  const displayWidth = 300;
-  const displayHeight = 300;
-  
-  const displayScale = Math.min(
-    displayWidth / Math.max(cropWidth, 100),
-    displayHeight / Math.max(cropHeight, 100)
-  );
   
   useEffect(() => {
     if (!image) return;
@@ -34,97 +25,50 @@ export default function ImageCropper({
     const img = new Image();
     img.onload = () => {
       setImageSize({ width: img.width, height: img.height });
-      setImageLoaded(true);
-      
-      let initialZoom;
-      if (img.width < cropWidth || img.height < cropHeight) {
-        initialZoom = Math.max(
-          cropWidth / img.width,
-          cropHeight / img.height
-        ) * 1.1; // 少し余裕を持たせる
-      } else {
-        initialZoom = Math.min(
-          cropWidth / img.width,
-          cropHeight / img.height
-        ) * 0.9; // 少し余白を持たせる
-      }
-      
-      setZoom(initialZoom);
       
       setPosition({
-        x: (cropWidth - img.width * initialZoom) / 2,
-        y: (cropHeight - img.height * initialZoom) / 2
+        x: (cropWidth - img.width * zoom) / 2,
+        y: (cropHeight - img.height * zoom) / 2
       });
     };
-    
     img.src = image;
     imageRef.current = img;
-  }, [image, cropWidth, cropHeight]);
+  }, [image, zoom, cropWidth, cropHeight]);
   
   useEffect(() => {
-    if (!canvasRef.current || !imageRef.current || !imageLoaded) return;
+    if (!canvasRef.current || !imageRef.current) return;
     
     const ctx = canvasRef.current.getContext('2d');
-    ctx.clearRect(0, 0, displayWidth, displayHeight);
+    ctx.clearRect(0, 0, cropWidth, cropHeight);
     
     ctx.fillStyle = '#f0f0f0';
-    ctx.fillRect(0, 0, displayWidth, displayHeight);
-    
-    const imgWidth = imageRef.current.width * zoom;
-    const imgHeight = imageRef.current.height * zoom;
-    
-    const centerX = displayWidth / 2;
-    const centerY = displayHeight / 2;
-    
-    const drawX = centerX - (cropWidth / 2) + position.x;
-    const drawY = centerY - (cropHeight / 2) + position.y;
+    ctx.fillRect(0, 0, cropWidth, cropHeight);
     
     ctx.drawImage(
       imageRef.current,
       0, 0, imageRef.current.width, imageRef.current.height,
-      drawX, drawY, imgWidth, imgHeight
+      position.x, position.y, imageRef.current.width * zoom, imageRef.current.height * zoom
     );
-    
-    const cropX = centerX - (cropWidth * displayScale / 2);
-    const cropY = centerY - (cropHeight * displayScale / 2);
-    
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-    ctx.fillRect(0, 0, displayWidth, displayHeight);
-    
-    ctx.clearRect(cropX, cropY, cropWidth * displayScale, cropHeight * displayScale);
     
     ctx.strokeStyle = '#fa7be6';
     ctx.lineWidth = 2;
-    ctx.strokeRect(cropX, cropY, cropWidth * displayScale, cropHeight * displayScale);
-    
-    ctx.fillStyle = '#ffffff';
-    ctx.font = '12px sans-serif';
-    ctx.fillText(`${cropWidth} x ${cropHeight}px`, cropX + 5, cropY + 20);
-  }, [position, zoom, imageSize, cropWidth, cropHeight, displayWidth, displayHeight, displayScale, imageLoaded]);
+    ctx.strokeRect(0, 0, cropWidth, cropHeight);
+  }, [position, zoom, imageSize, cropWidth, cropHeight]);
   
   const handleMouseDown = (e) => {
-    if (!canvasRef.current || !imageLoaded) return;
-    
-    const rect = canvasRef.current.getBoundingClientRect();
     setDragging(true);
-    
     setDragStart({
-      x: e.clientX - rect.left - position.x,
-      y: e.clientY - rect.top - position.y
+      x: e.clientX - position.x,
+      y: e.clientY - position.y
     });
   };
   
   const handleMouseMove = (e) => {
-    if (!dragging || !canvasRef.current) return;
-    
-    const rect = canvasRef.current.getBoundingClientRect();
-    
-    const newX = e.clientX - rect.left - dragStart.x;
-    const newY = e.clientY - rect.top - dragStart.y;
+    if (!dragging) return;
     
     setPosition({
-      x: newX,
-      y: newY
+      x: e.clientX - dragStart.x,
+      y: e.clientY - dragStart.y
     });
   };
   
@@ -149,26 +93,17 @@ export default function ImageCropper({
   };
   
   const handleCrop = () => {
-    if (!canvasRef.current || !imageRef.current || !imageLoaded) return;
+    if (!canvasRef.current || !imageRef.current) return;
     
     const cropCanvas = document.createElement('canvas');
     cropCanvas.width = cropWidth;
     cropCanvas.height = cropHeight;
     const ctx = cropCanvas.getContext('2d');
     
-    const centerX = displayWidth / 2;
-    const centerY = displayHeight / 2;
-    
-    const sourceX = centerX - (cropWidth / 2) - position.x;
-    const sourceY = centerY - (cropHeight / 2) - position.y;
-    
-    const drawX = 0;
-    const drawY = 0;
-    
     ctx.drawImage(
       imageRef.current,
       0, 0, imageRef.current.width, imageRef.current.height,
-      drawX - position.x, drawY - position.y, imageRef.current.width * zoom, imageRef.current.height * zoom
+      position.x, position.y, imageRef.current.width * zoom, imageRef.current.height * zoom
     );
     
     cropCanvas.toBlob((blob) => {
@@ -178,19 +113,13 @@ export default function ImageCropper({
     }, 'image/jpeg', 0.95);
   };
   
-  const minZoom = imageSize.width && imageSize.height ? 
-    Math.max(0.1, cropWidth / (imageSize.width * 2), cropHeight / (imageSize.height * 2)) : 0.1;
-  
-  const maxZoom = imageSize.width && imageSize.height ? 
-    Math.max(3, cropWidth / (imageSize.width * 0.5), cropHeight / (imageSize.height * 0.5)) : 3;
-  
   return (
     <div className="image-cropper">
       <div className="image-cropper-container">
         <canvas
           ref={canvasRef}
-          width={displayWidth}
-          height={displayHeight}
+          width={cropWidth}
+          height={cropHeight}
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
@@ -204,8 +133,8 @@ export default function ImageCropper({
           <span>縮小</span>
           <input
             type="range"
-            min={minZoom}
-            max={maxZoom}
+            min="0.5"
+            max="3"
             step="0.01"
             value={zoom}
             onChange={handleZoomChange}
