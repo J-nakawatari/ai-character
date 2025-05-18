@@ -107,7 +107,9 @@ async function generateAIResponse(message, userName, character, chatHistory = []
 
     let systemMessage = `あなたは${character.name}というAIキャラクターです。`;
     
-    if (character.personalityPrompt && character.personalityPrompt.trim() !== '') {
+    if (character.adminPrompt && character.adminPrompt.trim() !== '') {
+      systemMessage += ` ${character.adminPrompt}`;
+    } else if (character.personalityPrompt && character.personalityPrompt.trim() !== '') {
       systemMessage += ` ${character.personalityPrompt}`;
     } else if (character.personality && character.personality.trim() !== '') {
       systemMessage += ` あなたの性格は「${character.personality}」です。`;
