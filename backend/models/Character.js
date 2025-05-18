@@ -18,6 +18,10 @@ const CharacterSchema = new Schema({
     type: String,
     default: ''
   },
+  adminPrompt: {
+    type: String,
+    default: ''
+  },
   isPremium: {
     type: Boolean,
     default: false

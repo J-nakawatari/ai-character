@@ -14,6 +14,7 @@ export default function NewCharacter() {
     name: '',
     description: '',
     personalityPrompt: '',
+    adminPrompt: '',
     isPremium: false,
     price: 0,
     purchaseType: 'buy',
@@ -231,6 +232,8 @@ export default function NewCharacter() {
             <textarea id="description" value={formData.description} onChange={handleChange} style={{width:'100%',padding:'10px',border:'1px solid #eee',borderRadius:'6px',marginTop:'6px',marginBottom:'12px'}} rows={2} />
             <label className="admin-stats-title" htmlFor="personalityPrompt">性格プロンプト</label>
             <input id="personalityPrompt" type="text" value={formData.personalityPrompt} onChange={handleChange} style={{width:'100%',padding:'10px',border:'1px solid #eee',borderRadius:'6px',marginTop:'6px',marginBottom:'12px'}} />
+            <label className="admin-stats-title" htmlFor="adminPrompt">AIシステムプロンプト (管理者用)</label>
+            <textarea id="adminPrompt" value={formData.adminPrompt} onChange={handleChange} style={{width:'100%',padding:'10px',border:'1px solid #eee',borderRadius:'6px',marginTop:'6px',marginBottom:'12px'}} rows={4} />
           </div>
           <div style={{marginBottom:'24px'}}>
             <div className="admin-stats-title">設定</div>
