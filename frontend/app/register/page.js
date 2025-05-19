@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '../utils/auth';
+import BackButton from '../components/BackButton';
 
 const schema = z.object({
   name: z.string().min(2, 'お名前は2文字以上で入力してください'),
@@ -49,92 +50,82 @@ export default function Register() {
   };
   
   return (
-    <div className="container" style={{ position: 'relative', overflow: 'hidden' }}>
-      <img
-        src="/images/room_02.jpg"
-        alt="background"
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          zIndex: -1,
-          pointerEvents: 'none',
-          opacity: 0.2
-        }}
-      />
-      <div className="card">
-        <h1 className="register-title">新規登録</h1>
-        
-        {serverError && (
-          <div className="error-message" style={{ marginBottom: '16px' }}>
-            {serverError}
-          </div>
-        )}
-        
-        <form onSubmit={handleSubmit(onSubmit)} className="login-form">
-          <div className="input-group">
-            <label className="input-label">お名前</label>
-            <input
-              className="input"
-              type="text"
-              placeholder="お名前を入力してください"
-              {...register('name')}
-            />
-            {errors.name && (
-              <p className="error-message">{errors.name.message}</p>
-            )}
-          </div>
-          
-          <div className="input-group">
-            <label className="input-label">メールアドレス</label>
-            <input
-              className="input"
-              type="email"
-              placeholder="メールアドレスを入力してください"
-              {...register('email')}
-            />
-            {errors.email && (
-              <p className="error-message">{errors.email.message}</p>
-            )}
-          </div>
-          
-          <div className="input-group">
-            <label className="input-label">パスワード</label>
-            <input
-              className="input"
-              type="password"
-              placeholder="パスワードを入力してください"
-              {...register('password')}
-            />
-            {errors.password && (
-              <p className="error-message">{errors.password.message}</p>
-            )}
-          </div>
-          
-          <button
-            type="submit"
-            className="button"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? '登録中...' : '登録する'}
-          </button>
-        </form>
-        
-        <div className="register-link-container">
-          <p className="register-link-text">
-            すでにアカウントをお持ちの方は
-            <Link href="/login" className="register-link">こちら</Link>
-            からログインできます
-          </p>
-        </div>
+    <div className="auth-layout">
+      <div className="auth-layout__background">
+        <div className="auth-layout__bubble auth-layout__bubble--1"></div>
+        <div className="auth-layout__bubble auth-layout__bubble--2"></div>
+        <div className="auth-layout__bubble auth-layout__bubble--3"></div>
       </div>
-      <div style={{ textAlign: 'center', marginTop: '32px' }}>
-        <a href="/" className="back-link">
-          TOPに戻る
-        </a>
+      
+      <BackButton to="/" />
+      
+      <div className="card auth-layout__card">
+        <div className="card__body">
+          <h1 className="auth-layout__title">新規登録</h1>
+          
+          {serverError && (
+            <div className="input__error-message mb-3">
+              {serverError}
+            </div>
+          )}
+          
+          <form onSubmit={handleSubmit(onSubmit)} className="auth-layout__form">
+            <div className="input-group">
+              <label className="input__label">お名前</label>
+              <input
+                className="input"
+                type="text"
+                placeholder="お名前を入力してください"
+                {...register('name')}
+              />
+              {errors.name && (
+                <p className="input__error-message">{errors.name.message}</p>
+              )}
+            </div>
+            
+            <div className="input-group">
+              <label className="input__label">メールアドレス</label>
+              <input
+                className="input"
+                type="email"
+                placeholder="メールアドレスを入力してください"
+                {...register('email')}
+              />
+              {errors.email && (
+                <p className="input__error-message">{errors.email.message}</p>
+              )}
+            </div>
+            
+            <div className="input-group">
+              <label className="input__label">パスワード</label>
+              <input
+                className="input"
+                type="password"
+                placeholder="パスワードを入力してください"
+                {...register('password')}
+              />
+              {errors.password && (
+                <p className="input__error-message">{errors.password.message}</p>
+              )}
+            </div>
+            
+            <button
+              type="submit"
+              className="button button--primary button--full"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? '登録中...' : '登録する'}
+            </button>
+          </form>
+          
+          <div className="auth-layout__footer">
+            <p>
+              すでにアカウントをお持ちの方は
+              <Link href="/login" className="auth-layout__link">こちら</Link>
+              からログインできます
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );
