@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '../utils/auth';
-import styles from './login.module.css';
+import BackButton from '../components/BackButton';
 
 const schema = z.object({
   email: z.string().email('Invalid email address'),
