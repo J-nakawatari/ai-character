@@ -7,6 +7,7 @@ import { useAuth } from '../utils/auth';
 import api from '../utils/api';
 import Button from '../components/Button';
 import ChatMessage from '../components/ChatMessage';
+import '../styles/chat.css';
 
 export default function Chat() {
   const { user, loading, logout } = useAuth();
@@ -20,14 +21,6 @@ export default function Chat() {
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const canvasRef = useRef(null);
-  
-  useEffect(() => {
-    if (!loading && !user) {
-      router.push('/login');
-    } else if (!loading && user && !user.hasCompletedSetup) {
-      router.push('/setup');
-    }
-  }, [user, loading, router]);
   
   useEffect(() => {
     const loadChatHistory = async () => {
@@ -193,30 +186,28 @@ export default function Chat() {
   
   return (
     <div className="chat-container">
-      <canvas ref={canvasRef} id="bg-canvas" key={pathname}></canvas>
-      {/* Stylish navigation buttons */}
-      <button 
-        className="floating-nav-button back-button" 
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          router.push('/dashboard');
-        }}
-        aria-label="戻る"
-      >
-        <span className="nav-icon">←</span>
-        <span className="nav-text">戻る</span>
-      </button>
-      <button 
-        className="floating-nav-button logout-button" 
-        onClick={handleLogout}
-        aria-label="ログアウト"
-      >
-        <span className="nav-icon">⏻</span>
-        <span className="nav-text">ログアウト</span>
-      </button>
-      
+      {user.selectedCharacter?.imageChatBg && (
+        <img
+          src={user.selectedCharacter.imageChatBg}
+          alt="背景"
+          className="chat-bg-character-image"
+        />
+      )}
       <main className="chat-main">
+        <div className="chat-messages">
+          {messages.map((msg, idx) => (
+            <div
+              key={idx}
+              className={
+                'chat-bubble ' +
+                (msg.sender === 'user' ? 'chat-bubble--user' : 'chat-bubble--ai')
+              }
+            >
+              <span className="chat-bubble-text">{msg.content}</span>
+            </div>
+          ))}
+          <div ref={messagesEndRef} />
+        </div>
         {/* Character info */}
         <div className="chat-character-info">
           <div className="chat-character-avatar">
@@ -250,76 +241,37 @@ export default function Chat() {
           />
         </div> */}
         
-        {/* Chat messages container */}
-        <div className="chat-messages-container">
-          <img
-            src={user.selectedCharacter?.imageChatBackground || '/images/character_01.png'}
-            alt="背景キャラクター"
-            className="chat-bg-character-image"
-          />
-          <div className="chat-messages-list">
-            {messages.length === 0 ? (
-              <div className="chat-welcome">
-                <p>{`${user.name}さん、おかえりなさい！ チャットを始めましょう。`}</p>
-              </div>
-            ) : (
-              <div>
-                {messages.map((msg, index) => (
-                  <ChatMessage
-                    key={index}
-                    message={msg}
-                    isUser={msg.sender === 'user'}
-                    characterImageUrl={user.selectedCharacter?.imageChatAvatar}
-                  />
-                ))}
-                {isTyping && (
-                  <div className="chat-typing">
-                    <div className="chat-typing-bubble">
-                      <div className="chat-typing-dots">
-                        <span className="chat-typing-dot"></span>
-                        <span className="chat-typing-dot"></span>
-                        <span className="chat-typing-dot"></span>
-                      </div>
-                    </div>
-                  </div>
-                )}
-                <div ref={messagesEndRef} />
-              </div>
-            )}
-          </div>
-          
-          {/* Message input */}
-          <div className="chat-input-container">
-            {error && (
-              <div className="chat-input-error">
-                {error}
-              </div>
-            )}
-            <div className="chat-input-form">
-              <div className="chat-input-wrapper">
-                <textarea
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  placeholder="メッセージを入力..."
-                  className="chat-input"
-                  ref={inputRef}
-                  rows={1}
-                  style={{ resize: 'none', overflow: 'auto', minHeight: '44px', maxHeight: '120px' }}
-                />
-                <Button
-                  type="submit"
-                  className="chat-send-button"
-                  disabled={isTyping || !message.trim()}
-                  onClick={handleSendMessage}
-                >
-                  送信
-                </Button>
-              </div>
-              <p className="chat-input-help">
-                送信: Enter  |  改行: Shift + Enter
-              </p>
+        {/* Message input */}
+        <div className="chat-input-container">
+          {error && (
+            <div className="chat-input-error">
+              {error}
             </div>
+          )}
+          <div className="chat-input-form">
+            <div className="chat-input-wrapper">
+              <textarea
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="メッセージを入力..."
+                className="chat-input"
+                ref={inputRef}
+                rows={1}
+                style={{ resize: 'none', overflow: 'auto', minHeight: '44px', maxHeight: '120px' }}
+              />
+              <Button
+                type="submit"
+                className="chat-send-button"
+                disabled={isTyping || !message.trim()}
+                onClick={handleSendMessage}
+              >
+                送信
+              </Button>
+            </div>
+            <p className="chat-input-help">
+              送信: Enter  |  改行: Shift + Enter
+            </p>
           </div>
         </div>
       </main>

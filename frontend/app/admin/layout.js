@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAdminAuth } from '../utils/adminAuth';
 import Link from 'next/link';
-import './admin.css';
+import Sidebar from "../components/Sidebar";
 
 export default function AdminLayout({ children }) {
   const { admin, loading, adminLogout } = useAdminAuth();
@@ -43,36 +43,23 @@ export default function AdminLayout({ children }) {
   }
   
   return (
-    <div className="admin-root">
-      {/* ヘッダー */}
-      <header className="admin-header">
-        <div className="admin-header-inner">
-          <h1 className="admin-header-title">Charactier 管理画面</h1>
-          <button onClick={handleLogout} className="admin-logout-btn">ログアウト</button>
+    <div className="app-layout">
+      <Sidebar adminMode />
+      <main className="app-main">
+        {/* ヘッダー */}
+        <header className="admin-header">
+          <div className="admin-header-inner">
+            <h1 className="admin-header-title">Charactier 管理画面</h1>
+            <button onClick={handleLogout} className="admin-logout-btn">ログアウト</button>
+          </div>
+        </header>
+        <div className="admin-content">
+          {/* メインコンテンツエリア */}
+          <main className="admin-main">
+            {children}
+          </main>
         </div>
-      </header>
-      <div className="admin-content">
-        {/* サイドバー */}
-        <aside className="admin-sidebar">
-          <nav>
-            <ul>
-              <li>
-                <Link href="/admin/dashboard" className={pathname === '/admin/dashboard' ? 'active' : ''}>ダッシュボード</Link>
-              </li>
-              <li>
-                <Link href="/admin/users" className={pathname === '/admin/users' ? 'active' : ''}>ユーザー管理</Link>
-              </li>
-              <li>
-                <Link href="/admin/characters" className={pathname.startsWith('/admin/characters') ? 'active' : ''}>キャラクター管理</Link>
-              </li>
-            </ul>
-          </nav>
-        </aside>
-        {/* メインコンテンツエリア */}
-        <main className="admin-main">
-          {children}
-        </main>
-      </div>
+      </main>
     </div>
   );
 }
