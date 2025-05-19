@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '../utils/auth';
-import styles from './login.module.css';
+import BackButton from '../components/BackButton';
 
 const schema = z.object({
   email: z.string().email('Invalid email address'),
@@ -44,84 +44,81 @@ export default function Login() {
   };
   
   return (
-    <div className="container" style={{ position: 'relative', overflow: 'hidden' }}>
-      {/* 背景画像を追加 */}
-      <img
-        src="/images/room_01.jpg"
-        alt="background"
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          zIndex: -1,
-          pointerEvents: 'none',
-          opacity: 0.2
-        }}
-      />
-      <div className="card">
-        {/* <h1 className={styles.loginTitle}>ログイン</h1> */}
-        
-        {serverError && (
-          <div className="error-message" style={{ marginBottom: '16px' }}>
-            {serverError === 'Invalid credentials'
-              ? 'メールアドレスまたはパスワードが正しくありません'
-              : serverError === 'Login failed'
-                ? 'ログインに失敗しました'
-                : serverError}
-          </div>
-        )}
-        
-        <form onSubmit={handleSubmit(onSubmit)} className="login-form">
-          <div className="input-group">
-            <label className="input-label">メールアドレス</label>
-            <input
-              className="input"
-              type="email"
-              placeholder="メールアドレスを入力してください"
-              {...register('email')}
-            />
-            {errors.email && (
-              <p className="error-message">{errors.email.message === 'Invalid email address' ? '有効なメールアドレスを入力してください' : errors.email.message}</p>
-            )}
-          </div>
-          
-          <div className="input-group">
-            <label className="input-label">パスワード</label>
-            <input
-              className="input"
-              type="password"
-              placeholder="パスワードを入力してください"
-              {...register('password')}
-            />
-            {errors.password && (
-              <p className="error-message">{errors.password.message === 'Password is required' ? 'パスワードを入力してください' : errors.password.message}</p>
-            )}
-          </div>
-          
-          <button
-            type="submit"
-            className="button"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? 'ログイン中...' : 'ログイン'}
-          </button>
-        </form>
-        
-        <div className="register-link-container">
-          <p className="register-link-text">
-            アカウントをお持ちでない方は
-            <Link href="/register" className="register-link">こちら</Link>
-            から新規登録できます
-          </p>
-        </div>
+    <div className="auth-layout">
+      <div className="auth-layout__background">
+        <div className="auth-layout__bubble auth-layout__bubble--1"></div>
+        <div className="auth-layout__bubble auth-layout__bubble--2"></div>
+        <div className="auth-layout__bubble auth-layout__bubble--3"></div>
       </div>
-      <div style={{ textAlign: 'center', marginTop: '32px' }}>
-        <a href="/" className="back-link">
-          TOPに戻る
-        </a>
+      
+      <BackButton to="/" />
+      
+      <div className="card auth-layout__card">
+        <div className="card__body">
+          <h1 className="auth-layout__title">ログイン</h1>
+          
+          {serverError && (
+            <div className="input__error-message mb-3">
+              {serverError === 'Invalid credentials'
+                ? 'メールアドレスまたはパスワードが正しくありません'
+                : serverError === 'Login failed'
+                  ? 'ログインに失敗しました'
+                  : serverError}
+            </div>
+          )}
+          
+          <form onSubmit={handleSubmit(onSubmit)} className="auth-layout__form">
+            <div className="input-group">
+              <label className="input__label">メールアドレス</label>
+              <input
+                className="input"
+                type="email"
+                placeholder="メールアドレスを入力してください"
+                {...register('email')}
+              />
+              {errors.email && (
+                <p className="input__error-message">
+                  {errors.email.message === 'Invalid email address' 
+                    ? '有効なメールアドレスを入力してください' 
+                    : errors.email.message}
+                </p>
+              )}
+            </div>
+            
+            <div className="input-group">
+              <label className="input__label">パスワード</label>
+              <input
+                className="input"
+                type="password"
+                placeholder="パスワードを入力してください"
+                {...register('password')}
+              />
+              {errors.password && (
+                <p className="input__error-message">
+                  {errors.password.message === 'Password is required' 
+                    ? 'パスワードを入力してください' 
+                    : errors.password.message}
+                </p>
+              )}
+            </div>
+            
+            <button
+              type="submit"
+              className="button button--primary button--full"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'ログイン中...' : 'ログイン'}
+            </button>
+          </form>
+          
+          <div className="auth-layout__footer">
+            <p>
+              アカウントをお持ちでない方は
+              <Link href="/register" className="auth-layout__link">こちら</Link>
+              から新規登録できます
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );
