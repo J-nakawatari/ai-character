@@ -1,9 +1,51 @@
-export default function Card({ children, className = '' }) {
+export default function Card({ 
+  children, 
+  variant = 'default', 
+  className = '',
+  ...props 
+}) {
+  const baseClass = 'card';
+  const variantClass = variant !== 'default' ? `card--${variant}` : '';
+  
+  const cardClasses = [baseClass, variantClass, className]
+    .filter(Boolean)
+    .join(' ');
+  
   return (
-    <div className={`bg-white p-6 rounded-lg shadow-[0_4px_24px_rgba(0,0,0,0.12)] 
-    border border-[#e5e7eb] hover:shadow-[0_6px_32px_rgba(0,0,0,0.15)] 
-    transition-shadow duration-300 ${className}`}>
+    <div className={cardClasses} {...props}>
       {children}
     </div>
+  );
+}
+
+export function CardBody({ children, className = '', ...props }) {
+  return (
+    <div className={`card__body ${className}`} {...props}>
+      {children}
+    </div>
+  );
+}
+
+export function CardHeader({ children, className = '', ...props }) {
+  return (
+    <div className={`card__header ${className}`} {...props}>
+      {children}
+    </div>
+  );
+}
+
+export function CardFooter({ children, className = '', ...props }) {
+  return (
+    <div className={`card__footer ${className}`} {...props}>
+      {children}
+    </div>
+  );
+}
+
+export function CardTitle({ children, className = '', ...props }) {
+  return (
+    <h2 className={`card__title ${className}`} {...props}>
+      {children}
+    </h2>
   );
 }
