@@ -1,0 +1,5 @@
+/* ページ（Pages） */
+@import './pages/dashboard.css';
+@import './pages/admin.css';
+@import './pages/setup.css';
+@import './pages/login.css';
