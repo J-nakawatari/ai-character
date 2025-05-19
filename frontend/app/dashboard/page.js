@@ -4,8 +4,8 @@ import { useEffect, useRef } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
 import { useAuth } from '../utils/auth';
-import Card from '../components/Card';
 import Button from '../components/Button';
+import BackButton from '../components/BackButton';
 
 export default function Dashboard() {
   const { user, loading, logout } = useAuth();
@@ -22,43 +22,39 @@ export default function Dashboard() {
   }, [user, loading, router]);
   
   useEffect(() => {
-    if (!loading && user) {
-      console.log('Dashboard user data:', user);
-      console.log('Selected character:', user.selectedCharacter);
-    }
-  }, [user, loading]);
-  
-  useEffect(() => {
+    if (!canvasRef.current) return;
+    
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    let width = window.innerWidth;
+    let height = window.innerHeight;
     let animationId;
-    let particles = [];
-    let ctx, width, height, canvas;
 
-    function setupCanvas() {
-      canvas = canvasRef.current;
-      if (!canvas) return;
-      ctx = canvas.getContext('2d');
+    function resize() {
       width = window.innerWidth;
       height = window.innerHeight;
       canvas.width = width;
       canvas.height = height;
-      // パーティクル設定
-      particles = [];
-      const PARTICLE_NUM = 40;
-      for (let i = 0; i < PARTICLE_NUM; i++) {
-        particles.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
-          r: 60 + Math.random() * 40,
-          dx: (Math.random() - 0.5) * 0.3,
-          dy: (Math.random() - 0.5) * 0.3,
-          alpha: 0.08 + Math.random() * 0.08,
-          color: `hsl(${Math.random() * 360}, 70%, 85%)`
-        });
-      }
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    // パーティクル設定
+    const particles = [];
+    const PARTICLE_NUM = 40;
+    for (let i = 0; i < PARTICLE_NUM; i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        r: 60 + Math.random() * 40,
+        dx: (Math.random() - 0.5) * 0.3,
+        dy: (Math.random() - 0.5) * 0.3,
+        alpha: 0.08 + Math.random() * 0.08,
+        color: `hsl(${Math.random() * 360}, 70%, 85%)`
+      });
     }
 
     function draw() {
-      if (!ctx) return;
       ctx.clearRect(0, 0, width, height);
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
@@ -81,20 +77,21 @@ export default function Dashboard() {
       }
       animationId = requestAnimationFrame(draw);
     }
-
-    function handleResize() {
-      setupCanvas();
-    }
-
-    setupCanvas();
     draw();
-    window.addEventListener('resize', handleResize);
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('resize', resize);
       cancelAnimationFrame(animationId);
     };
   }, [pathname]);
+  
+  const handleStartChat = () => {
+    router.push('/chat');
+  };
+  
+  const handleChangeCharacter = () => {
+    router.push('/setup?reselect=true');
+  };
   
   const handleLogout = async () => {
     const result = await logout();
@@ -105,81 +102,107 @@ export default function Dashboard() {
   
   if (loading || !user) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p>Loading...</p>
+      <div className="dashboard">
+        <div className="dashboard__loading">
+          <p>読み込み中...</p>
+        </div>
       </div>
     );
   }
   
+  const generatePersonalityTags = () => {
+    if (!user.selectedCharacter?.personalityPrompt) return [];
+    
+    const personalityWords = [
+      '明るい', '優しい', '厳しい', '真面目', '陽気', '冷静', '情熱的', 
+      '穏やか', '活発', '慎重', '大胆', '繊細', '強気', '優雅', '知的',
+      '謙虚', '誠実', '勇敢', '忠実', '思いやり', '几帳面', '自由', '創造的'
+    ];
+    
+    const tags = [];
+    const text = user.selectedCharacter.personalityPrompt.toLowerCase();
+    
+    personalityWords.forEach(word => {
+      if (text.includes(word.toLowerCase())) {
+        tags.push(word);
+      }
+    });
+    
+    return tags.slice(0, 5);
+  };
+  
+  const personalityTags = generatePersonalityTags();
+  
   return (
-    <div className="chat-container">
-      <canvas ref={canvasRef} id="bg-canvas" key={pathname}></canvas>
-      {/* Stylish navigation buttons */}
-      <button 
-        className="floating-nav-button back-button" 
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          router.push('/setup?reselect=true');
-        }}
-        aria-label="戻る"
-      >
-        <span className="nav-icon">←</span>
-        <span className="nav-text">戻る</span>
-      </button>
-      <button 
-        className="floating-nav-button logout-button" 
-        onClick={handleLogout}
-        aria-label="ログアウト"
-      >
-        <span className="nav-icon">⏻</span>
-        <span className="nav-text">ログアウト</span>
-      </button>
+    <div className="dashboard">
+      <BackButton to="/setup" />
+      <canvas ref={canvasRef} className="dashboard__bg-canvas"></canvas>
       
-      <main className="chat-main" style={{ height: 'calc(100vh - 64px)', padding: '1.5rem' }}>
-        <div className="dashboard-card card">
-          <div className="dashboard-character-name">
-            {user.selectedCharacter?.name || 'AIキャラクター'}
-          </div>
-          <div className="dashboard-main-row">
-            {/* 左カラム：テキスト */}
-            <div className="dashboard-col-text">
-              <h2 className="dashboard-title">キャラクター詳細</h2>
-              <div className="dashboard-section">
-                <div className="dashboard-label">特長</div>
-                <div className="dashboard-desc">{user.selectedCharacter?.description || '明るく元気な性格と創造的な発想を持つ、陽気なAIコンパニオン。'}</div>
-                <div className="dashboard-label">性格</div>
-                <div className="dashboard-personality-tags">
-                  {(user.selectedCharacter?.personality || user.selectedCharacter?.personalityPrompt || 'Cheerful,creative,engaging')
-                    .split(/,| /)
-                    .filter(tag => tag.trim())
-                    .map((tag, idx) => (
-                      <div key={idx} className="dashboard-personality-tag">{tag.trim()}</div>
-                    ))
-                  }
+      <div className="dashboard__card">
+        <h1 className="dashboard__character-name">{user.selectedCharacter?.name}</h1>
+        
+        <div className="dashboard__main-row">
+          <div className="dashboard__col-text">
+            <div className="dashboard__col-wrapper">
+              <div className="dashboard__section">
+                <h2 className="dashboard__label">性格</h2>
+                <div className="dashboard__personality-tags">
+                  {personalityTags.map((tag, index) => (
+                    <span key={index} className="dashboard__personality-tag">{tag}</span>
+                  ))}
                 </div>
+                <p className="dashboard__personality">{user.selectedCharacter?.personalityPrompt || '情報なし'}</p>
               </div>
-            </div>
-            {/* 右カラム：画像 */}
-            <div className="dashboard-col-image">
-              <img
-                src={user.selectedCharacter?.imageDashboard || '/images/character_01.png'}
-                alt={user.selectedCharacter?.name || 'AIキャラクター'}
-                className="dashboard-character-img"
-              />
+              
+              <div className="dashboard__section">
+                <h2 className="dashboard__label">説明</h2>
+                <p className="dashboard__desc">{user.selectedCharacter?.description || '情報なし'}</p>
+              </div>
+              
+              <button 
+                onClick={handleStartChat} 
+                className="button button--primary button--lg button--full"
+              >
+                チャットを始める
+              </button>
+              
+              <button 
+                onClick={handleChangeCharacter} 
+                className="button button--outline button--full mt-3"
+              >
+                キャラクターを変更する
+              </button>
             </div>
           </div>
-          {/* 下部ボタン */}
-          <div className="dashboard-bottom">
-            <Button 
-              onClick={() => router.push('/chat')} 
-              className="button w-full"
-            >
-              チャットを始める
-            </Button>
+          
+          <div className="dashboard__col-image">
+            <div className="dashboard__col-wrapper">
+              {user.selectedCharacter?.imageDashboard ? (
+                <Image
+                  src={user.selectedCharacter.imageDashboard}
+                  alt={user.selectedCharacter.name}
+                  width={320}
+                  height={400}
+                  className="dashboard__character-img"
+                />
+              ) : (
+                <div className="dashboard__character-img dashboard__character-img--placeholder">
+                  画像がありません
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </main>
+        
+        <div className="dashboard__bottom">
+          <button 
+            onClick={handleLogout} 
+            className="button button--secondary button--sm"
+          >
+            ログアウト
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

@@ -1,8 +1,6 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Base styles moved to /styles/base/reset.css */
 
-@layer components {
+/* Legacy styles kept for backward compatibility */
 * {
   margin: 0;
   padding: 0;
@@ -19,6 +17,7 @@
   --border-color: #e5e7eb;
   --card-background: #ffffff;
 }
+
 
 body, html {
   overflow-x: hidden;
@@ -1918,7 +1917,6 @@ body {
   .admin-stats-card {
     padding: 24px 18px 18px 18px;
   }
-}
 }
 
 /* トグルスイッチ */
