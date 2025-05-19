@@ -186,6 +186,7 @@ export default function Chat() {
   
   return (
     <div className="chat-container">
+      {/* 背景画像 */}
       {user.selectedCharacter?.imageChatBg && (
         <img
           src={user.selectedCharacter.imageChatBg}
@@ -193,53 +194,73 @@ export default function Chat() {
           className="chat-bg-character-image"
         />
       )}
+      
+      {/* 戻るボタン */}
+      <button 
+        className="chat-back-button" 
+        onClick={() => router.push('/dashboard')}
+        aria-label="戻る"
+      >
+        <span>←</span>
+      </button>
+      
+      {/* ヘッダー */}
+      <header className="chat-header">
+        <h1 className="chat-header-title">{user.selectedCharacter?.name || 'AI Character'}</h1>
+        <button 
+          onClick={handleLogout} 
+          className="button button--secondary button--sm"
+        >
+          ログアウト
+        </button>
+      </header>
+      
       <main className="chat-main">
         <div className="chat-messages">
-          {messages.map((msg, idx) => (
-            <div
-              key={idx}
-              className={
-                'chat-bubble ' +
-                (msg.sender === 'user' ? 'chat-bubble--user' : 'chat-bubble--ai')
-              }
-            >
-              <span className="chat-bubble-text">{msg.content}</span>
+          {messages.length === 0 ? (
+            <div className="chat-welcome">
+              <p>{`${user.name}さん、おかえりなさい！ チャットを始めましょう。`}</p>
             </div>
-          ))}
+          ) : (
+            <>
+              {messages.map((msg, idx) => (
+                <div
+                  key={idx}
+                  className={`chat-message ${msg.sender === 'user' ? 'chat-message--user' : 'chat-message--ai'}`}
+                >
+                  {msg.sender === 'ai' && user.selectedCharacter?.imageChatAvatar && (
+                    <div className="chat-message-avatar">
+                      <img
+                        src={user.selectedCharacter.imageChatAvatar}
+                        alt={user.selectedCharacter.name}
+                        width={40}
+                        height={40}
+                      />
+                    </div>
+                  )}
+                  <div className={`chat-bubble ${msg.sender === 'user' ? 'chat-bubble--user' : 'chat-bubble--ai'}`}>
+                    <span className="chat-bubble-text">{msg.content}</span>
+                    <span className="chat-bubble-time">
+                      {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </span>
+                  </div>
+                </div>
+              ))}
+              {isTyping && (
+                <div className="chat-typing">
+                  <div className="chat-typing-bubble">
+                    <div className="chat-typing-dots">
+                      <span className="chat-typing-dot"></span>
+                      <span className="chat-typing-dot"></span>
+                      <span className="chat-typing-dot"></span>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
           <div ref={messagesEndRef} />
         </div>
-        {/* Character info */}
-        <div className="chat-character-info">
-          <div className="chat-character-avatar">
-            {user.selectedCharacter?.imageChatAvatar ? (
-              <Image
-                src={user.selectedCharacter.imageChatAvatar}
-                alt={user.selectedCharacter.name}
-                width={64}
-                height={64}
-                className="object-cover rounded-full"
-                priority
-              />
-            ) : (
-              <div className="absolute inset-0 flex items-center justify-center text-gray-500 text-xl">
-                {user.selectedCharacter?.name?.charAt(0) || '?'}
-              </div>
-            )}
-          </div>
-          <div className="chat-character-details">
-            <h2 className="chat-character-name">{user.selectedCharacter?.name || 'AI Character'}</h2>
-            <p className="chat-character-personality">{user.selectedCharacter?.personality}</p>
-          </div>
-        </div>
-        
-        {/* Character background image */}
-        {/* <div className="chat-character-background">
-          <img 
-            src={user.selectedCharacter.imageUrl} 
-            alt={user.selectedCharacter.name} 
-            className="chat-character-bg-image"
-          />
-        </div> */}
         
         {/* Message input */}
         <div className="chat-input-container">
@@ -258,16 +279,15 @@ export default function Chat() {
                 className="chat-input"
                 ref={inputRef}
                 rows={1}
-                style={{ resize: 'none', overflow: 'auto', minHeight: '44px', maxHeight: '120px' }}
               />
-              <Button
+              <button
                 type="submit"
                 className="chat-send-button"
                 disabled={isTyping || !message.trim()}
                 onClick={handleSendMessage}
               >
                 送信
-              </Button>
+              </button>
             </div>
             <p className="chat-input-help">
               送信: Enter  |  改行: Shift + Enter
