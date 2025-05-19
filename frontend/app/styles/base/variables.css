@@ -1,0 +1,95 @@
+:root {
+  /* カラーパレット */
+  --color-primary: #fa7be6;
+  --color-primary-light: rgba(250, 123, 230, 0.15);
+  --color-primary-dark: #7c3aed;
+  --color-secondary: #43eafc;
+  --color-secondary-light: rgba(67, 234, 252, 0.15);
+  --color-accent: #8b5cf6;
+  
+  /* テキストカラー */
+  --color-text: #333;
+  --color-text-light: #6b7280;
+  --color-text-inverse: #fff;
+  
+  /* 背景色 */
+  --color-bg-primary: #fff;
+  --color-bg-secondary: #f4f6fa;
+  --color-bg-tertiary: #f9fafb;
+  --color-bg-accent: rgba(99, 102, 241, 0.05);
+  
+  /* ボーダー */
+  --color-border: #e5e7eb;
+  --color-border-light: rgba(99, 102, 241, 0.1);
+  
+  /* シャドウ */
+  --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.08);
+  --shadow-primary: 0 4px 24px rgba(250, 123, 230, 0.12);
+  
+  /* スペーシング */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  
+  /* フォントサイズ */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-size-4xl: 2.25rem;
+  
+  /* フォントファミリー */
+  --font-family-base: 'M PLUS Rounded 1c', 'Yu Gothic', 'Meiryo', sans-serif;
+  --font-family-heading: var(--font-family-base);
+  --font-family-mono: var(--font-orbitron);
+  
+  /* ブレークポイント */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  
+  /* 角丸 */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+  
+  /* アニメーション */
+  --transition-normal: 0.2s ease-in-out;
+  --transition-slow: 0.3s ease-in-out;
+}
+
+/* ダークモード用変数 */
+.dark-mode {
+  --color-primary: #fa7be6;
+  --color-primary-light: rgba(250, 123, 230, 0.2);
+  --color-primary-dark: #8b5cf6;
+  --color-secondary: #43eafc;
+  --color-secondary-light: rgba(67, 234, 252, 0.2);
+  
+  --color-text: #e5e7eb;
+  --color-text-light: #9ca3af;
+  --color-text-inverse: #1f2937;
+  
+  --color-bg-primary: #111827;
+  --color-bg-secondary: #1f2937;
+  --color-bg-tertiary: #1a1c29;
+  --color-bg-accent: rgba(99, 102, 241, 0.1);
+  
+  --color-border: #374151;
+  --color-border-light: rgba(99, 102, 241, 0.2);
+  
+  --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.3);
+  --shadow-primary: 0 4px 24px rgba(250, 123, 230, 0.2);
+}

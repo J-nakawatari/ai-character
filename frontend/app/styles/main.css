@@ -1,0 +1,67 @@
+/* ベーススタイル */
+@import './base/variables.css';
+@import './base/reset.css';
+
+/* アトム（Atoms） */
+@import './atoms/button.css';
+@import './atoms/input.css';
+@import './atoms/card.css';
+
+/* 分子（Molecules） */
+@import './molecules/toast.css';
+@import './molecules/chat-message.css';
+@import './molecules/nav-button.css';
+
+/* 有機体（Organisms） */
+@import './organisms/chat-interface.css';
+
+/* テンプレート（Templates） */
+@import './templates/auth-layout.css';
+
+/* ページ（Pages） */
+@import './pages/dashboard.css';
+
+/* テーマ（Themes） */
+@import './themes/dark-mode.css';
+
+/* ユーティリティクラス */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.mt-1 { margin-top: var(--space-xs); }
+.mt-2 { margin-top: var(--space-sm); }
+.mt-3 { margin-top: var(--space-md); }
+.mt-4 { margin-top: var(--space-lg); }
+.mt-5 { margin-top: var(--space-xl); }
+
+.mb-1 { margin-bottom: var(--space-xs); }
+.mb-2 { margin-bottom: var(--space-sm); }
+.mb-3 { margin-bottom: var(--space-md); }
+.mb-4 { margin-bottom: var(--space-lg); }
+.mb-5 { margin-bottom: var(--space-xl); }
+
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.gap-1 { gap: var(--space-xs); }
+.gap-2 { gap: var(--space-sm); }
+.gap-3 { gap: var(--space-md); }
+.gap-4 { gap: var(--space-lg); }
+
+.w-full { width: 100%; }
+.h-full { height: 100%; }
