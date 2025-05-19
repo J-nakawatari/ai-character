@@ -20,6 +20,8 @@
 
 /* ページ（Pages） */
 @import './pages/dashboard.css';
+@import './pages/admin.css';
+@import './pages/setup.css';
 
 /* テーマ（Themes） */
 @import './themes/dark-mode.css';
