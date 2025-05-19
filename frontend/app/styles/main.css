@@ -19,9 +19,7 @@
 @import './templates/auth-layout.css';
 
 /* ページ（Pages） */
-@import './pages/dashboard.css';
-@import './pages/admin.css';
-@import './pages/setup.css';
+@import './pages.css';
 
 /* テーマ（Themes） */
 @import './themes/dark-mode.css';

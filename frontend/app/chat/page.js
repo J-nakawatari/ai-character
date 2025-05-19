@@ -5,8 +5,8 @@ import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
 import { useAuth } from '../utils/auth';
 import api from '../utils/api';
-import Button from '../components/Button';
 import ChatMessage from '../components/ChatMessage';
+import BackButton from '../components/BackButton';
 
 export default function Chat() {
   const { user, loading, logout } = useAuth();
@@ -57,36 +57,39 @@ export default function Chat() {
   }, [messages]);
   
   useEffect(() => {
+    if (!canvasRef.current) return;
+    
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    let width = window.innerWidth;
+    let height = window.innerHeight;
     let animationId;
-    let particles = [];
-    let ctx, width, height, canvas;
 
-    function setupCanvas() {
-      canvas = canvasRef.current;
-      if (!canvas) return;
-      ctx = canvas.getContext('2d');
+    function resize() {
       width = window.innerWidth;
       height = window.innerHeight;
       canvas.width = width;
       canvas.height = height;
-      // パーティクル設定
-      particles = [];
-      const PARTICLE_NUM = 40;
-      for (let i = 0; i < PARTICLE_NUM; i++) {
-        particles.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
-          r: 60 + Math.random() * 40,
-          dx: (Math.random() - 0.5) * 0.3,
-          dy: (Math.random() - 0.5) * 0.3,
-          alpha: 0.08 + Math.random() * 0.08,
-          color: `hsl(${Math.random() * 360}, 70%, 85%)`
-        });
-      }
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    // パーティクル設定
+    const particles = [];
+    const PARTICLE_NUM = 40;
+    for (let i = 0; i < PARTICLE_NUM; i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        r: 60 + Math.random() * 40,
+        dx: (Math.random() - 0.5) * 0.3,
+        dy: (Math.random() - 0.5) * 0.3,
+        alpha: 0.08 + Math.random() * 0.08,
+        color: `hsl(${Math.random() * 360}, 70%, 85%)`
+      });
     }
 
     function draw() {
-      if (!ctx) return;
       ctx.clearRect(0, 0, width, height);
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
@@ -109,17 +112,10 @@ export default function Chat() {
       }
       animationId = requestAnimationFrame(draw);
     }
-
-    function handleResize() {
-      setupCanvas();
-    }
-
-    setupCanvas();
     draw();
-    window.addEventListener('resize', handleResize);
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('resize', resize);
       cancelAnimationFrame(animationId);
     };
   }, [pathname]);
@@ -172,94 +168,53 @@ export default function Chat() {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage(e);
-    } else if (e.key === 'Enter' && e.shiftKey) {
-    }
-  };
-  
-  const handleLogout = async () => {
-    const result = await logout();
-    if (result.success) {
-      router.push('/login');
     }
   };
   
   if (loading || !user) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p>Loading...</p>
+      <div className="chat">
+        <div className="chat__loading">
+          <p>読み込み中...</p>
+        </div>
       </div>
     );
   }
   
   return (
-    <div className="chat-container">
-      <canvas ref={canvasRef} id="bg-canvas" key={pathname}></canvas>
-      {/* Stylish navigation buttons */}
-      <button 
-        className="floating-nav-button back-button" 
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          router.push('/dashboard');
-        }}
-        aria-label="戻る"
-      >
-        <span className="nav-icon">←</span>
-        <span className="nav-text">戻る</span>
-      </button>
-      <button 
-        className="floating-nav-button logout-button" 
-        onClick={handleLogout}
-        aria-label="ログアウト"
-      >
-        <span className="nav-icon">⏻</span>
-        <span className="nav-text">ログアウト</span>
-      </button>
+    <div className="chat">
+      <canvas ref={canvasRef} className="chat__bg-canvas"></canvas>
+      <BackButton to="/dashboard" />
       
-      <main className="chat-main">
-        {/* Character info */}
-        <div className="chat-character-info">
-          <div className="chat-character-avatar">
-            {user.selectedCharacter?.imageChatAvatar ? (
-              <Image
-                src={user.selectedCharacter.imageChatAvatar}
-                alt={user.selectedCharacter.name}
-                width={64}
-                height={64}
-                className="object-cover rounded-full"
-                priority
-              />
-            ) : (
-              <div className="absolute inset-0 flex items-center justify-center text-gray-500 text-xl">
-                {user.selectedCharacter?.name?.charAt(0) || '?'}
-              </div>
-            )}
-          </div>
-          <div className="chat-character-details">
-            <h2 className="chat-character-name">{user.selectedCharacter?.name || 'AI Character'}</h2>
-            <p className="chat-character-personality">{user.selectedCharacter?.personality}</p>
+      <header className="chat__header">
+        <div className="chat__header-content">
+          <h1 className="chat__title">{user.selectedCharacter?.name || 'AI Character'}</h1>
+          <div className="chat__nav">
+            <button 
+              onClick={logout} 
+              className="button button--secondary button--sm"
+            >
+              ログアウト
+            </button>
           </div>
         </div>
-        
-        {/* Character background image */}
-        {/* <div className="chat-character-background">
-          <img 
-            src={user.selectedCharacter.imageUrl} 
-            alt={user.selectedCharacter.name} 
-            className="chat-character-bg-image"
-          />
-        </div> */}
-        
-        {/* Chat messages container */}
-        <div className="chat-messages-container">
-          <img
-            src={user.selectedCharacter?.imageChatBackground || '/images/character_01.png'}
-            alt="背景キャラクター"
-            className="chat-bg-character-image"
-          />
-          <div className="chat-messages-list">
+      </header>
+      
+      <main className="chat__main">
+        <div className="chat__messages-container">
+          {user.selectedCharacter?.imageChatBackground && (
+            <div className="chat__character-background">
+              <img
+                src={user.selectedCharacter.imageChatBackground}
+                alt="背景キャラクター"
+                className="chat__character-bg-image"
+              />
+            </div>
+          )}
+          
+          <div className="chat__messages-list">
             {messages.length === 0 ? (
-              <div className="chat-welcome">
+              <div className="chat__welcome">
                 <p>{`${user.name}さん、おかえりなさい！ チャットを始めましょう。`}</p>
               </div>
             ) : (
@@ -273,12 +228,21 @@ export default function Chat() {
                   />
                 ))}
                 {isTyping && (
-                  <div className="chat-typing">
-                    <div className="chat-typing-bubble">
+                  <div className="chat-message chat-message--ai">
+                    <div className="chat-message__avatar">
+                      <Image 
+                        src={user.selectedCharacter?.imageChatAvatar || '/images/default-avatar.png'} 
+                        alt="Character" 
+                        width={40} 
+                        height={40} 
+                        className="chat-message__avatar-img" 
+                      />
+                    </div>
+                    <div className="chat-message__bubble chat-message__bubble--typing">
                       <div className="chat-typing-dots">
-                        <span className="chat-typing-dot"></span>
-                        <span className="chat-typing-dot"></span>
-                        <span className="chat-typing-dot"></span>
+                        <div className="chat-typing-dot"></div>
+                        <div className="chat-typing-dot"></div>
+                        <div className="chat-typing-dot"></div>
                       </div>
                     </div>
                   </div>
@@ -288,35 +252,33 @@ export default function Chat() {
             )}
           </div>
           
-          {/* Message input */}
-          <div className="chat-input-container">
+          <div className="chat__input-container">
             {error && (
-              <div className="chat-input-error">
+              <div className="chat__input-error">
                 {error}
               </div>
             )}
-            <div className="chat-input-form">
-              <div className="chat-input-wrapper">
+            <div className="chat__input-form">
+              <div className="chat__input-wrapper">
                 <textarea
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder="メッセージを入力..."
-                  className="chat-input"
+                  className="chat__input"
                   ref={inputRef}
                   rows={1}
-                  style={{ resize: 'none', overflow: 'auto', minHeight: '44px', maxHeight: '120px' }}
                 />
-                <Button
+                <button
                   type="submit"
-                  className="chat-send-button"
+                  className="chat__send-button"
                   disabled={isTyping || !message.trim()}
                   onClick={handleSendMessage}
                 >
                   送信
-                </Button>
+                </button>
               </div>
-              <p className="chat-input-help">
+              <p className="chat__input-help">
                 送信: Enter  |  改行: Shift + Enter
               </p>
             </div>

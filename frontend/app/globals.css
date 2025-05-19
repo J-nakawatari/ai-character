@@ -1,24 +1,464 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* ベーススタイル */
+:root {
+  /* カラーパレット */
+  --color-primary: #fa7be6;
+  --color-primary-light: rgba(250, 123, 230, 0.15);
+  --color-primary-dark: #7c3aed;
+  --color-secondary: #43eafc;
+  --color-secondary-light: rgba(67, 234, 252, 0.15);
+  --color-accent: #8b5cf6;
+  
+  /* テキストカラー */
+  --color-text: #333;
+  --color-text-light: #6b7280;
+  --color-text-inverse: #fff;
+  
+  /* 背景色 */
+  --color-bg-primary: #fff;
+  --color-bg-secondary: #f4f6fa;
+  --color-bg-tertiary: #f9fafb;
+  --color-bg-accent: rgba(99, 102, 241, 0.05);
+  
+  /* ボーダー */
+  --color-border: #e5e7eb;
+  --color-border-light: rgba(99, 102, 241, 0.1);
+  
+  /* シャドウ */
+  --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.08);
+  --shadow-primary: 0 4px 24px rgba(250, 123, 230, 0.12);
+  
+  /* スペーシング */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  
+  /* フォントサイズ */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-size-4xl: 2.25rem;
+  
+  /* フォントファミリー */
+  --font-family-base: 'M PLUS Rounded 1c', 'Yu Gothic', 'Meiryo', sans-serif;
+  --font-family-heading: var(--font-family-base);
+  --font-family-mono: var(--font-orbitron);
+  
+  /* ブレークポイント */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  
+  /* 角丸 */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+  
+  /* アニメーション */
+  --transition-normal: 0.2s ease-in-out;
+  --transition-slow: 0.3s ease-in-out;
+}
 
-@layer components {
-* {
+/* ダークモード用変数 */
+.dark-mode {
+  --color-primary: #fa7be6;
+  --color-primary-light: rgba(250, 123, 230, 0.2);
+  --color-primary-dark: #8b5cf6;
+  --color-secondary: #43eafc;
+  --color-secondary-light: rgba(67, 234, 252, 0.2);
+  
+  --color-text: #e5e7eb;
+  --color-text-light: #9ca3af;
+  --color-text-inverse: #1f2937;
+  
+  --color-bg-primary: #111827;
+  --color-bg-secondary: #1f2937;
+  --color-bg-tertiary: #1a1c29;
+  --color-bg-accent: rgba(99, 102, 241, 0.1);
+  
+  --color-border: #374151;
+  --color-border-light: rgba(99, 102, 241, 0.2);
+  
+  --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.3);
+  --shadow-primary: 0 4px 24px rgba(250, 123, 230, 0.2);
+}
+
+/* リセットスタイル */
+*, *::before, *::after {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
-:root {
-  --primary-color: #3b82f6;
-  --primary-hover: #2563eb;
-  --background-color: #f9fafb;
-  --text-color: #1f2937;
-  --error-color: #ef4444;
-  --success-color: #10b981;
-  --border-color: #e5e7eb;
-  --card-background: #ffffff;
+html, body {
+  font-family: var(--font-family-base);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--color-text);
+  background-color: var(--color-bg-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+  font-size: 100%;
+  line-height: 1.15;
+}
+
+button {
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ボタンの基本スタイル */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-md) var(--space-lg);
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  transition: all var(--transition-normal);
+  text-align: center;
+}
+
+/* バリエーション */
+.button--primary {
+  background-color: var(--color-primary);
+  color: var(--color-text-inverse);
+  box-shadow: var(--shadow-primary);
+}
+
+.button--primary:hover {
+  background-color: var(--color-primary-dark);
+}
+
+.button--secondary {
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+}
+
+.button--secondary:hover {
+  background-color: var(--color-bg-tertiary);
+}
+
+.button--outline {
+  background-color: transparent;
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+}
+
+.button--outline:hover {
+  background-color: var(--color-primary-light);
+}
+
+/* サイズ */
+.button--sm {
+  padding: var(--space-xs) var(--space-md);
+  font-size: var(--font-size-sm);
+}
+
+.button--lg {
+  padding: var(--space-lg) var(--space-xl);
+  font-size: var(--font-size-lg);
+}
+
+/* 状態 */
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* アイコン付きボタン */
+.button__icon {
+  margin-right: var(--space-xs);
+}
+
+/* フルワイドボタン */
+.button--full {
+  width: 100%;
+}
+
+/* 入力フィールドの基本スタイル */
+.input {
+  width: 100%;
+  padding: var(--space-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-bg-primary);
+  color: var(--color-text);
+  font-size: var(--font-size-md);
+  transition: border var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-light);
+}
+
+.input::placeholder {
+  color: var(--color-text-light);
+}
+
+/* ラベル */
+.input__label {
+  display: block;
+  margin-bottom: var(--space-xs);
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+/* エラー状態 */
+.input--error {
+  border-color: #ef4444;
+}
+
+.input--error:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+}
+
+.input__error-message {
+  color: #ef4444;
+  font-size: var(--font-size-sm);
+  margin-top: var(--space-xs);
+}
+
+/* サイズバリエーション */
+.input--sm {
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--font-size-sm);
+}
+
+.input--lg {
+  padding: var(--space-lg);
+  font-size: var(--font-size-lg);
+}
+
+/* テキストエリア */
+.textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* カードの基本スタイル */
+.card {
+  background-color: var(--color-bg-primary);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+.card__body {
+  padding: var(--space-lg);
+}
+
+.card__header {
+  padding: var(--space-lg);
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.card__footer {
+  padding: var(--space-lg);
+  border-top: 1px solid var(--color-border-light);
+}
+
+.card__title {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  margin-bottom: var(--space-md);
+}
+
+/* バリエーション */
+.card--shadowed {
+  box-shadow: var(--shadow-lg);
+}
+
+.card--bordered {
+  border: 1px solid var(--color-border);
+  box-shadow: none;
+}
+
+.card--flat {
+  box-shadow: none;
+  background-color: var(--color-bg-tertiary);
+}
+
+/* 認証画面のレイアウト */
+.auth-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-xl) var(--space-md);
+  background-color: var(--color-bg-primary);
+  position: relative;
+}
+
+.auth-layout__background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.auth-layout__bubble {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.6;
+  animation: float 8s infinite ease-in-out alternate;
+}
+
+.auth-layout__bubble--1 { 
+  width: 140px; 
+  height: 140px; 
+  left: 15vw; 
+  top: 60vh; 
+  animation-delay: 0s; 
+  background: radial-gradient(circle, rgba(255,183,255,0.4) 0%, rgba(255,183,255,0) 70%); 
+}
+
+.auth-layout__bubble--2 { 
+  width: 100px; 
+  height: 100px; 
+  left: 60vw; 
+  top: 35vh; 
+  animation-delay: 2s; 
+  background: radial-gradient(circle, rgba(183,225,255,0.4) 0%, rgba(183,225,255,0) 70%); 
+}
+
+.auth-layout__bubble--3 { 
+  width: 180px; 
+  height: 180px; 
+  left: 40vw; 
+  top: 70vh; 
+  animation-delay: 4s; 
+  background: radial-gradient(circle, rgba(255,255,183,0.4) 0%, rgba(255,255,183,0) 70%); 
+}
+
+@keyframes float {
+  0%   { transform: translateY(0) scale(1); opacity: 0.5; }
+  50%  { transform: translateY(-60px) scale(1.1); opacity: 0.7; }
+  100% { transform: translateY(-120px) scale(0.9); opacity: 0.4; }
+}
+
+.auth-layout__card {
+  width: 100%;
+  max-width: 420px;
+  margin-bottom: var(--space-xl);
+}
+
+.auth-layout__title {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: var(--space-xl);
+  color: var(--color-text);
+}
+
+.auth-layout__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.input-group {
+  margin-bottom: var(--space-md);
+}
+
+.auth-layout__footer {
+  margin-top: var(--space-xl);
+  text-align: center;
+  color: var(--color-text-light);
+}
+
+.auth-layout__link {
+  color: var(--color-primary);
+  font-weight: 500;
+  transition: color var(--transition-normal);
+}
+
+.auth-layout__link:hover {
+  color: var(--color-primary-dark);
+  text-decoration: underline;
+}
+
+/* ユーティリティクラス */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.mt-1 { margin-top: var(--space-xs); }
+.mt-2 { margin-top: var(--space-sm); }
+.mt-3 { margin-top: var(--space-md); }
+.mt-4 { margin-top: var(--space-lg); }
+.mt-5 { margin-top: var(--space-xl); }
+
+.mb-1 { margin-bottom: var(--space-xs); }
+.mb-2 { margin-bottom: var(--space-sm); }
+.mb-3 { margin-bottom: var(--space-md); }
+.mb-4 { margin-bottom: var(--space-lg); }
+.mb-5 { margin-bottom: var(--space-xl); }
+
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.gap-1 { gap: var(--space-xs); }
+.gap-2 { gap: var(--space-sm); }
+.gap-3 { gap: var(--space-md); }
+.gap-4 { gap: var(--space-lg); }
+
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+
 
 body, html {
   overflow-x: hidden;
