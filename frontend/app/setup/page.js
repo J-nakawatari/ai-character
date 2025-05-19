@@ -224,80 +224,86 @@ export default function Setup() {
 
   if (loading || loadingCharacters) {
     return (
-      <div className="setup-loading">
+      <div className="setup--loading">
         <p>読み込み中...</p>
       </div>
     );
   }
 
+  // 選択中キャラクター取得（右カラム用）
+  const selectedCharacter = characters.find(c => c._id === selectedCharacterId) || characters[0];
+
   return (
-    <div className="setup-root" style={{ position: 'relative', overflow: 'hidden' }}>
-      <canvas ref={canvasRef} id="bg-canvas"></canvas>
-      <form className="setup-form" onSubmit={handleSubmit(onSubmit)}>
-        <h2 className="setup-section-title">
+    <div className="setup--root" style={{ position: 'relative', overflow: 'hidden' }}>
+      <form className="setup--form" onSubmit={handleSubmit(onSubmit)}>
+        <h2 className="setup--section-title">
           AIキャラクターを選択してください
         </h2>
-        <div className="setup-card-list">
-          {characters.slice(0, 4).map((character, idx) => (
-            <div
-              key={character._id}
-              className={`setup-character-card${selectedCharacterId === character._id ? ' selected' : ''}`}
-            >
-              <div className="setup-character-img-wrapper">
-                <img
-                  className="setup-character-img"
-                  src={character.imageCharacterSelect || '/images/default.png'}
-                  alt={character.name}
-                />
-                <img
-                  className="voiceicon"
-                  src="/images/voice.png"
-                  alt="ボイス"
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => {
-                    if (audioRef.current) {
-                      audioRef.current.pause();
-                      audioRef.current.currentTime = 0;
-                    }
-                    
-                    const audioSrc = character.sampleVoiceUrl || `/voice/voice_0${idx + 1}.wav`;
-                    const audio = new Audio(audioSrc);
-                    audioRef.current = audio;
-                    audio.play();
-                  }}
-                />
-              </div>
-              <div className="setup-character-name">{character.name}</div>
-              <div className="setup-character-tags">
-                {(character.personality || character.personalityPrompt) ? 
-                  (character.personality || character.personalityPrompt).split(/,| /).map((tag, idx) =>
-                    tag.trim() && (
-                      <span className="setup-character-tag" key={idx}>{tag.trim()}</span>
-                    )
-                  ) : []
-                }
-              </div>
-              <div className="setup-character-desc">{character.description}</div>
-              <button
-                type="button"
-                className="setup-select-btn"
-                disabled={selectedCharacterId === character._id}
-                onClick={() => setValue('characterId', character._id)}
+        <div className="setup--main">
+          <div className="setup--card-list">
+            {characters.slice(0, 4).map((character, idx) => (
+              <div
+                key={character._id}
+                className="setup--character-card"
               >
-                {selectedCharacterId === character._id ? 'このキャラを選択する' : 'このキャラを選択する'}
-              </button>
-            </div>
-          ))}
+                <div className="setup--character-img-wrapper">
+                  <img
+                    className="setup--character-img"
+                    src={character.imageCharacterSelect || '/images/default.png'}
+                    alt={character.name}
+                  />
+                  <img
+                    className="voiceicon"
+                    src="/images/voice.png"
+                    alt="ボイス"
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => {
+                      if (audioRef.current) {
+                        audioRef.current.pause();
+                        audioRef.current.currentTime = 0;
+                      }
+                      const audioSrc = character.sampleVoiceUrl || `/voice/voice_0${idx + 1}.wav`;
+                      const audio = new Audio(audioSrc);
+                      audioRef.current = audio;
+                      audio.play();
+                    }}
+                  />
+                </div>
+                <div className="setup--character-name">{character.name}</div>
+                <div className="setup--character-tags">
+                  {(character.personality || character.personalityPrompt) ? 
+                    (character.personality || character.personalityPrompt).split(/,| /).map((tag, idx) =>
+                      tag.trim() && (
+                        <span className="setup--character-tag" key={idx}>{tag.trim()}</span>
+                      )
+                    ) : []
+                  }
+                </div>
+                <div className="setup--character-desc">{character.description}</div>
+                <button
+                  type="button"
+                  className="setup--select-btn"
+                  disabled={selectedCharacterId === character._id}
+                  onClick={async () => {
+                    setValue('characterId', character._id);
+                    setServerError('');
+                    const result = await completeSetup({
+                      name: watch('name'),
+                      characterId: character._id
+                    });
+                    if (result.success) {
+                      router.push('/dashboard');
+                    } else {
+                      setServerError(result.error);
+                    }
+                  }}
+                >
+                  このキャラを選択する
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
-        {errors.characterId && <p className="error-message">{errors.characterId.message}</p>}
-        <button
-          type="submit"
-          className="setup-complete-btn"
-          disabled={isSubmitting || !selectedCharacterId || !watch('name')}
-        >
-          セットアップを完了する
-        </button>
-        {serverError && <div className="error-message" style={{ marginBottom: '16px' }}>{serverError}</div>}
       </form>
     </div>
   );

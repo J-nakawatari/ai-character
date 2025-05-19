@@ -1,0 +1,150 @@
+/* ダッシュボード画面用グローバルCSS */
+
+.dashboard {
+  background: #f7f9fb;
+  min-height: 100vh;
+  padding: 40px 0 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dashboard__container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 32px;
+  align-items: start;
+  padding: 40px;
+}
+
+.dashboard__section-wrapper {
+  display: flex;
+  gap: 40px;
+}
+
+.dashboard__main {
+  width: 800px;
+}
+
+.dashboard__card {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(30, 34, 90, 0.06);
+  padding: 32px 36px 28px 36px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0;
+  border: 1px solid #f0f1f6;
+  min-height: 340px;
+  justify-content: flex-start;
+}
+
+.dashboard__card--image {
+  align-items: center;
+  justify-content: center;
+  min-height: 340px;
+  max-height: 400px;
+  display: flex;
+}
+
+.dashboard__title {
+  font-size: 26px;
+  color: #333;
+  margin-bottom: 24px;
+  letter-spacing: 0.16px;
+}
+
+.dashboard__section {
+  margin-bottom: 24px;
+}
+
+.dashboard__section-flex {
+  width: 50%;
+}
+
+.dashboard__label {
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #2563eb;
+  font-size: 17.6px;
+}
+
+.dashboard__desc {
+  color: #333;
+  margin-bottom: 16px;
+  font-size: 16px;
+}
+
+.dashboard__personality-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 10px;
+  padding: 0;
+  min-height: 26px;
+}
+
+.dashboard__personality-tag {
+  background: #e8f0fe;
+  color: #2563eb;
+  font-size: 12px;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-weight: 500;
+  margin-bottom: 2px;
+  height: 26px;
+}
+
+.dashboard__character-img {
+  width: 100%;
+  max-width: 320px;
+  aspect-ratio: 4/5;
+  height: auto;
+  border-radius: 12px;
+  background: #f0f1f6;
+  object-fit: cover;
+  margin-bottom: 0;
+  display: block;
+}
+
+.dashboard__bottom {
+  padding: 16px 24px;
+  border-top: 1px solid #f3f4f6;
+  background: transparent;
+  min-height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.button--chat-start {
+  border-radius: 8px;
+  background: #75C6D1;
+  color: #fff;
+  font-weight: bold;
+  font-size: 1.2rem;
+  padding: 12px 24px;
+  width: 100%;
+  border: none;
+  transition: background 0.2s, color 0.2s;
+}
+.button--chat-start:hover {
+  background: #51929A;
+  color: #FFF;
+}
+
+@media (max-width: 900px) {
+  .dashboard__container {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    padding: 0 8px;
+  }
+  .dashboard__card, .dashboard__card--image {
+    padding: 18px 10px 18px 10px;
+    min-height: unset;
+    max-height: unset;
+  }
+} 
