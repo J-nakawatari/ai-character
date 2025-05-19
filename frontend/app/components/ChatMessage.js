@@ -8,16 +8,24 @@ export default function ChatMessage({ message, isUser, characterImageUrl }) {
     </span>
   ));
 
+  const messageClass = isUser ? 'chat-message--user' : 'chat-message--ai';
+
   return (
-    <div className={`chat-message ${isUser ? 'chat-message-user' : 'chat-message-ai'}`}>
+    <div className={`chat-message ${messageClass}`}>
       {!isUser && characterImageUrl && (
-        <div className="chat-message-avatar">
-          <Image src={characterImageUrl} alt="Character" width={40} height={40} className="chat-avatar-img" />
+        <div className="chat-message__avatar">
+          <Image 
+            src={characterImageUrl} 
+            alt="Character" 
+            width={40} 
+            height={40} 
+            className="chat-message__avatar-img" 
+          />
         </div>
       )}
-      <div className="chat-message-bubble">
-        <p className="chat-message-content">{formattedContent}</p>
-        <span className="chat-message-time">
+      <div className="chat-message__bubble">
+        <p className="chat-message__content">{formattedContent}</p>
+        <span className="chat-message__time">
           {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
         </span>
       </div>
