@@ -1,0 +1,144 @@
+/* ダッシュボードページのスタイル */
+.dashboard {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-bg-primary);
+  position: relative;
+}
+
+.dashboard__card {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.dashboard__main-row {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: var(--space-2xl);
+  padding: 0 var(--space-md) 0 var(--space-xl);
+  height: 528px;
+  margin-top: auto;
+}
+
+.dashboard__col-text {
+  flex: 1 1 0%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.dashboard__title {
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+  margin-bottom: var(--space-xl);
+}
+
+.dashboard__section {
+  margin-bottom: var(--space-xl);
+}
+
+.dashboard__label {
+  font-weight: 700;
+  margin-bottom: var(--space-xs);
+}
+
+.dashboard__desc {
+  color: var(--color-text);
+  margin-bottom: var(--space-md);
+}
+
+.dashboard__personality {
+  color: var(--color-text);
+}
+
+.dashboard__col-image {
+  display: flex;
+}
+
+.dashboard__character-img {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  padding-bottom: 1px;
+}
+
+.dashboard__bottom {
+  padding: var(--space-md) var(--space-lg);
+  border-top: 1px solid var(--color-border-light);
+  background: transparent;
+  min-height: 95px;
+  height: 95px;
+}
+
+.dashboard__col-wrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.dashboard__col-text .dashboard__col-wrapper {
+  margin-bottom: auto;
+}
+
+.dashboard__col-image .dashboard__col-wrapper {
+  justify-content: flex-end;
+}
+
+.dashboard__character-name {
+  font-size: var(--font-size-4xl);
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: var(--space-md);
+  text-align: center;
+  padding-top: var(--space-lg);
+}
+
+.dashboard__personality-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-sm);
+  justify-content: flex-start;
+  padding: 0;
+  min-height: 26px;
+}
+
+.dashboard__personality-tag {
+  background: #fbead1;
+  color: #7a5c2e;
+  font-size: var(--font-size-xs);
+  border-radius: var(--radius-sm);
+  padding: var(--space-xs) var(--space-sm);
+  font-weight: 500;
+  margin-bottom: 2px;
+  height: 26px;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  .dashboard__main-row {
+    flex-direction: column;
+    gap: var(--space-lg);
+    height: auto;
+    padding: var(--space-md);
+  }
+  
+  .dashboard__col-image {
+    justify-content: center;
+  }
+  
+  .dashboard__character-img {
+    max-width: 250px;
+  }
+  
+  .dashboard__character-name {
+    font-size: var(--font-size-3xl);
+  }
+}

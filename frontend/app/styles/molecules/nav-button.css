@@ -1,0 +1,76 @@
+/* ナビゲーションボタンの基本スタイル */
+.nav-button {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  font-weight: 500;
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-normal);
+  cursor: pointer;
+  font-size: var(--font-size-md);
+  z-index: 100;
+}
+
+.nav-button:hover {
+  background: var(--color-bg-primary);
+  box-shadow: var(--shadow-md);
+}
+
+.nav-button__icon {
+  font-size: var(--font-size-lg);
+}
+
+.nav-button__text {
+  display: inline-block;
+}
+
+/* 位置バリエーション */
+.nav-button--top-left {
+  top: var(--space-md);
+  left: var(--space-md);
+}
+
+
+.nav-button--top-right {
+  top: var(--space-md);
+  right: var(--space-md);
+}
+
+.nav-button--bottom-left {
+  bottom: var(--space-md);
+  left: var(--space-md);
+}
+
+.nav-button--bottom-right {
+  bottom: var(--space-md);
+  right: var(--space-md);
+}
+
+/* ダークモード対応 */
+.dark-mode .nav-button {
+  background: rgba(31, 41, 55, 0.8);
+  border-color: var(--color-border);
+}
+
+.dark-mode .nav-button:hover {
+  background: var(--color-bg-secondary);
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 640px) {
+  .nav-button__text {
+    display: none;
+  }
+  
+  .nav-button {
+    padding: var(--space-xs);
+  }
+}
