@@ -1,0 +1,218 @@
+/* 管理者ページのスタイル */
+.admin {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-bg-secondary);
+}
+
+.admin__header {
+  background-color: var(--color-bg-primary);
+  height: 64px;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-xl);
+  box-shadow: var(--shadow-sm);
+  z-index: 10;
+}
+
+.admin__header-title {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  color: var(--color-primary);
+  letter-spacing: 0.02em;
+}
+
+.admin__content {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.admin__sidebar {
+  width: 220px;
+  background-color: #23272f;
+  color: var(--color-text-inverse);
+  padding: var(--space-xl) 0 0 0;
+  min-height: calc(100vh - 64px);
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-sm);
+}
+
+.admin__nav {
+  list-style: none;
+  padding: 0 0 0 var(--space-lg);
+  margin: 0;
+}
+
+.admin__nav-item {
+  margin-bottom: var(--space-md);
+}
+
+.admin__nav-link {
+  color: var(--color-text-inverse);
+  text-decoration: none;
+  font-size: var(--font-size-md);
+  font-weight: 500;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
+  display: block;
+  transition: all var(--transition-normal);
+}
+
+.admin__nav-link:hover,
+.admin__nav-link--active {
+  background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  color: var(--color-text-inverse);
+  font-weight: 700;
+}
+
+.admin__main {
+  flex: 1;
+  padding: var(--space-2xl) var(--space-xl);
+  overflow-x: auto;
+}
+
+.admin__title {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  margin-bottom: var(--space-xl);
+  color: var(--color-text);
+}
+
+.admin__card {
+  background-color: var(--color-bg-primary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: var(--space-xl);
+  margin-bottom: var(--space-xl);
+  border: 1px solid var(--color-border-light);
+}
+
+.admin__card-title {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  margin-bottom: var(--space-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.admin__card-icon {
+  font-size: var(--font-size-2xl);
+}
+
+.admin__stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--space-lg);
+  margin-bottom: var(--space-xl);
+}
+
+.admin__stat-card {
+  background-color: var(--color-bg-primary);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border-light);
+}
+
+.admin__stat-title {
+  font-size: var(--font-size-md);
+  font-weight: 500;
+  color: var(--color-text-light);
+  margin-bottom: var(--space-xs);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.admin__stat-value {
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.admin__stat-desc {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+  margin-top: var(--space-xs);
+}
+
+.admin__table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin__table-header {
+  background-color: var(--color-bg-secondary);
+  text-align: left;
+}
+
+.admin__table-header th {
+  padding: var(--space-sm) var(--space-md);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.admin__table-row {
+  border-top: 1px solid var(--color-border);
+}
+
+.admin__table-cell {
+  padding: var(--space-sm) var(--space-md);
+}
+
+.admin__table-cell--image {
+  width: 48px;
+}
+
+.admin__table-cell--actions {
+  display: flex;
+  gap: var(--space-xs);
+}
+
+.admin__avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: var(--color-bg-secondary);
+}
+
+.admin__avatar-placeholder {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--color-bg-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-light);
+  font-weight: 700;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  .admin__sidebar {
+    width: 80px;
+  }
+  
+  .admin__nav {
+    padding-left: var(--space-xs);
+  }
+  
+  .admin__nav-link {
+    padding: var(--space-sm);
+    text-align: center;
+  }
+  
+  .admin__nav-text {
+    display: none;
+  }
+  
+  .admin__main {
+    padding: var(--space-lg) var(--space-md);
+  }
+}
