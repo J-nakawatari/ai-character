@@ -187,9 +187,9 @@ export default function Chat() {
   return (
     <div className="chat-container">
       {/* 背景画像 */}
-      {user.selectedCharacter?.imageChatBg && (
+      {user.selectedCharacter?.imageChatBackground && (
         <img
-          src={user.selectedCharacter.imageChatBg}
+          src={user.selectedCharacter.imageChatBackground}
           alt="背景"
           className="chat-bg-character-image"
         />
