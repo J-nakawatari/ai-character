@@ -6,9 +6,10 @@ import { useAuth } from '../utils/auth';
 import api from '../utils/api';
 import BackButton from '../components/BackButton';
 import { useTranslation } from 'next-i18next';
+import i18n from 'i18next';
 
 export default function MyPage() {
-  const { user, loading, logout } = useAuth();
+  const { user, loading, logout, updateLanguage } = useAuth();
   const router = useRouter();
   const [purchasedCharacters, setPurchasedCharacters] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -45,9 +46,10 @@ export default function MyPage() {
   
   const handleLanguageChange = async (language) => {
     try {
-      await api.patch('/users/me/language', { language });
-      localStorage.setItem('i18nextLng', language);
-      window.location.reload(); // 一時的にリロードを使用（後でリアルタイム切り替えに修正）
+      const { success } = await updateLanguage(language);
+      if (success) {
+        i18n.changeLanguage(language);
+      }
     } catch (err) {
       console.error('言語設定の変更に失敗しました', err);
     }
