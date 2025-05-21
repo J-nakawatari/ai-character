@@ -24,6 +24,39 @@ const UserSchema = new Schema({
     ref: 'Character',
     default: null
   },
+  membershipType: {
+    type: String,
+    enum: ['free', 'premium'],
+    default: 'free'
+  },
+  subscriptionStatus: {
+    type: String,
+    enum: ['active', 'inactive', 'expired', 'canceled'],
+    default: 'active'
+  },
+  subscriptionEndDate: {
+    type: Date,
+    default: null
+  },
+  purchasedCharacters: [{
+    character: {
+      type: Schema.Types.ObjectId,
+      ref: 'Character'
+    },
+    purchaseDate: {
+      type: Date,
+      default: Date.now
+    },
+    purchaseType: {
+      type: String,
+      enum: ['buy', 'subscription'],
+      default: 'buy'
+    }
+  }],
+  lastLoginDate: {
+    type: Date,
+    default: Date.now
+  },
   createdAt: {
     type: Date,
     default: Date.now
