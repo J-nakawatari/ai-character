@@ -35,10 +35,11 @@ const orbitron = Orbitron({
 
 export default function RootLayout({ children }) {
   const pathname = usePathname();
-  const locale = useLocale();
   const isAdmin = pathname.startsWith('/admin');
   const hideSidebar = pathname.startsWith('/login') || pathname.startsWith('/register') || isAdmin;
 
+  const locale = 'ja';
+  
   let messages;
   try {
     messages = require(`../messages/${locale}.json`);
