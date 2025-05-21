@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '../utils/auth';
 import api from '../utils/api';
 import BackButton from '../components/BackButton';
+import { useTranslation } from 'next-i18next';
 
 export default function MyPage() {
   const { user, loading, logout } = useAuth();
@@ -14,6 +15,7 @@ export default function MyPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
+  const { t } = useTranslation('common');
   
   useEffect(() => {
     if (!loading && !user) {
@@ -38,6 +40,16 @@ export default function MyPage() {
       window.location.reload();
     } catch (err) {
       console.error('キャラクター選択に失敗しました', err);
+    }
+  };
+  
+  const handleLanguageChange = async (language) => {
+    try {
+      await api.patch('/users/me/language', { language });
+      localStorage.setItem('i18nextLng', language);
+      window.location.reload(); // 一時的にリロードを使用（後でリアルタイム切り替えに修正）
+    } catch (err) {
+      console.error('言語設定の変更に失敗しました', err);
     }
   };
   
@@ -190,6 +202,30 @@ export default function MyPage() {
             ))}
           </div>
         )}
+      </section>
+      
+      {/* 言語設定 */}
+      <section className="mypage__section">
+        <h2 className="mypage__section-title">{t('mypage.language_settings')}</h2>
+        <p>表示言語を選択してください。キャラクターとの会話も選択した言語で行われます。</p>
+        
+        <div className="mypage__language-selection">
+          <div 
+            className={`mypage__language-option ${user.preferredLanguage === 'ja' ? 'mypage__language-option--active' : ''}`}
+            onClick={() => handleLanguageChange('ja')}
+          >
+            <span className="mypage__language-flag">🇯🇵</span>
+            <span className="mypage__language-name">{t('mypage.language_japanese')}</span>
+          </div>
+          
+          <div 
+            className={`mypage__language-option ${user.preferredLanguage === 'en' ? 'mypage__language-option--active' : ''}`}
+            onClick={() => handleLanguageChange('en')}
+          >
+            <span className="mypage__language-flag">🇺🇸</span>
+            <span className="mypage__language-name">{t('mypage.language_english')}</span>
+          </div>
+        </div>
       </section>
       
       {/* 退会 */}

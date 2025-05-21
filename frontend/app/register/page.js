@@ -8,17 +8,20 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '../utils/auth';
 import BackButton from '../components/BackButton';
+import { useTranslation } from 'next-i18next';
 
 const schema = z.object({
   name: z.string().min(2, 'お名前は2文字以上で入力してください'),
   email: z.string().email('有効なメールアドレスを入力してください'),
   password: z.string().min(6, 'パスワードは6文字以上で入力してください'),
+  preferredLanguage: z.enum(['ja', 'en']),
 });
 
 export default function Register() {
   const { register: registerUser } = useAuth();
   const router = useRouter();
   const [serverError, setServerError] = useState('');
+  const { t } = useTranslation('common');
   
   const {
     register,
@@ -61,7 +64,7 @@ export default function Register() {
       
       <div className="card auth-layout__card">
         <div className="card__body">
-          <h1 className="auth-layout__title">新規登録</h1>
+          <h1 className="auth-layout__title">{t('auth.register_title')}</h1>
           
           {serverError && (
             <div className="input__error-message mb-3">
@@ -71,7 +74,7 @@ export default function Register() {
           
           <form onSubmit={handleSubmit(onSubmit)} className="auth-layout__form">
             <div className="input-group">
-              <label className="input__label">お名前</label>
+              <label className="input__label">{t('auth.name')}</label>
               <input
                 className="input"
                 type="text"
@@ -84,7 +87,7 @@ export default function Register() {
             </div>
             
             <div className="input-group">
-              <label className="input__label">メールアドレス</label>
+              <label className="input__label">{t('auth.email')}</label>
               <input
                 className="input"
                 type="email"
@@ -97,7 +100,7 @@ export default function Register() {
             </div>
             
             <div className="input-group">
-              <label className="input__label">パスワード</label>
+              <label className="input__label">{t('auth.password')}</label>
               <input
                 className="input"
                 type="password"
@@ -109,20 +112,44 @@ export default function Register() {
               )}
             </div>
             
+            <div className="input-group">
+              <label className="input__label">{t('mypage.language_settings')}</label>
+              <div className="language-options">
+                <label className="language-option">
+                  <input
+                    type="radio"
+                    value="ja"
+                    {...register('preferredLanguage')}
+                    defaultChecked
+                  />
+                  <span className="language-flag">🇯🇵</span>
+                  <span className="language-name">{t('mypage.language_japanese')}</span>
+                </label>
+                <label className="language-option">
+                  <input
+                    type="radio"
+                    value="en"
+                    {...register('preferredLanguage')}
+                  />
+                  <span className="language-flag">🇺🇸</span>
+                  <span className="language-name">{t('mypage.language_english')}</span>
+                </label>
+              </div>
+            </div>
+            
             <button
               type="submit"
               className="button button--primary button--full"
               disabled={isSubmitting}
             >
-              {isSubmitting ? '登録中...' : '登録する'}
+              {isSubmitting ? t('auth.registering') : t('auth.register_button')}
             </button>
           </form>
           
           <div className="auth-layout__footer">
             <p>
-              すでにアカウントをお持ちの方は
-              <Link href="/login" className="auth-layout__link">こちら</Link>
-              からログインできます
+              {t('auth.already_have_account')}
+              <Link href="/login" className="auth-layout__link">{t('auth.login_button')}</Link>
             </p>
           </div>
         </div>
