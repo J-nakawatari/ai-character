@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Marvel:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Maven+Pro:wght@900&display=swap');
 @import './styles/reset.css';
 @import './styles/layout.css';
 
@@ -23,4 +25,133 @@ body {
 main {
   flex: 1;
   padding: 0;
+}
+
+/* --- トグルスイッチUI --- */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 26px;
+  vertical-align: middle;
+}
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #e5eaf2;
+  transition: background 0.2s;
+  border-radius: 30px;
+}
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background-color: #fff;
+  transition: transform 0.2s;
+  border-radius: 50%;
+  box-shadow: 0 1px 4px rgba(67, 234, 252, 0.08);
+}
+.toggle-switch input:checked + .toggle-slider {
+  background-color: #43eafc;
+}
+.toggle-switch input:checked + .toggle-slider:before {
+  transform: translateX(18px);
+}
+
+/* --- ユーザー一覧 --- */
+.user-list {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.user-list-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr 1fr;
+  padding: 16px;
+  align-items: center;
+}
+
+.user-list-row:last-child {
+  border-bottom: none;
+}
+
+.user-list-cell {
+  font-size: 14px;
+  color: var(--text-color);
+}
+
+.user-list-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-completed {
+  background-color: #e6f4ea;
+  color: #1e7e34;
+}
+
+.status-pending {
+  background-color: #fff3e0;
+  color: #f57c00;
+}
+
+/* --- Toast（画面中央表示・フェードアウト） --- */
+.toast-center {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 320px;
+  background: #22c55e;
+  color: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+  padding: 24px 32px;
+  font-size: 1.1rem;
+  z-index: 9999;
+  opacity: 1;
+  transition: opacity 0.5s;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.toast-center.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+.toast-center .toast-title {
+  font-weight: bold;
+  font-size: 1.1em;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+}
+.toast-center .toast-title .toast-icon {
+  font-size: 1.3em;
+  margin-right: 8px;
+}
+.toast-center .toast-message {
+  font-size: 1em;
 } 

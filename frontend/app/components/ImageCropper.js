@@ -8,7 +8,12 @@ export default function ImageCropper({
   cropWidth, 
   cropHeight, 
   onCropComplete, 
-  aspectRatio = null 
+  aspectRatio = null, 
+  saveButtonClassName = '',
+  saveButtonText = '切り抜いて保存',
+  cancelButtonClassName = '',
+  cancelButtonText = 'キャンセル',
+  onCancel
 }) {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
@@ -154,7 +159,12 @@ export default function ImageCropper({
           <div>サイズ: {cropWidth} x {cropHeight}px</div>
         </div>
         
-        <Button onClick={handleCrop}>切り抜いて保存</Button>
+        <div style={{ display: 'flex', gap: 16, marginTop: 18 }}>
+          <Button onClick={handleCrop} className={saveButtonClassName}>{saveButtonText}</Button>
+          {onCancel && (
+            <Button onClick={onCancel} className={cancelButtonClassName}>{cancelButtonText}</Button>
+          )}
+        </div>
       </div>
     </div>
   );

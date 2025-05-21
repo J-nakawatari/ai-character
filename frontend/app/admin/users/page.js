@@ -77,53 +77,74 @@ export default function AdminUsers() {
   }
   
   return (
-    <div>
+    <div className="admin-content">
       <h1 className="admin-dashboard-title">ユーザー管理</h1>
-      {error && (
-        <div className="admin-stats-card" style={{background:'#fff0f3', color:'#c2185b', marginBottom: '24px'}}>{error}</div>
-      )}
-      <div className="admin-stats-cards">
-        <div className="admin-stats-card">
-          <div className="admin-stats-title"><span className="admin-stats-icon">👥</span>ユーザー数</div>
-          <div className="admin-stats-value">{users.length}</div>
-          <div className="admin-stats-desc">登録ユーザー数</div>
-        </div>
-      </div>
-      <div className="admin-stats-cards" style={{flexDirection:'column', gap:'18px'}}>
-        <div className="admin-stats-card" style={{padding:'24px 18px'}}>
-          <div className="admin-stats-title"><span className="admin-stats-icon">📋</span>ユーザー一覧</div>
-          <div style={{width:'100%', overflowX:'auto'}}>
-            <table style={{width:'100%', borderCollapse:'collapse'}}>
-              <thead>
-                <tr style={{background:'#f4f6fa'}}>
-                  <th style={{textAlign:'left', padding:'8px 12px'}}>名前</th>
-                  <th style={{textAlign:'left', padding:'8px 12px'}}>操作</th>
-                </tr>
-              </thead>
-              <tbody>
-                {users.map(user => (
-                  <tr key={user._id} style={{borderTop:'1px solid #eee'}}>
-                    <td style={{padding:'8px 12px'}}>{user.name || user.email}</td>
-                    <td style={{padding:'8px 12px'}}>
-                      <button onClick={() => handleUserSelect(user._id)} className="admin-logout-btn" style={{padding:'4px 12px', fontSize:'0.95rem'}}>詳細</button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+      <div className="admin-content-wrapper">
+        {error && (
+          <div className="admin-stats-card-wrapper error">{error}</div>
+        )}
+        <div className="admin-stats-card-wrapper">
+          <div className="admin-stats-title">ユーザー一覧</div>
+          <div className="user-list">
+            {users.map(user => (
+              <div key={user._id} className="user-list-row">
+                <div className="user-list-cell">{user.name || user.email}</div>
+                <div className="user-list-cell">
+                セットアップ状態：
+                  <span className={`status-badge ${user.hasCompletedSetup ? 'status-completed' : 'status-pending'}`}>
+                    {user.hasCompletedSetup ? '完了' : '未完了'}
+                  </span>
+                </div>
+                <div className="user-list-cell">登録日：{new Date(user.createdAt).toLocaleString('ja-JP')}</div>
+                <div className="user-list-actions">
+                  <button onClick={() => handleUserSelect(user._id)} className="admin-logout-btn">詳細</button>
+                  <button onClick={() => handleBanUser(user._id)} className="admin-logout-btn ban">無効化</button>
+                  <button onClick={() => handleDeleteUser(user._id)} className="admin-logout-btn delete">削除</button>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
         {selectedUser && (
-          <div className="admin-stats-card" style={{padding:'24px 18px'}}>
-            <div className="admin-stats-title"><span className="admin-stats-icon">👤</span>ユーザー詳細</div>
-            <div style={{marginBottom:'8px'}}><b>名前:</b> {selectedUser.name}</div>
-            <div style={{marginBottom:'8px'}}><b>メール:</b> {selectedUser.email}</div>
-            <div style={{marginBottom:'8px'}}><b>登録日:</b> {new Date(selectedUser.createdAt).toLocaleString('ja-JP')}</div>
-            <div style={{marginBottom:'8px'}}><b>セットアップ完了:</b> {selectedUser.hasCompletedSetup ? 'はい' : 'いいえ'}</div>
-            <div style={{marginBottom:'8px'}}><b>選択中キャラクター:</b> {selectedUser.selectedCharacter ? selectedUser.selectedCharacter.name : '未選択'}</div>
-            <div style={{display:'flex', gap:'8px', marginTop:'12px'}}>
-              <button onClick={() => handleBanUser(selectedUser._id)} className="admin-logout-btn" style={{background:'#ffe082', color:'#7b1fa2'}}>無効化</button>
-              <button onClick={() => handleDeleteUser(selectedUser._id)} className="admin-logout-btn" style={{background:'#ffb3c6', color:'#c2185b'}}>削除</button>
+          <div className="admin-stats-card-wrapper">
+            <div className="admin-stats-title">ユーザー詳細</div>
+            <div className="user-detail-section">
+              <h3 className="user-detail-section-title">基本情報</h3>
+              <div className="user-detail-grid">
+                <div className="user-detail-item">
+                  <span className="user-detail-label">名前</span>
+                  <span className="user-detail-value">{selectedUser.name}</span>
+                </div>
+                <div className="user-detail-item">
+                  <span className="user-detail-label">メール</span>
+                  <span className="user-detail-value">{selectedUser.email}</span>
+                </div>
+                <div className="user-detail-item">
+                  <span className="user-detail-label">登録日</span>
+                  <span className="user-detail-value">{new Date(selectedUser.createdAt).toLocaleString('ja-JP')}</span>
+                </div>
+              </div>
+            </div>
+            <div className="user-detail-section">
+              <h3 className="user-detail-section-title">アカウント情報</h3>
+              <div className="user-detail-grid">
+                <div className="user-detail-item">
+                  <span className="user-detail-label">セットアップ状態</span>
+                  <span className={`user-detail-value ${selectedUser.hasCompletedSetup ? 'status-completed' : 'status-pending'}`}>{selectedUser.hasCompletedSetup ? '完了' : '未完了'}</span>
+                </div>
+                <div className="user-detail-item">
+                  <span className="user-detail-label">選択中キャラクター</span>
+                  <span className="user-detail-value">
+                    {selectedUser.selectedCharacter ? (
+                      <div className="character-info">
+                        <span className="character-name">{selectedUser.selectedCharacter.name}</span>
+                      </div>
+                    ) : (
+                      <span className="status-pending">未選択</span>
+                    )}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         )}

@@ -59,88 +59,130 @@ export default function AdminCharacters() {
   }
   
   return (
-    <div>
+    <div className="admin-content">
       <h1 className="admin-dashboard-title">キャラクター管理</h1>
-      {error && (
-        <div className="admin-stats-card" style={{background:'#fff0f3', color:'#c2185b', marginBottom: '24px'}}>{error}</div>
-      )}
-      <div className="admin-stats-cards">
-        <div className="admin-stats-card">
-          <div className="admin-stats-title"><span className="admin-stats-icon">🤖</span>キャラクター数</div>
-          <div className="admin-stats-value">{characters.length}</div>
-          <div className="admin-stats-desc">登録キャラクター数</div>
-        </div>
-        <div style={{flex:1}}></div>
-      </div>
-      <div className="admin-stats-card" style={{padding:'24px 18px', marginBottom:'32px'}}>
-        <div className="admin-stats-title"><span className="admin-stats-icon">📋</span>キャラクター一覧</div>
-        <div style={{width:'100%', overflowX:'auto'}}>
-          <table style={{width:'100%', borderCollapse:'collapse'}}>
-            <thead>
-              <tr style={{background:'#f4f6fa'}}>
-                <th style={{textAlign:'left', padding:'8px 12px'}}>画像</th>
-                <th style={{textAlign:'left', padding:'8px 12px'}}>名前</th>
-                <th style={{textAlign:'left', padding:'8px 12px'}}>特長</th>
-                <th style={{textAlign:'left', padding:'8px 12px'}}>種別</th>
-                <th style={{textAlign:'left', padding:'8px 12px'}}>ステータス</th>
-                <th style={{textAlign:'left', padding:'8px 12px'}}>操作</th>
-              </tr>
-            </thead>
-            <tbody>
-              {characters.length === 0 ? (
-                <tr><td colSpan={6} style={{padding:'16px', textAlign:'center'}}>キャラクターが見つかりません</td></tr>
-              ) :
-                characters.map(character => (
-                  <tr key={character._id} style={{borderTop:'1px solid #eee'}}>
-                    <td style={{padding:'8px 12px'}}>
-                      {character.imageChatAvatar ? (
-                        <img src={character.imageChatAvatar} alt={character.name} style={{width:'40px', height:'40px', borderRadius:'50%', objectFit:'cover', background:'#f4f6fa'}} />
-                      ) : (
-                        <span style={{display:'inline-block', width:'40px', height:'40px', borderRadius:'50%', background:'#f4f6fa', textAlign:'center', lineHeight:'40px', color:'#aaa', fontWeight:'bold'}}>{character.name.charAt(0)}</span>
-                      )}
-                    </td>
-                    <td style={{padding:'8px 12px', fontWeight:'bold'}}>{character.name}</td>
-                    <td style={{padding:'8px 12px', maxWidth:'240px', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis'}}>{character.description}</td>
-                    <td style={{padding:'8px 12px'}}>
-                      {character.isPremium ? <span style={{color:'#fa7be6'}}>プレミアム</span> : <span style={{color:'#888'}}>通常</span>}
-                      {character.isLimited && <span style={{color:'#43eafc', marginLeft:'8px'}}>限定</span>}
-                    </td>
-                    <td style={{padding:'8px 12px'}}>{character.isActive ? <span style={{color:'#43eafc'}}>有効</span> : <span style={{color:'#c2185b'}}>無効</span>}</td>
-                    <td style={{padding:'8px 12px'}}>
-                      <button onClick={() => setModalCharacter(character)} className="admin-logout-btn" style={{background:'#eee', color:'#7b1fa2', marginRight:'6px'}}>詳細</button>
-                      <button onClick={() => handleEditCharacter(character._id)} className="admin-logout-btn" style={{background:'#e0f7fa', color:'#7b1fa2', marginRight:'6px'}}>編集</button>
-                      <button onClick={() => handleDeleteCharacter(character._id)} className="admin-logout-btn" style={{background:'#ffb3c6', color:'#c2185b'}}>削除</button>
-                    </td>
-                  </tr>
-                ))
-              }
-            </tbody>
-          </table>
-        </div>
-      </div>
-      {modalCharacter && (
-        <div style={{position:'fixed',top:0,left:0,width:'100vw',height:'100vh',background:'rgba(0,0,0,0.25)',zIndex:1000,display:'flex',alignItems:'center',justifyContent:'center'}}>
-          <div className="admin-stats-card" style={{minWidth:'320px',maxWidth:'90vw',padding:'32px 36px',position:'relative'}}>
-            <button onClick={()=>setModalCharacter(null)} style={{position:'absolute',top:'16px',right:'16px',background:'none',border:'none',fontSize:'1.5rem',color:'#888',cursor:'pointer'}}>×</button>
-            <div style={{display:'flex',alignItems:'center',gap:'18px',marginBottom:'18px'}}>
-              {modalCharacter.imageChatAvatar ? (
-                <img src={modalCharacter.imageChatAvatar} alt={modalCharacter.name} style={{width:'56px',height:'56px',borderRadius:'50%',objectFit:'cover',background:'#f4f6fa'}} />
-              ) : (
-                <span style={{display:'inline-block', width:'56px', height:'56px', borderRadius:'50%', background:'#f4f6fa', textAlign:'center', lineHeight:'56px', color:'#aaa', fontWeight:'bold',fontSize:'1.5rem'}}>{modalCharacter.name.charAt(0)}</span>
-              )}
-              <div>
-                <div style={{fontWeight:'bold',fontSize:'1.2rem'}}>{modalCharacter.name}</div>
-                <div style={{color:'#888',fontSize:'0.95rem'}}>{modalCharacter.isPremium ? 'プレミアム' : '通常'}{modalCharacter.isLimited && '・限定'}</div>
+      <div className="admin-content-wrapper">
+        {error && (
+          <div className="admin-stats-card-wrapper error">{error}</div>
+        )}
+        <div className="admin-stats-cards">
+          <div className="character-admin-stats-card">
+            <div className="admin-stats-info">
+              <div className="admin-stats-title">
+              登録キャラクター数 {characters.length}人
+              </div>
+              <div className="admin-stats-summary">
+                <div className="admin-stats-summary-item">
+                  <span className="admin-stats-summary-label">プレミアム</span>
+                  <span className="admin-stats-summary-value">{characters.filter(c => c.isPremium).length}人</span>
+                </div>
+                <div className="admin-stats-summary-item">
+                  <span className="admin-stats-summary-label">限定</span>
+                  <span className="admin-stats-summary-value">{characters.filter(c => c.isLimited).length}人</span>
+                </div>
+                <div className="admin-stats-summary-item">
+                  <span className="admin-stats-summary-label">有効</span>
+                  <span className="admin-stats-summary-value">{characters.filter(c => c.isActive).length}人</span>
+                </div>
               </div>
             </div>
-            <div style={{marginBottom:'12px'}}><b>特長:</b> {modalCharacter.description}</div>
-            <div style={{marginBottom:'12px'}}><b>性格:</b> {modalCharacter.personalityPrompt}</div>
-            <div style={{marginBottom:'12px'}}><b>ステータス:</b> {modalCharacter.isActive ? <span style={{color:'#43eafc'}}>有効</span> : <span style={{color:'#c2185b'}}>無効</span>}</div>
+          </div>
+          <div className="flex-spacer"></div>
+        </div>
+        
+        <div className="admin-stats-card-wrapper">
+          <div className="admin-stats-header">
+            <div className="admin-stats-title">キャラクター一覧</div>
+            <button onClick={handleCreateCharacter} className="admin-logout-btn create">新規作成</button>
+          </div>
+          <div className="character-list">
+            {characters.length === 0 ? (
+              <div className="empty-message">キャラクターが見つかりません</div>
+            ) : (
+              characters.map(character => (
+                <div key={character._id} className="character-list-item">
+                  <div className="character-list-main">
+                    <div className="character-avatar">
+                      {character.imageChatAvatar ? (
+                        <img src={character.imageChatAvatar} alt={character.name} className="character-avatar-img" />
+                      ) : (
+                        <span className="character-avatar-placeholder">{character.name.charAt(0)}</span>
+                      )}
+                    </div>
+                    <div className="character-info">
+                      <div className="character-name">{character.name}</div>
+                      <div className="character-date">
+                        登録日時: {new Date(character.createdAt).toLocaleString('ja-JP')}
+                      </div>
+                      <div className="character-tags">
+                        {character.isPremium && (
+                          <span className="premium-badge">
+                            プレミアム：{character.purchaseType === 'buy' ? '買い切り' : 'レンタル'}
+                          </span>
+                        )}
+                        {character.isLimited && <span className="limited-badge">限定</span>}
+                        {character.isActive ? (
+                          <span className="active-badge">有効</span>
+                        ) : (
+                          <span className="inactive-badge">無効</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="character-actions">
+                    <button onClick={() => setModalCharacter(character)} className="admin-logout-btn detail">詳細</button>
+                    <button onClick={() => handleEditCharacter(character._id)} className="admin-logout-btn edit">編集</button>
+                    <button onClick={() => handleDeleteCharacter(character._id)} className="admin-logout-btn delete">削除</button>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
-      )}
-      <div style={{marginTop:'32px'}}>
-        <button onClick={handleCreateCharacter} className="admin-logout-btn" style={{background:'#43eafc', color:'#fff', fontWeight:'bold'}}>新規キャラクター作成</button>
+        
+        {modalCharacter && (
+          <div className="modal-overlay">
+            <div className="admin-stats-card-wrapper modal-content">
+              <button onClick={()=>setModalCharacter(null)} className="modal-close">×</button>
+              <div className="modal-header">
+                {modalCharacter.imageChatAvatar ? (
+                  <img src={modalCharacter.imageChatAvatar} alt={modalCharacter.name} className="modal-avatar" />
+                ) : (
+                  <span className="modal-avatar-placeholder">{modalCharacter.name.charAt(0)}</span>
+                )}
+                <div>
+                  <div className="modal-title">{modalCharacter.name}</div>
+                  <div className="modal-subtitle">
+                    {modalCharacter.isPremium ? 'プレミアム' : '通常'}{modalCharacter.isLimited && '・限定'}
+                  </div>
+                </div>
+              </div>
+              <div className="modal-detail-section">
+                <h3 className="modal-detail-title">基本情報</h3>
+                <div className="modal-detail-grid">
+                  <div className="modal-detail-item">
+                    <span className="modal-detail-label">特長</span>
+                    <span className="modal-detail-value">{modalCharacter.description}</span>
+                  </div>
+                  <div className="modal-detail-item">
+                    <span className="modal-detail-label">性格</span>
+                    <span className="modal-detail-value">{modalCharacter.personalityPrompt}</span>
+                  </div>
+                  <div className="modal-detail-item">
+                    <span className="modal-detail-label">ステータス</span>
+                    <span className="modal-detail-value">
+                      {modalCharacter.isActive ? (
+                        <span className="active-badge">有効</span>
+                      ) : (
+                        <span className="inactive-badge">無効</span>
+                      )}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAdminAuth } from '../utils/adminAuth';
 import Link from 'next/link';
-import Sidebar from "../components/Sidebar";
+import SidebarShadcn from "../components/SidebarShadcn";
 
 export default function AdminLayout({ children }) {
   const { admin, loading, adminLogout } = useAdminAuth();
@@ -44,22 +44,8 @@ export default function AdminLayout({ children }) {
   
   return (
     <div className="app-layout">
-      <Sidebar adminMode />
-      <main className="app-main">
-        {/* ヘッダー */}
-        <header className="admin-header">
-          <div className="admin-header-inner">
-            <h1 className="admin-header-title">Charactier 管理画面</h1>
-            <button onClick={handleLogout} className="admin-logout-btn">ログアウト</button>
-          </div>
-        </header>
-        <div className="admin-content">
-          {/* メインコンテンツエリア */}
-          <main className="admin-main">
-            {children}
-          </main>
-        </div>
-      </main>
+      <SidebarShadcn onLogout={handleLogout} />
+      {children}
     </div>
   );
 }

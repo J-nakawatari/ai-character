@@ -2,34 +2,46 @@
 
 import { useEffect, useState } from 'react';
 
-export default function Toast({ message, type = 'success', duration = 3000, onClose }) {
-  const [visible, setVisible] = useState(true);
+export default function Toast({ show, message, type = 'success', duration = 3000, onClose }) {
+  const [visible, setVisible] = useState(show);
+  const [hide, setHide] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setVisible(false);
-      if (onClose) onClose();
-    }, duration);
+    setVisible(show);
+  }, [show]);
 
+  useEffect(() => {
+    if (!show) return;
+    const timer = setTimeout(() => {
+      setHide(true);
+      setTimeout(() => {
+        setVisible(false);
+        if (onClose) onClose();
+      }, 500); // フェードアウト用
+    }, duration);
     return () => clearTimeout(timer);
-  }, [duration, onClose]);
+  }, [show, duration, onClose]);
 
   if (!visible) return null;
 
-  const toastClasses = {
-    success: 'toast-success',
-    error: 'toast-error',
-    info: 'toast-info',
+  const toastTitles = {
+    success: 'Success',
+    error: 'Error',
+    info: 'Info',
+  };
+  const toastIcons = {
+    success: '✓',
+    error: '✕',
+    info: 'ℹ',
   };
 
   return (
-    <div className={`toast ${toastClasses[type] || 'toast-info'}`}>
-      <div className="toast-content">
-        {type === 'success' && <span className="toast-icon">✓</span>}
-        {type === 'error' && <span className="toast-icon">✕</span>}
-        {type === 'info' && <span className="toast-icon">ℹ</span>}
-        <span className="toast-message">{message}</span>
+    <div className={`toast-center${hide ? ' hide' : ''}`}> 
+      <div className="toast-title">
+        <span className="toast-icon">{toastIcons[type] || toastIcons.info}</span>
+        {toastTitles[type] || toastTitles.info}
       </div>
+      <div className="toast-message">{message}</div>
     </div>
   );
 }
