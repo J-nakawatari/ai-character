@@ -9,4 +9,11 @@ module.exports = {
   },
   reloadOnPrerender: process.env.NODE_ENV === 'development',
   defaultNS: 'common',
+  detection: {
+    order: ['localStorage', 'cookie', 'navigator'],
+    caches: ['localStorage', 'cookie'],
+  },
+  react: {
+    useSuspense: false,
+  },
 };
