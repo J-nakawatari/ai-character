@@ -12,6 +12,8 @@
     "@hookform/resolvers": "^5.0.1",
     "accept-language": "^3.0.20",
     "axios": "^1.9.0",
+    "i18next-browser-languagedetector": "^8.1.0",
+    "i18next-http-backend": "^3.0.2",
     "next": "15.3.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

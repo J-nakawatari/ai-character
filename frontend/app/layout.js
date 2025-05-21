@@ -6,6 +6,7 @@ import { AdminAuthProvider } from "./utils/adminAuth";
 import Sidebar from "./components/Sidebar";
 import { usePathname } from "next/navigation";
 import { appWithTranslation } from 'next-i18next';
+import './i18n'; // Import i18n initialization
 import './globals.css';
 import './styles/setup.css';
 import './styles/dashboard.css';
