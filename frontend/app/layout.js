@@ -5,6 +5,7 @@ import { AuthProvider } from "./utils/auth";
 import { AdminAuthProvider } from "./utils/adminAuth";
 import Sidebar from "./components/Sidebar";
 import { usePathname } from "next/navigation";
+import { appWithTranslation } from 'next-i18next';
 import './globals.css';
 import './styles/setup.css';
 import './styles/dashboard.css';
@@ -31,7 +32,7 @@ const orbitron = Orbitron({
   variable: '--font-orbitron',
 });
 
-export default function RootLayout({ children }) {
+export default appWithTranslation(function RootLayout({ children }) {
   const pathname = usePathname();
   const isAdmin = pathname.startsWith('/admin');
   const hideSidebar = pathname.startsWith('/login') || pathname.startsWith('/register') || isAdmin;
@@ -54,4 +55,4 @@ export default function RootLayout({ children }) {
       </body>
     </html>
   );
-}
+});

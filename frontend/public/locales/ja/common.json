@@ -1,0 +1,44 @@
+{
+  "app": {
+    "title": "Charactier",
+    "login": "ログイン",
+    "register": "新規登録",
+    "logout": "ログアウト",
+    "mypage": "マイページ",
+    "dashboard": "ダッシュボード"
+  },
+  "auth": {
+    "name": "お名前",
+    "email": "メールアドレス",
+    "password": "パスワード",
+    "login_title": "ログイン",
+    "register_title": "新規登録",
+    "already_have_account": "すでにアカウントをお持ちの方はこちらからログインできます",
+    "dont_have_account": "アカウントをお持ちでない方はこちらから登録できます",
+    "logging_in": "ログイン中...",
+    "login_button": "ログインする",
+    "registering": "登録中...",
+    "register_button": "登録する"
+  },
+  "mypage": {
+    "title": "マイページ",
+    "account_info": "アカウント情報",
+    "username": "ユーザー名",
+    "email": "メールアドレス",
+    "member_type": "会員種別",
+    "premium_member": "プレミアム会員",
+    "free_member": "無料会員",
+    "register_date": "登録日",
+    "last_login": "最終ログイン",
+    "subscription_info": "サブスクリプション情報",
+    "status": "ステータス",
+    "next_billing": "次回請求日 / 有効期限",
+    "upgrade_button": "プレミアムにアップグレード",
+    "purchased_characters": "購入済みキャラクター",
+    "no_purchased_characters": "購入済みのキャラクターはありません",
+    "delete_account": "退会する",
+    "language_settings": "言語設定",
+    "language_japanese": "日本語",
+    "language_english": "English"
+  }
+}

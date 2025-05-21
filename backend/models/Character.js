@@ -3,24 +3,48 @@ const Schema = mongoose.Schema;
 
 const CharacterSchema = new Schema({
   name: {
-    type: String,
-    required: true
+    ja: {
+      type: String,
+      required: true
+    },
+    en: {
+      type: String,
+      default: ''
+    }
   },
   description: {
-    type: String,
-    required: true
+    ja: {
+      type: String,
+      required: true
+    },
+    en: {
+      type: String,
+      default: ''
+    }
   },
   personality: {
     type: String,
     default: ''
   },
   personalityPrompt: {
-    type: String,
-    default: ''
+    ja: {
+      type: String,
+      default: ''
+    },
+    en: {
+      type: String,
+      default: ''
+    }
   },
   adminPrompt: {
-    type: String,
-    default: ''
+    ja: {
+      type: String,
+      default: ''
+    },
+    en: {
+      type: String,
+      default: ''
+    }
   },
   isPremium: {
     type: Boolean,
@@ -43,8 +67,14 @@ const CharacterSchema = new Schema({
     default: ''
   },
   defaultMessage: {
-    type: String,
-    default: ''
+    ja: {
+      type: String,
+      default: ''
+    },
+    en: {
+      type: String,
+      default: ''
+    }
   },
   themeColor: {
     type: String,
