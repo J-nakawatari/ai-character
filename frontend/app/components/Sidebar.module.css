@@ -1,13 +1,12 @@
 .sidebar {
-  width: 240px;
-  background: #fff;
-  border-right: 1px solid #f0f1f6;
+  width: 300px;
+  background: #F7F8FA;
+  border-right: 1px solid #E9EBF0;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 32px 0 24px 0;
-  box-shadow: 2px 0 8px rgba(30, 34, 90, 0.04);
+  padding: 0 0 24px 0;
 }
 
 .sidebar__logo {
@@ -39,36 +38,40 @@
 }
 
 .sidebar__item {
-  width: 100%;
-  margin-bottom: 4px;
+  margin: 0 auto;
+  width: calc(100% - 64px);
+}
+
+.sidebar__item:first-child {
+  border-top: 1px solid #E9EBF0;
+  padding-top: 32px;
 }
 
 .sidebar__item--active .sidebar__text,
 .sidebar__item:focus .sidebar__text {
-  color: #fff;
+  color: #1F2633;
 }
 
 .sidebar__item--active {
-  background: #5651AB;
+  color: #3B82F6;
 }
 
 .sidebar__item a {
   display: block;
-  padding: 14px 32px;
-  color: #222;
+  color: #1F2633;
   text-decoration: none;
   font-weight: 500;
   font-size: 16px;
+  padding: 16px 0;
   transition: background 0.18s, color 0.18s;
 }
 
 .sidebar__item a:hover {
-  background: #2F2B74;
-  color: #FFF;
+  color: #3B82F6;
 }
 
 .sidebar__item--active a {
-  color: #fff;
+  color: #3B82F6;
 }
 
 .sidebar__logout {
@@ -92,11 +95,37 @@
   color: #AC063F;
 }
 
+.sidebar__logoutBtn >.sidebar__icon {
+  color: #E4125A;
+}
+
+.sidebar__logoutBtn:hover > .sidebar__icon {
+  color: #AC063F;
+}
+
 .sidebar__icon {
+  color: #3B82F6;
   display: inline-flex;
   align-items: center;
   margin-right: 12px;
   vertical-align: middle;
+}
+
+.sidebar--logo {
+  display: flex;
+  width: 100%;
+  height: 60px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #232e43;
+  font-family: 'Orbitron', 'Orbitron Fallback', sans-serif;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar--admin {
+  margin-top: 32px;
+  margin-bottom: 32px;
 }
 
 @media (max-width: 900px) {

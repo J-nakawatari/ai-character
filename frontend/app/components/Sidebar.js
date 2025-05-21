@@ -18,19 +18,39 @@ export default function Sidebar() {
   return (
     <aside className={styles.sidebar + ' sidebar--user'}>
       <div className={styles.sidebar__logo}>
-        <Link href="/setup?reselect=true" className={styles.sidebar__backLink}>
-          <span className={styles.sidebar__text}>← 戻る</span>
-        </Link>
+        {/* ロゴや他の要素があればここに残す。戻るボタンは削除 */}
       </div>
       <nav className={styles.sidebar__nav}>
         <ul className={styles.sidebar__list}>
           <li className={pathname.startsWith('/dashboard') ? styles.sidebar__item + ' ' + styles['sidebar__item--active'] : styles.sidebar__item}>
             <Link href="/dashboard" className={styles.sidebar__link}>
               <span className={styles.sidebar__icon}>
-                {/* Home Icon (Outline) */}
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                  <path d="M3 12L12 5l9 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M9 21V13h6v8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                {/* Dashboard Icon (from public/icon/dashboard.svg) */}
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M4 8C4.55228 8 5 7.55228 5 7C5 6.44772 4.55228 6 4 6C3.44772 6 3 6.44772 3 7C3 7.55228 3.44772 8 4 8Z"
+                    fill="currentColor"
+                  />
+                  <path
+                    d="M8 7C8 7.55228 7.55228 8 7 8C6.44772 8 6 7.55228 6 7C6 6.44772 6.44772 6 7 6C7.55228 6 8 6.44772 8 7Z"
+                    fill="currentColor"
+                  />
+                  <path
+                    d="M10 8C10.5523 8 11 7.55228 11 7C11 6.44772 10.5523 6 10 6C9.44771 6 9 6.44772 9 7C9 7.55228 9.44771 8 10 8Z"
+                    fill="currentColor"
+                  />
+                  <path
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                    d="M3 3C1.34315 3 0 4.34315 0 6V18C0 19.6569 1.34315 21 3 21H21C22.6569 21 24 19.6569 24 18V6C24 4.34315 22.6569 3 21 3H3ZM21 5H3C2.44772 5 2 5.44772 2 6V9H22V6C22 5.44772 21.5523 5 21 5ZM2 18V11H22V18C22 18.5523 21.5523 19 21 19H3C2.44772 19 2 18.5523 2 18Z"
+                    fill="currentColor"
+                  />
                 </svg>
               </span>
               <span className={styles.sidebar__text}>ダッシュボード</span>
@@ -75,11 +95,22 @@ export default function Sidebar() {
       <div className={styles.sidebar__logout}>
         <button className={styles.sidebar__logoutBtn} onClick={handleLogout}>
           <span className={styles.sidebar__icon}>
-            {/* Logout Icon (Outline) */}
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-              <path d="M16 17l5-5-5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M21 12H9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M13 5v-2a2 2 0 0 0-2-2h-6a2 2 0 0 0-2 2v18a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            {/* Logout Icon (from public/icon/log-out.svg) */}
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M8.51428 20H4.51428C3.40971 20 2.51428 19.1046 2.51428 18V6C2.51428 4.89543 3.40971 4 4.51428 4H8.51428V6H4.51428V18H8.51428V20Z"
+                fill="currentColor"
+              />
+              <path
+                d="M13.8418 17.385L15.262 15.9768L11.3428 12.0242L20.4857 12.0242C21.038 12.0242 21.4857 11.5765 21.4857 11.0242C21.4857 10.4719 21.038 10.0242 20.4857 10.0242L11.3236 10.0242L15.304 6.0774L13.8958 4.6572L7.5049 10.9941L13.8418 17.385Z"
+                fill="currentColor"
+              />
             </svg>
           </span>
           <span className={styles.sidebar__text}>ログアウト</span>

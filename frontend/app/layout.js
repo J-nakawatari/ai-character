@@ -33,7 +33,8 @@ const orbitron = Orbitron({
 
 export default function RootLayout({ children }) {
   const pathname = usePathname();
-  const hideSidebar = pathname.startsWith('/login') || pathname.startsWith('/register');
+  const isAdmin = pathname.startsWith('/admin');
+  const hideSidebar = pathname.startsWith('/login') || pathname.startsWith('/register') || isAdmin;
 
   return (
     <html lang="ja">
