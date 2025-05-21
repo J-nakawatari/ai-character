@@ -5,8 +5,8 @@ import { AuthProvider } from "./utils/auth";
 import { AdminAuthProvider } from "./utils/adminAuth";
 import Sidebar from "./components/Sidebar";
 import { usePathname } from "next/navigation";
-import { appWithTranslation } from 'next-i18next';
-import './i18n'; // Import i18n initialization
+import { NextIntlClientProvider } from 'next-intl';
+import { useLocale } from 'next-intl';
 import './globals.css';
 import './styles/setup.css';
 import './styles/dashboard.css';
@@ -33,27 +33,38 @@ const orbitron = Orbitron({
   variable: '--font-orbitron',
 });
 
-export default appWithTranslation(function RootLayout({ children }) {
+export default function RootLayout({ children }) {
   const pathname = usePathname();
+  const locale = useLocale();
   const isAdmin = pathname.startsWith('/admin');
   const hideSidebar = pathname.startsWith('/login') || pathname.startsWith('/register') || isAdmin;
 
+  let messages;
+  try {
+    messages = require(`../messages/${locale}.json`);
+  } catch (error) {
+    console.error(`Could not load messages for locale "${locale}"`, error);
+    messages = require('../messages/ja.json');
+  }
+
   return (
-    <html lang="ja">
+    <html lang={locale}>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${mPlusRounded.variable} ${orbitron.variable} antialiased`}
       >
-        <AuthProvider>
-          <AdminAuthProvider>
-            <div className="app-layout">
-              {!hideSidebar && <Sidebar />}
-              <main className="app-main">
-                {children}
-              </main>
-            </div>
-          </AdminAuthProvider>
-        </AuthProvider>
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <AuthProvider>
+            <AdminAuthProvider>
+              <div className="app-layout">
+                {!hideSidebar && <Sidebar />}
+                <main className="app-main">
+                  {children}
+                </main>
+              </div>
+            </AdminAuthProvider>
+          </AuthProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );
-});
+};

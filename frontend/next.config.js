@@ -1,3 +1,7 @@
+const withNextIntl = require('next-intl/plugin')(
+  './i18n/request.js'
+);
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -7,4 +11,4 @@ const nextConfig = {
   serverExternalPackages: ['mongoose']
 };
 
-module.exports = nextConfig;
+module.exports = withNextIntl(nextConfig);

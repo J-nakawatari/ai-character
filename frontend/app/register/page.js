@@ -8,7 +8,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '../utils/auth';
 import BackButton from '../components/BackButton';
-import { useTranslation } from 'next-i18next';
+import { useTranslations } from 'next-intl';
 
 const schema = z.object({
   name: z.string().min(2, 'お名前は2文字以上で入力してください'),
@@ -21,7 +21,8 @@ export default function Register() {
   const { register: registerUser } = useAuth();
   const router = useRouter();
   const [serverError, setServerError] = useState('');
-  const { t } = useTranslation('common');
+  const t = useTranslations('auth');
+  const tMypage = useTranslations('mypage');
   
   const {
     register,
@@ -64,7 +65,7 @@ export default function Register() {
       
       <div className="card auth-layout__card">
         <div className="card__body">
-          <h1 className="auth-layout__title">{t('auth.register_title')}</h1>
+          <h1 className="auth-layout__title">{t('register_title')}</h1>
           
           {serverError && (
             <div className="input__error-message mb-3">
@@ -74,7 +75,7 @@ export default function Register() {
           
           <form onSubmit={handleSubmit(onSubmit)} className="auth-layout__form">
             <div className="input-group">
-              <label className="input__label">{t('auth.name')}</label>
+              <label className="input__label">{t('name')}</label>
               <input
                 className="input"
                 type="text"
@@ -87,7 +88,7 @@ export default function Register() {
             </div>
             
             <div className="input-group">
-              <label className="input__label">{t('auth.email')}</label>
+              <label className="input__label">{t('email')}</label>
               <input
                 className="input"
                 type="email"
@@ -100,7 +101,7 @@ export default function Register() {
             </div>
             
             <div className="input-group">
-              <label className="input__label">{t('auth.password')}</label>
+              <label className="input__label">{t('password')}</label>
               <input
                 className="input"
                 type="password"
@@ -113,7 +114,7 @@ export default function Register() {
             </div>
             
             <div className="input-group">
-              <label className="input__label">{t('mypage.language_settings')}</label>
+              <label className="input__label">{tMypage('language_settings')}</label>
               <div className="language-options">
                 <label className="language-option">
                   <input
@@ -123,7 +124,7 @@ export default function Register() {
                     defaultChecked
                   />
                   <span className="language-flag">🇯🇵</span>
-                  <span className="language-name">{t('mypage.language_japanese')}</span>
+                  <span className="language-name">{tMypage('language_japanese')}</span>
                 </label>
                 <label className="language-option">
                   <input
@@ -132,7 +133,7 @@ export default function Register() {
                     {...register('preferredLanguage')}
                   />
                   <span className="language-flag">🇺🇸</span>
-                  <span className="language-name">{t('mypage.language_english')}</span>
+                  <span className="language-name">{tMypage('language_english')}</span>
                 </label>
               </div>
             </div>
@@ -142,14 +143,14 @@ export default function Register() {
               className="button button--primary button--full"
               disabled={isSubmitting}
             >
-              {isSubmitting ? t('auth.registering') : t('auth.register_button')}
+              {isSubmitting ? t('registering') : t('register_button')}
             </button>
           </form>
           
           <div className="auth-layout__footer">
             <p>
-              {t('auth.already_have_account')}
-              <Link href="/login" className="auth-layout__link">{t('auth.login_button')}</Link>
+              {t('already_have_account')}
+              <Link href="/login" className="auth-layout__link">{t('login_button')}</Link>
             </p>
           </div>
         </div>

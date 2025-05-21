@@ -1,0 +1,44 @@
+{
+  "app": {
+    "title": "Charactier",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "mypage": "My Page",
+    "dashboard": "Dashboard"
+  },
+  "auth": {
+    "name": "Name",
+    "email": "Email",
+    "password": "Password",
+    "login_title": "Login",
+    "register_title": "Register",
+    "already_have_account": "Already have an account? Login here",
+    "dont_have_account": "Don't have an account? Register here",
+    "logging_in": "Logging in...",
+    "login_button": "Login",
+    "registering": "Registering...",
+    "register_button": "Register"
+  },
+  "mypage": {
+    "title": "My Page",
+    "account_info": "Account Information",
+    "username": "Username",
+    "email": "Email",
+    "member_type": "Membership Type",
+    "premium_member": "Premium Member",
+    "free_member": "Free Member",
+    "register_date": "Registration Date",
+    "last_login": "Last Login",
+    "subscription_info": "Subscription Information",
+    "status": "Status",
+    "next_billing": "Next Billing Date / Expiration Date",
+    "upgrade_button": "Upgrade to Premium",
+    "purchased_characters": "Purchased Characters",
+    "no_purchased_characters": "No purchased characters",
+    "delete_account": "Delete Account",
+    "language_settings": "Language Settings",
+    "language_japanese": "日本語",
+    "language_english": "English"
+  }
+}
