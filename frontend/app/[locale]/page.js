@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef, useLayoutEffect, use } from 'react';
+import { useEffect, useState, useRef, useLayoutEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '../utils/auth';
@@ -30,10 +30,18 @@ const videoFiles = [
 export default function Home({ params }) {
   const { user, loading } = useAuth();
   const router = useRouter();
-  const { locale } = typeof params.then === 'function' ? use(params) : params;
+  const { locale } = params;
   const [isMobile, setIsMobile] = useState(false);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const videoRef1 = useRef(null);
+  const videoRef2 = useRef(null);
+  const [activeVideo, setActiveVideo] = useState(1);
+  const currentIndexRef = useRef(0);
+  const activeVideoRef = useRef(1);
+  const [videoDurations, setVideoDurations] = useState({});
   const [isFading, setIsFading] = useState(false);
+  const [nextVideoIndex, setNextVideoIndex] = useState(null);
   const videoRef = useRef(null);
   const [arrowHover, setArrowHover] = useState(false);
   const [chatIndex, setChatIndex] = useState(0);
@@ -55,6 +63,7 @@ export default function Home({ params }) {
   const leftMessage = chatMessages[leftMessageIndex];
   const rightMessage = chatMessages[rightMessageIndex];
   const t = useTranslations('app');
+  const timeoutRef = useRef(null);
   
   useEffect(() => {
     const checkMobile = () => {
@@ -80,13 +89,65 @@ export default function Home({ params }) {
   }, [user, loading, router, locale]);
   
   useEffect(() => {
-    const switchVideo = () => {
-      setCurrentVideoIndex(prev => (prev + 1) % videoFiles.length);
+    const loadVideoDuration = (videoElement, index) => {
+      if (videoElement && !videoDurations[index]) {
+        videoElement.addEventListener('loadedmetadata', () => {
+          console.log(`動画${index + 1}の長さ:`, videoElement.duration, '秒');
+          setVideoDurations(prev => ({
+            ...prev,
+            [index]: videoElement.duration
+          }));
+        });
+      }
     };
-    const interval = setInterval(switchVideo, 10000);
-    return () => clearInterval(interval);
-  }, []);
+
+    if (videoRef1.current) {
+      loadVideoDuration(videoRef1.current, currentVideoIndex);
+    }
+    if (videoRef2.current) {
+      loadVideoDuration(videoRef2.current, (currentVideoIndex + 1) % videoFiles.length);
+    }
+  }, [currentVideoIndex, videoDurations]);
   
+  const switchToNextVideo = useCallback(() => {
+    if (isTransitioning) return;
+    
+    setIsTransitioning(true);
+    const nextIndex = (currentIndexRef.current + 1) % videoFiles.length;
+    currentIndexRef.current = nextIndex;
+    
+    const inactiveRef = activeVideoRef.current === 1 ? videoRef2 : videoRef1;
+    if (inactiveRef.current) {
+      inactiveRef.current.src = videoFiles[nextIndex];
+      inactiveRef.current.load();
+      inactiveRef.current.play();
+    }
+    
+    setTimeout(() => {
+      const newActiveVideo = activeVideoRef.current === 1 ? 2 : 1;
+      activeVideoRef.current = newActiveVideo;
+      setActiveVideo(newActiveVideo);
+      setCurrentVideoIndex(nextIndex);
+      setIsTransitioning(false);
+      const activeRef = newActiveVideo === 1 ? videoRef1 : videoRef2;
+      if (activeRef.current) {
+        activeRef.current.play();
+      }
+      timeoutRef.current = setTimeout(switchToNextVideo, 7000);
+    }, 2000);
+  }, [isTransitioning]);
+
+  useEffect(() => {
+    currentIndexRef.current = currentVideoIndex;
+  }, [currentVideoIndex]);
+
+  useEffect(() => {
+    timeoutRef.current = setTimeout(switchToNextVideo, 7000);
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, [switchToNextVideo]);
+
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.addEventListener('loadeddata', () => {
@@ -226,19 +287,30 @@ export default function Home({ params }) {
             className={styles['background-image']}
           />
         ) : (
-          <video
-            ref={videoRef}
-            autoPlay
-            muted
-            loop
-            playsInline
-            className={styles['background-video']}
-            key={videoFiles[currentVideoIndex]}
-            onError={(e) => console.error('Video error:', e)}
-          >
-            <source src={videoFiles[currentVideoIndex]} type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
+          <>
+            <video
+              ref={videoRef1}
+              autoPlay
+              muted
+              loop
+              playsInline
+              className={`${styles['background-video']} ${activeVideo === 1 ? styles.active : ''}`}
+            >
+              <source src={videoFiles[currentVideoIndex]} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+            <video
+              ref={videoRef2}
+              autoPlay
+              muted
+              loop
+              playsInline
+              className={`${styles['background-video']} ${activeVideo === 2 ? styles.active : ''}`}
+            >
+              <source src={videoFiles[(currentVideoIndex + 1) % videoFiles.length]} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </>
         )}
       </div>
       <div className={`container ${styles['home-container']}`}> 
