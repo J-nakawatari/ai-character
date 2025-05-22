@@ -5,7 +5,8 @@
     "register": "Register",
     "logout": "Logout",
     "mypage": "My Page",
-    "dashboard": "Dashboard"
+    "dashboard": "Dashboard",
+    "back_to_top": "Back to TOP"
   },
   "auth": {
     "name": "Name",
@@ -18,7 +19,11 @@
     "logging_in": "Logging in...",
     "login_button": "Login",
     "registering": "Registering...",
-    "register_button": "Register"
+    "register_button": "Register",
+    "email_placeholder": "Enter your email",
+    "password_placeholder": "Enter your password",
+    "invalid_credentials": "Invalid email or password",
+    "login_failed": "Login failed"
   },
   "mypage": {
     "title": "My Page",

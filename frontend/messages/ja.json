@@ -5,7 +5,8 @@
     "register": "新規登録",
     "logout": "ログアウト",
     "mypage": "マイページ",
-    "dashboard": "ダッシュボード"
+    "dashboard": "ダッシュボード",
+    "back_to_top": "TOPに戻る"
   },
   "auth": {
     "name": "お名前",
@@ -18,7 +19,11 @@
     "logging_in": "ログイン中...",
     "login_button": "ログインする",
     "registering": "登録中...",
-    "register_button": "登録する"
+    "register_button": "登録する",
+    "email_placeholder": "メールアドレスを入力してください",
+    "password_placeholder": "パスワードを入力してください",
+    "invalid_credentials": "メールアドレスまたはパスワードが正しくありません",
+    "login_failed": "ログインに失敗しました"
   },
   "mypage": {
     "title": "マイページ",

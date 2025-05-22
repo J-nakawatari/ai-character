@@ -53,9 +53,9 @@ export default function Login() {
         {serverError && (
           <div className="error-message" style={{ marginBottom: '16px' }}>
             {serverError === 'Invalid credentials'
-              ? 'メールアドレスまたはパスワードが正しくありません'
+              ? t('auth.invalid_credentials')
               : serverError === 'Login failed'
-                ? 'ログインに失敗しました'
+                ? t('auth.login_failed')
                 : serverError}
           </div>
         )}
@@ -66,7 +66,7 @@ export default function Login() {
             <input
               className="input"
               type="email"
-              placeholder={`${t('email')}を入力してください`}
+              placeholder={t('email_placeholder')}
               {...register('email')}
             />
             {errors.email && (
@@ -79,7 +79,7 @@ export default function Login() {
             <input
               className="input"
               type="password"
-              placeholder={`${t('password')}を入力してください`}
+              placeholder={t('password_placeholder')}
               {...register('password')}
             />
             {errors.password && (
@@ -105,7 +105,7 @@ export default function Login() {
       </div>
       <div style={{ textAlign: 'center', marginTop: '32px' }}>
         <Link href="/" className="back-link">
-          TOPに戻る
+          {t('app.back_to_top')}
         </Link>
       </div>
     </div>
