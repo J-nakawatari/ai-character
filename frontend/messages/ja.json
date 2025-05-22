@@ -26,8 +26,18 @@
     "login_failed": "ログインに失敗しました",
     "validation": {
       "invalid_email": "有効なメールアドレスを入力してください",
-      "password_required": "パスワードを入力してください"
-    }
+      "password_required": "パスワードを入力してください",
+      "name_min_length": "お名前は2文字以上で入力してください",
+      "password_min_length": "パスワードは6文字以上で入力してください"
+    },
+    "name_placeholder": "お名前を入力してください",
+    "user_already_exists": "このメールアドレスは既に登録されています",
+    "registration_failed": "登録に失敗しました",
+    "invalid_email_format": "メールアドレスの形式が正しくありません",
+    "password_too_short": "パスワードが短すぎます",
+    "invalid_password_format": "パスワードの形式が正しくありません",
+    "server_error": "サーバーエラーが発生しました",
+    "network_error": "ネットワークエラーが発生しました"
   },
   "mypage": {
     "title": "マイページ",
