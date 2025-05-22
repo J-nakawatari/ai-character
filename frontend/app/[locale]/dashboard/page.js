@@ -50,7 +50,18 @@ export default function Dashboard({ params }) {
     ];
     
     const tags = [];
-    const text = user.selectedCharacter.personalityPrompt.toLowerCase();
+    
+    // personalityPromptがオブジェクトの場合は言語に応じたプロパティを参照
+    let text = '';
+    if (typeof user.selectedCharacter.personalityPrompt === 'object') {
+      text = user.selectedCharacter.personalityPrompt[locale] || 
+             user.selectedCharacter.personalityPrompt.ja || 
+             user.selectedCharacter.personalityPrompt.en || '';
+    } else {
+      text = user.selectedCharacter.personalityPrompt || '';
+    }
+    
+    text = text.toLowerCase();
     
     personalityWords.forEach(word => {
       if (text.includes(word.toLowerCase())) {
