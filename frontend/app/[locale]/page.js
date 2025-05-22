@@ -69,13 +69,13 @@ export default function Home() {
     if (!loading) {
       if (user) {
         if (user.hasCompletedSetup) {
-          router.push('/dashboard');
+          router.push(`/${locale}/dashboard`);
         } else {
-          router.push('/setup');
+          router.push(`/${locale}/setup`);
         }
       }
     }
-  }, [user, loading, router]);
+  }, [user, loading, router, locale]);
   
   useEffect(() => {
     const switchVideo = () => {
