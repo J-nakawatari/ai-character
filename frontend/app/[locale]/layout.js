@@ -1,9 +1,9 @@
 'use client';
 
 import { NextIntlClientProvider } from 'next-intl';
-import { AuthProvider } from '../../utils/auth';
-import { AdminAuthProvider } from '../../utils/adminAuth';
-import Sidebar from '../../components/Sidebar';
+import { AuthProvider } from '../utils/auth';
+import { AdminAuthProvider } from '../utils/adminAuth';
+import Sidebar from '../components/Sidebar';
 import { usePathname } from 'next/navigation';
 
 export default function LocaleLayout({ children, params }) {
@@ -16,10 +16,10 @@ export default function LocaleLayout({ children, params }) {
   
   let messages;
   try {
-    messages = require(`../../messages/${locale}.json`);
+    messages = require(`../messages/${locale}.json`);
   } catch (error) {
     console.error(`Could not load messages for locale "${locale}"`, error);
-    messages = require('../../messages/ja.json');
+    messages = require('../messages/ja.json');
   }
 
   return (
