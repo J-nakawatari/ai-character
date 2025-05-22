@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useAuth } from '../../utils/auth';
+// モック認証を使用
+import { useAuth } from '../../utils/mockAuth';
 import api from '../../utils/api';
 import { useTranslations } from 'next-intl';
 // モックデータをインポート
@@ -21,7 +22,7 @@ export default function Setup({ params }) {
   const router = useRouter();
   const [characters, setCharacters] = useState([]);
   const [serverError, setServerError] = useState('');
-  const [loadingCharacters, setLoadingCharacters] = useState(true);
+  const [loadingCharacters, setLoadingCharacters] = useState(false); // 初期値をfalseに変更
   const canvasRef = useRef(null);
   const audioRef = useRef(null);
   const t = useTranslations('setup');
@@ -213,7 +214,8 @@ export default function Setup({ params }) {
     }
   };
 
-  if (loading || loadingCharacters) {
+  // ローディング状態を強制的にfalseにする
+  if (false) {
     return (
       <div className="setup--loading">
         <p>{t('loading')}</p>
