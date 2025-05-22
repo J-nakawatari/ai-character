@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, use } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
@@ -23,6 +23,7 @@ export default function Register({ params }) {
   const [serverError, setServerError] = useState('');
   const t = useTranslations('auth');
   const tMypage = useTranslations('mypage');
+  const { locale } = typeof params.then === 'function' ? use(params) : params;
   
   const {
     register,
@@ -38,7 +39,7 @@ export default function Register({ params }) {
     const result = await registerUser(data);
     
     if (result.success) {
-      router.push(`/${params.locale}/setup`);
+      router.push(`/${locale}/setup`);
     } else {
       const errorMessages = {
         'User already exists': t('user_already_exists'),
@@ -61,7 +62,7 @@ export default function Register({ params }) {
         <div className="auth-layout__bubble auth-layout__bubble--3"></div>
       </div>
       
-      <BackButton to={`/${params.locale}`} />
+      <BackButton to={`/${locale}`} />
       
       <div className="card auth-layout__card">
         <div className="card__body">
@@ -150,7 +151,7 @@ export default function Register({ params }) {
           <div className="auth-layout__footer">
             <p>
               {t('already_have_account')}
-              <Link href={`/${params.locale}/login`} className="auth-layout__link">{t('login_button')}</Link>
+              <Link href={`/${locale}/login`} className="auth-layout__link">{t('login_button')}</Link>
             </p>
           </div>
         </div>
