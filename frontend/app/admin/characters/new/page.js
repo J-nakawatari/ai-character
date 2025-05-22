@@ -12,16 +12,16 @@ import styles from './page.module.css';
 
 export default function NewCharacter() {
   const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    personalityPrompt: '',
-    adminPrompt: '',
+    name: { ja: '', en: '' },
+    description: { ja: '', en: '' },
+    personalityPrompt: { ja: '', en: '' },
+    adminPrompt: { ja: '', en: '' },
     isPremium: false,
     price: 0,
     purchaseType: 'buy',
     isLimited: false,
     voice: '',
-    defaultMessage: '',
+    defaultMessage: { ja: '', en: '' },
     themeColor: '#000000',
     isActive: true,
     imageCharacterSelect: '',
@@ -235,11 +235,21 @@ export default function NewCharacter() {
                 </div>
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                   <div className={styles['admin-form-group']}>
-                    <label htmlFor="name" className={styles['admin-form-label']}>キャラクター名</label>
+                    <label htmlFor="name" className={styles['admin-form-label']}>キャラクター名（日本語）</label>
                     <Input
                       id="name"
-                      value={formData.name}
-                      onChange={handleChange}
+                      value={formData.name.ja}
+                      onChange={(e) => setFormData({ ...formData, name: { ...formData.name, ja: e.target.value } })}
+                      required
+                      className={styles['admin-form-input']}
+                    />
+                  </div>
+                  <div className={styles['admin-form-group']}>
+                    <label htmlFor="name" className={styles['admin-form-label']}>キャラクター名（English）</label>
+                    <Input
+                      id="name"
+                      value={formData.name.en}
+                      onChange={(e) => setFormData({ ...formData, name: { ...formData.name, en: e.target.value } })}
                       required
                       className={styles['admin-form-input']}
                     />
@@ -263,11 +273,21 @@ export default function NewCharacter() {
                   </div>
                 </div>
                 <div className={styles['admin-form-group']}>
-                  <label htmlFor="description" className={styles['admin-form-label']}>キャラクター説明</label>
+                  <label htmlFor="description" className={styles['admin-form-label']}>キャラクター説明（日本語）</label>
                   <textarea
                     id="description"
-                    value={formData.description}
-                    onChange={handleChange}
+                    value={formData.description.ja}
+                    onChange={(e) => setFormData({ ...formData, description: { ...formData.description, ja: e.target.value } })}
+                    rows={3}
+                    className={styles['admin-form-input']}
+                  />
+                </div>
+                <div className={styles['admin-form-group']}>
+                  <label htmlFor="description" className={styles['admin-form-label']}>キャラクター説明（English）</label>
+                  <textarea
+                    id="description"
+                    value={formData.description.en}
+                    onChange={(e) => setFormData({ ...formData, description: { ...formData.description, en: e.target.value } })}
                     rows={3}
                     className={styles['admin-form-input']}
                   />
@@ -282,31 +302,61 @@ export default function NewCharacter() {
                   <p className="mt-1 text-sm text-gray-500">キャラクターの会話に関する設定を行います</p>
                 </div>
                 <div className={styles['admin-form-group']}>
-                  <label htmlFor="personalityPrompt" className={styles['admin-form-label']}>性格プロンプト</label>
+                  <label htmlFor="personalityPrompt" className={styles['admin-form-label']}>性格プロンプト（日本語）</label>
                   <textarea
                     id="personalityPrompt"
-                    value={formData.personalityPrompt}
-                    onChange={handleChange}
+                    value={formData.personalityPrompt.ja}
+                    onChange={(e) => setFormData({ ...formData, personalityPrompt: { ...formData.personalityPrompt, ja: e.target.value } })}
                     rows={4}
                     className={styles['admin-form-input']}
                   />
                 </div>
                 <div className={styles['admin-form-group']}>
-                  <label htmlFor="adminPrompt" className={styles['admin-form-label']}>管理者プロンプト</label>
+                  <label htmlFor="personalityPrompt" className={styles['admin-form-label']}>性格プロンプト（English）</label>
+                  <textarea
+                    id="personalityPrompt"
+                    value={formData.personalityPrompt.en}
+                    onChange={(e) => setFormData({ ...formData, personalityPrompt: { ...formData.personalityPrompt, en: e.target.value } })}
+                    rows={4}
+                    className={styles['admin-form-input']}
+                  />
+                </div>
+                <div className={styles['admin-form-group']}>
+                  <label htmlFor="adminPrompt" className={styles['admin-form-label']}>管理者プロンプト（日本語）</label>
                   <textarea
                     id="adminPrompt"
-                    value={formData.adminPrompt}
-                    onChange={handleChange}
+                    value={formData.adminPrompt.ja}
+                    onChange={(e) => setFormData({ ...formData, adminPrompt: { ...formData.adminPrompt, ja: e.target.value } })}
                     rows={4}
                     className={styles['admin-form-input']}
                   />
                 </div>
                 <div className={styles['admin-form-group']}>
-                  <label htmlFor="defaultMessage" className={styles['admin-form-label']}>デフォルトメッセージ</label>
+                  <label htmlFor="adminPrompt" className={styles['admin-form-label']}>管理者プロンプト（English）</label>
+                  <textarea
+                    id="adminPrompt"
+                    value={formData.adminPrompt.en}
+                    onChange={(e) => setFormData({ ...formData, adminPrompt: { ...formData.adminPrompt, en: e.target.value } })}
+                    rows={4}
+                    className={styles['admin-form-input']}
+                  />
+                </div>
+                <div className={styles['admin-form-group']}>
+                  <label htmlFor="defaultMessage" className={styles['admin-form-label']}>デフォルトメッセージ（日本語）</label>
                   <textarea
                     id="defaultMessage"
-                    value={formData.defaultMessage}
-                    onChange={handleChange}
+                    value={formData.defaultMessage.ja}
+                    onChange={(e) => setFormData({ ...formData, defaultMessage: { ...formData.defaultMessage, ja: e.target.value } })}
+                    rows={2}
+                    className={styles['admin-form-input']}
+                  />
+                </div>
+                <div className={styles['admin-form-group']}>
+                  <label htmlFor="defaultMessage" className={styles['admin-form-label']}>デフォルトメッセージ（English）</label>
+                  <textarea
+                    id="defaultMessage"
+                    value={formData.defaultMessage.en}
+                    onChange={(e) => setFormData({ ...formData, defaultMessage: { ...formData.defaultMessage, en: e.target.value } })}
                     rows={2}
                     className={styles['admin-form-input']}
                   />
@@ -512,7 +562,7 @@ export default function NewCharacter() {
         </div>
       </div>
       {toast.show && (
-        <Toast message={toast.message} type={toast.type} onClose={() => setToast({ ...toast, show: false })} />
+        <Toast message={typeof toast.message === 'object' ? (toast.message.ja || toast.message.en || '') : toast.message} type={toast.type} onClose={() => setToast({ ...toast, show: false })} />
       )}
       {showCropper && selectedImage && (
         <div className={styles['cropper-modal-overlay']}>

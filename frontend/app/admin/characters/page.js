@@ -110,7 +110,7 @@ export default function AdminCharacters() {
                       )}
                     </div>
                     <div className="character-info">
-                      <div className="character-name">{character.name}</div>
+                      <div className="character-name">{typeof character.name === 'object' ? (character.name.ja || character.name.en || '') : character.name}</div>
                       <div className="character-date">
                         登録日時: {new Date(character.createdAt).toLocaleString('ja-JP')}
                       </div>
@@ -151,7 +151,7 @@ export default function AdminCharacters() {
                   <span className="modal-avatar-placeholder">{modalCharacter.name.charAt(0)}</span>
                 )}
                 <div>
-                  <div className="modal-title">{modalCharacter.name}</div>
+                  <div className="modal-title">{typeof modalCharacter.name === 'object' ? (modalCharacter.name.ja || modalCharacter.name.en || '') : modalCharacter.name}</div>
                   <div className="modal-subtitle">
                     {modalCharacter.isPremium ? 'プレミアム' : '通常'}{modalCharacter.isLimited && '・限定'}
                   </div>
@@ -162,11 +162,11 @@ export default function AdminCharacters() {
                 <div className="modal-detail-grid">
                   <div className="modal-detail-item">
                     <span className="modal-detail-label">特長</span>
-                    <span className="modal-detail-value">{modalCharacter.description}</span>
+                    <span className="modal-detail-value">{typeof modalCharacter.description === 'object' ? (modalCharacter.description.ja || modalCharacter.description.en || '') : modalCharacter.description}</span>
                   </div>
                   <div className="modal-detail-item">
                     <span className="modal-detail-label">性格</span>
-                    <span className="modal-detail-value">{modalCharacter.personalityPrompt}</span>
+                    <span className="modal-detail-value">{typeof modalCharacter.personalityPrompt === 'object' ? (modalCharacter.personalityPrompt.ja || modalCharacter.personalityPrompt.en || '') : modalCharacter.personalityPrompt}</span>
                   </div>
                   <div className="modal-detail-item">
                     <span className="modal-detail-label">ステータス</span>

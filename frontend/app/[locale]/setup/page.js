@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -24,7 +24,7 @@ export default function Setup({ params }) {
   const audioRef = useRef(null);
   const t = useTranslations('setup');
   const appT = useTranslations('app');
-  const locale = params.locale || 'ja';
+  const { locale } = typeof params.then === 'function' ? use(params) : params;
 
   const {
     register,
@@ -271,13 +271,22 @@ export default function Setup({ params }) {
                   </div>
                   <div className="setup--character-name">{characterName}</div>
                   <div className="setup--character-tags">
-                    {(character.personality || character.personalityPrompt) ? 
-                      (character.personality || character.personalityPrompt).split(/,| /).map((tag, idx) =>
-                        tag.trim() && (
-                          <span className="setup--character-tag" key={idx}>{tag.trim()}</span>
-                        )
-                      ) : []
-                    }
+                    {(character.personality || character.personalityPrompt) ?
+                      ((() => {
+                        let personalityText = character.personality || '';
+                        if (!personalityText && character.personalityPrompt) {
+                          if (typeof character.personalityPrompt === 'object') {
+                            personalityText = character.personalityPrompt[locale] || character.personalityPrompt.ja || character.personalityPrompt.en || '';
+                          } else {
+                            personalityText = character.personalityPrompt;
+                          }
+                        }
+                        return personalityText.split(/,| /).map((tag, idx) =>
+                          tag.trim() && (
+                            <span className="setup--character-tag" key={idx}>{tag.trim()}</span>
+                          )
+                        );
+                      })()) : []}
                   </div>
                   <div className="setup--character-desc">{characterDesc}</div>
                   <button

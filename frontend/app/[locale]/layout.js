@@ -5,9 +5,10 @@ import { AuthProvider } from '../utils/auth';
 import { AdminAuthProvider } from '../utils/adminAuth';
 import Sidebar from '../components/Sidebar';
 import { usePathname } from 'next/navigation';
+import { use } from 'react';
 
 export default function LocaleLayout({ children, params }) {
-  const locale = params.locale || 'ja';
+  const { locale } = typeof params.then === 'function' ? use(params) : params;
   const pathname = usePathname();
   const isAdmin = pathname.startsWith(`/${locale}/admin`);
   const hideSidebar = pathname.startsWith(`/${locale}/login`) || 

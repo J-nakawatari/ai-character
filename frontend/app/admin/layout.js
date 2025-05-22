@@ -2,11 +2,19 @@
 
 import { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { useAdminAuth } from '../utils/adminAuth';
+import { useAdminAuth, AdminAuthProvider } from '../utils/adminAuth';
 import Link from 'next/link';
 import SidebarShadcn from "../components/SidebarShadcn";
 
 export default function AdminLayout({ children }) {
+  return (
+    <AdminAuthProvider>
+      <AdminLayoutInner>{children}</AdminLayoutInner>
+    </AdminAuthProvider>
+  );
+}
+
+function AdminLayoutInner({ children }) {
   const { admin, loading, adminLogout } = useAdminAuth();
   const router = useRouter();
   const pathname = usePathname();
