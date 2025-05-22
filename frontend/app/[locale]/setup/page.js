@@ -8,6 +8,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '../../utils/auth';
 import api from '../../utils/api';
 import { useTranslations } from 'next-intl';
+// モックデータをインポート
+import { mockCharacters, mockCompleteSetup } from '../../utils/mockData';
 
 const schema = z.object({
   name: z.string().min(2, 'お名前は2文字以上で入力してください'),
@@ -54,8 +56,10 @@ export default function Setup({ params }) {
   useEffect(() => {
     const fetchCharacters = async () => {
       try {
-        const res = await api.get('/characters');
-        setCharacters(res.data);
+        // APIコールの代わりにモックデータを使用
+        // const res = await api.get('/characters');
+        // setCharacters(res.data);
+        setCharacters(mockCharacters);
       } catch (err) {
         setServerError('キャラクターの取得に失敗しました');
       } finally {
@@ -199,7 +203,9 @@ export default function Setup({ params }) {
 
   const onSubmit = async (data) => {
     setServerError('');
-    const result = await completeSetup(data);
+    // 本来のcompleteSetup関数の代わりにモック関数を使用
+    // const result = await completeSetup(data);
+    const result = await mockCompleteSetup(data);
     if (result.success) {
       router.push(`/${locale}/dashboard`);
     } else {
@@ -296,7 +302,9 @@ export default function Setup({ params }) {
                     onClick={async () => {
                       setValue('characterId', character._id);
                       setServerError('');
-                      const result = await completeSetup({
+                      // 本来のcompleteSetup関数の代わりにモック関数を使用
+                      // const result = await completeSetup({
+                      const result = await mockCompleteSetup({
                         name: watch('name'),
                         characterId: character._id
                       });
