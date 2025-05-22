@@ -5,8 +5,8 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-// モック認証を使用
-import { useAuth } from '../../utils/mockAuth';
+// 通常のauth.jsからインポート
+import { useAuth } from '../../utils/auth';
 import api from '../../utils/api';
 import { useTranslations } from 'next-intl';
 // モックデータをインポート
