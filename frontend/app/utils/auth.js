@@ -99,6 +99,21 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const updateLanguage = async (language) => {
+    try {
+      const res = await api.patch('/users/me/language', { language });
+      setUser(prev => ({
+        ...prev,
+        preferredLanguage: language
+      }));
+      localStorage.setItem('i18nextLng', language);
+      return { success: true, user: res.data };
+    } catch (err) {
+      console.error('言語設定の変更に失敗しました', err);
+      return { success: false, error: err.response?.data?.msg || '言語設定の変更に失敗しました' };
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -107,7 +122,8 @@ export const AuthProvider = ({ children }) => {
         register,
         login,
         logout,
-        completeSetup
+        completeSetup,
+        updateLanguage
       }}
     >
       {children}

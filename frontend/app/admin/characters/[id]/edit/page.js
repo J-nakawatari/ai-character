@@ -14,15 +14,30 @@ export default function EditCharacter({ params }) {
   const { id } = use(params);
   
   const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    personalityPrompt: '',
-    adminPrompt: '',
+    name: {
+      ja: '',
+      en: ''
+    },
+    description: {
+      ja: '',
+      en: ''
+    },
+    personalityPrompt: {
+      ja: '',
+      en: ''
+    },
+    adminPrompt: {
+      ja: '',
+      en: ''
+    },
     characterType: 'premium', // 'premium' | 'paid' | 'limited'
     price: 0,
     purchaseType: 'buy',
     voice: '',
-    defaultMessage: '',
+    defaultMessage: {
+      ja: '',
+      en: ''
+    },
     themeColor: '#000000',
     isActive: true,
     imageCharacterSelect: '',
@@ -274,14 +289,30 @@ export default function EditCharacter({ params }) {
                 </div>
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                   <div className={styles['admin-form-group']}>
-                    <label htmlFor="name" className={styles['admin-form-label']}>キャラクター名</label>
-                    <Input
-                      id="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      required
-                      className={styles['admin-form-input']}
-                    />
+                    <label className={styles['admin-form-label']}>キャラクター名</label>
+                    <div className="language-tabs">
+                      <div className="language-tab">
+                        <div className="language-label">🇯🇵 日本語</div>
+                        <Input
+                          id="name.ja"
+                          name="name.ja"
+                          value={formData.name.ja}
+                          onChange={handleChange}
+                          required
+                          className={styles['admin-form-input']}
+                        />
+                      </div>
+                      <div className="language-tab">
+                        <div className="language-label">🇺🇸 English</div>
+                        <Input
+                          id="name.en"
+                          name="name.en"
+                          value={formData.name.en}
+                          onChange={handleChange}
+                          className={styles['admin-form-input']}
+                        />
+                      </div>
+                    </div>
                   </div>
                   <div className={styles['admin-form-group']}>
                     <label htmlFor="themeColor" className={styles['admin-form-label']}>テーマカラー</label>
@@ -302,14 +333,31 @@ export default function EditCharacter({ params }) {
                   </div>
                 </div>
                 <div className={styles['admin-form-group']}>
-                  <label htmlFor="description" className={styles['admin-form-label']}>キャラクター説明</label>
-                  <textarea
-                    id="description"
-                    value={formData.description}
-                    onChange={handleChange}
-                    rows={3}
-                    className={styles['admin-form-input']}
-                  />
+                  <label className={styles['admin-form-label']}>キャラクター説明</label>
+                  <div className="language-tabs">
+                    <div className="language-tab">
+                      <div className="language-label">🇯🇵 日本語</div>
+                      <textarea
+                        id="description.ja"
+                        name="description.ja"
+                        value={formData.description.ja}
+                        onChange={handleChange}
+                        rows={3}
+                        className={styles['admin-form-input']}
+                      />
+                    </div>
+                    <div className="language-tab">
+                      <div className="language-label">🇺🇸 English</div>
+                      <textarea
+                        id="description.en"
+                        name="description.en"
+                        value={formData.description.en}
+                        onChange={handleChange}
+                        rows={3}
+                        className={styles['admin-form-input']}
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </Card>
@@ -322,34 +370,85 @@ export default function EditCharacter({ params }) {
                   <p className="mt-1 text-sm text-gray-500">キャラクターの会話に関する設定を行います</p>
                 </div>
                 <div className={styles['admin-form-group']}>
-                  <label htmlFor="personalityPrompt" className={styles['admin-form-label']}>性格プロンプト</label>
-                  <textarea
-                    id="personalityPrompt"
-                    value={formData.personalityPrompt}
-                    onChange={handleChange}
-                    rows={4}
-                    className={styles['admin-form-input']}
-                  />
+                  <label className={styles['admin-form-label']}>性格プロンプト</label>
+                  <div className="language-tabs">
+                    <div className="language-tab">
+                      <div className="language-label">🇯🇵 日本語</div>
+                      <textarea
+                        id="personalityPrompt.ja"
+                        name="personalityPrompt.ja"
+                        value={formData.personalityPrompt.ja}
+                        onChange={handleChange}
+                        rows={4}
+                        className={styles['admin-form-input']}
+                      />
+                    </div>
+                    <div className="language-tab">
+                      <div className="language-label">🇺🇸 English</div>
+                      <textarea
+                        id="personalityPrompt.en"
+                        name="personalityPrompt.en"
+                        value={formData.personalityPrompt.en}
+                        onChange={handleChange}
+                        rows={4}
+                        className={styles['admin-form-input']}
+                      />
+                    </div>
+                  </div>
                 </div>
                 <div className={styles['admin-form-group']}>
-                  <label htmlFor="adminPrompt" className={styles['admin-form-label']}>管理者プロンプト</label>
-                  <textarea
-                    id="adminPrompt"
-                    value={formData.adminPrompt}
-                    onChange={handleChange}
-                    rows={4}
-                    className={styles['admin-form-input']}
-                  />
+                  <label className={styles['admin-form-label']}>管理者プロンプト</label>
+                  <div className="language-tabs">
+                    <div className="language-tab">
+                      <div className="language-label">🇯🇵 日本語</div>
+                      <textarea
+                        id="adminPrompt.ja"
+                        name="adminPrompt.ja"
+                        value={formData.adminPrompt.ja}
+                        onChange={handleChange}
+                        rows={4}
+                        className={styles['admin-form-input']}
+                      />
+                    </div>
+                    <div className="language-tab">
+                      <div className="language-label">🇺🇸 English</div>
+                      <textarea
+                        id="adminPrompt.en"
+                        name="adminPrompt.en"
+                        value={formData.adminPrompt.en}
+                        onChange={handleChange}
+                        rows={4}
+                        className={styles['admin-form-input']}
+                      />
+                    </div>
+                  </div>
                 </div>
                 <div className={styles['admin-form-group']}>
-                  <label htmlFor="defaultMessage" className={styles['admin-form-label']}>デフォルトメッセージ</label>
-                  <textarea
-                    id="defaultMessage"
-                    value={formData.defaultMessage}
-                    onChange={handleChange}
-                    rows={2}
-                    className={styles['admin-form-input']}
-                  />
+                  <label className={styles['admin-form-label']}>デフォルトメッセージ</label>
+                  <div className="language-tabs">
+                    <div className="language-tab">
+                      <div className="language-label">🇯🇵 日本語</div>
+                      <textarea
+                        id="defaultMessage.ja"
+                        name="defaultMessage.ja"
+                        value={formData.defaultMessage.ja}
+                        onChange={handleChange}
+                        rows={2}
+                        className={styles['admin-form-input']}
+                      />
+                    </div>
+                    <div className="language-tab">
+                      <div className="language-label">🇺🇸 English</div>
+                      <textarea
+                        id="defaultMessage.en"
+                        name="defaultMessage.en"
+                        value={formData.defaultMessage.en}
+                        onChange={handleChange}
+                        rows={2}
+                        className={styles['admin-form-input']}
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </Card>

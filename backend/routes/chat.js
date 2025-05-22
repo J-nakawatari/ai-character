@@ -105,17 +105,28 @@ async function generateAIResponse(message, userName, character, chatHistory = []
       apiKey: process.env.OPENAI_API_KEY,
     });
 
-    let systemMessage = `あなたは${character.name}というAIキャラクターです。`;
+    const user = await User.findById(chatHistory[0]?.userId);
+    const lang = user?.preferredLanguage || 'ja';
+
+    const characterName = character.name[lang] || character.name.ja || character.name;
+    const characterDescription = character.description[lang] || character.description.ja || character.description;
+    const characterPrompt = character.adminPrompt[lang] || character.adminPrompt.ja || character.adminPrompt;
+
+    let systemMessage = `あなたは${characterName}というAIキャラクターです。`;
     
-    if (character.adminPrompt && character.adminPrompt.trim() !== '') {
-      systemMessage += ` ${character.adminPrompt}`;
+    if (characterPrompt && characterPrompt.trim() !== '') {
+      systemMessage += ` ${characterPrompt}`;
     }
     
-    if (character.description && character.description.trim() !== '') {
-      systemMessage += ` ${character.description}`;
+    if (characterDescription && characterDescription.trim() !== '') {
+      systemMessage += ` ${characterDescription}`;
     }
     
-    systemMessage += ` ユーザーの名前は${userName}さんです。敬語を使って短く返答してください。`;
+    if (lang === 'en') {
+      systemMessage = `You are an AI character named ${characterName}. ${characterPrompt} ${characterDescription} The user's name is ${userName}. Please respond politely and keep your answers short.`;
+    } else {
+      systemMessage += ` ユーザーの名前は${userName}さんです。敬語を使って短く返答してください。`;
+    }
 
     const messages = [
       { role: 'system', content: systemMessage }
