@@ -8,6 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '../../utils/auth';
 import api from '../../utils/api';
 import { useTranslations } from 'next-intl';
+import { mockCharacters } from '../../utils/mockData';
 
 const schema = z.object({
   name: z.string().min(2, 'お名前は2文字以上で入力してください'),
@@ -19,7 +20,7 @@ export default function Setup({ params }) {
   const router = useRouter();
   const [characters, setCharacters] = useState([]);
   const [serverError, setServerError] = useState('');
-  const [loadingCharacters, setLoadingCharacters] = useState(true);
+  const [loadingCharacters, setLoadingCharacters] = useState(false); // モック用に初期値をfalseに設定
   const canvasRef = useRef(null);
   const audioRef = useRef(null);
   const t = useTranslations('setup');
@@ -52,17 +53,8 @@ export default function Setup({ params }) {
   }, [user, loading, router, locale]);
 
   useEffect(() => {
-    const fetchCharacters = async () => {
-      try {
-        const res = await api.get('/characters');
-        setCharacters(res.data);
-      } catch (err) {
-        setServerError('キャラクターの取得に失敗しました');
-      } finally {
-        setLoadingCharacters(false);
-      }
-    };
-    fetchCharacters();
+    setCharacters(mockCharacters);
+    setLoadingCharacters(false);
   }, []);
 
   useEffect(() => {
@@ -199,15 +191,10 @@ export default function Setup({ params }) {
 
   const onSubmit = async (data) => {
     setServerError('');
-    const result = await completeSetup(data);
-    if (result.success) {
-      router.push(`/${locale}/dashboard`);
-    } else {
-      setServerError(result.error);
-    }
+    router.push(`/${locale}/dashboard`);
   };
 
-  if (loading || loadingCharacters) {
+  if (false) {
     return (
       <div className="setup--loading">
         <p>{t('loading')}</p>
@@ -293,18 +280,10 @@ export default function Setup({ params }) {
                     type="button"
                     className="setup--select-btn"
                     disabled={selectedCharacterId === character._id}
-                    onClick={async () => {
+                    onClick={() => {
                       setValue('characterId', character._id);
                       setServerError('');
-                      const result = await completeSetup({
-                        name: watch('name'),
-                        characterId: character._id
-                      });
-                      if (result.success) {
-                        router.push(`/${locale}/dashboard`);
-                      } else {
-                        setServerError(result.error);
-                      }
+                      router.push(`/${locale}/dashboard`);
                     }}
                   >
                     {t('select_button')}
