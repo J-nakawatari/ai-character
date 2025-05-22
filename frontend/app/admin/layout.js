@@ -53,7 +53,9 @@ function AdminLayoutInner({ children }) {
   return (
     <div className="app-layout">
       <SidebarShadcn onLogout={handleLogout} />
-      {children}
+      <main className="app-main">
+        {children}
+      </main>
     </div>
   );
 }

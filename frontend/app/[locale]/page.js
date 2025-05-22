@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useAuth } from '../utils/auth';
 import { Orbitron } from 'next/font/google';
 import { useTranslations } from 'next-intl';
+import styles from './page.module.css';
 
 const chatMessages = [
   '今日は何のお話をする？✨',
@@ -150,70 +151,62 @@ export default function Home({ params }) {
   useEffect(() => {
     let isLeft = true;
     let currentIndex = 0;
-    
-    function startLoop() {
-      const message = chatMessages[currentIndex];
-      const typingTime = message.length * 100;
-      const displayTime = 3500;
-      const pauseTime = 7000;
-      
-      setLeftVisible(isLeft);
-      setRightVisible(!isLeft);
-      
-      setTimeout(() => {
+    let leftTimeout, rightTimeout;
+
+    function showLeft() {
+      setLeftText('');
+      setLeftVisible(true);
+      setRightVisible(false);
+      let i = 0;
+      function type() {
+        setLeftText(chatMessages[currentIndex].slice(0, i + 1));
+        if (i < chatMessages[currentIndex].length - 1) {
+          leftTimeout = setTimeout(() => {
+            i++;
+            type();
+          }, 100);
+        }
+      }
+      type();
+      leftTimeout = setTimeout(() => {
         setLeftVisible(false);
-        setRightVisible(false);
-        
         setTimeout(() => {
-          isLeft = !isLeft;
           currentIndex = (currentIndex + 1) % chatMessages.length;
-          if (isLeft) {
-            setLeftMessageIndex(currentIndex);
-          } else {
-            setRightMessageIndex(currentIndex);
-          }
-          startLoop();
-        }, pauseTime);
-      }, displayTime + typingTime);
+          showRight();
+        }, 600); // フェードアウト後
+      }, 2500 + chatMessages[currentIndex].length * 100);
     }
-    
-    startLoop();
-    
+
+    function showRight() {
+      setRightText('');
+      setLeftVisible(false);
+      setRightVisible(true);
+      let i = 0;
+      function type() {
+        setRightText(chatMessages[currentIndex].slice(0, i + 1));
+        if (i < chatMessages[currentIndex].length - 1) {
+          rightTimeout = setTimeout(() => {
+            i++;
+            type();
+          }, 100);
+        }
+      }
+      type();
+      rightTimeout = setTimeout(() => {
+        setRightVisible(false);
+        setTimeout(() => {
+          currentIndex = (currentIndex + 1) % chatMessages.length;
+          showLeft();
+        }, 600);
+      }, 2500 + chatMessages[currentIndex].length * 100);
+    }
+
+    showLeft();
     return () => {
+      clearTimeout(leftTimeout);
+      clearTimeout(rightTimeout);
     };
   }, []);
-  
-  useEffect(() => {
-    setLeftText('');
-    if (!leftVisible) return;
-    let i = 0;
-    function type() {
-      setLeftText(leftMessage.slice(0, i + 1));
-      if (i < leftMessage.length - 1) {
-        setTimeout(() => {
-          i++;
-          type();
-        }, 100); // タイプ速度を遅く（50ms→100ms）
-      }
-    }
-    type();
-  }, [leftVisible, leftMessage]);
-
-  useEffect(() => {
-    setRightText('');
-    if (!rightVisible) return;
-    let i = 0;
-    function type() {
-      setRightText(rightMessage.slice(0, i + 1));
-      if (i < rightMessage.length - 1) {
-        setTimeout(() => {
-          i++;
-          type();
-        }, 100); // タイプ速度を遅く（50ms→100ms）
-      }
-    }
-    type();
-  }, [rightVisible, rightMessage]);
   
   if (loading) {
     return (
@@ -225,13 +218,12 @@ export default function Home({ params }) {
   
   return (
     <>
-      <div className="background-container" style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', overflow: 'hidden' }}>
+      <div className={styles['background-container']}>
         {isMobile ? (
           <img
             src="/images/background-mobile.jpg"
             alt="Background"
-            className="background-image"
-            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            className={styles['background-image']}
           />
         ) : (
           <video
@@ -240,17 +232,7 @@ export default function Home({ params }) {
             muted
             loop
             playsInline
-            className="background-video"
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              transition: 'opacity 1s ease-in-out',
-              zIndex: 1
-            }}
+            className={styles['background-video']}
             key={videoFiles[currentVideoIndex]}
             onError={(e) => console.error('Video error:', e)}
           >
@@ -259,120 +241,73 @@ export default function Home({ params }) {
           </video>
         )}
       </div>
-      <div className="container">
-        <div style={{ width: '100%', margin: '0 auto', textAlign: 'center', position: 'relative' }}>
-          <div style={{ display: 'inline-block', textAlign: 'left', position: 'relative' }}>
-            <div style={{ fontSize: '16px', color: '#fff', marginBottom: '-20px', fontWeight: 'bold', letterSpacing: '0.1em', textShadow: '0 2px 8px rgba(0,0,0,0.18), 0 1px 2px rgba(0,0,0,0.12)' }}>
-              キャラクティア
-            </div>
-            <h1 className={`${orbitron.className} title`} ref={titleRef}>
-              {t('title')}
-            </h1>
-            {/* 右側の吹き出し */}
-            <div
-              className={`chat-bubble left${leftVisible ? ' show' : ' hide'}`}
-              style={{
-                display: 'inline-block',
-                verticalAlign: 'middle',
-                marginLeft: 0,
-                position: 'absolute',
-                top: '-72px',
-                left: '300px',
-                opacity: leftText ? 1 : 0,
-                transition: 'opacity 0.6s',
-              }}
-            >
-              {leftText || '\u00A0'}
-            </div>
-            {/* 左側の吹き出し（左右反転パターン） */}
-            <div
-              className={`chat-bubble right${rightVisible ? ' show' : ' hide'}`}
-              style={{
-                display: 'inline-block',
-                verticalAlign: 'middle',
-                marginRight: '0px',
-                position: 'absolute',
-                top: '158px',
-                right: '450px',
-                opacity: rightText ? 1 : 0,
-                transition: 'opacity 0.6s, top 0.3s',
-              }}
-            >
-              {rightText || '\u00A0'}
-            </div>
-          </div>
-        </div>
-        <p className="subtitle">
-          会いにきて...あなただけの愛(AI）。
-        </p>
-        <p className="description">
-          Charactier（キャラクティア）は、あなた専用の<br />AIキャラクターと、毎日話したり気持ちを共有できる体験です。
-        </p>
-        <div style={{ width: '100%', maxWidth: '300px' }}>
-          <Link
-            href={`/${locale}/login`}
-            className={`${orbitron.className} button`}
-            style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', paddingRight: '16px', paddingLeft: '16px', overflow: 'hidden', position: 'relative' }}
-            onMouseEnter={() => setArrowHover(true)}
-            onMouseLeave={() => setArrowHover(false)}
-          >
-            <span style={{ position: 'absolute', left: 0, right: 0, textAlign: 'center', zIndex: 2 }}>{t('login')}</span>
-            <span
-              style={{
-                marginLeft: 'auto',
-                marginRight: '8px',
-                position: 'relative',
-                zIndex: 2,
-                width: 24,
-                height: 24,
-                display: 'inline-block',
-              }}
-            >
-              {/* Arrow SVG */}
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                className={`arrow-svg${arrowHover ? ' arrow-hide' : ''}`}
-                style={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  transition: 'opacity 0.3s',
-                }}
+      <div className={`container ${styles['home-container']}`}> 
+        <div className={styles['home-wrapper']}>
+          <div className={styles['home-title-area']}>
+            <div className={styles['home-title-block']}>
+              <div className={styles['home-logo']}>キャラクティア</div>
+              <h1 className={`${orbitron.className} ${styles.title}`} ref={titleRef}>
+                {t('title')}
+              </h1>
+              {/* 左右の吹き出し */}
+              <div
+                className={
+                  `${styles['chat-bubble']} ${styles.left} ${leftVisible ? styles.show : styles.hide}`
+                }
               >
-                <path d="M9 6L15 12L9 18" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              {/* Heart SVG (img) */}
-              <img
-                src="/images/heart.svg"
-                alt="heart"
-                className={`heart-svg${arrowHover ? ' heart-show' : ''}`}
-                style={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  width: 18,
-                  height: 18,
-                  zIndex: 2,
-                  pointerEvents: 'none',
-                  filter: 'brightness(0) invert(1)',
-                  transform: 'translate(-50%, -50%)',
-                  transition: 'opacity 0.3s, transform 0.3s',
-                }}
-              />
-            </span>
-          </Link>
-          <div style={{ textAlign: 'center', marginTop: '16px' }}>
-            <Link href={`/${locale}/register`} className="register-link">
-              {t('register')}
+                {leftText || '\u00A0'}
+              </div>
+              <div
+                className={
+                  `${styles['chat-bubble']} ${styles.right} ${rightVisible ? styles.show : styles.hide}`
+                }
+              >
+                {rightText || '\u00A0'}
+              </div>
+            </div>
+            <p className={styles.subtitle}>
+              会いにきて...あなただけの愛(AI）。
+            </p>
+          </div>
+          <p className={styles['description']}>
+            Charactier（キャラクティア）は、あなた専用の<br />AIキャラクターと、毎日話したり気持ちを共有できる体験です。
+          </p>
+          <div className={styles['home-btn-wrap']}>
+            <Link
+              href={`/${locale}/login`}
+              className={`${orbitron.className} button ${styles['home-login-btn']}`}
+              onMouseEnter={() => setArrowHover(true)}
+              onMouseLeave={() => setArrowHover(false)}
+            >
+              <span className={styles['home-login-btn-text']}>{t('login')}</span>
+              <span className={styles['home-login-btn-icon']}>
+                {/* Arrow SVG */}
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  className={`${styles['arrow-svg']}${arrowHover ? ' ' + styles['arrow-hide'] : ''}`}
+                >
+                  <path d="M9 6L15 12L9 18" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                {/* Heart SVG (img) */}
+                <img
+                  src="/images/heart.svg"
+                  alt="heart"
+                  className={`${styles['heart-svg']}${arrowHover ? ' ' + styles['heart-show'] : ''}`}
+                />
+              </span>
             </Link>
+            <div className={styles['home-register-link-wrap']}>
+              <Link href={`/${locale}/register`} className="register-link">
+                {t('register')}
+              </Link>
+            </div>
           </div>
         </div>
       </div>
-      <div className="overlay" />
+      <div className={styles.overlay} />
     </>
   );
 }

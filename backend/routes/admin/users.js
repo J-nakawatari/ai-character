@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const adminAuth = require('../../middleware/adminAuth');
 const User = require('../../models/User');
+const jwtBlacklist = require('../../utils/jwtBlacklist');
 
 router.get('/', adminAuth, async (req, res) => {
   try {
@@ -50,6 +51,11 @@ router.put('/:id/ban', adminAuth, async (req, res) => {
     user.isActive = false;
     await user.save();
     
+    const { token } = req.body;
+    if (token) {
+      jwtBlacklist.add(token);
+    }
+    
     res.json({ msg: 'ユーザーが無効化されました' });
   } catch (err) {
     console.error(err.message);
@@ -62,6 +68,24 @@ router.put('/:id/ban', adminAuth, async (req, res) => {
   }
 });
 
+router.put('/:id/activate', adminAuth, async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ msg: 'ユーザーが見つかりません' });
+    }
+    user.isActive = true;
+    await user.save();
+    res.json({ msg: 'ユーザーが有効化されました' });
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ msg: 'ユーザーが見つかりません' });
+    }
+    res.status(500).send('サーバーエラー');
+  }
+});
+
 router.delete('/:id', adminAuth, async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
@@ -70,7 +94,7 @@ router.delete('/:id', adminAuth, async (req, res) => {
       return res.status(404).json({ msg: 'ユーザーが見つかりません' });
     }
     
-    await user.remove();
+    await user.deleteOne();
     
     res.json({ msg: 'ユーザーが削除されました' });
   } catch (err) {

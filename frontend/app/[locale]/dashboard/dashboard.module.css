@@ -1,0 +1,130 @@
+.dashboardRoot {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  background: #f7f8fa;
+  padding: 40px 0;
+}
+
+.dashboardCard {
+  width: 100%;
+  max-width: 900px;
+  padding: 32px 32px 40px 32px;
+  border-radius: 18px;
+  background: #FFFFFF;
+  box-shadow: 0px 1px 3px rgba(96, 108, 128, 0.05);
+  border-radius: 8px;
+}
+
+.dashboardGrid {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 40px;
+  align-items: flex-start;
+}
+
+.dashboardImageWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.dashboardCharacterImg {
+  width: 320px;
+  height: 400px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1.5px solid #e5eaf2;
+  background: #f3f4f6;
+}
+
+.dashboardCharacterImgPlaceholder {
+  width: 320px;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  border: 1.5px dashed #e5eaf2;
+  background: #f3f4f6;
+  color: #b0b8c9;
+  font-size: 1.1rem;
+}
+
+.dashboardInfoSection {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.dashboardSection {
+  margin-bottom: 0;
+}
+
+.dashboardLabel {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #3a466e;
+  margin-bottom: 6px;
+}
+
+.dashboardTitle {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #232e43;
+  margin-bottom: 8px;
+}
+
+.dashboardPersonalityTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.dashboardPersonalityTag {
+  background: #e5eaf2;
+  color: #2563eb;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 8px;
+  padding: 4px 12px;
+}
+
+.dashboardDesc {
+  color: #3a466e;
+  font-size: 1rem;
+  margin-bottom: 0;
+}
+
+.dashboardButtonWrapper {
+  display: flex;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.dashboardSecondaryButton {
+  background: #e5eaf2;
+  color: #232e43;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 32px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.dashboardSecondaryButton:hover {
+  background: #d1d5db;
+}
+
+.dashboardLoading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+  font-size: 1.2rem;
+  color: #3a466e;
+} 

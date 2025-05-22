@@ -3,12 +3,14 @@ import { useAuth } from '../utils/auth';
 import { useRouter, usePathname } from 'next/navigation';
 import { getLocaleFromPath } from '../i18n-config';
 import styles from './Sidebar.module.css';
+import { useTranslations } from 'next-intl';
 
 export default function Sidebar() {
   const { logout } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
   const locale = getLocaleFromPath(pathname);
+  const t = useTranslations('app');
 
   const handleLogout = async () => {
     const result = await logout();
@@ -18,7 +20,7 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className={styles.sidebar + ' sidebar--user'}>
+    <aside className={styles.sidebar}>
       <div className={styles.sidebar__logo}>
         {/* ロゴや他の要素があればここに残す。戻るボタンは削除 */}
       </div>
@@ -55,7 +57,7 @@ export default function Sidebar() {
                   />
                 </svg>
               </span>
-              <span className={styles.sidebar__text}>ダッシュボード</span>
+              <span className={styles.sidebar__text}>{t('dashboard')}</span>
             </Link>
           </li>
           <li className={pathname.startsWith(`/${locale}/chat`) ? styles.sidebar__item + ' ' + styles['sidebar__item--active'] : styles.sidebar__item}>
@@ -66,7 +68,7 @@ export default function Sidebar() {
                   <path d="M4 4h16v12H5.17L4 17.17V4z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"/>
                 </svg>
               </span>
-              <span className={styles.sidebar__text}>チャット</span>
+              <span className={styles.sidebar__text}>{t('chat')}</span>
             </Link>
           </li>
           <li className={pathname.startsWith(`/${locale}/setup`) ? styles.sidebar__item + ' ' + styles['sidebar__item--active'] : styles.sidebar__item}>
@@ -77,7 +79,7 @@ export default function Sidebar() {
                   <path d="M16.862 5.487l1.65-1.65a1.5 1.5 0 1 1 2.121 2.122l-1.65 1.65m-2.121-2.122l-9.193 9.193a2 2 0 0 0-.497.828l-1.03 3.09a.5.5 0 0 0 .632.632l3.09-1.03a2 2 0 0 0 .828-.497l9.193-9.193m-2.121-2.122 2.121 2.122" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </span>
-              <span className={styles.sidebar__text}>キャラを変更</span>
+              <span className={styles.sidebar__text}>{t('setup') || 'キャラを変更'}</span>
             </Link>
           </li>
           <li className={pathname.startsWith(`/${locale}/mypage`) ? styles.sidebar__item + ' ' + styles['sidebar__item--active'] : styles.sidebar__item}>
@@ -89,7 +91,7 @@ export default function Sidebar() {
                   <path d="M4 20c0-4 4-7 8-7s8 3 8 7" stroke="currentColor" strokeWidth="2"/>
                 </svg>
               </span>
-              <span className={styles.sidebar__text}>マイページ</span>
+              <span className={styles.sidebar__text}>{t('mypage')}</span>
             </Link>
           </li>
         </ul>
@@ -115,7 +117,7 @@ export default function Sidebar() {
               />
             </svg>
           </span>
-          <span className={styles.sidebar__text}>ログアウト</span>
+          <span className={styles.sidebar__text}>{t('logout')}</span>
         </button>
       </div>
     </aside>

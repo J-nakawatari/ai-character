@@ -73,7 +73,11 @@ router.post('/login', async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({ msg: 'Invalid credentials' });
+      return res.status(400).json({ msg: 'このアカウントは登録されていません' });
+    }
+
+    if (!user.isActive) {
+      return res.status(403).json({ msg: 'アカウントが無効化されています。管理者にお問い合わせください。' });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);

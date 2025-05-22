@@ -9,6 +9,7 @@ export default function ChatMessage({ message, isUser, characterImageUrl }) {
   ));
 
   const messageClass = isUser ? 'chat-message--user' : 'chat-message--ai';
+  const bubbleClass = isUser ? 'chat-bubble chat-bubble--user' : 'chat-bubble chat-bubble--ai';
 
   return (
     <div className={`chat-message ${messageClass}`}>
@@ -23,7 +24,7 @@ export default function ChatMessage({ message, isUser, characterImageUrl }) {
           />
         </div>
       )}
-      <div className="chat-message__bubble">
+      <div className={bubbleClass}>
         <p className="chat-message__content">{formattedContent}</p>
         <span className="chat-message__time">
           {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}

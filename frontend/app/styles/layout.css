@@ -432,6 +432,24 @@
   font-weight: 500;
 }
 
+.free-badge {
+  background: #F87171;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.paid-badge {
+  background: #FFF0C2;
+  color: #D9A200;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
 /* モーダルのスタイル */
 .modal-overlay {
   position: fixed;

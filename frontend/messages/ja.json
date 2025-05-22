@@ -6,6 +6,8 @@
     "logout": "ログアウト",
     "mypage": "マイページ",
     "dashboard": "ダッシュボード",
+    "chat": "チャット",
+    "setup": "キャラを変更",
     "back_to_top": "TOPに戻る",
     "loading": "読み込み中..."
   },
@@ -41,7 +43,10 @@
     },
     "auth": {
       "invalid_credentials": "メールアドレスまたはパスワードが正しくありません",
-      "login_failed": "ログインに失敗しました"
+      "login_failed": "ログインに失敗しました",
+      "validation": {
+        "invalid_email": "有効なメールアドレスを入力してください"
+      }
     },
     "name_placeholder": "お名前を入力してください",
     "user_already_exists": "このメールアドレスは既に登録されています",

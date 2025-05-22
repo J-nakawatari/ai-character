@@ -300,8 +300,14 @@ export default function Setup({ params }) {
                         name: watch('name'),
                         characterId: character._id
                       });
+                      const queryParams = new URLSearchParams(window.location.search);
+                      const isReselect = queryParams.get('reselect') === 'true';
                       if (result.success) {
-                        router.push(`/${locale}/dashboard`);
+                        if (isReselect) {
+                          router.push(`/${locale}/chat`);
+                        } else {
+                          router.push(`/${locale}/dashboard`);
+                        }
                       } else {
                         setServerError(result.error);
                       }

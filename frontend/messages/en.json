@@ -41,7 +41,10 @@
     },
     "auth": {
       "invalid_credentials": "Invalid email or password",
-      "login_failed": "Login failed"
+      "login_failed": "Login failed",
+      "validation": {
+        "invalid_email": "Please enter a valid email address"
+      }
     },
     "name_placeholder": "Enter your name",
     "user_already_exists": "This email address is already registered",

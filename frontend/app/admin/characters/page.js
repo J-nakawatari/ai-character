@@ -115,12 +115,18 @@ export default function AdminCharacters() {
                         登録日時: {new Date(character.createdAt).toLocaleString('ja-JP')}
                       </div>
                       <div className="character-tags">
-                        {character.isPremium && (
-                          <span className="premium-badge">
-                            プレミアム：{character.purchaseType === 'buy' ? '買い切り' : 'レンタル'}
-                          </span>
+                        {character.characterType === 'free' && (
+                          <span className="free-badge">無料キャラ</span>
                         )}
-                        {character.isLimited && <span className="limited-badge">限定</span>}
+                        {character.characterType === 'premium' && (
+                          <span className="premium-badge">サブスク会員用キャラクター</span>
+                        )}
+                        {character.characterType === 'paid' && (
+                          <span className="paid-badge">課金キャラクター：{character.price}円（{character.purchaseType === 'buy' ? '買い切り' : '月額課金'}）</span>
+                        )}
+                        {character.characterType === 'limited' && (
+                          <span className="limited-badge">期間限定キャラクター</span>
+                        )}
                         {character.isActive ? (
                           <span className="active-badge">有効</span>
                         ) : (
@@ -153,7 +159,10 @@ export default function AdminCharacters() {
                 <div>
                   <div className="modal-title">{typeof modalCharacter.name === 'object' ? (modalCharacter.name.ja || modalCharacter.name.en || '') : modalCharacter.name}</div>
                   <div className="modal-subtitle">
-                    {modalCharacter.isPremium ? 'プレミアム' : '通常'}{modalCharacter.isLimited && '・限定'}
+                    {modalCharacter.characterType === 'free' && '無料キャラ'}
+                    {modalCharacter.characterType === 'premium' && 'サブスク会員用キャラクター'}
+                    {modalCharacter.characterType === 'paid' && `課金キャラクター：${modalCharacter.price}円（${modalCharacter.purchaseType === 'buy' ? '買い切り' : '月額課金'}）`}
+                    {modalCharacter.characterType === 'limited' && '期間限定キャラクター'}
                   </div>
                 </div>
               </div>

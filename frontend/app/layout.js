@@ -4,6 +4,7 @@ import { M_PLUS_Rounded_1c, Orbitron } from "next/font/google";
 import './globals.css';
 import './styles/setup.css';
 import './styles/dashboard.css';
+import './styles/pages/mypage.css';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

@@ -80,11 +80,23 @@ export default function EditCharacter({ params }) {
   };
   
   const handleChange = (e) => {
-    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-    setFormData({
-      ...formData,
-      [e.target.name || e.target.id]: value
-    });
+    const { name, value, type, checked, id } = e.target;
+    const key = name || id;
+    if (key && key.includes('.')) {
+      const [parent, child] = key.split('.');
+      setFormData((prev) => ({
+        ...prev,
+        [parent]: {
+          ...prev[parent],
+          [child]: value
+        }
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [key]: type === 'checkbox' ? checked : value
+      }));
+    }
   };
   
   const handleSubmit = async (e) => {
@@ -496,6 +508,18 @@ export default function EditCharacter({ params }) {
                     />
                     <span className={styles.radioMark}></span>
                     <span className={styles.checkboxLabel}>期間限定キャラクター</span>
+                  </label>
+                  <label className={styles.customRadio}>
+                    <input
+                      type="radio"
+                      name="characterType"
+                      value="free"
+                      checked={formData.characterType === 'free'}
+                      onChange={handleChange}
+                      className={styles.radioInput}
+                    />
+                    <span className={styles.radioMark}></span>
+                    <span className={styles.checkboxLabel}>無料キャラ</span>
                   </label>
                 </div>
                 {formData.characterType === 'paid' && (

@@ -46,9 +46,10 @@ const CharacterSchema = new Schema({
       default: ''
     }
   },
-  isPremium: {
-    type: Boolean,
-    default: false
+  characterType: {
+    type: String,
+    enum: ['free', 'premium', 'paid', 'limited'],
+    default: 'free',
   },
   price: {
     type: Number,
@@ -57,10 +58,6 @@ const CharacterSchema = new Schema({
   purchaseType: {
     type: String,
     default: 'buy'
-  },
-  isLimited: {
-    type: Boolean,
-    default: false
   },
   voice: {
     type: String,
