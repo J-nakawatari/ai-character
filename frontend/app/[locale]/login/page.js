@@ -20,6 +20,7 @@ export default function Login() {
   const router = useRouter();
   const [serverError, setServerError] = useState('');
   const t = useTranslations('auth');
+  const appT = useTranslations('app');
   
   const {
     register,
@@ -105,7 +106,7 @@ export default function Login() {
       </div>
       <div style={{ textAlign: 'center', marginTop: '32px' }}>
         <Link href="/" className="back-link">
-          {t('app.back_to_top')}
+          {appT('back_to_top')}
         </Link>
       </div>
     </div>

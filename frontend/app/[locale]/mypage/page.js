@@ -1,16 +1,17 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '../../../utils/auth';
-import api from '../../../utils/api';
-import BackButton from '../../../components/BackButton';
+import { useRouter, useParams } from 'next/navigation';
+import { useAuth } from '../../utils/auth';
+import api from '../../utils/api';
+import BackButton from '../../components/BackButton';
 import { useTranslations } from 'next-intl';
 import i18n from 'i18next';
 
-export default function MyPage() {
+export default function MyPage({ params }) {
   const { user, loading, logout, updateLanguage } = useAuth();
   const router = useRouter();
+  const locale = params?.locale || 'ja';
   const [purchasedCharacters, setPurchasedCharacters] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [password, setPassword] = useState('');
@@ -20,11 +21,11 @@ export default function MyPage() {
   
   useEffect(() => {
     if (!loading && !user) {
-      router.push('/login');
+      router.push(`/${locale}/login`);
     } else if (user) {
       fetchPurchasedCharacters();
     }
-  }, [loading, user, router]);
+  }, [loading, user, router, locale]);
   
   const fetchPurchasedCharacters = async () => {
     try {
@@ -57,7 +58,7 @@ export default function MyPage() {
   
   const handleDeleteAccount = async () => {
     if (!password) {
-      setError('パスワードを入力してください');
+      setError(t('password_required') || 'パスワードを入力してください');
       return;
     }
     
@@ -66,18 +67,18 @@ export default function MyPage() {
     try {
       await api.post('/users/me/delete', { password });
       await logout();
-      router.push('/login');
+      router.push(`/${locale}/login`);
     } catch (err) {
-      console.error('アカウント削除に失敗しました', err);
-      setError(err.response?.data?.msg || 'アカウント削除に失敗しました');
+      console.error(t('delete_account_failed') || 'アカウント削除に失敗しました', err);
+      setError(err.response?.data?.msg || t('delete_account_failed') || 'アカウント削除に失敗しました');
       setIsDeleting(false);
     }
   };
   
   const formatDate = (dateString) => {
-    if (!dateString) return '未設定';
+    if (!dateString) return t('not_set') || '未設定';
     const date = new Date(dateString);
-    return new Intl.DateTimeFormat('ja-JP', {
+    return new Intl.DateTimeFormat(locale === 'en' ? 'en-US' : 'ja-JP', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
@@ -90,7 +91,7 @@ export default function MyPage() {
     return (
       <div className="mypage">
         <div className="mypage__loading">
-          <p>読み込み中...</p>
+          <p>{t('app.loading') || "読み込み中..."}</p>
         </div>
       </div>
     );
@@ -98,7 +99,7 @@ export default function MyPage() {
   
   return (
     <div className="mypage">
-      <BackButton href="/dashboard" label="ダッシュボードに戻る" />
+      <BackButton href={`/${locale}/dashboard`} label={t('back_to_dashboard') || "ダッシュボードに戻る"} />
       
       <h1 className="mypage__title">{t('title')}</h1>
       
@@ -143,10 +144,10 @@ export default function MyPage() {
             <div className="mypage__info-label">{t('status')}</div>
             <div className="mypage__info-value">
               <span className={`mypage__status mypage__status--${user.subscriptionStatus || 'active'}`}>
-                {user.subscriptionStatus === 'active' ? '有効' : 
-                 user.subscriptionStatus === 'inactive' ? '停止中' : 
-                 user.subscriptionStatus === 'expired' ? '期限切れ' : 
-                 user.subscriptionStatus === 'canceled' ? 'キャンセル済み' : '無料会員'}
+                {user.subscriptionStatus === 'active' ? t('status_active') : 
+                 user.subscriptionStatus === 'inactive' ? t('status_inactive') : 
+                 user.subscriptionStatus === 'expired' ? t('status_expired') : 
+                 user.subscriptionStatus === 'canceled' ? t('status_canceled') : t('status_free')}
               </span>
             </div>
           </div>
@@ -197,10 +198,10 @@ export default function MyPage() {
                   {item.character.name.ja || item.character.name}
                 </div>
                 <div className="mypage__character-type">
-                  {item.purchaseType === 'buy' ? '買い切り' : 'サブスク限定'}
+                  {item.purchaseType === 'buy' ? t('purchase_type_buy') : t('purchase_type_subscription')}
                 </div>
                 <div className="mypage__character-date">
-                  購入日: {formatDate(item.purchaseDate)}
+                  {t('purchase_date')} {formatDate(item.purchaseDate)}
                 </div>
               </div>
             ))}
@@ -211,7 +212,7 @@ export default function MyPage() {
       {/* 言語設定 */}
       <section className="mypage__section">
         <h2 className="mypage__section-title">{t('language_settings')}</h2>
-        <p>表示言語を選択してください。キャラクターとの会話も選択した言語で行われます。</p>
+        <p>{t('select_language')}</p>
         
         <div className="mypage__language-selection">
           <div 
@@ -234,13 +235,13 @@ export default function MyPage() {
       
       {/* 退会 */}
       <section className="mypage__section">
-        <h2 className="mypage__section-title">退会</h2>
-        <p>アカウントを削除すると、すべてのデータが完全に削除され、復元できなくなります。</p>
+        <h2 className="mypage__section-title">{t('delete_account')}</h2>
+        <p>{t('delete_account_description')}</p>
         <button 
           className="mypage__delete-button"
           onClick={() => setShowDeleteModal(true)}
         >
-          退会する
+          {t('delete_account')}
         </button>
       </section>
       
@@ -248,25 +249,25 @@ export default function MyPage() {
       {showDeleteModal && (
         <div className="mypage__modal-overlay">
           <div className="mypage__modal-content">
-            <h3 className="mypage__modal-title">本当に退会しますか？</h3>
+            <h3 className="mypage__modal-title">{t('delete_account_confirm')}</h3>
             <p className="mypage__modal-message">
-              退会すると、アカウント情報、購入済みキャラクター、チャット履歴などすべてのデータが完全に削除され、復元できなくなります。
+              {t('delete_account_warning')}
             </p>
             
             {user.membershipType === 'premium' && user.subscriptionStatus === 'active' && (
               <div className="mypage__modal-warning">
-                現在プレミアムサブスクリプションに加入中です。退会しても日割り返金はありません。
+                {t('premium_warning')}
               </div>
             )}
             
             <div className="mypage__modal-form">
-              <div className="mypage__info-label">確認のためパスワードを入力してください</div>
+              <div className="mypage__info-label">{t('delete_account_password')}</div>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="input"
-                placeholder="パスワード"
+                placeholder={t('password')}
               />
               {error && <p className="error-message">{error}</p>}
             </div>
@@ -280,14 +281,14 @@ export default function MyPage() {
                   setError('');
                 }}
               >
-                キャンセル
+                {t('cancel')}
               </button>
               <button
                 className="mypage__modal-button mypage__modal-button--delete"
                 onClick={handleDeleteAccount}
                 disabled={isDeleting}
               >
-                {isDeleting ? '処理中...' : '削除する'}
+                {isDeleting ? t('processing') : t('delete_account_button')}
               </button>
             </div>
           </div>
