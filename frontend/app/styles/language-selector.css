@@ -1,0 +1,89 @@
+/* 言語選択UI用のスタイル */
+.language-options {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.language-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.language-option:hover {
+  background-color: #f7fafc;
+}
+
+.language-option input {
+  margin-right: 0.5rem;
+}
+
+.language-flag {
+  font-size: 1.5rem;
+}
+
+.language-name {
+  font-size: 0.875rem;
+}
+
+/* マイページの言語選択 */
+.mypage__language-selection {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.mypage__language-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.mypage__language-option:hover {
+  background-color: #f7fafc;
+}
+
+.mypage__language-option--active {
+  background-color: #ebf8ff;
+  border-color: #4299e1;
+}
+
+.mypage__language-flag {
+  font-size: 1.5rem;
+}
+
+.mypage__language-name {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* 言語タブ（キャラクター編集用） */
+.language-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.language-tab {
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.language-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: #4a5568;
+}

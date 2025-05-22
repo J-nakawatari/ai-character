@@ -29,6 +29,11 @@ const UserSchema = new Schema({
     enum: ['free', 'premium'],
     default: 'free'
   },
+  preferredLanguage: {
+    type: String,
+    enum: ['ja', 'en'],
+    default: 'ja'
+  },
   subscriptionStatus: {
     type: String,
     enum: ['active', 'inactive', 'expired', 'canceled'],

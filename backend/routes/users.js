@@ -128,6 +128,34 @@ router.patch('/me/use-character', auth, async (req, res) => {
   }
 });
 
+router.patch('/me/language', auth, async (req, res) => {
+  const { language } = req.body;
+  
+  if (!language || !['ja', 'en'].includes(language)) {
+    return res.status(400).json({ msg: '有効な言語を指定してください' });
+  }
+  
+  try {
+    const user = await User.findById(req.user.id);
+    
+    if (!user) {
+      return res.status(404).json({ msg: 'ユーザーが見つかりません' });
+    }
+    
+    user.preferredLanguage = language;
+    await user.save();
+    
+    const updatedUser = await User.findById(user._id)
+      .select('-password')
+      .populate('selectedCharacter');
+    
+    res.json(updatedUser);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('サーバーエラー');
+  }
+});
+
 router.post('/me/delete', auth, async (req, res) => {
   const { password } = req.body;
   
