@@ -9,6 +9,8 @@ import Button from '../../components/Button';
 import ChatMessage from '../../components/ChatMessage';
 import '../../styles/chat.css';
 import { useTranslations } from 'next-intl';
+// モックデータをインポート
+import { mockCharacters, mockUser } from '../../utils/mockData';
 
 export default function Chat({ params }) {
   const { user, loading, logout } = useAuth();
@@ -25,28 +27,45 @@ export default function Chat({ params }) {
   const inputRef = useRef(null);
   const canvasRef = useRef(null);
   
+  // モックユーザーデータを作成
+  const mockUserWithCharacter = {
+    ...mockUser,
+    hasCompletedSetup: true,
+    selectedCharacter: mockCharacters[0] // 最初のキャラクターを選択したと仮定
+  };
+  
+  // 実際のユーザーデータがある場合はそれを使用し、なければモックデータを使用
+  const displayUser = user || mockUserWithCharacter;
+  
   useEffect(() => {
     const loadChatHistory = async () => {
-      if (user?.selectedCharacter?._id) {
+      if (displayUser?.selectedCharacter?._id) {
         try {
-          const res = await api.get(`/chat?characterId=${user.selectedCharacter._id}`);
-          setMessages(res.data.messages || []);
-          setChatId(res.data._id);
+          // APIコールの代わりにモックメッセージを使用
+          const mockMessages = [
+            {
+              sender: 'ai',
+              content: `こんにちは、${displayUser.name}さん！私は${displayUser.selectedCharacter.name.ja || displayUser.selectedCharacter.name}です。何かお手伝いできることはありますか？`,
+              timestamp: new Date(Date.now() - 60000).toISOString()
+            }
+          ];
+          setMessages(mockMessages);
+          setChatId('mock-chat-id');
           setError('');
         } catch (err) {
           setError(t('failed_load_history', 'チャット履歴の読み込みに失敗しました'));
           console.error('Failed to load chat history:', err);
         }
-      } else if (user?.selectedCharacter) {
-        console.error('selectedCharacter exists but _id is missing:', user.selectedCharacter);
+      } else if (displayUser?.selectedCharacter) {
+        console.error('selectedCharacter exists but _id is missing:', displayUser.selectedCharacter);
         setError(t('incomplete_character_data', 'キャラクターデータが不完全です。再読み込みしてください'));
       }
     };
     
-    if (!loading && user) {
+    if (!loading) {
       loadChatHistory();
     }
-  }, [loading, user, t]);
+  }, [loading, displayUser, t]);
   
   useEffect(() => {
     scrollToBottom();
@@ -139,17 +158,13 @@ export default function Chat({ params }) {
       setMessage('');
       setIsTyping(true);
       
-      const res = await api.post('/chat', {
-        characterId: user.selectedCharacter._id,
-        message: message.trim()
-      });
-      
+      // APIコールの代わりにモックレスポンスを使用
       setTimeout(() => {
         setIsTyping(false);
         
         const aiMessage = {
           sender: 'ai',
-          content: res.data.reply,
+          content: `${message.trim()}についてですね。もう少し詳しく教えていただけますか？`,
           timestamp: new Date().toISOString()
         };
         
@@ -178,7 +193,9 @@ export default function Chat({ params }) {
     }
   };
   
-  if (loading || !user) {
+  // ローディング中またはユーザーデータがない場合はローディング表示
+  // モックデータを使用するため、常にモックユーザーデータを表示する
+  if (false) { // 常にfalseになるようにして、ローディング表示をスキップ
     return (
       <div className="min-h-screen flex items-center justify-center">
         <p>{t('loading', 'Loading...')}</p>
@@ -186,15 +203,20 @@ export default function Chat({ params }) {
     );
   }
   
+  // キャラクター名を取得（オブジェクトの場合はロケールに合わせて表示）
+  const getCharacterName = () => {
+    const character = displayUser.selectedCharacter;
+    if (!character) return '';
+    
+    if (typeof character.name === 'object') {
+      return character.name[locale] || character.name.ja || character.name.en || '';
+    }
+    return character.name || '';
+  };
+  
   return (
     <div className="chat-container">
-      {user.selectedCharacter?.imageChatBackground && (
-        <img
-          src={user.selectedCharacter.imageChatBackground}
-          alt="背景"
-          className="chat-bg-character-image"
-        />
-      )}
+      <canvas ref={canvasRef} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: -1 }}></canvas>
       
       <button 
         className="chat-back-button" 
@@ -205,7 +227,7 @@ export default function Chat({ params }) {
       </button>
       
       <header className="chat-header">
-        <h1 className="chat-header-title">{user.selectedCharacter?.name || 'AI Character'}</h1>
+        <h1 className="chat-header-title">{getCharacterName() || 'AI Character'}</h1>
         <button 
           onClick={handleLogout} 
           className="button button--secondary button--sm"
@@ -218,7 +240,7 @@ export default function Chat({ params }) {
         <div className="chat-messages">
           {messages.length === 0 ? (
             <div className="chat-welcome">
-              <p>{t('welcome_message', `${user.name}さん、おかえりなさい！ チャットを始めましょう。`)}</p>
+              <p>{t('welcome_message', `${displayUser.name}さん、おかえりなさい！ チャットを始めましょう。`)}</p>
             </div>
           ) : (
             <>
@@ -227,11 +249,11 @@ export default function Chat({ params }) {
                   key={idx}
                   className={`chat-message ${msg.sender === 'user' ? 'chat-message--user' : 'chat-message--ai'}`}
                 >
-                  {msg.sender === 'ai' && user.selectedCharacter?.imageChatAvatar && (
+                  {msg.sender === 'ai' && displayUser.selectedCharacter?.imageCharacterSelect && (
                     <div className="chat-message-avatar">
                       <img
-                        src={user.selectedCharacter.imageChatAvatar}
-                        alt={user.selectedCharacter.name}
+                        src={displayUser.selectedCharacter.imageCharacterSelect}
+                        alt={getCharacterName()}
                         width={40}
                         height={40}
                       />
