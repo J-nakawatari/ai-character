@@ -6,7 +6,8 @@
     "logout": "ログアウト",
     "mypage": "マイページ",
     "dashboard": "ダッシュボード",
-    "back_to_top": "TOPに戻る"
+    "back_to_top": "TOPに戻る",
+    "loading": "読み込み中..."
   },
   "auth": {
     "name": "お名前",
@@ -51,13 +52,34 @@
     "last_login": "最終ログイン",
     "subscription_info": "サブスクリプション情報",
     "status": "ステータス",
+    "status_active": "有効",
+    "status_inactive": "停止中",
+    "status_expired": "期限切れ",
+    "status_canceled": "キャンセル済み",
+    "status_free": "無料会員",
     "next_billing": "次回請求日 / 有効期限",
     "upgrade_button": "プレミアムにアップグレード",
     "purchased_characters": "購入済みキャラクター",
     "no_purchased_characters": "購入済みのキャラクターはありません",
     "delete_account": "退会する",
+    "delete_account_description": "アカウントを削除すると、すべてのデータが完全に削除され、復元できなくなります。",
     "language_settings": "言語設定",
     "language_japanese": "日本語",
-    "language_english": "English"
+    "language_english": "English",
+    "back_to_dashboard": "ダッシュボードに戻る",
+    "select_language": "表示言語を選択してください。キャラクターとの会話も選択した言語で行われます。",
+    "password_required": "パスワードを入力してください",
+    "delete_account_failed": "アカウント削除に失敗しました",
+    "delete_account_confirm": "本当にアカウントを削除しますか？",
+    "delete_account_warning": "この操作は取り消せません。すべてのデータが完全に削除されます。",
+    "delete_account_password": "確認のためパスワードを入力してください",
+    "delete_account_button": "アカウントを削除する",
+    "cancel": "キャンセル",
+    "processing": "処理中...",
+    "purchase_type_buy": "買い切り",
+    "purchase_type_subscription": "サブスク限定",
+    "purchase_date": "購入日:",
+    "premium_warning": "現在プレミアムサブスクリプションに加入中です。退会しても日割り返金はありません。",
+    "not_set": "未設定"
   }
 }

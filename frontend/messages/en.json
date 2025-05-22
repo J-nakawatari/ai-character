@@ -6,7 +6,8 @@
     "logout": "Logout",
     "mypage": "My Page",
     "dashboard": "Dashboard",
-    "back_to_top": "Back to TOP"
+    "back_to_top": "Back to TOP",
+    "loading": "Loading..."
   },
   "auth": {
     "name": "Name",
@@ -51,13 +52,34 @@
     "last_login": "Last Login",
     "subscription_info": "Subscription Information",
     "status": "Status",
+    "status_active": "Active",
+    "status_inactive": "Inactive",
+    "status_expired": "Expired",
+    "status_canceled": "Canceled",
+    "status_free": "Free Member",
     "next_billing": "Next Billing Date / Expiration Date",
     "upgrade_button": "Upgrade to Premium",
     "purchased_characters": "Purchased Characters",
     "no_purchased_characters": "No purchased characters",
     "delete_account": "Delete Account",
+    "delete_account_description": "Deleting your account will permanently remove all your data and cannot be undone.",
     "language_settings": "Language Settings",
     "language_japanese": "日本語",
-    "language_english": "English"
+    "language_english": "English",
+    "back_to_dashboard": "Back to Dashboard",
+    "select_language": "Select your display language. Character conversations will also be in the selected language.",
+    "password_required": "Password is required",
+    "delete_account_failed": "Failed to delete account",
+    "delete_account_confirm": "Are you sure you want to delete your account?",
+    "delete_account_warning": "This action cannot be undone. All your data will be permanently deleted.",
+    "delete_account_password": "Please enter your password to confirm",
+    "delete_account_button": "Delete Account",
+    "cancel": "Cancel",
+    "processing": "Processing...",
+    "purchase_type_buy": "One-time Purchase",
+    "purchase_type_subscription": "Subscription Only",
+    "purchase_date": "Purchase Date:",
+    "premium_warning": "You are currently subscribed to a premium plan. There will be no prorated refund if you delete your account.",
+    "not_set": "Not set"
   }
 }
