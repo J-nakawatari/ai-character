@@ -23,7 +23,11 @@
     "email_placeholder": "Enter your email",
     "password_placeholder": "Enter your password",
     "invalid_credentials": "Invalid email or password",
-    "login_failed": "Login failed"
+    "login_failed": "Login failed",
+    "validation": {
+      "invalid_email": "Please enter a valid email address",
+      "password_required": "Password is required"
+    }
   },
   "mypage": {
     "title": "My Page",

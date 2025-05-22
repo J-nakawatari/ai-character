@@ -70,7 +70,7 @@ export default function Login() {
               {...register('email')}
             />
             {errors.email && (
-              <p className="error-message">{errors.email.message === 'Invalid email address' ? '有効なメールアドレスを入力してください' : errors.email.message}</p>
+              <p className="error-message">{errors.email.message === 'Invalid email address' ? t('auth.validation.invalid_email') : errors.email.message}</p>
             )}
           </div>
           
@@ -83,7 +83,7 @@ export default function Login() {
               {...register('password')}
             />
             {errors.password && (
-              <p className="error-message">{errors.password.message === 'Password is required' ? 'パスワードを入力してください' : errors.password.message}</p>
+              <p className="error-message">{errors.password.message === 'Password is required' ? t('auth.validation.password_required') : errors.password.message}</p>
             )}
           </div>
           
