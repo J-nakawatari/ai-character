@@ -1,6 +1,4 @@
-const withNextIntl = require('next-intl/plugin')(
-  './i18n/request.js'
-);
+const withNextIntl = require('next-intl/plugin')();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
