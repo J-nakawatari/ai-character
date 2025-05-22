@@ -89,5 +89,25 @@
     "purchase_date": "Purchase Date:",
     "premium_warning": "You are currently subscribed to a premium plan. There will be no prorated refund if you delete your account.",
     "not_set": "Not set"
+  },
+  "dashboard": {
+    "name": "Name",
+    "personality": "Personality",
+    "description": "Description",
+    "start_chat": "Start Chat",
+    "no_info": "No information",
+    "loading": "Loading..."
+  },
+  "chat": {
+    "loading": "Loading...",
+    "back": "Back",
+    "logout": "Logout",
+    "welcome_message": "Welcome back, %s! Let's start chatting.",
+    "input_placeholder": "Type a message...",
+    "send": "Send",
+    "input_help": "Send: Enter  |  New line: Shift + Enter",
+    "failed_load_history": "Failed to load chat history",
+    "incomplete_character_data": "Character data is incomplete. Please reload.",
+    "failed_send": "Failed to send message"
   }
 }
