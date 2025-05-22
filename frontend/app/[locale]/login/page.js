@@ -55,9 +55,9 @@ export default function Login({ params }) {
         {serverError && (
           <div className="error-message" style={{ marginBottom: '16px' }}>
             {serverError === 'Invalid credentials'
-              ? t('auth.invalid_credentials')
+              ? t('invalid_credentials')
               : serverError === 'Login failed'
-                ? t('auth.login_failed')
+                ? t('login_failed')
                 : serverError}
           </div>
         )}

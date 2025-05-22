@@ -39,6 +39,10 @@
       "name_min_length": "Name must be at least 2 characters",
       "password_min_length": "Password must be at least 6 characters"
     },
+    "auth": {
+      "invalid_credentials": "Invalid email or password",
+      "login_failed": "Login failed"
+    },
     "name_placeholder": "Enter your name",
     "user_already_exists": "This email address is already registered",
     "registration_failed": "Registration failed",
