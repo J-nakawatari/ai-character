@@ -7,6 +7,8 @@ import { useAuth } from '../../utils/auth';
 import Button from '../../components/Button';
 import BackButton from '../../components/BackButton';
 import { useTranslations } from 'next-intl';
+// モックデータをインポート
+import { mockCharacters, mockUser } from '../../utils/mockData';
 
 export default function Dashboard({ params }) {
   const { user, loading, logout } = useAuth();
@@ -14,6 +16,13 @@ export default function Dashboard({ params }) {
   const pathname = usePathname();
   const { locale } = typeof params.then === 'function' ? use(params) : params;
   const t = useTranslations('dashboard');
+  
+  // モックユーザーデータを作成
+  const mockUserWithCharacter = {
+    ...mockUser,
+    hasCompletedSetup: true,
+    selectedCharacter: mockCharacters[0] // 最初のキャラクターを選択したと仮定
+  };
   
   const handleStartChat = () => {
     router.push(`/${locale}/chat`);
@@ -30,7 +39,9 @@ export default function Dashboard({ params }) {
     }
   };
   
-  if (loading || !user) {
+  // ローディング中またはユーザーデータがない場合はローディング表示
+  // モックデータを使用するため、常にモックユーザーデータを表示する
+  if (false) { // 常にfalseになるようにして、ローディング表示をスキップ
     return (
       <div className="dashboard">
         <div className="dashboard__loading">
@@ -40,8 +51,11 @@ export default function Dashboard({ params }) {
     );
   }
   
+  // 実際のユーザーデータがある場合はそれを使用し、なければモックデータを使用
+  const displayUser = user || mockUserWithCharacter;
+  
   const generatePersonalityTags = () => {
-    if (!user.selectedCharacter?.personalityPrompt) return [];
+    if (!displayUser.selectedCharacter?.personalityPrompt) return [];
     
     const personalityWords = [
       '明るい', '優しい', '厳しい', '真面目', '陽気', '冷静', '情熱的', 
@@ -50,18 +64,49 @@ export default function Dashboard({ params }) {
     ];
     
     const tags = [];
-    const text = user.selectedCharacter.personalityPrompt.toLowerCase();
+    const text = displayUser.selectedCharacter.personalityPrompt;
     
-    personalityWords.forEach(word => {
-      if (text.includes(word.toLowerCase())) {
-        tags.push(word);
-      }
-    });
+    if (typeof text === 'object') {
+      const textStr = text[locale] || text.ja || text.en || '';
+      personalityWords.forEach(word => {
+        if (textStr.toLowerCase().includes(word.toLowerCase())) {
+          tags.push(word);
+        }
+      });
+    } else if (typeof text === 'string') {
+      personalityWords.forEach(word => {
+        if (text.toLowerCase().includes(word.toLowerCase())) {
+          tags.push(word);
+        }
+      });
+    }
     
     return tags.slice(0, 5);
   };
   
   const personalityTags = generatePersonalityTags();
+  
+  // キャラクター名を取得（オブジェクトの場合はロケールに合わせて表示）
+  const getCharacterName = () => {
+    const character = displayUser.selectedCharacter;
+    if (!character) return '';
+    
+    if (typeof character.name === 'object') {
+      return character.name[locale] || character.name.ja || character.name.en || '';
+    }
+    return character.name || '';
+  };
+  
+  // キャラクター説明を取得（オブジェクトの場合はロケールに合わせて表示）
+  const getCharacterDescription = () => {
+    const character = displayUser.selectedCharacter;
+    if (!character) return '';
+    
+    if (typeof character.description === 'object') {
+      return character.description[locale] || character.description.ja || character.description.en || '';
+    }
+    return character.description || '';
+  };
   
   return (
     <div className="dashboard">
@@ -69,10 +114,10 @@ export default function Dashboard({ params }) {
         <div className="dashboard__card">
           <div className="dashboard__section-wrapper">
             <div className="dashboard__card--image">
-              {user.selectedCharacter?.imageDashboard ? (
+              {displayUser.selectedCharacter?.imageCharacterSelect ? (
                 <img
-                  src={user.selectedCharacter.imageDashboard}
-                  alt={user.selectedCharacter.name}
+                  src={displayUser.selectedCharacter.imageCharacterSelect}
+                  alt={getCharacterName()}
                   width={320}
                   height={400}
                   className="dashboard__character-img"
@@ -86,7 +131,7 @@ export default function Dashboard({ params }) {
             <div className="dashboard__section-flex">
               <div className="dashboard__section">
                 <h2 className="dashboard__label">{t('name', '名前')}</h2>
-                <p className="dashboard__title">{user.selectedCharacter?.name}</p>
+                <p className="dashboard__title">{getCharacterName()}</p>
               </div>
               <div className="dashboard__section">
                 <h2 className="dashboard__label">{t('personality', '性格')}</h2>
@@ -98,13 +143,13 @@ export default function Dashboard({ params }) {
                   ))}
                 </div>
                 <p className="dashboard__desc">
-                  {user.selectedCharacter?.personalityPrompt || t('no_info', '情報なし')}
+                  {displayUser.selectedCharacter?.personalityPrompt || t('no_info', '情報なし')}
                 </p>
               </div>
               <div className="dashboard__section">
                 <h2 className="dashboard__label">{t('description', '説明')}</h2>
                 <p className="dashboard__desc">
-                  {user.selectedCharacter?.description || t('no_info', '情報なし')}
+                  {getCharacterDescription() || t('no_info', '情報なし')}
                 </p>
               </div>
               <button
