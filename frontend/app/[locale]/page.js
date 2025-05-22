@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef, useLayoutEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { useAuth } from '../../utils/auth';
+import { useAuth } from '../utils/auth';
 import { Orbitron } from 'next/font/google';
 import { useTranslations } from 'next-intl';
 
