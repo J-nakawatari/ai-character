@@ -24,16 +24,9 @@ export default function LocaleLayout({ children, params }) {
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
-      <AuthProvider>
-        <AdminAuthProvider>
-          <div className="app-layout">
-            {!hideSidebar && <Sidebar />}
-            <main className="app-main">
-              {children}
-            </main>
-          </div>
-        </AdminAuthProvider>
-      </AuthProvider>
+      <div className="app-main">
+        {children}
+      </div>
     </NextIntlClientProvider>
   );
 }

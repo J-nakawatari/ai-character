@@ -9,6 +9,14 @@
     "back_to_top": "TOPに戻る",
     "loading": "読み込み中..."
   },
+  "setup": {
+    "title": "セットアップへようこそ",
+    "description": "ここからあなたのキャラクター設定を始めましょう。",
+    "select_character": "AIキャラクターを選択してください",
+    "character_tags": "タグ",
+    "select_button": "このキャラを選択する",
+    "loading": "読み込み中..."
+  },
   "auth": {
     "name": "お名前",
     "email": "メールアドレス",

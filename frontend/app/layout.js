@@ -1,6 +1,10 @@
 'use client';
 import { Geist, Geist_Mono } from "next/font/google";
 import { M_PLUS_Rounded_1c, Orbitron } from "next/font/google";
+import { AuthProvider } from "./utils/auth";
+import { AdminAuthProvider } from "./utils/adminAuth";
+import Sidebar from "./components/Sidebar";
+import { usePathname } from "next/navigation";
 import './globals.css';
 import './styles/setup.css';
 import './styles/dashboard.css';
@@ -28,12 +32,30 @@ const orbitron = Orbitron({
 });
 
 export default function RootLayout({ children }) {
+  const pathname = usePathname();
+  const isAdmin = pathname?.startsWith('/admin');
+  const isLocalized = pathname?.match(/^\/(ja|en)\//);
+  const hideSidebar = pathname?.startsWith('/login') || 
+                      pathname?.startsWith('/register') || 
+                      pathname?.startsWith('/setup') || 
+                      isAdmin || 
+                      isLocalized;
+
   return (
     <html lang="ja">
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${mPlusRounded.variable} ${orbitron.variable} antialiased`}
       >
-        {children}
+        <AuthProvider>
+          <AdminAuthProvider>
+            <div className="app-layout">
+              {!hideSidebar && <Sidebar />}
+              <main className="app-main">
+                {children}
+              </main>
+            </div>
+          </AdminAuthProvider>
+        </AuthProvider>
       </body>
     </html>
   );
