@@ -16,10 +16,10 @@ export default function LocaleLayout({ children, params }) {
   
   let messages;
   try {
-    messages = require(`../messages/${locale}.json`);
+    messages = require(`../../messages/${locale}.json`);
   } catch (error) {
     console.error(`Could not load messages for locale "${locale}"`, error);
-    messages = require('../messages/ja.json');
+    messages = require('../../messages/ja.json');
   }
 
   return (
