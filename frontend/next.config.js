@@ -8,7 +8,9 @@ const nextConfig = {
   images: {
     domains: ['localhost'],
   },
-  serverExternalPackages: ['mongoose']
+  experimental: {
+    serverComponentsExternalPackages: ['mongoose']
+  }
 };
 
 module.exports = withNextIntl(nextConfig);
