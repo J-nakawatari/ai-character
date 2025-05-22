@@ -9,6 +9,14 @@
     "back_to_top": "Back to TOP",
     "loading": "Loading..."
   },
+  "setup": {
+    "title": "Welcome to Setup",
+    "description": "Let's start setting up your character.",
+    "select_character": "Select an AI Character",
+    "character_tags": "Tags",
+    "select_button": "Select this character",
+    "loading": "Loading..."
+  },
   "auth": {
     "name": "Name",
     "email": "Email",

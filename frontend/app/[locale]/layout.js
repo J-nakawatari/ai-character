@@ -12,6 +12,7 @@ export default function LocaleLayout({ children, params }) {
   const isAdmin = pathname.startsWith(`/${locale}/admin`);
   const hideSidebar = pathname.startsWith(`/${locale}/login`) || 
                       pathname.startsWith(`/${locale}/register`) || 
+                      pathname.startsWith(`/${locale}/setup`) || 
                       isAdmin;
   
   let messages;
