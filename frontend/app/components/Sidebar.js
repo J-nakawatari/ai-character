@@ -1,17 +1,19 @@
 import Link from 'next/link';
 import { useAuth } from '../utils/auth';
 import { useRouter, usePathname } from 'next/navigation';
+import { getLocaleFromPath } from '../i18n-config';
 import styles from './Sidebar.module.css';
 
 export default function Sidebar() {
   const { logout } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
+  const locale = getLocaleFromPath(pathname);
 
   const handleLogout = async () => {
     const result = await logout();
     if (result.success) {
-      router.push('/login');
+      router.push(`/${locale}/login`);
     }
   };
 
@@ -22,8 +24,8 @@ export default function Sidebar() {
       </div>
       <nav className={styles.sidebar__nav}>
         <ul className={styles.sidebar__list}>
-          <li className={pathname.startsWith('/dashboard') ? styles.sidebar__item + ' ' + styles['sidebar__item--active'] : styles.sidebar__item}>
-            <Link href="/dashboard" className={styles.sidebar__link}>
+          <li className={pathname.startsWith(`/${locale}/dashboard`) ? styles.sidebar__item + ' ' + styles['sidebar__item--active'] : styles.sidebar__item}>
+            <Link href={`/${locale}/dashboard`} className={styles.sidebar__link}>
               <span className={styles.sidebar__icon}>
                 {/* Dashboard Icon (from public/icon/dashboard.svg) */}
                 <svg
@@ -56,8 +58,8 @@ export default function Sidebar() {
               <span className={styles.sidebar__text}>ダッシュボード</span>
             </Link>
           </li>
-          <li className={pathname.startsWith('/chat') ? styles.sidebar__item + ' ' + styles['sidebar__item--active'] : styles.sidebar__item}>
-            <Link href="/chat" className={styles.sidebar__link}>
+          <li className={pathname.startsWith(`/${locale}/chat`) ? styles.sidebar__item + ' ' + styles['sidebar__item--active'] : styles.sidebar__item}>
+            <Link href={`/${locale}/chat`} className={styles.sidebar__link}>
               <span className={styles.sidebar__icon}>
                 {/* Chat Icon (Outline) */}
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
@@ -67,8 +69,8 @@ export default function Sidebar() {
               <span className={styles.sidebar__text}>チャット</span>
             </Link>
           </li>
-          <li className={pathname.startsWith('/setup') ? styles.sidebar__item + ' ' + styles['sidebar__item--active'] : styles.sidebar__item}>
-            <Link href="/setup?reselect=true" className={styles.sidebar__link}>
+          <li className={pathname.startsWith(`/${locale}/setup`) ? styles.sidebar__item + ' ' + styles['sidebar__item--active'] : styles.sidebar__item}>
+            <Link href={`/${locale}/setup?reselect=true`} className={styles.sidebar__link}>
               <span className={styles.sidebar__icon}>
                 {/* Edit/Pen Icon (Outline) */}
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
@@ -78,8 +80,8 @@ export default function Sidebar() {
               <span className={styles.sidebar__text}>キャラを変更</span>
             </Link>
           </li>
-          <li className={pathname.startsWith('/mypage') ? styles.sidebar__item + ' ' + styles['sidebar__item--active'] : styles.sidebar__item}>
-            <Link href="/mypage" className={styles.sidebar__link}>
+          <li className={pathname.startsWith(`/${locale}/mypage`) ? styles.sidebar__item + ' ' + styles['sidebar__item--active'] : styles.sidebar__item}>
+            <Link href={`/${locale}/mypage`} className={styles.sidebar__link}>
               <span className={styles.sidebar__icon}>
                 {/* User Icon (Outline) */}
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
@@ -118,4 +120,4 @@ export default function Sidebar() {
       </div>
     </aside>
   );
-} 
+}  
