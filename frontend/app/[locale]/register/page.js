@@ -6,18 +6,18 @@ import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useAuth } from '../utils/auth';
-import BackButton from '../components/BackButton';
+import { useAuth } from '../../utils/auth';
+import BackButton from '../../components/BackButton';
 import { useTranslations } from 'next-intl';
 
-const schema = z.object({
-  name: z.string().min(2, 'お名前は2文字以上で入力してください'),
-  email: z.string().email('有効なメールアドレスを入力してください'),
-  password: z.string().min(6, 'パスワードは6文字以上で入力してください'),
+const schema = (t) => z.object({
+  name: z.string().min(2, t('auth.validation.name_min_length')),
+  email: z.string().email(t('auth.validation.invalid_email')),
+  password: z.string().min(6, t('auth.validation.password_min_length')),
   preferredLanguage: z.enum(['ja', 'en']),
 });
 
-export default function Register() {
+export default function Register({ params }) {
   const { register: registerUser } = useAuth();
   const router = useRouter();
   const [serverError, setServerError] = useState('');
@@ -29,7 +29,7 @@ export default function Register() {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schema(t)),
   });
   
   const onSubmit = async (data) => {
@@ -38,16 +38,16 @@ export default function Register() {
     const result = await registerUser(data);
     
     if (result.success) {
-      router.push('/setup');
+      router.push(`/${params.locale}/setup`);
     } else {
       const errorMessages = {
-        'User already exists': 'このメールアドレスは既に登録されています',
-        'Registration failed': '登録に失敗しました',
-        'Invalid email format': 'メールアドレスの形式が正しくありません',
-        'Password too short': 'パスワードが短すぎます',
-        'Invalid password format': 'パスワードの形式が正しくありません',
-        'Server error': 'サーバーエラーが発生しました',
-        'Network error': 'ネットワークエラーが発生しました'
+        'User already exists': t('user_already_exists'),
+        'Registration failed': t('registration_failed'),
+        'Invalid email format': t('invalid_email_format'),
+        'Password too short': t('password_too_short'),
+        'Invalid password format': t('invalid_password_format'),
+        'Server error': t('server_error'),
+        'Network error': t('network_error')
       };
       setServerError(errorMessages[result.error] || result.error);
     }
@@ -61,7 +61,7 @@ export default function Register() {
         <div className="auth-layout__bubble auth-layout__bubble--3"></div>
       </div>
       
-      <BackButton to="/" />
+      <BackButton to={`/${params.locale}`} />
       
       <div className="card auth-layout__card">
         <div className="card__body">
@@ -79,7 +79,7 @@ export default function Register() {
               <input
                 className="input"
                 type="text"
-                placeholder="お名前を入力してください"
+                placeholder={t('name_placeholder')}
                 {...register('name')}
               />
               {errors.name && (
@@ -92,7 +92,7 @@ export default function Register() {
               <input
                 className="input"
                 type="email"
-                placeholder="メールアドレスを入力してください"
+                placeholder={t('email_placeholder')}
                 {...register('email')}
               />
               {errors.email && (
@@ -105,7 +105,7 @@ export default function Register() {
               <input
                 className="input"
                 type="password"
-                placeholder="パスワードを入力してください"
+                placeholder={t('password_placeholder')}
                 {...register('password')}
               />
               {errors.password && (
@@ -150,7 +150,7 @@ export default function Register() {
           <div className="auth-layout__footer">
             <p>
               {t('already_have_account')}
-              <Link href="/login" className="auth-layout__link">{t('login_button')}</Link>
+              <Link href={`/${params.locale}/login`} className="auth-layout__link">{t('login_button')}</Link>
             </p>
           </div>
         </div>
