@@ -89,5 +89,25 @@
     "purchase_date": "購入日:",
     "premium_warning": "現在プレミアムサブスクリプションに加入中です。退会しても日割り返金はありません。",
     "not_set": "未設定"
+  },
+  "dashboard": {
+    "name": "名前",
+    "personality": "性格",
+    "description": "説明",
+    "start_chat": "チャットを始める",
+    "no_info": "情報なし",
+    "loading": "読み込み中..."
+  },
+  "chat": {
+    "loading": "読み込み中...",
+    "back": "戻る",
+    "logout": "ログアウト",
+    "welcome_message": "%sさん、おかえりなさい！ チャットを始めましょう。",
+    "input_placeholder": "メッセージを入力...",
+    "send": "送信",
+    "input_help": "送信: Enter  |  改行: Shift + Enter",
+    "failed_load_history": "チャット履歴の読み込みに失敗しました",
+    "incomplete_character_data": "キャラクターデータが不完全です。再読み込みしてください",
+    "failed_send": "メッセージの送信に失敗しました"
   }
 }
