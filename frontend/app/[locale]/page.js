@@ -26,9 +26,10 @@ const videoFiles = [
   '/videos/hero-videos_03.mp4',
 ];
 
-export default function Home() {
+export default function Home({ params }) {
   const { user, loading } = useAuth();
   const router = useRouter();
+  const locale = params.locale || 'ja';
   const [isMobile, setIsMobile] = useState(false);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [isFading, setIsFading] = useState(false);
@@ -309,7 +310,7 @@ export default function Home() {
         </p>
         <div style={{ width: '100%', maxWidth: '300px' }}>
           <Link
-            href="/login"
+            href={`/${locale}/login`}
             className={`${orbitron.className} button`}
             style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', paddingRight: '16px', paddingLeft: '16px', overflow: 'hidden', position: 'relative' }}
             onMouseEnter={() => setArrowHover(true)}
@@ -365,7 +366,7 @@ export default function Home() {
             </span>
           </Link>
           <div style={{ textAlign: 'center', marginTop: '16px' }}>
-            <Link href="/register" className="register-link">
+            <Link href={`/${locale}/register`} className="register-link">
               {t('register')}
             </Link>
           </div>
