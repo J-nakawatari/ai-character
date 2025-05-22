@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, use } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
 import { useAuth } from '../../utils/auth';
@@ -12,7 +12,7 @@ export default function Dashboard({ params }) {
   const { user, loading, logout } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
-  const locale = params.locale || 'ja';
+  const { locale } = typeof params.then === 'function' ? use(params) : params;
   const t = useTranslations('dashboard');
   
   const handleStartChat = () => {

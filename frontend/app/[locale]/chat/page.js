@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, use } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
 import { useAuth } from '../../utils/auth';
@@ -14,7 +14,7 @@ export default function Chat({ params }) {
   const { user, loading, logout } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
-  const locale = params.locale || 'ja';
+  const { locale } = typeof params.then === 'function' ? use(params) : params;
   const t = useTranslations('chat');
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);

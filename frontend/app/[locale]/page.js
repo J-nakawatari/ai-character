@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef, useLayoutEffect } from 'react';
+import { useEffect, useState, useRef, useLayoutEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '../utils/auth';
@@ -29,7 +29,7 @@ const videoFiles = [
 export default function Home({ params }) {
   const { user, loading } = useAuth();
   const router = useRouter();
-  const locale = params.locale || 'ja';
+  const { locale } = typeof params.then === 'function' ? use(params) : params;
   const [isMobile, setIsMobile] = useState(false);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [isFading, setIsFading] = useState(false);

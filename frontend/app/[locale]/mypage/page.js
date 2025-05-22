@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useAuth } from '../../utils/auth';
 import api from '../../utils/api';
@@ -10,7 +10,7 @@ import { useTranslations } from 'next-intl';
 export default function MyPage({ params }) {
   const { user, loading, logout, updateLanguage } = useAuth();
   const router = useRouter();
-  const locale = params?.locale || 'ja';
+  const { locale } = typeof params.then === 'function' ? use(params) : params;
   const [purchasedCharacters, setPurchasedCharacters] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [password, setPassword] = useState('');

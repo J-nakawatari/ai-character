@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, use } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
@@ -21,7 +21,7 @@ export default function Login({ params }) {
   const [serverError, setServerError] = useState('');
   const t = useTranslations('auth');
   const appT = useTranslations('app');
-  const locale = params.locale || 'ja';
+  const { locale } = typeof params.then === 'function' ? use(params) : params;
   
   const {
     register,
