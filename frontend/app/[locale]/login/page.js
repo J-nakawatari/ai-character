@@ -15,12 +15,13 @@ const schema = z.object({
   password: z.string().min(1, 'Password is required'),
 });
 
-export default function Login() {
+export default function Login({ params }) {
   const { login, user } = useAuth();
   const router = useRouter();
   const [serverError, setServerError] = useState('');
   const t = useTranslations('auth');
   const appT = useTranslations('app');
+  const locale = params.locale || 'ja';
   
   const {
     register,
@@ -37,9 +38,9 @@ export default function Login() {
     
     if (result.success) {
       if (user?.hasCompletedSetup) {
-        router.push('/dashboard');
+        router.push(`/${locale}/dashboard`);
       } else {
-        router.push('/setup');
+        router.push(`/${locale}/setup`);
       }
     } else {
       setServerError(result.error);
@@ -100,12 +101,12 @@ export default function Login() {
         <div className="register-link-container">
           <p className="register-link-text">
             {t('dont_have_account')}
-            <Link href="/register" className="register-link">{t('register_button')}</Link>
+            <Link href={`/${locale}/register`} className="register-link">{t('register_button')}</Link>
           </p>
         </div>
       </div>
       <div style={{ textAlign: 'center', marginTop: '32px' }}>
-        <Link href="/" className="back-link">
+        <Link href={`/${locale}`} className="back-link">
           {appT('back_to_top')}
         </Link>
       </div>
