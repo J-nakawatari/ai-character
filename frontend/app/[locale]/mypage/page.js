@@ -6,7 +6,6 @@ import { useAuth } from '../../utils/auth';
 import api from '../../utils/api';
 import BackButton from '../../components/BackButton';
 import { useTranslations } from 'next-intl';
-import i18n from 'i18next';
 
 export default function MyPage({ params }) {
   const { user, loading, logout, updateLanguage } = useAuth();
@@ -49,7 +48,7 @@ export default function MyPage({ params }) {
     try {
       const { success } = await updateLanguage(language);
       if (success) {
-        i18n.changeLanguage(language);
+        router.refresh();
       }
     } catch (err) {
       console.error('言語設定の変更に失敗しました', err);
