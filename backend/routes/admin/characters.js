@@ -41,10 +41,9 @@ router.post('/', adminAuth, async (req, res) => {
       description,
       personalityPrompt,
       adminPrompt,
-      isPremium,
+      characterType,
       price,
       purchaseType,
-      isLimited,
       voice,
       defaultMessage,
       themeColor,
@@ -56,10 +55,11 @@ router.post('/', adminAuth, async (req, res) => {
       description,
       personalityPrompt,
       adminPrompt,
-      isPremium: typeof isPremium === 'boolean' ? isPremium : isPremium === 'true',
+      characterType,
+      isPremium: characterType === 'premium',
+      isLimited: characterType === 'limited',
       price: parseInt(price) || 0,
       purchaseType,
-      isLimited: typeof isLimited === 'boolean' ? isLimited : isLimited === 'true',
       voice,
       defaultMessage,
       themeColor,
@@ -87,10 +87,9 @@ router.put('/:id', adminAuth, async (req, res) => {
       description,
       personalityPrompt,
       adminPrompt,
-      isPremium,
+      characterType,
       price,
       purchaseType,
-      isLimited,
       voice,
       defaultMessage,
       themeColor,
@@ -112,10 +111,11 @@ router.put('/:id', adminAuth, async (req, res) => {
     character.description = description || character.description;
     character.personalityPrompt = personalityPrompt || character.personalityPrompt;
     character.adminPrompt = adminPrompt || character.adminPrompt;
-    character.isPremium = typeof isPremium === 'boolean' ? isPremium : isPremium === 'true';
+    character.characterType = characterType || character.characterType;
+    character.isPremium = characterType === 'premium';
+    character.isLimited = characterType === 'limited';
     character.price = parseInt(price) || character.price;
     character.purchaseType = purchaseType || character.purchaseType;
-    character.isLimited = typeof isLimited === 'boolean' ? isLimited : isLimited === 'true';
     character.voice = voice || character.voice;
     character.defaultMessage = defaultMessage || character.defaultMessage;
     character.themeColor = themeColor || character.themeColor;

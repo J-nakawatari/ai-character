@@ -5,12 +5,15 @@ import { useRouter } from 'next/navigation';
 import api from '../../utils/api';
 import Card from '../../components/Card';
 import Button from '../../components/Button';
+import Toast from '../../components/Toast';
+import Cookies from 'js-cookie';
 
 export default function AdminUsers() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [selectedUser, setSelectedUser] = useState(null);
+  const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
   const router = useRouter();
   
   useEffect(() => {
@@ -44,13 +47,31 @@ export default function AdminUsers() {
     if (!confirm('このユーザーを無効化しますか？')) return;
     
     try {
-      await api.put(`/admin/users/${userId}/ban`);
+      const token = Cookies.get('token');
+      await api.put(`/admin/users/${userId}/ban`, { token });
       fetchUsers();
       if (selectedUser && selectedUser._id === userId) {
         setSelectedUser(null);
       }
+      setToast({ show: true, message: 'ユーザーを無効化しました', type: 'success' });
     } catch (err) {
       console.error('ユーザーの無効化に失敗:', err);
+      setToast({ show: true, message: 'ユーザーの無効化に失敗しました', type: 'error' });
+    }
+  };
+  
+  const handleActivateUser = async (userId) => {
+    if (!confirm('このユーザーを有効化しますか？')) return;
+    try {
+      await api.put(`/admin/users/${userId}/activate`);
+      fetchUsers();
+      if (selectedUser && selectedUser._id === userId) {
+        setSelectedUser(null);
+      }
+      setToast({ show: true, message: 'ユーザーを有効化しました', type: 'success' });
+    } catch (err) {
+      console.error('ユーザーの有効化に失敗:', err);
+      setToast({ show: true, message: 'ユーザーの有効化に失敗しました', type: 'error' });
     }
   };
   
@@ -97,8 +118,12 @@ export default function AdminUsers() {
                 </div>
                 <div className="user-list-cell">登録日：{new Date(user.createdAt).toLocaleString('ja-JP')}</div>
                 <div className="user-list-actions">
-                  <button onClick={() => handleUserSelect(user._id)} className="admin-logout-btn">詳細</button>
-                  <button onClick={() => handleBanUser(user._id)} className="admin-logout-btn ban">無効化</button>
+                  <button onClick={() => handleUserSelect(user._id)} className="admin-logout-btn detail">詳細</button>
+                  {user.isActive ? (
+                    <button onClick={() => handleBanUser(user._id)} className="admin-logout-btn ban">無効化</button>
+                  ) : (
+                    <button onClick={() => handleActivateUser(user._id)} className="admin-logout-btn create">有効化</button>
+                  )}
                   <button onClick={() => handleDeleteUser(user._id)} className="admin-logout-btn delete">削除</button>
                 </div>
               </div>
@@ -136,8 +161,37 @@ export default function AdminUsers() {
                   <span className="user-detail-label">選択中キャラクター</span>
                   <span className="user-detail-value">
                     {selectedUser.selectedCharacter ? (
-                      <div className="character-info">
-                        <span className="character-name">{selectedUser.selectedCharacter.name}</span>
+                      <div className="modal-header" style={{gap: '16px', alignItems: 'center', margin: 0, padding: 0}}>
+                        {selectedUser.selectedCharacter.imageChatAvatar ? (
+                          <img
+                            src={selectedUser.selectedCharacter.imageChatAvatar}
+                            alt={typeof selectedUser.selectedCharacter.name === 'object' ? (selectedUser.selectedCharacter.name.ja || selectedUser.selectedCharacter.name.en || '') : selectedUser.selectedCharacter.name}
+                            className="modal-avatar"
+                            style={{width: '48px', height: '48px'}}
+                          />
+                        ) : (
+                          <span className="modal-avatar-placeholder" style={{width: '48px', height: '48px', fontSize: '20px'}}>
+                            {typeof selectedUser.selectedCharacter.name === 'object'
+                              ? (selectedUser.selectedCharacter.name.ja || selectedUser.selectedCharacter.name.en || '')
+                              : selectedUser.selectedCharacter.name}
+                          </span>
+                        )}
+                        <div className="character-modal-info" style={{display: 'flex', flexDirection: 'column', gap: '4px'}}>
+                          <div className="modal-title" style={{fontSize: '16px', marginBottom: '2px'}}>{
+                            typeof selectedUser.selectedCharacter.name === 'object'
+                              ? (selectedUser.selectedCharacter.name.ja || selectedUser.selectedCharacter.name.en || '')
+                              : selectedUser.selectedCharacter.name
+                          }</div>
+                          <div className="modal-subtitle" style={{fontSize: '12px'}}>
+                            {selectedUser.selectedCharacter.characterType === 'free' && <span className="free-badge">無料キャラ</span>}
+                            {selectedUser.selectedCharacter.characterType === 'premium' && <span className="premium-badge">サブスク会員用キャラクター</span>}
+                            {selectedUser.selectedCharacter.characterType === 'paid' && <span className="paid-badge">課金キャラクター：{selectedUser.selectedCharacter.price}円（{selectedUser.selectedCharacter.purchaseType === 'buy' ? '買い切り' : '月額課金'}）</span>}
+                            {selectedUser.selectedCharacter.characterType === 'limited' && <span className="limited-badge">期間限定キャラクター</span>}
+                          </div>
+                          <div className="character-date" style={{fontSize: '12px', color: '#6B7A99'}}>
+                            登録日時: {selectedUser.selectedCharacter.createdAt ? new Date(selectedUser.selectedCharacter.createdAt).toLocaleString('ja-JP') : ''}
+                          </div>
+                        </div>
                       </div>
                     ) : (
                       <span className="status-pending">未選択</span>
@@ -147,6 +201,14 @@ export default function AdminUsers() {
               </div>
             </div>
           </div>
+        )}
+        {toast.show && (
+          <Toast
+            show={toast.show}
+            message={toast.message}
+            type={toast.type}
+            onClose={() => setToast({ ...toast, show: false })}
+          />
         )}
       </div>
     </div>

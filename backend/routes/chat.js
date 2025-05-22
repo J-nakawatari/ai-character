@@ -69,7 +69,8 @@ router.post('/', auth, async (req, res) => {
       message, 
       user.name, 
       character,
-      chat.messages // 会話履歴を渡す
+      chat.messages, // 会話履歴を渡す
+      user // 追加
     );
     
     chat.messages.push({
@@ -94,7 +95,7 @@ router.post('/', auth, async (req, res) => {
   }
 });
 
-async function generateAIResponse(message, userName, character, chatHistory = []) {
+async function generateAIResponse(message, userName, character, chatHistory = [], user) {
   if (!process.env.OPENAI_API_KEY) {
     console.error('OpenAI API key is not configured');
     return `申し訳ありません、AIサービスの設定が完了していないためチャットができません。管理者にお問い合わせください。`;
@@ -105,7 +106,6 @@ async function generateAIResponse(message, userName, character, chatHistory = []
       apiKey: process.env.OPENAI_API_KEY,
     });
 
-    const user = await User.findById(chatHistory[0]?.userId);
     const lang = user?.preferredLanguage || 'ja';
 
     const characterName = character.name[lang] || character.name.ja || character.name;

@@ -249,3 +249,23 @@
   font-size: 0.875rem;
   margin-top: 4px;
 }
+
+.mypage__language-select {
+  width: 220px;
+  padding: 10px 16px;
+  border-radius: 6px;
+  border: 1px solid #e0e0e0;
+  background: #f9f9f9;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+  margin-top: 12px;
+  margin-bottom: 8px;
+  box-shadow: 0 2px 8px rgba(67, 234, 252, 0.08);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.mypage__language-select:focus {
+  outline: none;
+  border-color: #43eafc;
+  box-shadow: 0 0 0 2px #43eafc33;
+}

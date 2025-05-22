@@ -188,33 +188,14 @@ export default function Chat({ params }) {
   
   return (
     <div className="chat-container">
-      {user.selectedCharacter?.imageChatBackground && (
-        <img
-          src={user.selectedCharacter.imageChatBackground}
-          alt="背景"
-          className="chat-bg-character-image"
-        />
-      )}
-      
-      <button 
-        className="chat-back-button" 
-        onClick={() => router.push(`/${locale}/dashboard`)}
-        aria-label={t('back', '戻る')}
-      >
-        <span>←</span>
-      </button>
-      
-      <header className="chat-header">
-        <h1 className="chat-header-title">{user.selectedCharacter?.name || 'AI Character'}</h1>
-        <button 
-          onClick={handleLogout} 
-          className="button button--secondary button--sm"
-        >
-          {t('logout', 'ログアウト')}
-        </button>
-      </header>
-      
       <main className="chat-main">
+        {user.selectedCharacter?.imageChatBackground && (
+          <img
+            src={user.selectedCharacter.imageChatBackground}
+            alt="背景"
+            className="chat-bg-character-image"
+          />
+        )}
         <div className="chat-messages">
           {messages.length === 0 ? (
             <div className="chat-welcome">
@@ -231,7 +212,7 @@ export default function Chat({ params }) {
                     <div className="chat-message-avatar">
                       <img
                         src={user.selectedCharacter.imageChatAvatar}
-                        alt={user.selectedCharacter.name}
+                        alt={typeof user.selectedCharacter.name === 'object' ? (user.selectedCharacter.name[locale] || user.selectedCharacter.name.ja || user.selectedCharacter.name.en || 'AI Character') : (user.selectedCharacter.name || 'AI Character')}
                         width={40}
                         height={40}
                       />

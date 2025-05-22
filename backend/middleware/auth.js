@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const jwtBlacklist = require('../utils/jwtBlacklist');
 require('dotenv').config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -13,6 +14,10 @@ module.exports = (req, res, next) => {
   
   console.log('Token from cookies:', token ? 'Found' : 'Not found');
   
+  if (jwtBlacklist.has(token)) {
+    return res.status(401).json({ msg: 'Token is blacklisted' });
+  }
+
   if (!token) {
     return res.status(401).json({ msg: 'No token, authorization denied' });
   }
@@ -21,7 +26,17 @@ module.exports = (req, res, next) => {
     const decoded = jwt.verify(token, JWT_SECRET);
     console.log('Token verified successfully:', decoded.user.id);
     req.user = decoded.user;
-    next();
+    // isActiveチェック
+    const User = require('../models/User');
+    User.findById(decoded.user.id).then(user => {
+      if (!user || user.isActive === false) {
+        return res.status(403).json({ msg: 'アカウントが無効化されています。' });
+      }
+      next();
+    }).catch(err => {
+      console.error('User fetch failed:', err.message);
+      res.status(401).json({ msg: 'Token is not valid' });
+    });
   } catch (err) {
     console.error('Token verification failed:', err.message);
     res.status(401).json({ msg: 'Token is not valid' });

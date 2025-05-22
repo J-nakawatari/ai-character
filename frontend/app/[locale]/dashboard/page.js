@@ -7,6 +7,8 @@ import { useAuth } from '../../utils/auth';
 import Button from '../../components/Button';
 import BackButton from '../../components/BackButton';
 import { useTranslations } from 'next-intl';
+import Card from '../../components/Card';
+import styles from './dashboard.module.css';
 
 export default function Dashboard({ params }) {
   const { user, loading, logout } = useAuth();
@@ -32,10 +34,8 @@ export default function Dashboard({ params }) {
   
   if (loading || !user) {
     return (
-      <div className="dashboard">
-        <div className="dashboard__loading">
-          <p>{t('loading', 'Loading...')}</p>
-        </div>
+      <div className={styles.dashboardLoading}>
+        <p>{t('loading', 'Loading...')}</p>
       </div>
     );
   }
@@ -49,9 +49,13 @@ export default function Dashboard({ params }) {
       '謙虚', '誠実', '勇敢', '忠実', '思いやり', '几帳面', '自由', '創造的'
     ];
     
-    const tags = [];
-    const text = user.selectedCharacter.personalityPrompt.toLowerCase();
+    let text = user.selectedCharacter.personalityPrompt;
+    if (typeof text === 'object') {
+      text = text[locale] || text.ja || text.en || '';
+    }
+    text = (text || '').toLowerCase();
     
+    const tags = [];
     personalityWords.forEach(word => {
       if (text.includes(word.toLowerCase())) {
         tags.push(word);
@@ -64,49 +68,57 @@ export default function Dashboard({ params }) {
   const personalityTags = generatePersonalityTags();
   
   return (
-    <div className="dashboard">
-      <div className="dashboard__main">
-        <div className="dashboard__card">
-          <div className="dashboard__section-wrapper">
-            <div className="dashboard__card--image">
-              {user.selectedCharacter?.imageDashboard ? (
-                <img
-                  src={user.selectedCharacter.imageDashboard}
-                  alt={user.selectedCharacter.name}
-                  width={320}
-                  height={400}
-                  className="dashboard__character-img"
-                />
-              ) : (
-                <div className="dashboard__character-img dashboard__character-img--placeholder">
-                  画像がありません
-                </div>
-              )}
-            </div>
-            <div className="dashboard__section-flex">
-              <div className="dashboard__section">
-                <h2 className="dashboard__label">{t('name', '名前')}</h2>
-                <p className="dashboard__title">{user.selectedCharacter?.name}</p>
+    <div className={styles.dashboardRoot}>
+      <Card className={styles.dashboardCard}>
+        <div className={styles.dashboardGrid}>
+          <div className={styles.dashboardImageWrapper}>
+            {user.selectedCharacter?.imageDashboard ? (
+              <img
+                src={user.selectedCharacter.imageDashboard}
+                alt={user.selectedCharacter.name}
+                width={320}
+                height={400}
+                className={styles.dashboardCharacterImg}
+              />
+            ) : (
+              <div className={styles.dashboardCharacterImgPlaceholder}>
+                画像がありません
               </div>
-              <div className="dashboard__section">
-                <h2 className="dashboard__label">{t('personality', '性格')}</h2>
-                <div className="dashboard__personality-tags">
-                  {personalityTags.map((tag, index) => (
-                    <span key={index} className="dashboard__personality-tag">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-                <p className="dashboard__desc">
-                  {user.selectedCharacter?.personalityPrompt || t('no_info', '情報なし')}
-                </p>
+            )}
+          </div>
+          <div className={styles.dashboardInfoSection}>
+            <section className={styles.dashboardSection}>
+              <h2 className={styles.dashboardLabel}>{t('name', '名前')}</h2>
+              <p className={styles.dashboardTitle}>{
+                typeof user.selectedCharacter?.name === 'object'
+                  ? (user.selectedCharacter.name[locale] || user.selectedCharacter.name.ja || user.selectedCharacter.name.en || '')
+                  : user.selectedCharacter?.name
+              }</p>
+            </section>
+            <section className={styles.dashboardSection}>
+              <h2 className={styles.dashboardLabel}>{t('personality', '性格')}</h2>
+              <div className={styles.dashboardPersonalityTags}>
+                {personalityTags.map((tag, index) => (
+                  <span key={index} className={styles.dashboardPersonalityTag}>
+                    {tag}
+                  </span>
+                ))}
               </div>
-              <div className="dashboard__section">
-                <h2 className="dashboard__label">{t('description', '説明')}</h2>
-                <p className="dashboard__desc">
-                  {user.selectedCharacter?.description || t('no_info', '情報なし')}
-                </p>
-              </div>
+              <p className={styles.dashboardDesc}>
+                {typeof user.selectedCharacter?.personalityPrompt === 'object'
+                  ? (user.selectedCharacter.personalityPrompt[locale] || user.selectedCharacter.personalityPrompt.ja || user.selectedCharacter.personalityPrompt.en || t('no_info', '情報なし'))
+                  : (user.selectedCharacter?.personalityPrompt || t('no_info', '情報なし'))}
+              </p>
+            </section>
+            <section className={styles.dashboardSection}>
+              <h2 className={styles.dashboardLabel}>{t('description', '説明')}</h2>
+              <p className={styles.dashboardDesc}>
+                {typeof user.selectedCharacter?.description === 'object'
+                  ? (user.selectedCharacter.description[locale] || user.selectedCharacter.description.ja || user.selectedCharacter.description.en || t('no_info', '情報なし'))
+                  : (user.selectedCharacter?.description || t('no_info', '情報なし'))}
+              </p>
+            </section>
+            <div className={styles.dashboardButtonWrapper}>
               <button
                 type="button"
                 onClick={handleStartChat}
@@ -117,7 +129,7 @@ export default function Dashboard({ params }) {
             </div>
           </div>
         </div>
-      </div>
+      </Card>
     </div>
   );
 }

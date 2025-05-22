@@ -116,27 +116,14 @@ export default function Register({ params }) {
             
             <div className="input-group">
               <label className="input__label">{tMypage('language_settings')}</label>
-              <div className="language-options">
-                <label className="language-option">
-                  <input
-                    type="radio"
-                    value="ja"
-                    {...register('preferredLanguage')}
-                    defaultChecked
-                  />
-                  <span className="language-flag">🇯🇵</span>
-                  <span className="language-name">{tMypage('language_japanese')}</span>
-                </label>
-                <label className="language-option">
-                  <input
-                    type="radio"
-                    value="en"
-                    {...register('preferredLanguage')}
-                  />
-                  <span className="language-flag">🇺🇸</span>
-                  <span className="language-name">{tMypage('language_english')}</span>
-                </label>
-              </div>
+              <select
+                className="input"
+                {...register('preferredLanguage')}
+                defaultValue="ja"
+              >
+                <option value="ja">🇯🇵 {tMypage('language_japanese')}</option>
+                <option value="en">🇺🇸 {tMypage('language_english')}</option>
+              </select>
             </div>
             
             <button

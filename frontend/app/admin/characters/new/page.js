@@ -16,10 +16,9 @@ export default function NewCharacter() {
     description: { ja: '', en: '' },
     personalityPrompt: { ja: '', en: '' },
     adminPrompt: { ja: '', en: '' },
-    isPremium: false,
+    characterType: 'free',
     price: 0,
     purchaseType: 'buy',
-    isLimited: false,
     voice: '',
     defaultMessage: { ja: '', en: '' },
     themeColor: '#000000',
@@ -62,8 +61,6 @@ export default function NewCharacter() {
       console.log('送信するデータ:', formData);
       const dataToSend = {
         ...formData,
-        isPremium: formData.isPremium,
-        isLimited: formData.isLimited,
         isActive: formData.isActive
       };
       console.log('実際に送信するデータ:', dataToSend);
@@ -370,71 +367,83 @@ export default function NewCharacter() {
                   <h2 className="admin-stats-title">販売設定</h2>
                   <p className="mt-1 text-sm text-gray-500">キャラクターの販売に関する設定を行います</p>
                 </div>
-                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                  <div className={styles['admin-form-group']}>
-                    <label className="custom-checkbox">
-                      <input
-                        type="checkbox"
-                        id="isPremium"
-                        checked={formData.isPremium}
-                        onChange={handleChange}
-                      />
-                      <span className="checkbox-mark"></span>
-                      <span className="checkbox-label">サブスク会員用キャラクター</span>
-                    </label>
-                    {formData.isPremium && (
-                      <div className="space-y-4 pl-6 mt-2">
-                        <div className={styles['admin-form-group']}>
-                          <label htmlFor="price" className={styles['admin-form-label']}>価格</label>
-                          <Input
-                            type="number"
-                            id="price"
-                            value={formData.price}
-                            onChange={handleChange}
-                            min="0"
-                            className={styles['admin-form-input']}
-                          />
-                        </div>
-                        <div className={styles['admin-form-group']}>
-                          <label htmlFor="purchaseType" className={styles['admin-form-label']}>購入タイプ</label>
-                          <select
-                            id="purchaseType"
-                            value={formData.purchaseType}
-                            onChange={handleChange}
-                            className={styles['admin-form-input']}
-                          >
-                         <option value="buy">買い切り</option>
-                         <option value="rent">月額課金</option>
-                          </select>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                  <div className={styles['admin-form-group']}>
-                    <label className="custom-checkbox square">
-                      <input
-                        type="checkbox"
-                        id="isLimited"
-                        checked={formData.isLimited}
-                        onChange={handleChange}
-                      />
-                      <span className="checkbox-mark"></span>
-                      <span className="checkbox-label">課金キャラクター</span>
-                    </label>
-                  </div>
-                  <div className={styles['admin-form-group']}>
-                    <label className="toggle-switch" style={{marginRight: '10px'}}>
-                      <input
-                        type="checkbox"
-                        id="isActive"
-                        checked={formData.isActive}
-                        onChange={handleChange}
-                      />
-                      <span className="toggle-slider"></span>
-                    </label>
-                    <span className="checkbox-label">アクティブ</span>
-                  </div>
+                <div className={styles['admin-form-group']} style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
+                  <label className={styles.customRadio}>
+                    <input
+                      type="radio"
+                      name="characterType"
+                      value="free"
+                      checked={formData.characterType === 'free'}
+                      onChange={handleChange}
+                      className={styles.radioInput}
+                    />
+                    <span className={styles.radioMark}></span>
+                    <span className={styles.checkboxLabel}>無料キャラ</span>
+                  </label>
+                  <label className={styles.customRadio}>
+                    <input
+                      type="radio"
+                      name="characterType"
+                      value="premium"
+                      checked={formData.characterType === 'premium'}
+                      onChange={handleChange}
+                      className={styles.radioInput}
+                    />
+                    <span className={styles.radioMark}></span>
+                    <span className={styles.checkboxLabel}>サブスク会員用キャラクター</span>
+                  </label>
+                  <label className={styles.customRadio}>
+                    <input
+                      type="radio"
+                      name="characterType"
+                      value="paid"
+                      checked={formData.characterType === 'paid'}
+                      onChange={handleChange}
+                      className={styles.radioInput}
+                    />
+                    <span className={styles.radioMark}></span>
+                    <span className={styles.checkboxLabel}>課金キャラクター</span>
+                  </label>
+                  <label className={styles.customRadio}>
+                    <input
+                      type="radio"
+                      name="characterType"
+                      value="limited"
+                      checked={formData.characterType === 'limited'}
+                      onChange={handleChange}
+                      className={styles.radioInput}
+                    />
+                    <span className={styles.radioMark}></span>
+                    <span className={styles.checkboxLabel}>期間限定キャラクター</span>
+                  </label>
                 </div>
+                {formData.characterType === 'paid' && (
+                  <div className="space-y-4 pl-6 mt-2">
+                    <div className={styles['admin-form-group']}>
+                      <label htmlFor="price" className={styles['admin-form-label']}>価格</label>
+                      <Input
+                        type="number"
+                        id="price"
+                        value={formData.price}
+                        onChange={handleChange}
+                        min="0"
+                        className={styles['admin-form-input']}
+                      />
+                    </div>
+                    <div className={styles['admin-form-group']}>
+                      <label htmlFor="purchaseType" className={styles['admin-form-label']}>購入タイプ</label>
+                      <select
+                        id="purchaseType"
+                        value={formData.purchaseType}
+                        onChange={handleChange}
+                        className={styles['admin-form-input']}
+                      >
+                        <option value="buy">買い切り</option>
+                        <option value="rent">月額課金</option>
+                      </select>
+                    </div>
+                  </div>
+                )}
               </div>
             </Card>
             {/* メディア設定セクション */}

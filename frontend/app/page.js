@@ -270,12 +270,15 @@ export default function Home() {
       <div className="container">
         <div style={{ width: '100%', margin: '0 auto', textAlign: 'center', position: 'relative' }}>
           <div style={{ display: 'inline-block', textAlign: 'left', position: 'relative' }}>
-            <div style={{ fontSize: '16px', color: '#fff', marginBottom: '-20px', fontWeight: 'bold', letterSpacing: '0.1em', textShadow: '0 2px 8px rgba(0,0,0,0.18), 0 1px 2px rgba(0,0,0,0.12)' }}>
-              キャラクティア
+            <div className={`${orbitron.className} title`}>
+              <div style={{ fontSize: '16px', color: '#fff', marginBottom: '-20px', fontWeight: 'bold', letterSpacing: '0.1em', textShadow: '0 2px 8px rgba(0,0,0,0.18), 0 1px 2px rgba(0,0,0,0.12)' }}>
+                キャラクティア
+              </div>
+              <h1 className={`${orbitron.className} title`}>
+                Charactier AI
+              </h1>
             </div>
-            <h1 className={`${orbitron.className} title`}>
-              Charactier AI
-            </h1>
+
             {/* 右側の吹き出し */}
             <div
               className={`chat-bubble left${leftVisible ? ' show' : ' hide'}`}
