@@ -6,8 +6,8 @@ import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useAuth } from '../../../utils/auth';
-import BackButton from '../../../components/BackButton';
+import { useAuth } from '../../utils/auth';
+import BackButton from '../../components/BackButton';
 import { useTranslations } from 'next-intl';
 
 const schema = z.object({
