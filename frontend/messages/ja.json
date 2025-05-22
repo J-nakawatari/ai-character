@@ -23,7 +23,11 @@
     "email_placeholder": "メールアドレスを入力してください",
     "password_placeholder": "パスワードを入力してください",
     "invalid_credentials": "メールアドレスまたはパスワードが正しくありません",
-    "login_failed": "ログインに失敗しました"
+    "login_failed": "ログインに失敗しました",
+    "validation": {
+      "invalid_email": "有効なメールアドレスを入力してください",
+      "password_required": "パスワードを入力してください"
+    }
   },
   "mypage": {
     "title": "マイページ",
