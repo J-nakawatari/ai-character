@@ -1,0 +1,56 @@
+.dashboard__start-chat-button {
+  background: #75C6D1;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+  width: 100%;
+  max-width: 300px;
+}
+
+.dashboard__start-chat-button:hover {
+  background: #51929A;
+}
+
+/* 購入ボタンのスタイル */
+.dashboard__start-chat-button[data-type="purchase"] {
+  background: #FF6B6B;
+}
+
+.dashboard__start-chat-button[data-type="purchase"]:hover {
+  background: #FF5252;
+}
+
+/* アップグレードボタンのスタイル */
+.dashboard__start-chat-button[data-type="upgrade"] {
+  background: #FFD93D;
+  color: #333;
+}
+
+.dashboard__start-chat-button[data-type="upgrade"]:hover {
+  background: #FFC107;
+}
+
+/* キャラクタータグのスタイル */
+.dashboard__tag {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: bold;
+  margin-right: 8px;
+}
+
+.dashboard__tag--premium {
+  background: #FFD93D;
+  color: #333;
+}
+
+.dashboard__tag--paid {
+  background: #FF6B6B;
+  color: #fff;
+} 

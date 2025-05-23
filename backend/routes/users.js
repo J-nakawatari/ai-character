@@ -108,10 +108,24 @@ router.patch('/me/use-character', auth, async (req, res) => {
     }
     
     const character = await Character.findById(characterId);
-    const isPurchased = user.purchasedCharacters.some(pc => pc.character.toString() === characterId);
     
-    if (!character || (!isPurchased && character.isPremium)) {
-      return res.status(400).json({ msg: '購入されていないキャラクターです' });
+    if (!character) {
+      return res.status(404).json({ msg: 'キャラクターが見つかりません' });
+    }
+
+    // キャラクターの種類に応じたチェック
+    if (character.characterType === 'paid') {
+      const isPurchased = user.purchasedCharacters.some(
+        pc => pc.character.toString() === characterId && pc.purchaseType === 'buy'
+      );
+      
+      if (!isPurchased) {
+        return res.status(403).json({ msg: 'このキャラクターは購入が必要です' });
+      }
+    } else if (character.characterType === 'premium') {
+      if (user.membershipType !== 'premium' || user.subscriptionStatus !== 'active') {
+        return res.status(403).json({ msg: 'プレミアム会員のみ利用可能です' });
+      }
     }
     
     user.selectedCharacter = characterId;

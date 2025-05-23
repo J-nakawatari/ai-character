@@ -1,0 +1,46 @@
+.dashboardButtonWrapper {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.dashboardPrice {
+  font-size: 18px;
+  font-weight: bold;
+  color: #FF6B6B;
+  margin-top: 8px;
+}
+
+/* ボタンのスタイル */
+.button--chat-start {
+  width: 100%;
+  max-width: 300px;
+  transition: all 0.2s ease;
+}
+
+.button--chat-start[data-type="purchase"] {
+  background-color: #FF6B6B;
+}
+
+.button--chat-start[data-type="purchase"]:hover {
+  background-color: #FF5252;
+}
+
+.button--chat-start[data-type="upgrade"] {
+  background-color: #FFD93D;
+  color: #333;
+}
+
+.button--chat-start[data-type="upgrade"]:hover {
+  background-color: #FFC107;
+}
+
+.button--chat-start[data-type="chat"] {
+  background-color: #75C6D1;
+}
+
+.button--chat-start[data-type="chat"]:hover {
+  background-color: #51929A;
+} 

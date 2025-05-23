@@ -15,7 +15,9 @@
     "select_character": "Select an AI Character",
     "character_tags": "Tags",
     "select_button": "Select this character",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "purchase_character": "Purchase",
+    "upgrade_to_premium": "Upgrade to Premium"
   },
   "auth": {
     "name": "Name",

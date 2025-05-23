@@ -13,6 +13,29 @@ router.get('/', auth, async (req, res) => {
     if (!characterId) {
       return res.status(400).json({ msg: 'Character ID is required' });
     }
+
+    // ユーザーとキャラクターの情報を取得
+    const user = await User.findById(req.user.id);
+    const character = await Character.findById(characterId);
+    
+    if (!user || !character) {
+      return res.status(404).json({ msg: 'User or character not found' });
+    }
+
+    // キャラクターの種類に応じたチェック
+    if (character.characterType === 'paid') {
+      const isPurchased = user.purchasedCharacters.some(
+        pc => pc.character.toString() === characterId && pc.purchaseType === 'buy'
+      );
+      
+      if (!isPurchased) {
+        return res.status(403).json({ msg: 'このキャラクターは購入が必要です' });
+      }
+    } else if (character.characterType === 'premium') {
+      if (user.membershipType !== 'premium' || user.subscriptionStatus !== 'active') {
+        return res.status(403).json({ msg: 'プレミアム会員のみ利用可能です' });
+      }
+    }
     
     let chat = await Chat.findOne({ 
       userId: req.user.id,
@@ -42,15 +65,34 @@ router.post('/', auth, async (req, res) => {
     if (!characterId || !message) {
       return res.status(400).json({ msg: 'Character ID and message are required' });
     }
-    
+
+    // ユーザーとキャラクターの情報を取得
     const user = await User.findById(req.user.id);
     const character = await Character.findById(characterId);
     
     if (!user || !character) {
       return res.status(404).json({ msg: 'User or character not found' });
     }
-    
-    let chat = await Chat.findOne({ userId: req.user.id, characterId });
+
+    // キャラクターの種類に応じたチェック
+    if (character.characterType === 'paid') {
+      const isPurchased = user.purchasedCharacters.some(
+        pc => pc.character.toString() === characterId && pc.purchaseType === 'buy'
+      );
+      
+      if (!isPurchased) {
+        return res.status(403).json({ msg: 'このキャラクターは購入が必要です' });
+      }
+    } else if (character.characterType === 'premium') {
+      if (user.membershipType !== 'premium' || user.subscriptionStatus !== 'active') {
+        return res.status(403).json({ msg: 'プレミアム会員のみ利用可能です' });
+      }
+    }
+
+    let chat = await Chat.findOne({ 
+      userId: req.user.id,
+      characterId
+    });
     
     if (!chat) {
       chat = new Chat({
@@ -60,38 +102,49 @@ router.post('/', auth, async (req, res) => {
       });
     }
     
+    // メッセージを追加
     chat.messages.push({
       sender: 'user',
-      content: message
-    });
-    
-    const aiResponse = await generateAIResponse(
-      message, 
-      user.name, 
-      character,
-      chat.messages, // 会話履歴を渡す
-      user // 追加
-    );
-    
-    chat.messages.push({
-      sender: 'ai',
-      content: aiResponse
+      content: message,
+      timestamp: new Date()
     });
     
     await chat.save();
     
-    res.json({
-      reply: aiResponse,
-      chatId: chat._id
+    // AIの応答を生成
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY
     });
+    
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4",
+      messages: [
+        {
+          role: "system",
+          content: character.personalityPrompt
+        },
+        ...chat.messages.map(msg => ({
+          role: msg.sender === 'user' ? 'user' : 'assistant',
+          content: msg.content
+        }))
+      ]
+    });
+    
+    const aiReply = completion.choices[0].message.content;
+    
+    // AIの応答を保存
+    chat.messages.push({
+      sender: 'ai',
+      content: aiReply,
+      timestamp: new Date()
+    });
+    
+    await chat.save();
+    
+    res.json({ reply: aiReply });
   } catch (err) {
-    console.error('Chat API Error:', err.message);
-    
-    if (err.message && (err.message.includes('API key') || err.message.includes('authentication'))) {
-      return res.status(500).json({ error: 'AIサービスの設定エラーが発生しました。管理者にお問い合わせください。' });
-    }
-    
-    res.status(500).json({ error: 'サーバーエラーが発生しました。しばらく経ってからもう一度お試しください。' });
+    console.error(err.message);
+    res.status(500).send('Server error');
   }
 });
 

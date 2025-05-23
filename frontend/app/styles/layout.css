@@ -432,6 +432,24 @@
   font-weight: 500;
 }
 
+.expired-badge {
+  background: #F3F4F6;
+  color: #6B7280;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.canceled-badge {
+  background: #F3F4F6;
+  color: #6B7280;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
 .free-badge {
   background: #F87171;
   color: #fff;

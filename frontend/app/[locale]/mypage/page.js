@@ -38,10 +38,26 @@ export default function MyPage({ params }) {
   
   const handleSelectCharacter = async (characterId) => {
     try {
+      // 購入済みキャラクターかどうかをチェック
+      const isPurchased = purchasedCharacters.some(
+        item => item.character._id === characterId
+      );
+
+      if (!isPurchased) {
+        // 未購入の場合はエラーメッセージを表示
+        alert('このキャラクターは購入が必要です。');
+        return;
+      }
+
       await api.patch('/users/me/use-character', { characterId });
       window.location.reload();
     } catch (err) {
       console.error('キャラクター選択に失敗しました', err);
+      if (err.response?.data?.msg) {
+        alert(err.response.data.msg);
+      } else {
+        alert('キャラクターの選択に失敗しました。');
+      }
     }
   };
   
