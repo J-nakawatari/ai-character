@@ -158,6 +158,32 @@ export default function AdminUsers() {
                   <span className={`user-detail-value ${selectedUser.hasCompletedSetup ? 'status-completed' : 'status-pending'}`}>{selectedUser.hasCompletedSetup ? '完了' : '未完了'}</span>
                 </div>
                 <div className="user-detail-item">
+                  <span className="user-detail-label">会員種別</span>
+                  <span className={`user-detail-value ${selectedUser.membershipType === 'premium' ? 'premium-badge' : 'free-badge'}`}>
+                    {selectedUser.membershipType === 'premium' ? 'プレミアム会員' : '無料会員'}
+                  </span>
+                </div>
+                <div className="user-detail-item">
+                  <span className="user-detail-label">サブスクリプション状態</span>
+                  <span className={`user-detail-value ${
+                    selectedUser.subscriptionStatus === 'active' ? 'active-badge' :
+                    selectedUser.subscriptionStatus === 'inactive' ? 'inactive-badge' :
+                    selectedUser.subscriptionStatus === 'expired' ? 'expired-badge' :
+                    selectedUser.subscriptionStatus === 'canceled' ? 'canceled-badge' : ''
+                  }`}>
+                    {selectedUser.subscriptionStatus === 'active' ? '有効' :
+                     selectedUser.subscriptionStatus === 'inactive' ? '停止中' :
+                     selectedUser.subscriptionStatus === 'expired' ? '期限切れ' :
+                     selectedUser.subscriptionStatus === 'canceled' ? 'キャンセル済み' : '無料会員'}
+                  </span>
+                </div>
+                {selectedUser.membershipType === 'premium' && selectedUser.subscriptionEndDate && (
+                  <div className="user-detail-item">
+                    <span className="user-detail-label">次回請求日 / 有効期限</span>
+                    <span className="user-detail-value">{new Date(selectedUser.subscriptionEndDate).toLocaleString('ja-JP')}</span>
+                  </div>
+                )}
+                <div className="user-detail-item">
                   <span className="user-detail-label">選択中キャラクター</span>
                   <span className="user-detail-value">
                     {selectedUser.selectedCharacter ? (

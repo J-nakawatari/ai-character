@@ -17,8 +17,33 @@ export default function Dashboard({ params }) {
   const { locale } = typeof params.then === 'function' ? use(params) : params;
   const t = useTranslations('dashboard');
   
-  const handleStartChat = () => {
-    router.push(`/${locale}/chat`);
+  const handleStartChat = async () => {
+    try {
+      // キャラクターの購入状態をチェック
+      const character = user.selectedCharacter;
+      if (character.characterType === 'paid') {
+        const isPurchased = user.purchasedCharacters.some(
+          pc => pc.character._id === character._id && pc.purchaseType === 'buy'
+        );
+        
+        if (!isPurchased) {
+          // 未購入の場合は購入ページに遷移
+          router.push(`/${locale}/purchase/${character._id}`);
+          return;
+        }
+      } else if (character.characterType === 'premium') {
+        if (user.membershipType !== 'premium' || user.subscriptionStatus !== 'active') {
+          // プレミアム会員でない場合はアップグレードページに遷移
+          router.push(`/${locale}/upgrade`);
+          return;
+        }
+      }
+      
+      // 購入済みまたは無料キャラクターの場合はチャット画面に遷移
+      router.push(`/${locale}/chat`);
+    } catch (err) {
+      console.error('キャラクターの確認に失敗しました', err);
+    }
   };
   
   const handleChangeCharacter = () => {
@@ -66,7 +91,37 @@ export default function Dashboard({ params }) {
   };
   
   const personalityTags = generatePersonalityTags();
-  
+
+  // キャラクターの購入状態をチェックする関数
+  const isCharacterPurchased = (character) => {
+    if (!character || !user.purchasedCharacters) return false;
+    return user.purchasedCharacters.some(
+      pc => pc.character._id === character._id && pc.purchaseType === 'buy'
+    );
+  };
+
+  // ボタンの表示テキストとタイプを取得する関数
+  const getButtonProps = (character) => {
+    if (character.characterType === 'paid' && !isCharacterPurchased(character)) {
+      return {
+        text: t('purchase_character', '購入する'),
+        type: 'purchase'
+      };
+    } else if (character.characterType === 'premium' && 
+               (user.membershipType !== 'premium' || user.subscriptionStatus !== 'active')) {
+      return {
+        text: t('upgrade_to_premium', 'プレミアムにアップグレード'),
+        type: 'upgrade'
+      };
+    }
+    return {
+      text: t('start_chat', 'チャットを始める'),
+      type: 'chat'
+    };
+  };
+
+  const buttonProps = getButtonProps(user.selectedCharacter);
+
   return (
     <div className={styles.dashboardRoot}>
       <Card className={styles.dashboardCard}>
@@ -122,10 +177,16 @@ export default function Dashboard({ params }) {
               <button
                 type="button"
                 onClick={handleStartChat}
-                className="button button--primary button--lg button--full button--chat-start"
+                className={`button button--primary button--lg button--full button--chat-start`}
+                data-type={buttonProps.type}
               >
-                {t('start_chat', 'チャットを始める')}
+                {buttonProps.text}
               </button>
+              {user.selectedCharacter?.characterType === 'paid' && !isCharacterPurchased(user.selectedCharacter) && (
+                <div className={styles.dashboardPrice}>
+                  {t('price', '価格')}: ¥{user.selectedCharacter.price.toLocaleString()}
+                </div>
+              )}
             </div>
           </div>
         </div>

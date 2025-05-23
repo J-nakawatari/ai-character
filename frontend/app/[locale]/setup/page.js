@@ -8,6 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '../../utils/auth';
 import api from '../../utils/api';
 import { useTranslations } from 'next-intl';
+import '../../styles/pages/setup.css';
 
 const schema = z.object({
   name: z.string().min(2, 'お名前は2文字以上で入力してください'),
@@ -25,6 +26,8 @@ export default function Setup({ params }) {
   const t = useTranslations('setup');
   const appT = useTranslations('app');
   const { locale } = typeof params.then === 'function' ? use(params) : params;
+  const [showPurchaseModal, setShowPurchaseModal] = useState(false);
+  const [modalCharacter, setModalCharacter] = useState(null);
 
   const {
     register,
@@ -207,6 +210,100 @@ export default function Setup({ params }) {
     }
   };
 
+  const handleCharacterSelect = async (character) => {
+    try {
+      // キャラクターの種類に応じたチェック
+      if (character.characterType === 'paid') {
+        const isPurchased = user.purchasedCharacters.some(
+          pc => pc.character._id === character._id && pc.purchaseType === 'buy'
+        );
+        
+        if (!isPurchased) {
+          // 未購入の場合は購入ページに遷移
+          router.push(`/${locale}/purchase/${character._id}`);
+          return;
+        }
+      } else if (character.characterType === 'premium') {
+        if (user.membershipType !== 'premium' || user.subscriptionStatus !== 'active') {
+          // プレミアム会員でない場合はアップグレードページに遷移
+          router.push(`/${locale}/upgrade`);
+          return;
+        }
+      }
+
+      // 購入済みまたは無料キャラクターの場合は選択を完了
+      setValue('characterId', character._id);
+      setServerError('');
+      const result = await completeSetup({
+        name: watch('name'),
+        characterId: character._id
+      });
+      
+      if (result.success) {
+        const queryParams = new URLSearchParams(window.location.search);
+        const isReselect = queryParams.get('reselect') === 'true';
+        if (isReselect) {
+          router.push(`/${locale}/chat`);
+        } else {
+          router.push(`/${locale}/dashboard`);
+        }
+      } else {
+        setServerError(result.error);
+      }
+    } catch (err) {
+      console.error('キャラクターの選択に失敗しました', err);
+      setServerError(t('character_select_failed', 'キャラクターの選択に失敗しました'));
+    }
+  };
+
+  // キャラクターの購入状態をチェックする関数
+  const isCharacterPurchased = (character) => {
+    if (!character || !user.purchasedCharacters) return false;
+    return user.purchasedCharacters.some(
+      pc => pc.character._id === character._id && pc.purchaseType === 'buy'
+    );
+  };
+
+  // ボタンの表示テキストとタイプを取得する関数
+  const getButtonProps = (character) => {
+    if (character.characterType === 'paid' && !isCharacterPurchased(character)) {
+      return {
+        text: t('purchase_character', '購入する'),
+        type: 'purchase'
+      };
+    } else if (character.characterType === 'premium' && 
+               (user.membershipType !== 'premium' || user.subscriptionStatus !== 'active')) {
+      return {
+        text: t('upgrade_to_premium', 'プレミアムにアップグレード'),
+        type: 'upgrade'
+      };
+    }
+    return {
+      text: t('select_button', '選択する'),
+      type: 'select'
+    };
+  };
+
+  // 購入モーダルを開く
+  const openPurchaseModal = (character) => {
+    setModalCharacter(character);
+    setShowPurchaseModal(true);
+  };
+  // 購入モーダルを閉じる
+  const closePurchaseModal = () => {
+    setShowPurchaseModal(false);
+    setModalCharacter(null);
+  };
+
+  // 購入確定処理（仮実装）
+  const handleConfirmPurchase = async () => {
+    if (!modalCharacter) return;
+    // ここで購入APIを呼ぶ
+    // await api.post(`/purchase`, { characterId: modalCharacter._id });
+    closePurchaseModal();
+    window.location.reload();
+  };
+
   if (loading || loadingCharacters) {
     return (
       <div className="setup--loading">
@@ -218,7 +315,7 @@ export default function Setup({ params }) {
   const selectedCharacter = characters.find(c => c._id === selectedCharacterId) || characters[0];
 
   return (
-    <div className="setup--root" style={{ position: 'relative', overflow: 'hidden' }}>
+    <div className="setup--root">
       <canvas ref={canvasRef} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: -1 }}></canvas>
       
       <div className="setup--header">
@@ -241,6 +338,8 @@ export default function Setup({ params }) {
                 ? (character.description[locale] || character.description.ja || character.description)
                 : character.description;
               
+              const buttonProps = getButtonProps(character);
+
               return (
                 <div
                   key={character._id}
@@ -254,7 +353,7 @@ export default function Setup({ params }) {
                     />
                     <img
                       className="voiceicon"
-                      src="/images/voice.png"
+                      src="/images/voice.svg"
                       alt="ボイス"
                       style={{ cursor: 'pointer' }}
                       onClick={() => {
@@ -292,28 +391,16 @@ export default function Setup({ params }) {
                   <button
                     type="button"
                     className="setup--select-btn"
-                    disabled={selectedCharacterId === character._id}
-                    onClick={async () => {
-                      setValue('characterId', character._id);
-                      setServerError('');
-                      const result = await completeSetup({
-                        name: watch('name'),
-                        characterId: character._id
-                      });
-                      const queryParams = new URLSearchParams(window.location.search);
-                      const isReselect = queryParams.get('reselect') === 'true';
-                      if (result.success) {
-                        if (isReselect) {
-                          router.push(`/${locale}/chat`);
-                        } else {
-                          router.push(`/${locale}/dashboard`);
-                        }
+                    data-type={buttonProps.type}
+                    onClick={() => {
+                      if (buttonProps.type === 'purchase') {
+                        openPurchaseModal(character);
                       } else {
-                        setServerError(result.error);
+                        handleCharacterSelect(character);
                       }
                     }}
                   >
-                    {t('select_button')}
+                    {buttonProps.text}
                   </button>
                 </div>
               );
@@ -321,6 +408,30 @@ export default function Setup({ params }) {
           </div>
         </div>
       </form>
+      {/* 購入モーダル */}
+      {showPurchaseModal && modalCharacter && (
+        <div className="setup--modal-overlay">
+          <div className="setup--modal-content">
+            <button className="setup--modal-close" onClick={closePurchaseModal} aria-label="閉じる">×</button>
+            <h2 className="setup--modal-title">{modalCharacter.name[locale] || modalCharacter.name.ja || modalCharacter.name}</h2>
+            <img
+              src={modalCharacter.imageCharacterSelect || '/images/character-placeholder.png'}
+              alt={modalCharacter.name[locale] || modalCharacter.name.ja || modalCharacter.name}
+              className="setup--modal-img"
+              style={{ width: '120px', height: '120px', objectFit: 'cover', borderRadius: '8px', marginBottom: '16px' }}
+            />
+            <div className="setup--modal-detail">
+              <div><b>価格:</b> ¥{modalCharacter.price.toLocaleString()}</div>
+              <div><b>種別:</b> {modalCharacter.purchaseType === 'buy' ? '買い切り' : 'レンタル'}</div>
+              <div style={{ marginTop: '8px' }}>{modalCharacter.description[locale] || modalCharacter.description.ja || modalCharacter.description}</div>
+            </div>
+            <div className="setup--modal-buttons">
+              <button className="setup--modal-confirm" onClick={handleConfirmPurchase}>購入を確定</button>
+              <button className="setup--modal-cancel" onClick={closePurchaseModal}>キャンセル</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
