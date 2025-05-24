@@ -45,7 +45,10 @@ ai-character-service/
    - `MONGO_URI`
    - `JWT_SECRET`
    - `OPENAI_API_KEY`
-   - `NEXT_PUBLIC_API_URL` （フロントエンド用、デフォルトは `http://localhost:5000/api`）
+   - `NEXT_PUBLIC_API_URL`
+     - フロントエンドが API を呼び出す際のベースURL。
+     - 開発環境では `/api` を指定し、Next.js のリライトルートを利用することで
+       Cookie のドメイン不一致による 401 エラーを防ぎます。
 
    - サンプル設定ファイル: `backend/.env.example` と `frontend/.env.example`
 
