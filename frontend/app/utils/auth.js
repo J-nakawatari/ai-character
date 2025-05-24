@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }) => {
     const loadUser = async () => {
       try {
         console.log('Attempting to load user profile...');
-        const res = await api.get('/auth/user');
+        const res = await api.get('/auth/user', { skipAuthRedirect: true });
         console.log('User loaded successfully:', res.data);
         setUser(res.data);
       } catch (err) {
