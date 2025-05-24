@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 require('dotenv').config();
 
 const app = express();
+app.disable('etag'); // disable ETag headers to avoid 304 responses on API requests
 app.use(cors({
   origin: 'http://localhost:3000',
   credentials: true,
