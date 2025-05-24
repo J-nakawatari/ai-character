@@ -12,14 +12,23 @@ const api = axios.create({
 api.interceptors.response.use(
   response => response,
   error => {
-    if (error.response?.status === 401 && typeof window !== 'undefined') {
+    if (
+      error.response?.status === 401 &&
+      typeof window !== 'undefined' &&
+      !error.config?.skipAuthRedirect
+    ) {
       const current = window.location.pathname;
       if (current.startsWith('/admin')) {
         if (current !== '/admin/login') {
           window.location.href = '/admin/login';
         }
-      } else if (current !== '/login') {
-        window.location.href = '/login';
+      } else {
+        const localeMatch = current.match(/^\/(ja|en)(\/|$)/);
+        const locale = localeMatch ? localeMatch[1] : null;
+        const loginPath = locale ? `/${locale}/login` : '/login';
+        if (current !== loginPath) {
+          window.location.href = loginPath;
+        }
       }
     }
     console.error('API Error:', error.response?.status, error.response?.data);
