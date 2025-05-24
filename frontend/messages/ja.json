@@ -130,7 +130,8 @@
     "no_info": "情報なし",
     "loading": "読み込み中...",
     "purchase_character": "購入する",
-    "price": "価格"
+    "price": "価格",
+    "no_character_selected": "選択中のキャラクターがありません"
   },
   "chat": {
     "loading": "読み込み中...",
