@@ -67,6 +67,7 @@ export default function Setup({ params }) {
     const fetchCharacters = async () => {
       try {
         const res = await api.get('/characters');
+        console.log('📦 APIレスポンス:', res.data);
         setCharacters(res.data);
         console.log('キャラクター取得結果:', res.data); 
       } catch (err) {

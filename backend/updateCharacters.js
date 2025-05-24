@@ -1,35 +1,22 @@
+// run this manually via node scripts/updateLimitMessages.js
 const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-const Character = require('./models/Character');
+const Character = require('../models/Character');
+require('dotenv').config();
 
-dotenv.config();
+mongoose.connect(process.env.MONGO_URI).then(async () => {
+  const characters = await Character.find();
 
-const updateCharacters = async () => {
-  try {
-    await mongoose.connect(process.env.MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-
-    console.log('MongoDB接続成功');
-
-    const characters = await Character.find({});
-    console.log(`${characters.length}件のキャラクターを更新します`);
-
-    for (const character of characters) {
-      if (character.personalityPrompt && !character.personality) {
-        character.personality = character.personalityPrompt;
-        await character.save();
-        console.log(`キャラクター「${character.name}」のpersonalityを更新しました`);
-      }
+  for (const char of characters) {
+    if (!char.limitMessage || char.limitMessage.size === 0) {
+      char.limitMessage = new Map([
+        ['ja', '今日はもうお話しできないよ。また明日ね。'],
+        ['en', "Looks like we can't chat anymore today. Let's talk tomorrow!"]
+      ]);
+      await char.save();
+      console.log(`✅ Updated ${char.name?.ja || char.name}: limitMessage added.`);
     }
-
-    console.log('すべてのキャラクターを更新しました');
-    process.exit(0);
-  } catch (err) {
-    console.error('エラーが発生しました:', err);
-    process.exit(1);
   }
-};
 
-updateCharacters();
+  console.log('🎉 Done.');
+  mongoose.disconnect();
+});
