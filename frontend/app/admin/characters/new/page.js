@@ -89,7 +89,7 @@ export default function CharacterNewPage() {
       return;
     }
     
-    if (file.type.startsWith('image/'))
+    if (file.type.startsWith('image/')) {
       const url = URL.createObjectURL(file);
       setSelectedImage(url);
       setImageType(type);
