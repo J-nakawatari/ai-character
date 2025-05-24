@@ -6,11 +6,17 @@
 }
 
 .app-main {
+  margin-left: 260px;
+  width: calc(100% - 260px);
   flex: 1;
-  width: calc(100% - 240px);
   min-height: 100vh;
   background-color: #F7F8FA;
   box-sizing: border-box;
+}
+
+.app-main.full-width {
+  margin-left: 0;
+  width: 100%;
 }
 
 /* Admin specific styles */
@@ -219,33 +225,29 @@
 }
 
 .user-detail-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 16px;
 }
 
 .user-detail-item {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
 }
 
 .user-detail-label {
-  font-size: 14px;
-  color: #6B7A99;
-  font-weight: 500;
+  font-weight: bold;
 }
 
 .user-detail-value {
-  font-size: 15px;
-  color: #1F2633;
+  word-break: break-all;
 }
 
 /* 一覧用バッジ */
 .status-badge.status-completed {
   display: inline-block;
-  padding: 4px 12px;
-  border-radius: 20px;
+  padding: 4px 8px;
+  border-radius: 4px;
   color: #059669;
   font-size: 12px;
   font-weight: 500;
@@ -269,10 +271,10 @@
   color: #059669;
   display: flex;
   font-weight: 500;
-  min-width: 60px;
   text-align: center;
   padding: 0;
   border-radius: 0;
+  font-size: 12px;
 }
 .user-detail-value.status-pending {
   background: none !important;
@@ -678,4 +680,24 @@
   font-size: 13px;
   color: #6B7A99;
   margin-bottom: 4px;
+}
+
+.user-account-detail-grid {
+  display: inline-block;
+}
+
+.user-account-detail-label {
+  text-align: right;
+  font-weight: bold;
+  width: 200px;
+  padding-right: 16px;
+}
+
+.home-main {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
 }

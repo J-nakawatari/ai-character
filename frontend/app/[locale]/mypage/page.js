@@ -6,6 +6,7 @@ import { useAuth } from '../../utils/auth';
 import api from '../../utils/api';
 import BackButton from '../../components/BackButton';
 import { useTranslations } from 'next-intl';
+import GlobalLoading from '../../components/GlobalLoading';
 
 export default function MyPage({ params }) {
   const { user, loading, logout, updateLanguage } = useAuth();
@@ -16,6 +17,8 @@ export default function MyPage({ params }) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isUnsubscribing, setIsUnsubscribing] = useState(false);
+  const [unsubscribeError, setUnsubscribeError] = useState('');
   const t = useTranslations('mypage');
   const tApp = useTranslations('app');
   
@@ -92,6 +95,24 @@ export default function MyPage({ params }) {
     }
   };
   
+  const handleLogout = async () => {
+    await logout();
+    router.push(`/${locale}/login`);
+  };
+  
+  const handleUnsubscribe = async () => {
+    if (!window.confirm(t('unsubscribe_confirm', '本当にサブスクを解除しますか？'))) return;
+    setIsUnsubscribing(true);
+    setUnsubscribeError('');
+    try {
+      await api.post('/users/me/unsubscribe');
+      window.location.reload();
+    } catch (err) {
+      setUnsubscribeError(err.response?.data?.msg || t('unsubscribe_failed', 'サブスク解除に失敗しました'));
+      setIsUnsubscribing(false);
+    }
+  };
+  
   const formatDate = (dateString) => {
     if (!dateString) return t('not_set') || '未設定';
     const date = new Date(dateString);
@@ -105,15 +126,7 @@ export default function MyPage({ params }) {
   };
   
   if (loading || !user) {
-    return (
-      <main className="app-main">
-        <div className="mypage">
-          <div className="mypage__loading">
-            <p>{tApp('loading') || "読み込み中..."}</p>
-          </div>
-        </div>
-      </main>
-    );
+    return <GlobalLoading text={tApp('loading') || "読み込み中..."} />;
   }
   
   return (
@@ -162,7 +175,7 @@ export default function MyPage({ params }) {
           <div className="mypage__info-grid">
             <div className="mypage__info-item">
               <div className="mypage__info-label">{t('status')}</div>
-              <div className="mypage__info-value">
+              <div className="mypage__info-value mypage__status-row">
                 <span className={`mypage__status mypage__status--${user.subscriptionStatus || 'active'}`}>
                   {user.subscriptionStatus === 'active' ? t('status_active') : 
                    user.subscriptionStatus === 'inactive' ? t('status_inactive') : 
@@ -175,10 +188,18 @@ export default function MyPage({ params }) {
             {user.membershipType === 'premium' && (
               <>
                 <div className="mypage__info-item">
+                  <div className="mypage__info-label">{t('subscription_start')}</div>
+                  <div className="mypage__info-value">{formatDate(user.subscriptionStartDate)}</div>
+                </div>
+                <div className="mypage__info-item">
                   <div className="mypage__info-label">{t('next_billing')}</div>
-                  <div className="mypage__info-value">
-                    {formatDate(user.subscriptionEndDate)}
-                  </div>
+                  <div className="mypage__info-value">{formatDate(user.subscriptionEndDate)}</div>
+                </div>
+                <div className="mypage__info-item" style={{gridColumn: '1 / -1'}}>
+                  <button className="mypage__delete-button" onClick={handleUnsubscribe} disabled={isUnsubscribing}>
+                    {isUnsubscribing ? t('processing', '処理中...') : t('unsubscribe_button', 'サブスクを解除する')}
+                  </button>
+                  {unsubscribeError && <div className="error-message">{unsubscribeError}</div>}
                 </div>
               </>
             )}
@@ -201,21 +222,22 @@ export default function MyPage({ params }) {
             <div className="mypage__character-list">
               {purchasedCharacters.map((item) => (
                 <div 
-                  key={item.character._id}
+                  key={item.character?._id || `no-character-${Math.random()}`}
                   className={`mypage__character-item ${
-                    user.selectedCharacter && user.selectedCharacter._id === item.character._id 
-                      ? 'mypage__character-item--selected' 
+                    user.selectedCharacter?._id && item.character?._id &&
+                    user.selectedCharacter._id === item.character._id
+                      ? 'mypage__character-item--selected'
                       : ''
                   }`}
-                  onClick={() => handleSelectCharacter(item.character._id)}
+                  onClick={() => handleSelectCharacter(item.character?._id)}
                 >
                   <img 
-                    src={item.character.imageCharacterSelect || '/images/character-placeholder.png'} 
-                    alt={item.character.name}
+                    src={item.character?.imageCharacterSelect || '/images/character-placeholder.png'} 
+                    alt={item.character?.name?.ja || item.character?.name || 'Character'}
                     className="mypage__character-image"
                   />
                   <div className="mypage__character-name">
-                    {item.character.name.ja || item.character.name}
+                    {item.character?.name?.ja || item.character?.name || 'キャラクター名不明'}
                   </div>
                   <div className="mypage__character-type">
                     {item.purchaseType === 'buy' ? t('purchase_type_buy') : t('purchase_type_subscription')}
@@ -306,6 +328,7 @@ export default function MyPage({ params }) {
             </div>
           </div>
         )}
+        
       </div>
     </main>
   );

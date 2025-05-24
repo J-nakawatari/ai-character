@@ -13,6 +13,7 @@ export function removeLocaleFromPath(pathname, locale) {
 }
 
 export function addLocaleToPath(pathname, locale) {
+  if (pathname.startsWith('/admin')) return pathname;
   if (locale === defaultLocale) return pathname;
   return `/${locale}${pathname === '/' ? '' : pathname}`;
 }

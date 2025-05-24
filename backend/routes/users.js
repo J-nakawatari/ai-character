@@ -198,4 +198,49 @@ router.post('/me/delete', auth, async (req, res) => {
   }
 });
 
+// サブスク（プレミアム）アップグレードAPI
+router.post('/me/subscribe', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ msg: 'ユーザーが見つかりません' });
+    }
+    // すでにプレミアム会員の場合は何もしない
+    if (user.membershipType === 'premium' && user.subscriptionStatus === 'active') {
+      return res.status(400).json({ msg: 'すでにプレミアム会員です' });
+    }
+    user.membershipType = 'premium';
+    user.subscriptionStatus = 'active';
+    user.subscriptionStartDate = new Date();
+    user.subscriptionEndDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30日後
+    await user.save();
+    res.json({ msg: 'プレミアム会員にアップグレードしました', user });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('サーバーエラー');
+  }
+});
+
+// サブスク解除APIを追加
+router.post('/me/unsubscribe', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ msg: 'ユーザーが見つかりません' });
+    }
+    // すでに無料会員なら何もしない
+    if (user.membershipType === 'free') {
+      return res.status(400).json({ msg: 'すでに無料会員です' });
+    }
+    user.membershipType = 'free';
+    user.subscriptionStatus = 'canceled';
+    user.subscriptionEndDate = new Date(); // ここは必要に応じて調整
+    await user.save();
+    res.json({ msg: 'サブスクを解除しました', user });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('サーバーエラー');
+  }
+});
+
 module.exports = router;

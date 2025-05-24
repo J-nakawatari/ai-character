@@ -9,6 +9,7 @@ import Button from '../../components/Button';
 import ChatMessage from '../../components/ChatMessage';
 import '../../styles/chat.css';
 import { useTranslations } from 'next-intl';
+import GlobalLoading from '../../components/GlobalLoading';
 
 export default function Chat({ params }) {
   const { user, loading, logout } = useAuth();
@@ -179,11 +180,7 @@ export default function Chat({ params }) {
   };
   
   if (loading || !user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p>{t('loading', 'Loading...')}</p>
-      </div>
-    );
+    return <GlobalLoading text={t('loading', '読み込み中...')} />;
   }
   
   return (

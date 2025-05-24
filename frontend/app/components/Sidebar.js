@@ -10,7 +10,7 @@ export default function Sidebar() {
   const router = useRouter();
   const pathname = usePathname();
   const locale = getLocaleFromPath(pathname);
-  const t = useTranslations('app');
+  const t = useTranslations('menu');
 
   const handleLogout = async () => {
     const result = await logout();
@@ -79,7 +79,7 @@ export default function Sidebar() {
                   <path d="M16.862 5.487l1.65-1.65a1.5 1.5 0 1 1 2.121 2.122l-1.65 1.65m-2.121-2.122l-9.193 9.193a2 2 0 0 0-.497.828l-1.03 3.09a.5.5 0 0 0 .632.632l3.09-1.03a2 2 0 0 0 .828-.497l9.193-9.193m-2.121-2.122 2.121 2.122" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </span>
-              <span className={styles.sidebar__text}>{t('setup') || 'キャラを変更'}</span>
+              <span className={styles.sidebar__text}>{t('setup')}</span>
             </Link>
           </li>
           <li className={pathname.startsWith(`/${locale}/mypage`) ? styles.sidebar__item + ' ' + styles['sidebar__item--active'] : styles.sidebar__item}>

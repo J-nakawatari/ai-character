@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, use } from 'react';
+import { useState, use, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
@@ -9,13 +9,20 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '../../utils/auth';
 import BackButton from '../../components/BackButton';
 import { useTranslations } from 'next-intl';
+import styles from '../login/page.module.css';
 
 const schema = (t) => z.object({
-  name: z.string().min(2, t('auth.validation.name_min_length')),
-  email: z.string().email(t('auth.validation.invalid_email')),
-  password: z.string().min(6, t('auth.validation.password_min_length')),
+  name: z.string().min(2, t('validation.name_min_length')),
+  email: z.string().email(t('validation.invalid_email')),
+  password: z.string().min(6, t('validation.password_min_length')),
   preferredLanguage: z.enum(['ja', 'en']),
 });
+
+const videoFiles = [
+  '/videos/hero-videos_01.mp4',
+  '/videos/hero-videos_02.mp4',
+  '/videos/hero-videos_03.mp4',
+];
 
 export default function Register({ params }) {
   const { register: registerUser } = useAuth();
@@ -33,6 +40,57 @@ export default function Register({ params }) {
     resolver: zodResolver(schema(t)),
   });
   
+  const [isMobile, setIsMobile] = useState(false);
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const videoRef1 = useRef(null);
+  const videoRef2 = useRef(null);
+  const [activeVideo, setActiveVideo] = useState(1);
+  const currentIndexRef = useRef(0);
+  const activeVideoRef = useRef(1);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const switchToNextVideo = () => {
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    const nextIndex = (currentIndexRef.current + 1) % videoFiles.length;
+    currentIndexRef.current = nextIndex;
+    const inactiveRef = activeVideoRef.current === 1 ? videoRef2 : videoRef1;
+    if (inactiveRef.current) {
+      inactiveRef.current.src = videoFiles[nextIndex];
+      inactiveRef.current.load();
+      inactiveRef.current.play();
+    }
+    setTimeout(() => {
+      const newActiveVideo = activeVideoRef.current === 1 ? 2 : 1;
+      activeVideoRef.current = newActiveVideo;
+      setActiveVideo(newActiveVideo);
+      setCurrentVideoIndex(nextIndex);
+      setIsTransitioning(false);
+      const activeRef = newActiveVideo === 1 ? videoRef1 : videoRef2;
+      if (activeRef.current) {
+        activeRef.current.play();
+      }
+    }, 2000);
+  };
+
+  useEffect(() => {
+    currentIndexRef.current = currentVideoIndex;
+  }, [currentVideoIndex]);
+
+  useEffect(() => {
+    const timeout = setTimeout(switchToNextVideo, 7000);
+    return () => clearTimeout(timeout);
+  }, [switchToNextVideo]);
+
   const onSubmit = async (data) => {
     setServerError('');
     
@@ -55,69 +113,94 @@ export default function Register({ params }) {
   };
   
   return (
-    <div className="auth-layout">
-      <div className="auth-layout__background">
-        <div className="auth-layout__bubble auth-layout__bubble--1"></div>
-        <div className="auth-layout__bubble auth-layout__bubble--2"></div>
-        <div className="auth-layout__bubble auth-layout__bubble--3"></div>
-      </div>
-      
-      <BackButton to={`/${locale}`} />
-      
-      <div className="card auth-layout__card">
-        <div className="card__body">
-          <h1 className="auth-layout__title">{t('register_title')}</h1>
-          
+    <>
+      {isMobile ? (
+        <img
+          src="/images/background-mobile.jpg"
+          alt="Background"
+          className={styles['background-image']}
+        />
+      ) : (
+        <>
+          <video
+            ref={videoRef1}
+            autoPlay
+            muted
+            loop
+            playsInline
+            className={`${styles['background-video']} ${activeVideo === 1 ? styles.active : ''}`}
+          >
+            <source src={videoFiles[currentVideoIndex]} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <video
+            ref={videoRef2}
+            autoPlay
+            muted
+            loop
+            playsInline
+            className={`${styles['background-video']} ${activeVideo === 2 ? styles.active : ''}`}
+          >
+            <source src={videoFiles[(currentVideoIndex + 1) % videoFiles.length]} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </>
+      )}
+      <div className={styles['darken-overlay']} />
+      <div className={`container ${styles['login-container']}`}>
+        <div className={styles['login-card']}>
+          <h1 className={styles['login-title']}>{t('register_title')}</h1>
+
           {serverError && (
-            <div className="input__error-message mb-3">
+            <div className={styles['error-message']}>
               {serverError}
             </div>
           )}
-          
-          <form onSubmit={handleSubmit(onSubmit)} className="auth-layout__form">
-            <div className="input-group">
-              <label className="input__label">{t('name')}</label>
+
+          <form onSubmit={handleSubmit(onSubmit)} className={styles['login-form']}>
+            <div className={styles['input-group']}>
+              <label className={styles['input-label']}>{t('name')}</label>
               <input
-                className="input"
+                className={styles.input}
                 type="text"
                 placeholder={t('name_placeholder')}
                 {...register('name')}
               />
               {errors.name && (
-                <p className="input__error-message">{errors.name.message}</p>
+                <p className={styles['error-message']}>{errors.name.message}</p>
               )}
             </div>
-            
-            <div className="input-group">
-              <label className="input__label">{t('email')}</label>
+
+            <div className={styles['input-group']}>
+              <label className={styles['input-label']}>{t('email')}</label>
               <input
-                className="input"
+                className={styles.input}
                 type="email"
                 placeholder={t('email_placeholder')}
                 {...register('email')}
               />
               {errors.email && (
-                <p className="input__error-message">{errors.email.message}</p>
+                <p className={styles['error-message']}>{errors.email.message}</p>
               )}
             </div>
-            
-            <div className="input-group">
-              <label className="input__label">{t('password')}</label>
+
+            <div className={styles['input-group']}>
+              <label className={styles['input-label']}>{t('password')}</label>
               <input
-                className="input"
+                className={styles.input}
                 type="password"
                 placeholder={t('password_placeholder')}
                 {...register('password')}
               />
               {errors.password && (
-                <p className="input__error-message">{errors.password.message}</p>
+                <p className={styles['error-message']}>{errors.password.message}</p>
               )}
             </div>
-            
-            <div className="input-group">
-              <label className="input__label">{tMypage('language_settings')}</label>
+
+            <div className={styles['input-group']}>
+              <label className={styles['input-label']}>{tMypage('language_settings')}</label>
               <select
-                className="input"
+                className={styles.input}
                 {...register('preferredLanguage')}
                 defaultValue="ja"
               >
@@ -125,24 +208,24 @@ export default function Register({ params }) {
                 <option value="en">🇺🇸 {tMypage('language_english')}</option>
               </select>
             </div>
-            
+
             <button
               type="submit"
-              className="button button--primary button--full"
+              className={styles['login-button']}
               disabled={isSubmitting}
             >
               {isSubmitting ? t('registering') : t('register_button')}
             </button>
           </form>
-          
-          <div className="auth-layout__footer">
-            <p>
-              {t('already_have_account')}
-              <Link href={`/${locale}/login`} className="auth-layout__link">{t('login_button')}</Link>
+
+          <div className={styles['register-link-container']}>
+            <p className={styles['register-link-text']}>
+              すでにアカウントをお持ちの方は<br />
+              {'こちらから'}<Link href={`/${locale}/login`} className={styles['register-link']}>ログイン</Link>{'できます'}
             </p>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

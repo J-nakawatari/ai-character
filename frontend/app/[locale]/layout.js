@@ -2,7 +2,6 @@
 
 import { NextIntlClientProvider } from 'next-intl';
 import { AuthProvider } from '../utils/auth';
-import { AdminAuthProvider } from '../utils/adminAuth';
 import Sidebar from '../components/Sidebar';
 import { usePathname } from 'next/navigation';
 import { use } from 'react';
@@ -10,11 +9,10 @@ import { use } from 'react';
 export default function LocaleLayout({ children, params }) {
   const { locale } = typeof params.then === 'function' ? use(params) : params;
   const pathname = usePathname();
-  const isAdmin = pathname.startsWith(`/${locale}/admin`);
   const hideSidebar = pathname === `/${locale}` ||
                       pathname.startsWith(`/${locale}/login`) || 
-                      pathname.startsWith(`/${locale}/register`) || 
-                      isAdmin;
+                      pathname.startsWith(`/${locale}/register`);
+  const isHome = pathname === `/${locale}`;
   
   let messages;
   try {
@@ -27,14 +25,16 @@ export default function LocaleLayout({ children, params }) {
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
       <AuthProvider>
-        <AdminAuthProvider>
-          <div className="app-layout">
-            {!hideSidebar && <Sidebar />}
-            <main className="app-main">
+        <div className={`app-layout${isHome ? ' home-main' : ''}`}>
+          {!hideSidebar && <Sidebar />}
+          {isHome ? (
+            children
+          ) : (
+            <main className={`app-main${hideSidebar ? ' full-width' : ''}`}>
               {children}
             </main>
-          </div>
-        </AdminAuthProvider>
+          )}
+        </div>
       </AuthProvider>
     </NextIntlClientProvider>
   );
