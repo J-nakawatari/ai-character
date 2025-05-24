@@ -45,6 +45,7 @@ ai-character-service/
    - `MONGO_URI`
    - `JWT_SECRET`
    - `OPENAI_API_KEY`
+   - `NEXT_PUBLIC_API_URL` （フロントエンド用、デフォルトは `http://localhost:5000/api`）
 
 3. 開発サーバーの起動：
    - バックエンド: `cd backend && npm run dev`
