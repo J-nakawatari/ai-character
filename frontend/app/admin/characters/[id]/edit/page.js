@@ -154,11 +154,7 @@ export default function EditCharacter({ params }) {
       try {
         setUploadStatus({ ...uploadStatus, voice: 'アップロード中...' });
         
-        const res = await api.post('/admin/characters/upload/voice', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        });
+        const res = await api.post('/admin/characters/upload/voice', formData);
         
         const voiceUrl = res.data.voiceUrl;
         
@@ -205,11 +201,7 @@ export default function EditCharacter({ params }) {
     try {
       setUploadStatus({ ...uploadStatus, image: 'アップロード中...' });
       
-      const res = await api.post('/admin/characters/upload/image', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
+      const res = await api.post('/admin/characters/upload/image', formData);
       
       const imageUrl = res.data.imageUrl;
       
@@ -247,11 +239,7 @@ export default function EditCharacter({ params }) {
     try {
       setUploadStatus({ ...uploadStatus, voice: 'アップロード中...' });
       
-      const res = await api.post('/admin/characters/upload/voice', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
+      const res = await api.post('/admin/characters/upload/voice', formData);
       
       const voiceUrl = res.data.voiceUrl;
       
@@ -677,12 +665,26 @@ export default function EditCharacter({ params }) {
         </div>
       </div>
 
-      {showCropper && (
-        <ImageCropper
-          image={selectedImage}
-          onCropComplete={handleCropComplete}
-          onCancel={() => setShowCropper(false)}
-        />
+      {showCropper && selectedImage && (
+        <div className={styles['cropper-modal-overlay']}>
+          <div className={styles['cropper-modal-content']}>
+            <h3 className={styles['cropper-modal-title']}>画像のトリミング</h3>
+            <ImageCropper
+              image={selectedImage}
+              cropWidth={imageType === 'characterSelect' ? 238 : imageType === 'dashboard' ? 320 : imageType === 'chatBackground' ? 455 : 400}
+              cropHeight={imageType === 'characterSelect' ? 260 : imageType === 'dashboard' ? 528 : imageType === 'chatBackground' ? 745 : 400}
+              onCropComplete={handleCropComplete}
+              className={styles['cropper-canvas']}
+              sliderClassName={styles['cropper-slider']}
+              sizeLabelClassName={styles['cropper-size-label']}
+              saveButtonClassName={styles['cropper-btn']}
+              saveButtonText="切り抜いて保存"
+              cancelButtonClassName={styles['cropper-btn'] + ' ' + styles['cancel']}
+              cancelButtonText="キャンセル"
+              onCancel={() => setShowCropper(false)}
+            />
+          </div>
+        </div>
       )}
 
       <Toast
