@@ -38,115 +38,126 @@ export default function CharacterDetailPage() {
   return (
     <div className="admin-content">
       <div className="admin-header">
-        <h1 className="admin-dashboard-title">キャラクター詳細</h1>
+        <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
+          <h1 className="admin-dashboard-title">キャラクター詳細</h1>
+          <div style={{display:'flex', gap:12}}>
+            <button className="admin-button admin-button--edit" onClick={() => router.push(`/admin/characters/${params.id}`)}>編集</button>
+            <button className="admin-button admin-button--danger" onClick={() => router.push('/admin/characters')}>一覧に戻る</button>
+          </div>
+        </div>
       </div>
       <div className="admin-content-wrapper" style={{maxWidth:900, margin:'0 auto'}}>
-        <button className="admin-button" onClick={() => router.push('/admin/characters')}>一覧に戻る</button>
+        {/* ステータスバー */}
+        <div style={{display:'flex', gap:12, marginBottom:24}}>
+          {badge(character.characterType, character.characterType==='free' ? '#3b82f6' : character.characterType==='premium' ? '#a21caf' : character.characterType==='paid' ? '#eab308' : '#f43f5e')}
+          {character.isActive ? badge('有効', '#22c55e') : badge('無効', '#e11d48')}
+          <span style={{color:'#64748b', fontSize:14}}>作成日: {character.createdAt ? new Date(character.createdAt).toLocaleString() : '-'}</span>
+        </div>
+
         {/* 基本情報カード */}
-        <Card className="admin-stats-card-wrapper" style={{marginTop:32, marginBottom:24}}>
+        <Card className="admin-stats-card-wrapper" style={{marginBottom:24}}>
           <h2 className="admin-stats-title" style={{marginBottom:24}}>基本情報</h2>
-          {/* 名前系 */}
-          <div style={{marginBottom:16}}>
-            <h3 style={{fontSize:16, color:'#64748b', fontWeight:'bold', marginBottom:8}}>名前</h3>
-            <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:24}}>
-              <div>
-                <div className="character-detail-label">日本語</div>
-                <div className="character-detail-value" style={{fontWeight:'bold', fontSize:18}}>{character.name?.ja}</div>
-              </div>
-              <div>
-                <div className="character-detail-label">英語</div>
-                <div className="character-detail-value">{character.name?.en}</div>
-              </div>
-            </div>
-          </div>
-          {/* 説明系 */}
-          <div style={{marginBottom:16}}>
-            <h3 style={{fontSize:16, color:'#64748b', fontWeight:'bold', marginBottom:8}}>説明</h3>
-            <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:24}}>
-              <div>
-                <div className="character-detail-label">日本語</div>
-                <div className="character-detail-value">{character.description?.ja}</div>
-              </div>
-              <div>
-                <div className="character-detail-label">英語</div>
-                <div className="character-detail-value">{character.description?.en}</div>
+          <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(300px, 1fr))', gap:24}}>
+            {/* 名前系 */}
+            <div className="character-detail-section">
+              <h3 className="character-detail-section-title">名前</h3>
+              <div className="character-detail-grid">
+                <div>
+                  <div className="character-detail-label">日本語</div>
+                  <div className="character-detail-value" style={{fontWeight:'bold', fontSize:18}}>{character.name?.ja}</div>
+                </div>
+                <div>
+                  <div className="character-detail-label">英語</div>
+                  <div className="character-detail-value">{character.name?.en}</div>
+                </div>
               </div>
             </div>
-          </div>
-          {/* その他 */}
-          <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:24}}>
-            <div>
-              <div className="character-detail-label">性格</div>
-              <div className="character-detail-value">{character.personality}</div>
+            {/* 説明系 */}
+            <div className="character-detail-section">
+              <h3 className="character-detail-section-title">説明</h3>
+              <div className="character-detail-grid">
+                <div>
+                  <div className="character-detail-label">日本語</div>
+                  <div className="character-detail-value">{character.description?.ja}</div>
+                </div>
+                <div>
+                  <div className="character-detail-label">英語</div>
+                  <div className="character-detail-value">{character.description?.en}</div>
+                </div>
+              </div>
             </div>
-            <div>
-              <div className="character-detail-label">有効/無効</div>
-              <div className="character-detail-value">{character.isActive ? badge('有効', '#22c55e') : badge('無効', '#e11d48')}</div>
+            {/* その他 */}
+            <div className="character-detail-section">
+              <h3 className="character-detail-section-title">その他</h3>
+              <div className="character-detail-grid">
+                <div>
+                  <div className="character-detail-label">性格</div>
+                  <div className="character-detail-value">{character.personality}</div>
+                </div>
+                <div>
+                  <div className="character-detail-label">テーマカラー</div>
+                  <div className="character-detail-value">
+                    <span style={{display:'inline-block',width:32,height:32,borderRadius:8,background:character.themeColor,marginRight:8,verticalAlign:'middle',border:'1px solid #e5e7eb'}}></span>
+                    {character.themeColor}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </Card>
+
         {/* 会話設定カード */}
         <Card className="admin-stats-card-wrapper" style={{marginBottom:24}}>
           <h2 className="admin-stats-title" style={{marginBottom:24}}>会話設定</h2>
-          <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:24}}>
-            <div>
-              <div className="character-detail-label">性格プロンプト（日本語）</div>
-              <div className="character-detail-value">{character.personalityPrompt?.ja}</div>
+          <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(300px, 1fr))', gap:24}}>
+            <div className="character-detail-section">
+              <h3 className="character-detail-section-title">プロンプト</h3>
+              <div className="character-detail-grid">
+                <div>
+                  <div className="character-detail-label">性格プロンプト（日本語）</div>
+                  <div className="character-detail-value character-detail-value--multiline">{character.personalityPrompt?.ja}</div>
+                </div>
+                <div>
+                  <div className="character-detail-label">性格プロンプト（英語）</div>
+                  <div className="character-detail-value character-detail-value--multiline">{character.personalityPrompt?.en}</div>
+                </div>
+                <div>
+                  <div className="character-detail-label">管理者プロンプト（日本語）</div>
+                  <div className="character-detail-value character-detail-value--multiline">{character.adminPrompt?.ja}</div>
+                </div>
+                <div>
+                  <div className="character-detail-label">管理者プロンプト（英語）</div>
+                  <div className="character-detail-value character-detail-value--multiline">{character.adminPrompt?.en}</div>
+                </div>
+              </div>
             </div>
-            <div>
-              <div className="character-detail-label">性格プロンプト（英語）</div>
-              <div className="character-detail-value">{character.personalityPrompt?.en}</div>
-            </div>
-            <div>
-              <div className="character-detail-label">管理者プロンプト（日本語）</div>
-              <div className="character-detail-value">{character.adminPrompt?.ja}</div>
-            </div>
-            <div>
-              <div className="character-detail-label">管理者プロンプト（英語）</div>
-              <div className="character-detail-value">{character.adminPrompt?.en}</div>
-            </div>
-            <div>
-              <div className="character-detail-label">デフォルトメッセージ（日本語）</div>
-              <div className="character-detail-value">{character.defaultMessage?.ja}</div>
-            </div>
-            <div>
-              <div className="character-detail-label">デフォルトメッセージ（英語）</div>
-              <div className="character-detail-value">{character.defaultMessage?.en}</div>
-            </div>
-            <div>
-              <div className="character-detail-label">voice</div>
-              <div className="character-detail-value">{character.voice}</div>
+            <div className="character-detail-section">
+              <h3 className="character-detail-section-title">メッセージ設定</h3>
+              <div className="character-detail-grid">
+                <div>
+                  <div className="character-detail-label">デフォルトメッセージ（日本語）</div>
+                  <div className="character-detail-value character-detail-value--multiline">{character.defaultMessage?.ja}</div>
+                </div>
+                <div>
+                  <div className="character-detail-label">デフォルトメッセージ（英語）</div>
+                  <div className="character-detail-value character-detail-value--multiline">{character.defaultMessage?.en}</div>
+                </div>
+                <div>
+                  <div className="character-detail-label">音声設定</div>
+                  <div className="character-detail-value">{character.voice}</div>
+                </div>
+              </div>
             </div>
           </div>
         </Card>
-        {/* システム設定カード */}
-        <Card className="admin-stats-card-wrapper" style={{marginBottom:24}}>
-          <h2 className="admin-stats-title" style={{marginBottom:24}}>システム設定</h2>
-          <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:24}}>
-            <div>
-              <div className="character-detail-label">テーマカラー</div>
-              <div className="character-detail-value"><span style={{display:'inline-block',width:32,height:32,borderRadius:8,background:character.themeColor,marginRight:8,verticalAlign:'middle',border:'1px solid #e5e7eb'}}></span>{character.themeColor}</div>
-            </div>
-          </div>
-        </Card>
+
         {/* 販売情報カード */}
         <Card className="admin-stats-card-wrapper" style={{marginBottom:24}}>
           <h2 className="admin-stats-title" style={{marginBottom:24}}>販売情報</h2>
-          <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:24}}>
-            <div>
-              <div className="character-detail-label">タイプ</div>
-              <div className="character-detail-value">
-                {badge(character.characterType, character.characterType==='free' ? '#3b82f6' : character.characterType==='premium' ? '#a21caf' : character.characterType==='paid' ? '#eab308' : '#f43f5e')}
-              </div>
-            </div>
-            <div>
-              <div className="character-detail-label">作成日</div>
-              <div className="character-detail-value">{character.createdAt ? new Date(character.createdAt).toLocaleString() : '-'}</div>
-            </div>
-            {/* 購入情報グループ */}
-            <div style={{gridColumn:'1/3', marginTop:16}}>
-              <h3 style={{fontSize:16, color:'#64748b', fontWeight:'bold', marginBottom:8}}>購入情報</h3>
-              <div style={{display:'flex', gap:32}}>
+          <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(300px, 1fr))', gap:24}}>
+            <div className="character-detail-section">
+              <h3 className="character-detail-section-title">価格設定</h3>
+              <div className="character-detail-grid">
                 <div>
                   <div className="character-detail-label">購入タイプ</div>
                   <div className="character-detail-value">{character.purchaseType}</div>
@@ -159,29 +170,70 @@ export default function CharacterDetailPage() {
             </div>
           </div>
         </Card>
+
         {/* メディア情報カード */}
         <Card className="admin-stats-card-wrapper">
           <h2 className="admin-stats-title" style={{marginBottom:24}}>メディア情報</h2>
-          <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:24}}>
-            <div>
-              <div className="character-detail-label">キャラクター選択画像</div>
-              <div className="character-detail-value">{character.imageCharacterSelect && <img src={character.imageCharacterSelect} alt="select" style={{width:100, height:100, borderRadius:16, objectFit:'cover', background:'#f3f4f6'}} />}</div>
+          <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(300px, 1fr))', gap:24}}>
+            <div className="character-detail-section">
+              <h3 className="character-detail-section-title">画像</h3>
+              <div className="character-detail-grid">
+                <div>
+                  <div className="character-detail-label">キャラクター選択画像</div>
+                  <div className="character-detail-value">
+                    {character.imageCharacterSelect ? (
+                      <img src={character.imageCharacterSelect} alt="select" style={{width:120, height:120, borderRadius:16, objectFit:'cover', background:'#f3f4f6'}} />
+                    ) : (
+                      <div style={{width:120, height:120, borderRadius:16, background:'#f3f4f6', display:'flex', alignItems:'center', justifyContent:'center', color:'#64748b'}}>未設定</div>
+                    )}
+                  </div>
+                </div>
+                <div>
+                  <div className="character-detail-label">ダッシュボード画像</div>
+                  <div className="character-detail-value">
+                    {character.imageDashboard ? (
+                      <img src={character.imageDashboard} alt="dashboard" style={{width:120, height:120, borderRadius:16, objectFit:'cover', background:'#f3f4f6'}} />
+                    ) : (
+                      <div style={{width:120, height:120, borderRadius:16, background:'#f3f4f6', display:'flex', alignItems:'center', justifyContent:'center', color:'#64748b'}}>未設定</div>
+                    )}
+                  </div>
+                </div>
+                <div>
+                  <div className="character-detail-label">チャット背景画像</div>
+                  <div className="character-detail-value">
+                    {character.imageChatBackground ? (
+                      <img src={character.imageChatBackground} alt="bg" style={{width:120, height:120, borderRadius:16, objectFit:'cover', background:'#f3f4f6'}} />
+                    ) : (
+                      <div style={{width:120, height:120, borderRadius:16, background:'#f3f4f6', display:'flex', alignItems:'center', justifyContent:'center', color:'#64748b'}}>未設定</div>
+                    )}
+                  </div>
+                </div>
+                <div>
+                  <div className="character-detail-label">チャットアバター画像</div>
+                  <div className="character-detail-value">
+                    {character.imageChatAvatar ? (
+                      <img src={character.imageChatAvatar} alt="avatar" style={{width:120, height:120, borderRadius:16, objectFit:'cover', background:'#f3f4f6'}} />
+                    ) : (
+                      <div style={{width:120, height:120, borderRadius:16, background:'#f3f4f6', display:'flex', alignItems:'center', justifyContent:'center', color:'#64748b'}}>未設定</div>
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
-            <div>
-              <div className="character-detail-label">ダッシュボード画像</div>
-              <div className="character-detail-value">{character.imageDashboard && <img src={character.imageDashboard} alt="dashboard" style={{width:100, height:100, borderRadius:16, objectFit:'cover', background:'#f3f4f6'}} />}</div>
-            </div>
-            <div>
-              <div className="character-detail-label">チャット背景画像</div>
-              <div className="character-detail-value">{character.imageChatBackground && <img src={character.imageChatBackground} alt="bg" style={{width:100, height:100, borderRadius:16, objectFit:'cover', background:'#f3f4f6'}} />}</div>
-            </div>
-            <div>
-              <div className="character-detail-label">チャットアバター画像</div>
-              <div className="character-detail-value">{character.imageChatAvatar && <img src={character.imageChatAvatar} alt="avatar" style={{width:100, height:100, borderRadius:16, objectFit:'cover', background:'#f3f4f6'}} />}</div>
-            </div>
-            <div style={{gridColumn:'1/3'}}>
-              <div className="character-detail-label">サンプル音声</div>
-              <div className="character-detail-value">{character.sampleVoiceUrl && <audio src={character.sampleVoiceUrl} controls style={{maxWidth:300}} />}</div>
+            <div className="character-detail-section">
+              <h3 className="character-detail-section-title">音声</h3>
+              <div className="character-detail-grid">
+                <div>
+                  <div className="character-detail-label">サンプル音声</div>
+                  <div className="character-detail-value">
+                    {character.sampleVoiceUrl ? (
+                      <audio src={character.sampleVoiceUrl} controls style={{maxWidth:300}} />
+                    ) : (
+                      <div style={{padding:12, background:'#f3f4f6', borderRadius:8, color:'#64748b'}}>未設定</div>
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </Card>
