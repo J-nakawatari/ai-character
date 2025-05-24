@@ -127,4 +127,11 @@
   min-height: 60vh;
   font-size: 1.2rem;
   color: #3a466e;
-} 
+}
+
+.dashboardNoCharacter {
+  font-size: 1.2rem;
+  color: #3a466e;
+  margin-bottom: 16px;
+  text-align: center;
+}
