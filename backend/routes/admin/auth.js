@@ -35,12 +35,12 @@ router.post('/login', async (req, res) => {
       (err, token) => {
         if (err) throw err;
         
+        // cookie の属性は環境によって切り替える
         res.cookie('adminToken', token, {
           httpOnly: true,
-          sameSite: 'lax',
-          maxAge: 24 * 60 * 60 * 1000, // 1日
-          domain: 'localhost',
-          secure: false
+          sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+          secure: process.env.NODE_ENV === 'production',
+          maxAge: 24 * 60 * 60 * 1000 // 1日
         });
         
         res.json({ success: true });
