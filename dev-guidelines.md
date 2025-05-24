@@ -49,6 +49,7 @@ ai-character-service/
 
    - サンプルとして `backend/.env.example` と `frontend/.env.example` を用意
 
+
 3. 開発サーバーの起動：
    - バックエンド: `cd backend && npm run dev`
    - フロントエンド: `cd frontend && npm run dev`
