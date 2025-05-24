@@ -120,7 +120,8 @@
     "no_info": "No information",
     "loading": "Loading...",
     "purchase_character": "Purchase",
-    "price": "Price"
+    "price": "Price",
+    "no_character_selected": "No character selected"
   },
   "chat": {
     "loading": "Loading...",
