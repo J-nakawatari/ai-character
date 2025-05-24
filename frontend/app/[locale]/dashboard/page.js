@@ -18,6 +18,7 @@ export default function Dashboard({ params }) {
   const urlParams = useParams();
   const locale = urlParams.locale || 'ja';
   const t = useTranslations('dashboard');
+  const tMenu = useTranslations('menu');
   
   const handleStartChat = async () => {
     try {
@@ -61,6 +62,25 @@ export default function Dashboard({ params }) {
   
   if (loading || !user) {
     return <GlobalLoading text={t('loading', '読み込み中...')} />;
+  }
+
+  if (!user.selectedCharacter) {
+    return (
+      <div className={styles.dashboardRoot}>
+        <Card className={styles.dashboardCard}>
+          <p className={styles.dashboardNoCharacter}>{t('no_character_selected', '選択中のキャラクターがありません')}</p>
+          <div className={styles.dashboardButtonWrapper}>
+            <button
+              type="button"
+              onClick={handleChangeCharacter}
+              className="button button--primary button--lg"
+            >
+              {tMenu('setup', 'キャラ設定')}
+            </button>
+          </div>
+        </Card>
+      </div>
+    );
   }
   
   const generatePersonalityTags = () => {
