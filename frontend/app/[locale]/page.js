@@ -279,7 +279,7 @@ export default function Home({ params }) {
       {isMobile ? (
         <img
           src="/images/background-mobile.jpg"
-          alt="Background"
+          alt="背景"
           className={styles['background-image']}
         />
       ) : (
@@ -293,7 +293,7 @@ export default function Home({ params }) {
             className={`${styles['background-video']} ${activeVideo === 1 ? styles.active : ''}`}
           >
             <source src={videoFiles[currentVideoIndex]} type="video/mp4" />
-            Your browser does not support the video tag.
+            お使いのブラウザはvideoタグをサポートしていません。
           </video>
           <video
             ref={videoRef2}
@@ -304,7 +304,7 @@ export default function Home({ params }) {
             className={`${styles['background-video']} ${activeVideo === 2 ? styles.active : ''}`}
           >
             <source src={videoFiles[(currentVideoIndex + 1) % videoFiles.length]} type="video/mp4" />
-            Your browser does not support the video tag.
+            お使いのブラウザはvideoタグをサポートしていません。
           </video>
         </>
       )}
@@ -362,7 +362,7 @@ export default function Home({ params }) {
                 {/* Heart SVG (img) */}
                 <img
                   src="/images/heart.svg"
-                  alt="heart"
+                  alt="ハート"
                   className={`${styles['heart-svg']}${arrowHover ? ' ' + styles['heart-show'] : ''}`}
                 />
               </span>

@@ -116,7 +116,7 @@ export default function Login({ params }) {
       {isMobile ? (
         <img
           src="/images/background-mobile.jpg"
-          alt="Background"
+          alt="背景"
           className={styles['background-image']}
         />
       ) : (
@@ -130,7 +130,7 @@ export default function Login({ params }) {
             className={`${styles['background-video']} ${activeVideo === 1 ? styles.active : ''}`}
           >
             <source src={videoFiles[currentVideoIndex]} type="video/mp4" />
-            Your browser does not support the video tag.
+            お使いのブラウザはvideoタグをサポートしていません。
           </video>
           <video
             ref={videoRef2}
@@ -141,7 +141,7 @@ export default function Login({ params }) {
             className={`${styles['background-video']} ${activeVideo === 2 ? styles.active : ''}`}
           >
             <source src={videoFiles[(currentVideoIndex + 1) % videoFiles.length]} type="video/mp4" />
-            Your browser does not support the video tag.
+            お使いのブラウザはvideoタグをサポートしていません。
           </video>
         </>
       )}
@@ -153,9 +153,9 @@ export default function Login({ params }) {
           {serverError && (
             <div className={styles['error-message']}>
               {serverError === 'Invalid credentials'
-                ? t('auth.auth.invalid_credentials')
+                ? t('invalid_credentials')
                 : serverError === 'Login failed'
-                  ? t('auth.auth.login_failed')
+                  ? t('login_failed')
                   : serverError}
             </div>
           )}
@@ -171,7 +171,7 @@ export default function Login({ params }) {
               />
               {errors.email && (
                 <p className={styles['error-message']}>
-                  {errors.email.message === 'Invalid email address' ? t('auth.validation.invalid_email') : errors.email.message}
+                  {errors.email.message === 'Invalid email address' ? t('validation.invalid_email') : errors.email.message}
                 </p>
               )}
             </div>
@@ -186,7 +186,7 @@ export default function Login({ params }) {
               />
               {errors.password && (
                 <p className={styles['error-message']}>
-                  {errors.password.message === 'Password is required' ? t('auth.validation.password_required') : errors.password.message}
+                  {errors.password.message === 'Password is required' ? t('validation.password_required') : errors.password.message}
                 </p>
               )}
             </div>
