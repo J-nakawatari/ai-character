@@ -154,11 +154,7 @@ export default function EditCharacter({ params }) {
       try {
         setUploadStatus({ ...uploadStatus, voice: 'アップロード中...' });
         
-        const res = await api.post('/admin/characters/upload/voice', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        });
+        const res = await api.post('/admin/characters/upload/voice', formData);
         
         const voiceUrl = res.data.voiceUrl;
         
@@ -205,11 +201,7 @@ export default function EditCharacter({ params }) {
     try {
       setUploadStatus({ ...uploadStatus, image: 'アップロード中...' });
       
-      const res = await api.post('/admin/characters/upload/image', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
+      const res = await api.post('/admin/characters/upload/image', formData);
       
       const imageUrl = res.data.imageUrl;
       
@@ -247,11 +239,7 @@ export default function EditCharacter({ params }) {
     try {
       setUploadStatus({ ...uploadStatus, voice: 'アップロード中...' });
       
-      const res = await api.post('/admin/characters/upload/voice', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
+      const res = await api.post('/admin/characters/upload/voice', formData);
       
       const voiceUrl = res.data.voiceUrl;
       
