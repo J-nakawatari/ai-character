@@ -90,10 +90,13 @@ export default function CharacterNewPage() {
     }
     
     if (file.type.startsWith('image/')) {
-      const url = URL.createObjectURL(file);
-      setSelectedImage(url);
-      setImageType(type);
-      setShowCropper(true);
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setSelectedImage(e.target.result);
+        setImageType(type);
+        setShowCropper(true);
+      };
+      reader.readAsDataURL(file);
       e.target.value = '';
       return;
     }
