@@ -20,7 +20,17 @@
     "loading": "読み込み中...",
     "purchase_character": "購入する",
     "upgrade_to_premium": "プレミアムにアップグレード",
-    "select_button": "選択する"
+    "select_button": "選択する",
+    "premium_modal_description": "サブスクに加入すると個性豊かなたくさんのキャラクターとお話することができるようになります。",
+    "premium_price": "月額{price}円（税込）",
+    "price": "価格",
+    "type": "種別",
+    "buy_type_buy": "買い切り",
+    "buy_type_rental": "レンタル",
+    "confirm_purchase": "購入を確定",
+    "cancel": "キャンセル",
+    "premium_price_period": "月額",
+    "subscription_start": "サブスク加入時期"
   },
   "auth": {
     "name": "お名前",
@@ -29,7 +39,8 @@
     "login_title": "ログイン",
     "register_title": "新規登録",
     "already_have_account": "すでにアカウントをお持ちの方はこちらからログインできます",
-    "dont_have_account": "アカウントをお持ちでない方はこちらから登録できます",
+    "dont_have_account": "アカウントをお持ちでない方は",
+    "register": "登録",
     "logging_in": "ログイン中...",
     "login_button": "ログインする",
     "registering": "登録中...",
@@ -100,7 +111,16 @@
     "purchase_type_subscription": "サブスク限定",
     "purchase_date": "購入日:",
     "premium_warning": "現在プレミアムサブスクリプションに加入中です。退会しても日割り返金はありません。",
-    "not_set": "未設定"
+    "not_set": "未設定",
+    "price": "価格",
+    "type": "種別",
+    "buy_type_buy": "買い切り",
+    "buy_type_rental": "レンタル",
+    "confirm_purchase": "購入を確定",
+    "subscription_start": "サブスク加入時期",
+    "unsubscribe_button": "サブスクを解除する",
+    "unsubscribe_confirm": "本当にサブスクを解除しますか？",
+    "unsubscribe_failed": "サブスク解除に失敗しました"
   },
   "dashboard": {
     "name": "名前",
@@ -108,7 +128,9 @@
     "description": "説明",
     "start_chat": "チャットを始める",
     "no_info": "情報なし",
-    "loading": "読み込み中..."
+    "loading": "読み込み中...",
+    "purchase_character": "購入する",
+    "price": "価格"
   },
   "chat": {
     "loading": "読み込み中...",
@@ -121,5 +143,12 @@
     "failed_load_history": "チャット履歴の読み込みに失敗しました",
     "incomplete_character_data": "キャラクターデータが不完全です。再読み込みしてください",
     "failed_send": "メッセージの送信に失敗しました"
+  },
+  "menu": {
+    "dashboard": "ダッシュボード",
+    "chat": "チャット",
+    "setup": "キャラ設定",
+    "mypage": "マイページ",
+    "logout": "ログアウト"
   }
 }

@@ -321,7 +321,7 @@ export default function Home() {
         </p>
         <div style={{ width: '100%', maxWidth: '300px' }}>
           <Link
-            href="/login"
+            href={`/${locale}/login`}
             className={`${orbitron.className} button`}
             style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', paddingRight: '16px', paddingLeft: '16px', overflow: 'hidden', position: 'relative' }}
             onMouseEnter={() => setArrowHover(true)}

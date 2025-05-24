@@ -33,7 +33,7 @@
   object-fit: cover;
   opacity: 0;
   transition: opacity 2s ease;
-  z-index: 0;
+  z-index: 1;
 }
 
 .background-video.active {
@@ -45,7 +45,7 @@
   width: 100%;
   height: 100vh;
   position: relative;
-  z-index: 2;
+  z-index: 10;
   overflow: hidden;
 }
 .home-wrapper {
@@ -257,34 +257,75 @@
   text-align: center;
 }
 .overlay {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   background: transparent;
   opacity: 1;
   pointer-events: none;
-  z-index: 1;
-  animation: noise 2s steps(10) infinite;
-  filter: contrast(200%) brightness(1500%);
+  z-index: 3;
+  /* filter: contrast(150%) brightness(1200%); */
+  /* mix-blend-mode: overlay; */
 }
 
 .overlay::before {
-  content: "";
+  content: '';
   position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: repeating-linear-gradient(
-    0deg,
-    rgba(0, 0, 0, 0.3),
-    rgba(0, 0, 0, 0.3) 1px,
-    transparent 1px,
-    transparent 2px
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.32);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.overlay::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(
+    45deg,
+    rgba(255, 0, 0, 0.18),
+    rgba(0, 255, 255, 0.18)
   );
-  animation: noise 2s steps(10) infinite;
+  mix-blend-mode: overlay;
+  animation: glitch 0.7s infinite;
+  opacity: 0.4;
+  pointer-events: none;
+  z-index: 4;
+}
+
+@keyframes glitch {
+  0% {
+    transform: translate(0);
+    filter: hue-rotate(0deg);
+  }
+  20% {
+    transform: translate(-12px, 8px);
+    filter: hue-rotate(180deg);
+  }
+  40% {
+    transform: translate(-12px, -12px);
+    filter: hue-rotate(360deg);
+  }
+  60% {
+    transform: translate(12px, 12px);
+    filter: hue-rotate(540deg);
+  }
+  80% {
+    transform: translate(12px, -12px);
+    filter: hue-rotate(720deg);
+  }
+  100% {
+    transform: translate(0);
+    filter: hue-rotate(0deg);
+  }
 }
 
 @keyframes noise {
@@ -301,24 +342,45 @@
     transform: translate(0.5%, -1%);
   }
   40% {
-    transform: translate(-0.5%, 1.5%);
+    transform: translate(-0.5%, 1%);
   }
   50% {
     transform: translate(-1%, 0.5%);
   }
   60% {
-    transform: translate(1.5%, 0);
+    transform: translate(1%, 0);
   }
   70% {
     transform: translate(0, 1%);
   }
   80% {
-    transform: translate(0.3%, 1.5%);
+    transform: translate(0.5%, 1%);
   }
   90% {
-    transform: translate(-1%, 1%);
+    transform: translate(-1%, 0.5%);
   }
   100% {
     transform: translate(0, 0);
   }
+}
+
+/* 共通: 画面全体を暗くする静止オーバーレイ */
+.darken-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.32);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }

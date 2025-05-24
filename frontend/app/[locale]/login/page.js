@@ -1,19 +1,28 @@
 'use client';
 
-import { useState, use } from 'react';
+import { useState, use, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '../../utils/auth';
-import BackButton from '../../components/BackButton';
 import { useTranslations } from 'next-intl';
+import { Orbitron } from 'next/font/google';
+import styles from './page.module.css';
+
+const orbitron = Orbitron({ weight: '700', subsets: ['latin'] });
 
 const schema = z.object({
   email: z.string().email('Invalid email address'),
   password: z.string().min(1, 'Password is required'),
 });
+
+const videoFiles = [
+  '/videos/hero-videos_01.mp4',
+  '/videos/hero-videos_02.mp4',
+  '/videos/hero-videos_03.mp4',
+];
 
 export default function Login({ params }) {
   const { login, user } = useAuth();
@@ -22,6 +31,14 @@ export default function Login({ params }) {
   const t = useTranslations('auth');
   const appT = useTranslations('app');
   const { locale } = typeof params.then === 'function' ? use(params) : params;
+  const [isMobile, setIsMobile] = useState(false);
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const videoRef1 = useRef(null);
+  const videoRef2 = useRef(null);
+  const [activeVideo, setActiveVideo] = useState(1);
+  const currentIndexRef = useRef(0);
+  const activeVideoRef = useRef(1);
   
   const {
     register,
@@ -30,6 +47,53 @@ export default function Login({ params }) {
   } = useForm({
     resolver: zodResolver(schema),
   });
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const switchToNextVideo = () => {
+    if (isTransitioning) return;
+    
+    setIsTransitioning(true);
+    const nextIndex = (currentIndexRef.current + 1) % videoFiles.length;
+    currentIndexRef.current = nextIndex;
+    
+    const inactiveRef = activeVideoRef.current === 1 ? videoRef2 : videoRef1;
+    if (inactiveRef.current) {
+      inactiveRef.current.src = videoFiles[nextIndex];
+      inactiveRef.current.load();
+      inactiveRef.current.play();
+    }
+    
+    setTimeout(() => {
+      const newActiveVideo = activeVideoRef.current === 1 ? 2 : 1;
+      activeVideoRef.current = newActiveVideo;
+      setActiveVideo(newActiveVideo);
+      setCurrentVideoIndex(nextIndex);
+      setIsTransitioning(false);
+      const activeRef = newActiveVideo === 1 ? videoRef1 : videoRef2;
+      if (activeRef.current) {
+        activeRef.current.play();
+      }
+    }, 2000);
+  };
+
+  useEffect(() => {
+    currentIndexRef.current = currentVideoIndex;
+  }, [currentVideoIndex]);
+
+  useEffect(() => {
+    const timeout = setTimeout(switchToNextVideo, 7000);
+    return () => clearTimeout(timeout);
+  }, []);
   
   const onSubmit = async (data) => {
     setServerError('');
@@ -48,68 +112,109 @@ export default function Login({ params }) {
   };
   
   return (
-    <div className="container" style={{ position: 'relative', overflow: 'hidden' }}>
-      <div className="card">
-        <h1 className="auth-layout__title">{t('login_title')}</h1>
-        
-        {serverError && (
-          <div className="error-message" style={{ marginBottom: '16px' }}>
-            {serverError === 'Invalid credentials'
-              ? t('auth.auth.invalid_credentials')
-              : serverError === 'Login failed'
-                ? t('auth.auth.login_failed')
-                : serverError}
-          </div>
-        )}
-        
-        <form onSubmit={handleSubmit(onSubmit)} className="login-form">
-          <div className="input-group">
-            <label className="input-label">{t('email')}</label>
-            <input
-              className="input"
-              type="email"
-              placeholder={t('email_placeholder')}
-              {...register('email')}
-            />
-            {errors.email && (
-              <p className="error-message">{errors.email.message === 'Invalid email address' ? t('auth.validation.invalid_email') : errors.email.message}</p>
-            )}
-          </div>
-          
-          <div className="input-group">
-            <label className="input-label">{t('password')}</label>
-            <input
-              className="input"
-              type="password"
-              placeholder={t('password_placeholder')}
-              {...register('password')}
-            />
-            {errors.password && (
-              <p className="error-message">{errors.password.message === 'Password is required' ? t('auth.validation.password_required') : errors.password.message}</p>
-            )}
-          </div>
-          
-          <button
-            type="submit"
-            className="button"
-            disabled={isSubmitting}
+    <>
+      {isMobile ? (
+        <img
+          src="/images/background-mobile.jpg"
+          alt="Background"
+          className={styles['background-image']}
+        />
+      ) : (
+        <>
+          <video
+            ref={videoRef1}
+            autoPlay
+            muted
+            loop
+            playsInline
+            className={`${styles['background-video']} ${activeVideo === 1 ? styles.active : ''}`}
           >
-            {isSubmitting ? t('logging_in') : t('login_button')}
-          </button>
-        </form>
-        
-        <div className="register-link-container">
-          <p className="register-link-text">
-            {t('dont_have_account')}
-            <Link href={`/${locale}/register`} className="register-link">{t('register_button')}</Link>
-          </p>
+            <source src={videoFiles[currentVideoIndex]} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <video
+            ref={videoRef2}
+            autoPlay
+            muted
+            loop
+            playsInline
+            className={`${styles['background-video']} ${activeVideo === 2 ? styles.active : ''}`}
+          >
+            <source src={videoFiles[(currentVideoIndex + 1) % videoFiles.length]} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </>
+      )}
+      <div className={styles['darken-overlay']} />
+      <div className={`container ${styles['login-container']}`}>
+        <div className={styles['login-card']}>
+          <h1 className={`${orbitron.className} ${styles['login-title']}`}>{t('login_title')}</h1>
+          
+          {serverError && (
+            <div className={styles['error-message']}>
+              {serverError === 'Invalid credentials'
+                ? t('auth.auth.invalid_credentials')
+                : serverError === 'Login failed'
+                  ? t('auth.auth.login_failed')
+                  : serverError}
+            </div>
+          )}
+          
+          <form onSubmit={handleSubmit(onSubmit)} className={styles['login-form']}>
+            <div className={styles['input-group']}>
+              <label className={styles['input-label']}>{t('email')}</label>
+              <input
+                className={styles.input}
+                type="email"
+                placeholder={t('email_placeholder')}
+                {...register('email')}
+              />
+              {errors.email && (
+                <p className={styles['error-message']}>
+                  {errors.email.message === 'Invalid email address' ? t('auth.validation.invalid_email') : errors.email.message}
+                </p>
+              )}
+            </div>
+            
+            <div className={styles['input-group']}>
+              <label className={styles['input-label']}>{t('password')}</label>
+              <input
+                className={styles.input}
+                type="password"
+                placeholder={t('password_placeholder')}
+                {...register('password')}
+              />
+              {errors.password && (
+                <p className={styles['error-message']}>
+                  {errors.password.message === 'Password is required' ? t('auth.validation.password_required') : errors.password.message}
+                </p>
+              )}
+            </div>
+            
+            <button
+              type="submit"
+              className={`${orbitron.className} ${styles['login-button']}`}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? t('logging_in') : t('login_button')}
+            </button>
+          </form>
+          
+          <div className={styles['register-link-container']}>
+            <p className={styles['register-link-text']}>
+              {t('dont_have_account')}{' '}
+              <Link href={`/${locale}/register`} className={styles['register-link']}>
+                {t('register')}
+              </Link>
+            </p>
+          </div>
+        </div>
+        <div className={styles['back-link-container']}>
+          <Link href={`/${locale}`} className={styles['back-link']}>
+            {appT('back_to_top')}
+          </Link>
         </div>
       </div>
-      <div style={{ textAlign: 'center', marginTop: '32px' }}>
-        <Link href={`/${locale}`} className="back-link">
-          {appT('back_to_top')}
-        </Link>
-      </div>
-    </div>
+    </>
   );
 }

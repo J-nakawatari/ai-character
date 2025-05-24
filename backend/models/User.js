@@ -43,6 +43,10 @@ const UserSchema = new Schema({
     type: Date,
     default: null
   },
+  subscriptionStartDate: {
+    type: Date,
+    default: null,
+  },
   purchasedCharacters: [{
     character: {
       type: Schema.Types.ObjectId,

@@ -43,6 +43,9 @@
 
 .mypage__info-item {
   margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .mypage__info-label {
@@ -77,6 +80,12 @@
 .mypage__status--expired {
   background-color: #feeceb;
   color: #d32f2f;
+}
+
+.mypage__status-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .mypage__character-list {

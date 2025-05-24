@@ -58,6 +58,15 @@ router.get('/', auth, async (req, res) => {
   }
 });
 
+// 文字列化ユーティリティ
+function getString(val, locale = 'ja') {
+  if (typeof val === 'string') return val;
+  if (typeof val === 'object' && val !== null) {
+    return val[locale] || val.ja || val.en || '';
+  }
+  return '';
+}
+
 router.post('/', auth, async (req, res) => {
   try {
     const { characterId, message } = req.body;
@@ -115,17 +124,22 @@ router.post('/', auth, async (req, res) => {
     const openai = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY
     });
-    
+
+    // localeの取得
+    const locale = user.preferredLanguage || 'ja';
+    // システムメッセージの文字列化
+    const systemPrompt = getString(character.personalityPrompt, locale);
+
     const completion = await openai.chat.completions.create({
       model: "gpt-4",
       messages: [
         {
           role: "system",
-          content: character.personalityPrompt
+          content: systemPrompt
         },
         ...chat.messages.map(msg => ({
           role: msg.sender === 'user' ? 'user' : 'assistant',
-          content: msg.content
+          content: typeof msg.content === 'string' ? msg.content : getString(msg.content, locale)
         }))
       ]
     });

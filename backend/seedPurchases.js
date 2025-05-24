@@ -71,10 +71,13 @@ const seedPurchases = async () => {
       if (Math.random() < 0.3) {
         user.membershipType = 'premium';
         user.subscriptionStatus = 'active';
+        user.subscriptionStartDate = new Date();
         user.subscriptionEndDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30日後
       } else {
         user.membershipType = 'free';
         user.subscriptionStatus = 'active';
+        user.subscriptionStartDate = null;
+        user.subscriptionEndDate = null;
       }
       
       user.lastLoginDate = new Date(Date.now() - Math.floor(Math.random() * 7) * 24 * 60 * 60 * 1000); // 過去7日以内

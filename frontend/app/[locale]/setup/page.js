@@ -9,6 +9,7 @@ import { useAuth } from '../../utils/auth';
 import api from '../../utils/api';
 import { useTranslations } from 'next-intl';
 import '../../styles/pages/setup.css';
+import GlobalLoading from '../../components/GlobalLoading';
 
 const schema = z.object({
   name: z.string().min(2, 'お名前は2文字以上で入力してください'),
@@ -28,6 +29,7 @@ export default function Setup({ params }) {
   const { locale } = typeof params.then === 'function' ? use(params) : params;
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   const [modalCharacter, setModalCharacter] = useState(null);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
   const {
     register,
@@ -304,12 +306,20 @@ export default function Setup({ params }) {
     window.location.reload();
   };
 
+  const openUpgradeModal = () => {
+    setShowUpgradeModal(true);
+  };
+  const closeUpgradeModal = () => {
+    setShowUpgradeModal(false);
+  };
+  const handleConfirmUpgrade = async () => {
+    // ここでサブスクAPIを呼ぶ（仮実装）
+    closeUpgradeModal();
+    window.location.reload();
+  };
+
   if (loading || loadingCharacters) {
-    return (
-      <div className="setup--loading">
-        <p>{t('loading')}</p>
-      </div>
-    );
+    return <GlobalLoading text={t('loading')} />;
   }
 
   const selectedCharacter = characters.find(c => c._id === selectedCharacterId) || characters[0];
@@ -395,6 +405,8 @@ export default function Setup({ params }) {
                     onClick={() => {
                       if (buttonProps.type === 'purchase') {
                         openPurchaseModal(character);
+                      } else if (buttonProps.type === 'upgrade') {
+                        openUpgradeModal();
                       } else {
                         handleCharacterSelect(character);
                       }
@@ -410,24 +422,46 @@ export default function Setup({ params }) {
       </form>
       {/* 購入モーダル */}
       {showPurchaseModal && modalCharacter && (
-        <div className="setup--modal-overlay">
-          <div className="setup--modal-content">
+        <div className="setup--modal-overlay" onClick={closePurchaseModal}>
+          <div className="setup--modal-content" onClick={e => e.stopPropagation()}>
             <button className="setup--modal-close" onClick={closePurchaseModal} aria-label="閉じる">×</button>
             <h2 className="setup--modal-title">{modalCharacter.name[locale] || modalCharacter.name.ja || modalCharacter.name}</h2>
             <img
               src={modalCharacter.imageCharacterSelect || '/images/character-placeholder.png'}
               alt={modalCharacter.name[locale] || modalCharacter.name.ja || modalCharacter.name}
               className="setup--modal-img"
-              style={{ width: '120px', height: '120px', objectFit: 'cover', borderRadius: '8px', marginBottom: '16px' }}
             />
             <div className="setup--modal-detail">
-              <div><b>価格:</b> ¥{modalCharacter.price.toLocaleString()}</div>
-              <div><b>種別:</b> {modalCharacter.purchaseType === 'buy' ? '買い切り' : 'レンタル'}</div>
-              <div style={{ marginTop: '8px' }}>{modalCharacter.description[locale] || modalCharacter.description.ja || modalCharacter.description}</div>
+              <div className="setup--modal-price">
+                <b>{t('price')}:</b>
+                <span className="setup--modal-price-value">¥{modalCharacter.price.toLocaleString()}</span>
+              </div>
+              <div className="setup--modal-type"><b>{t('type')}:</b> {modalCharacter.purchaseType === 'buy' ? t('buy_type_buy') : t('buy_type_rental')}</div>
+              <div className="setup--modal-desc">{modalCharacter.description[locale] || modalCharacter.description.ja || modalCharacter.description}</div>
             </div>
             <div className="setup--modal-buttons">
-              <button className="setup--modal-confirm" onClick={handleConfirmPurchase}>購入を確定</button>
-              <button className="setup--modal-cancel" onClick={closePurchaseModal}>キャンセル</button>
+              <button className="setup--modal-cancel" onClick={closePurchaseModal}>{t('cancel')}</button>
+              <button className="setup--modal-confirm" onClick={handleConfirmPurchase}>{t('confirm_purchase')}</button>
+            </div>
+          </div>
+        </div>
+      )}
+      {showUpgradeModal && (
+        <div className="setup--modal-overlay" onClick={closeUpgradeModal}>
+          <div className="setup--modal-content setup--modal-content-upgrade" onClick={e => e.stopPropagation()}>
+            <button className="setup--modal-close" onClick={closeUpgradeModal} aria-label="閉じる">×</button>
+            <h2 className="setup--modal-title">{t('upgrade_to_premium')}</h2>
+            <div className="setup--modal-detail">
+              <div style={{ marginBottom: '12px' }}>{t('premium_modal_description')}</div>
+              <div className="setup--modal-price setup--modal-price-center">
+                <span className="setup--modal-price-label">{t('premium_price_period', '月額')}</span>
+                <span className="setup--modal-price-value">980円</span>
+                <span className="setup--modal-price-tax">（税込）</span>
+              </div>
+            </div>
+            <div className="setup--modal-buttons">
+              <button className="setup--modal-cancel" onClick={closeUpgradeModal}>{t('cancel')}</button>
+              <button className="setup--modal-confirm" data-type="upgrade" onClick={handleConfirmUpgrade}>{t('upgrade_to_premium')}</button>
             </div>
           </div>
         </div>

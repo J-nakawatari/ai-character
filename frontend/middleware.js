@@ -1,14 +1,13 @@
 import createMiddleware from 'next-intl/middleware';
-import { locales, defaultLocale } from './app/i18n-config';
 
 export default createMiddleware({
-  locales,
-  defaultLocale,
-  localePrefix: 'always'
+  locales: ['ja', 'en'],
+  defaultLocale: 'ja'
 });
 
 export const config = {
   matcher: [
-    '/((?!api|_next|.*\\..*|uploads|favicon.ico|admin).*)'
+    // /admin 配下は除外
+    '/((?!api|_next|.*\\..*|admin).*)'
   ]
 };

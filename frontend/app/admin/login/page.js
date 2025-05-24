@@ -1,175 +1,73 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useAdminAuth } from '@/utils/adminAuth';
 import { useRouter } from 'next/navigation';
-import { useAdminAuth } from '../../utils/adminAuth';
-import Button from '../../components/Button';
-
-const styles = {
-  container: {
-    minHeight: '100vh',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    background: 'linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%)',
-    fontFamily: "'M PLUS Rounded 1c', 'Yu Gothic', 'Meiryo', sans-serif"
-  },
-  card: {
-    width: '100%',
-    maxWidth: '480px',
-    padding: '32px',
-    backgroundColor: 'white',
-    borderRadius: '12px',
-    boxShadow: '0 8px 32px rgba(67, 234, 252, 0.15), 0 4px 16px rgba(250, 123, 230, 0.1)',
-    border: '1px solid #e5e7eb'
-  },
-  title: {
-    fontSize: '24px',
-    fontWeight: 'bold',
-    marginBottom: '24px',
-    textAlign: 'center',
-    background: 'linear-gradient(90deg, #43eafc 0%, #fa7be6 100%)',
-    WebkitBackgroundClip: 'text',
-    WebkitTextFillColor: 'transparent',
-    fontFamily: "'M PLUS Rounded 1c', 'Yu Gothic', 'Meiryo', sans-serif"
-  },
-  form: {
-    color: '#1f2937'
-  },
-  formGroup: {
-    marginBottom: '16px'
-  },
-  label: {
-    display: 'block',
-    fontSize: '14px',
-    fontWeight: '500',
-    marginBottom: '4px',
-    color: '#4b5563'
-  },
-  input: {
-    width: '100%',
-    padding: '12px',
-    border: '1px solid #d1d5db',
-    borderRadius: '6px',
-    fontSize: '16px',
-    color: '#1f2937',
-    backgroundColor: 'white'
-  },
-  error: {
-    backgroundColor: '#fee2e2',
-    borderColor: '#f87171',
-    color: '#b91c1c',
-    padding: '12px 16px',
-    borderRadius: '6px',
-    marginBottom: '16px'
-  },
-  loading: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    minHeight: '100vh',
-    color: '#1f2937'
-  }
-};
+import GlobalLoading from '@/components/GlobalLoading';
 
 export default function AdminLogin() {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  });
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  
-  const { admin, loading, adminLogin } = useAdminAuth();
+  const { adminLogin } = useAdminAuth();
   const router = useRouter();
-  
-  useEffect(() => {
-    if (!loading && admin) {
-      router.push('/admin/dashboard');
-    }
-  }, [admin, loading, router]);
-  
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.id]: e.target.value
-    });
-  };
-  
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     setError('');
-    setIsLoading(true);
-    
     try {
-      const result = await adminLogin(formData);
-      
+      const result = await adminLogin({ email, password });
       if (result.success) {
         router.push('/admin/dashboard');
       } else {
-        setError(result.error);
+        setError(result.error || 'ログインに失敗しました');
       }
     } catch (err) {
-      setError('ログイン処理中にエラーが発生しました');
-      console.error(err);
+      setError('ログインに失敗しました');
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
-  
+
   if (loading) {
-    return (
-      <div style={styles.loading}>
-        <p>読み込み中...</p>
-      </div>
-    );
+    return <GlobalLoading text="ログイン中..." />;
   }
-  
+
   return (
-    <div style={styles.container}>
-      <div style={styles.card}>
-        <h1 style={styles.title}>管理者ログイン</h1>
-        
-        {error && (
-          <div style={styles.error}>
-            {error}
-          </div>
-        )}
-        
-        <form onSubmit={handleSubmit} style={styles.form}>
-          <div style={styles.formGroup}>
-            <label htmlFor="email" style={styles.label}>
-              メールアドレス
-            </label>
+    <div className="admin-login-container">
+      <div className="admin-login-box">
+        <h1 className="admin-login-title">管理者ログイン</h1>
+        {error && <div className="admin-login-error">{error}</div>}
+        <form onSubmit={handleSubmit} className="admin-login-form">
+          <div className="admin-form-group">
+            <label htmlFor="email">メールアドレス</label>
             <input
-              id="email"
               type="email"
-              value={formData.email}
-              onChange={handleChange}
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
-              style={styles.input}
+              className="admin-input"
             />
           </div>
-          
-          <div style={styles.formGroup}>
-            <label htmlFor="password" style={styles.label}>
-              パスワード
-            </label>
+          <div className="admin-form-group">
+            <label htmlFor="password">パスワード</label>
             <input
-              id="password"
               type="password"
-              value={formData.password}
-              onChange={handleChange}
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               required
-              style={styles.input}
+              className="admin-input"
             />
           </div>
-          
-          <button type="submit" className="admin-logout-btn" style={{width:'100%',background:'linear-gradient(90deg,#43eafc 0%,#fa7be6 100%)',color:'#fff',fontWeight:'bold',fontSize:'1.1rem',padding:'14px 0',borderRadius:'8px',marginTop:'24px',boxShadow:'0 4px 16px rgba(250,123,230,0.10)',transition:'background 0.2s'}} disabled={isLoading}>
-            {isLoading ? 'ログイン中...' : 'ログイン'}
+          <button type="submit" className="admin-button admin-button--primary admin-button--full">
+            ログイン
           </button>
         </form>
       </div>
     </div>
   );
-}
+} 

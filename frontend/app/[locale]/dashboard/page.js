@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, use } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter, usePathname, useParams } from 'next/navigation';
 import Image from 'next/image';
 import { useAuth } from '../../utils/auth';
 import Button from '../../components/Button';
@@ -9,12 +9,14 @@ import BackButton from '../../components/BackButton';
 import { useTranslations } from 'next-intl';
 import Card from '../../components/Card';
 import styles from './dashboard.module.css';
+import GlobalLoading from '../../components/GlobalLoading';
 
 export default function Dashboard({ params }) {
   const { user, loading, logout } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
-  const { locale } = typeof params.then === 'function' ? use(params) : params;
+  const urlParams = useParams();
+  const locale = urlParams.locale || 'ja';
   const t = useTranslations('dashboard');
   
   const handleStartChat = async () => {
@@ -58,11 +60,7 @@ export default function Dashboard({ params }) {
   };
   
   if (loading || !user) {
-    return (
-      <div className={styles.dashboardLoading}>
-        <p>{t('loading', 'Loading...')}</p>
-      </div>
-    );
+    return <GlobalLoading text={t('loading', '読み込み中...')} />;
   }
   
   const generatePersonalityTags = () => {
@@ -96,7 +94,9 @@ export default function Dashboard({ params }) {
   const isCharacterPurchased = (character) => {
     if (!character || !user.purchasedCharacters) return false;
     return user.purchasedCharacters.some(
-      pc => pc.character._id === character._id && pc.purchaseType === 'buy'
+      pc =>
+        ((pc.character && (pc.character._id?.toString?.() || pc.character?.toString?.())) === character._id?.toString()) &&
+        pc.purchaseType === 'buy'
     );
   };
 
@@ -176,7 +176,15 @@ export default function Dashboard({ params }) {
             <div className={styles.dashboardButtonWrapper}>
               <button
                 type="button"
-                onClick={handleStartChat}
+                onClick={() => {
+                  if (buttonProps.type === 'purchase') {
+                    router.push(`/${locale}/purchase/${user.selectedCharacter._id}`);
+                  } else if (buttonProps.type === 'upgrade') {
+                    router.push(`/${locale}/upgrade`);
+                  } else {
+                    router.push(`/${locale}/chat`);
+                  }
+                }}
                 className={`button button--primary button--lg button--full button--chat-start`}
                 data-type={buttonProps.type}
               >

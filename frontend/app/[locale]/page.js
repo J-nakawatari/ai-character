@@ -1,12 +1,13 @@
 'use client';
 
-import { useEffect, useState, useRef, useLayoutEffect, useCallback } from 'react';
+import { useEffect, useState, useRef, useLayoutEffect, useCallback, use } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '../utils/auth';
 import { Orbitron } from 'next/font/google';
 import { useTranslations } from 'next-intl';
 import styles from './page.module.css';
+import GlobalLoading from '../components/GlobalLoading';
 
 const chatMessages = [
   '今日は何のお話をする？✨',
@@ -30,7 +31,7 @@ const videoFiles = [
 export default function Home({ params }) {
   const { user, loading } = useAuth();
   const router = useRouter();
-  const { locale } = params;
+  const { locale } = typeof params.then === 'function' ? use(params) : params;
   const [isMobile, setIsMobile] = useState(false);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -270,49 +271,44 @@ export default function Home({ params }) {
   }, []);
   
   if (loading) {
-    return (
-      <div className="container">
-        <p>Loading...</p>
-      </div>
-    );
+    return <GlobalLoading text={t('loading', '読み込み中...')} />;
   }
   
   return (
     <>
-      <div className={styles['background-container']}>
-        {isMobile ? (
-          <img
-            src="/images/background-mobile.jpg"
-            alt="Background"
-            className={styles['background-image']}
-          />
-        ) : (
-          <>
-            <video
-              ref={videoRef1}
-              autoPlay
-              muted
-              loop
-              playsInline
-              className={`${styles['background-video']} ${activeVideo === 1 ? styles.active : ''}`}
-            >
-              <source src={videoFiles[currentVideoIndex]} type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-            <video
-              ref={videoRef2}
-              autoPlay
-              muted
-              loop
-              playsInline
-              className={`${styles['background-video']} ${activeVideo === 2 ? styles.active : ''}`}
-            >
-              <source src={videoFiles[(currentVideoIndex + 1) % videoFiles.length]} type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          </>
-        )}
-      </div>
+      {isMobile ? (
+        <img
+          src="/images/background-mobile.jpg"
+          alt="Background"
+          className={styles['background-image']}
+        />
+      ) : (
+        <>
+          <video
+            ref={videoRef1}
+            autoPlay
+            muted
+            loop
+            playsInline
+            className={`${styles['background-video']} ${activeVideo === 1 ? styles.active : ''}`}
+          >
+            <source src={videoFiles[currentVideoIndex]} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <video
+            ref={videoRef2}
+            autoPlay
+            muted
+            loop
+            playsInline
+            className={`${styles['background-video']} ${activeVideo === 2 ? styles.active : ''}`}
+          >
+            <source src={videoFiles[(currentVideoIndex + 1) % videoFiles.length]} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </>
+      )}
+      <div className={styles['darken-overlay']} />
       <div className={`container ${styles['home-container']}`}> 
         <div className={styles['home-wrapper']}>
           <div className={styles['home-title-area']}>
@@ -379,7 +375,6 @@ export default function Home({ params }) {
           </div>
         </div>
       </div>
-      <div className={styles.overlay} />
     </>
   );
 }
