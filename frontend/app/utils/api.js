@@ -18,8 +18,13 @@ api.interceptors.response.use(
         if (current !== '/admin/login') {
           window.location.href = '/admin/login';
         }
-      } else if (current !== '/login') {
-        window.location.href = '/login';
+      } else {
+        const localeMatch = current.match(/^\/(ja|en)(\/|$)/);
+        const locale = localeMatch ? localeMatch[1] : null;
+        const loginPath = locale ? `/${locale}/login` : '/login';
+        if (current !== loginPath) {
+          window.location.href = loginPath;
+        }
       }
     }
     console.error('API Error:', error.response?.status, error.response?.data);

@@ -1,6 +1,7 @@
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const sharp = require('sharp');
 
 const createUploadDir = (dir) => {
   const uploadDir = path.join(__dirname, '../../frontend/public', dir);
@@ -62,7 +63,23 @@ const uploadVoice = multer({
   limits: { fileSize: 10 * 1024 * 1024 } // 10MB制限
 });
 
+const resizeImage = (width = 512, height = 512) => async (req, res, next) => {
+  try {
+    if (!req.file) return next();
+
+    const tmpPath = req.file.path + '.tmp';
+    await sharp(req.file.path)
+      .resize(width, height, { fit: 'inside' })
+      .toFile(tmpPath);
+    await fs.promises.rename(tmpPath, req.file.path);
+    next();
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   uploadImage,
-  uploadVoice
+  uploadVoice,
+  resizeImage
 };
