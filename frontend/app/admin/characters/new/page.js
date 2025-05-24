@@ -91,8 +91,8 @@ export default function CharacterNewPage() {
     
     if (file.type.startsWith('image/')) {
       const reader = new FileReader();
-      reader.onload = (ev) => {
-        setSelectedImage(ev.target.result);
+      reader.onload = (e) => {
+        setSelectedImage(e.target.result);
         setImageType(type);
         setShowCropper(true);
       };
