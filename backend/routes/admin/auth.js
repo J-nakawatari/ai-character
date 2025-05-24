@@ -36,7 +36,7 @@ router.post('/login', async (req, res) => {
         if (err) throw err;
         
         // cookie の属性は環境によって切り替える
-        res.cookie('adminToken', token, {
+        res.cookie('token', token, {
           httpOnly: true,
           sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
 
@@ -65,7 +65,7 @@ router.get('/user', adminAuth, async (req, res) => {
 });
 
 router.post('/logout', adminAuth, (req, res) => {
-  res.clearCookie('adminToken', {
+  res.clearCookie('token', {
     path: '/',
     sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
     secure: process.env.NODE_ENV === 'production'

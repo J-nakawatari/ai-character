@@ -77,7 +77,7 @@ export default function AdminUsers() {
             <tbody>
               {users.map(user => (
                 <tr key={user._id}>
-                  <td>{user._id}</td>
+                  <td class="ID">{user._id}</td>
                   <td>{user.name?.ja || user.name || ''}</td>
                   <td>{user.email}</td>
                   <td>{user.hasCompletedSetup ? '完了' : '未完了'}</td>

@@ -228,6 +228,7 @@ export default function CharacterNewPage() {
                     <label htmlFor="name.ja" className={styles['admin-form-label']}>キャラクター名（日本語）</label>
                     <Input
                       id="name.ja"
+                      name="name.ja"
                       value={form.name.ja}
                       onChange={handleChange}
                       required
@@ -238,6 +239,7 @@ export default function CharacterNewPage() {
                     <label htmlFor="name.en" className={styles['admin-form-label']}>キャラクター名（English）</label>
                     <Input
                       id="name.en"
+                      name="name.en"
                       value={form.name.en}
                       onChange={handleChange}
                       className={styles['admin-form-input']}
@@ -249,11 +251,13 @@ export default function CharacterNewPage() {
                       <input
                         type="color"
                         id="themeColor"
+                        name="themeColor"
                         value={form.themeColor}
                         onChange={handleChange}
                         className="h-8 w-8 rounded border border-gray-300"
                       />
                       <Input
+                        name="themeColor"
                         value={form.themeColor}
                         onChange={handleChange}
                         className={styles['admin-form-input'] + ' flex-1'}
@@ -265,6 +269,7 @@ export default function CharacterNewPage() {
                   <label htmlFor="description.ja" className={styles['admin-form-label']}>キャラクター説明（日本語）</label>
                   <textarea
                     id="description.ja"
+                    name="description.ja"
                     value={form.description.ja}
                     onChange={handleChange}
                     rows={3}
@@ -275,6 +280,7 @@ export default function CharacterNewPage() {
                   <label htmlFor="description.en" className={styles['admin-form-label']}>キャラクター説明（English）</label>
                   <textarea
                     id="description.en"
+                    name="description.en"
                     value={form.description.en}
                     onChange={handleChange}
                     rows={3}
@@ -294,6 +300,7 @@ export default function CharacterNewPage() {
                   <label htmlFor="personalityPrompt.ja" className={styles['admin-form-label']}>性格プロンプト（日本語）</label>
                   <textarea
                     id="personalityPrompt.ja"
+                    name="personalityPrompt.ja"
                     value={form.personalityPrompt.ja}
                     onChange={handleChange}
                     rows={4}
@@ -304,6 +311,7 @@ export default function CharacterNewPage() {
                   <label htmlFor="personalityPrompt.en" className={styles['admin-form-label']}>性格プロンプト（English）</label>
                   <textarea
                     id="personalityPrompt.en"
+                    name="personalityPrompt.en"
                     value={form.personalityPrompt.en}
                     onChange={handleChange}
                     rows={4}
@@ -314,6 +322,7 @@ export default function CharacterNewPage() {
                   <label htmlFor="adminPrompt.ja" className={styles['admin-form-label']}>管理者プロンプト（日本語）</label>
                   <textarea
                     id="adminPrompt.ja"
+                    name="adminPrompt.ja"
                     value={form.adminPrompt.ja}
                     onChange={handleChange}
                     rows={4}
@@ -324,6 +333,7 @@ export default function CharacterNewPage() {
                   <label htmlFor="adminPrompt.en" className={styles['admin-form-label']}>管理者プロンプト（English）</label>
                   <textarea
                     id="adminPrompt.en"
+                    name="adminPrompt.en"
                     value={form.adminPrompt.en}
                     onChange={handleChange}
                     rows={4}
@@ -334,6 +344,7 @@ export default function CharacterNewPage() {
                   <label htmlFor="defaultMessage.ja" className={styles['admin-form-label']}>デフォルトメッセージ（日本語）</label>
                   <textarea
                     id="defaultMessage.ja"
+                    name="defaultMessage.ja"
                     value={form.defaultMessage.ja}
                     onChange={handleChange}
                     rows={2}
@@ -344,6 +355,7 @@ export default function CharacterNewPage() {
                   <label htmlFor="defaultMessage.en" className={styles['admin-form-label']}>デフォルトメッセージ（English）</label>
                   <textarea
                     id="defaultMessage.en"
+                    name="defaultMessage.en"
                     value={form.defaultMessage.en}
                     onChange={handleChange}
                     rows={2}
