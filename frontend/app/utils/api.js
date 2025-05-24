@@ -13,7 +13,14 @@ api.interceptors.response.use(
   response => response,
   error => {
     if (error.response?.status === 401 && typeof window !== 'undefined') {
-      window.location.href = '/admin/login';
+      const current = window.location.pathname;
+      if (current.startsWith('/admin')) {
+        if (current !== '/admin/login') {
+          window.location.href = '/admin/login';
+        }
+      } else if (current !== '/login') {
+        window.location.href = '/login';
+      }
     }
     console.error('API Error:', error.response?.status, error.response?.data);
     return Promise.reject(error);
