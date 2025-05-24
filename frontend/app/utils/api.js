@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// 環境変数から API エンドポイントを取得。存在しない場合はローカル開発用 URL を利用
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+// 環境変数から API エンドポイントを取得。存在しない場合はフロントエンドと同じドメインの `/api` を利用
+const API_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
 
 const api = axios.create({
   baseURL: API_URL,
