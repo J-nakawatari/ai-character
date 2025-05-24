@@ -57,6 +57,13 @@ export default function Setup({ params }) {
   }, [user, loading, router, locale]);
 
   useEffect(() => {
+    if (loading) return; // wait for auth state
+
+    if (!user) {
+      router.push(`/${locale}/login`);
+      return;
+    }
+
     const fetchCharacters = async () => {
       try {
         const res = await api.get('/characters');
@@ -68,7 +75,7 @@ export default function Setup({ params }) {
       }
     };
     fetchCharacters();
-  }, []);
+  }, [loading, user, router, locale]);
 
   useEffect(() => {
     if (user?.name) {
