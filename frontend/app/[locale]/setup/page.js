@@ -68,6 +68,7 @@ export default function Setup({ params }) {
       try {
         const res = await api.get('/characters');
         setCharacters(res.data);
+        console.log('キャラクター取得結果:', res.data); 
       } catch (err) {
         setServerError('キャラクターの取得に失敗しました');
       } finally {
