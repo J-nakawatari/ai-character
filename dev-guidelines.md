@@ -46,6 +46,7 @@ ai-character-service/
    - `JWT_SECRET`
    - `OPENAI_API_KEY`
    - `NEXT_PUBLIC_API_URL` （フロントエンド用、デフォルトは `http://localhost:5000/api`）
+
    - サンプルとして `backend/.env.example` と `frontend/.env.example` を用意
 
 3. 開発サーバーの起動：
