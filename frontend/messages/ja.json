@@ -20,7 +20,7 @@
     "loading": "読み込み中...",
     "purchase_character": "購入する",
     "upgrade_to_premium": "プレミアムにアップグレード",
-    "select_button": "選択する",
+    "select_button_short": "選択する",
     "premium_modal_description": "サブスクに加入すると個性豊かなたくさんのキャラクターとお話することができるようになります。",
     "premium_price": "月額{price}円（税込）",
     "price": "価格",
