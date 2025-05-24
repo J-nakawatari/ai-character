@@ -59,8 +59,16 @@ export default function EditCharacter({ params }) {
   const [imageType, setImageType] = useState('');
   const [showCropper, setShowCropper] = useState(false);
   const [previewUrl, setPreviewUrl] = useState('');
-  
+
   const router = useRouter();
+
+  useEffect(() => {
+    return () => {
+      if (selectedImage) {
+        URL.revokeObjectURL(selectedImage);
+      }
+    };
+  }, [selectedImage]);
   
   useEffect(() => {
     fetchCharacter();
@@ -137,13 +145,11 @@ export default function EditCharacter({ params }) {
     }
     
     if (file.type.startsWith('image/')) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setSelectedImage(e.target.result);
-        setImageType(type);
-        setShowCropper(true);
-      };
-      reader.readAsDataURL(file);
+      const url = URL.createObjectURL(file);
+      setSelectedImage(url);
+      setImageType(type);
+      setShowCropper(true);
+      e.target.value = '';
       return;
     }
     
@@ -178,6 +184,7 @@ export default function EditCharacter({ params }) {
         setUploadStatus({ ...uploadStatus, voice: 'アップロード失敗' });
         setToast({ show: true, message: '音声ファイルのアップロードに失敗しました', type: 'error' });
       }
+      e.target.value = '';
     }
   };
   

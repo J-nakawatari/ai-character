@@ -50,22 +50,7 @@ export default function ImageCropper({
       } else {
         initialZoom = Math.min(cropWidth / img.width, cropHeight / img.height) * 0.9;
       }
-      setZoom(initialZoom);
 
-      
-      let initialZoom;
-      if (img.width < cropWidth || img.height < cropHeight) {
-        initialZoom = Math.max(
-          cropWidth / img.width,
-          cropHeight / img.height
-        ) * 1.1; // 少し余裕を持たせる
-      } else {
-        initialZoom = Math.min(
-          cropWidth / img.width,
-          cropHeight / img.height
-        ) * 0.9; // 少し余白を持たせる
-      }
-      
       setZoom(initialZoom);
       
       setPosition({
