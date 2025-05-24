@@ -12,7 +12,11 @@ const api = axios.create({
 api.interceptors.response.use(
   response => response,
   error => {
-    if (error.response?.status === 401 && typeof window !== 'undefined') {
+    if (
+      error.response?.status === 401 &&
+      typeof window !== 'undefined' &&
+      !error.config?.skipAuthRedirect
+    ) {
       const current = window.location.pathname;
       if (current.startsWith('/admin')) {
         if (current !== '/admin/login') {
