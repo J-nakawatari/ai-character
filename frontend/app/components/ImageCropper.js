@@ -32,6 +32,21 @@ export default function ImageCropper({
   const displayWidth = 300;
   const displayHeight = 300;
 
+  const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+  const getBounds = (currentZoom = zoom) => {
+    const imgW = imageSize.width * currentZoom;
+    const imgH = imageSize.height * currentZoom;
+    const halfCropW = cropWidth / 2;
+    const halfCropH = cropHeight / 2;
+    const halfImgW = imgW / 2;
+    const halfImgH = imgH / 2;
+    const minX = Math.min(halfCropW - halfImgW, 0);
+    const maxX = Math.max(halfImgW - halfCropW, 0);
+    const minY = Math.min(halfCropH - halfImgH, 0);
+    const maxY = Math.max(halfImgH - halfCropH, 0);
+    return { minX, maxX, minY, maxY };
+  };
+
   const displayScale = Math.min(
     displayWidth / Math.max(cropWidth, 100),
     displayHeight / Math.max(cropHeight, 100)
@@ -50,22 +65,7 @@ export default function ImageCropper({
       } else {
         initialZoom = Math.min(cropWidth / img.width, cropHeight / img.height) * 0.9;
       }
-      setZoom(initialZoom);
 
-      
-      let initialZoom;
-      if (img.width < cropWidth || img.height < cropHeight) {
-        initialZoom = Math.max(
-          cropWidth / img.width,
-          cropHeight / img.height
-        ) * 1.1; // 少し余裕を持たせる
-      } else {
-        initialZoom = Math.min(
-          cropWidth / img.width,
-          cropHeight / img.height
-        ) * 0.9; // 少し余白を持たせる
-      }
-      
       setZoom(initialZoom);
       
       setPosition({
@@ -133,7 +133,11 @@ export default function ImageCropper({
     const rect = canvasRef.current.getBoundingClientRect();
     const newX = e.clientX - rect.left - dragStart.x;
     const newY = e.clientY - rect.top - dragStart.y;
-    setPosition({ x: newX, y: newY });
+    const { minX, maxX, minY, maxY } = getBounds();
+    setPosition({
+      x: clamp(newX, minX, maxX),
+      y: clamp(newY, minY, maxY)
+    });
 
   };
 
@@ -147,9 +151,10 @@ export default function ImageCropper({
     const prevHeight = imageSize.height * zoom;
     const newWidth = imageSize.width * newZoom;
     const newHeight = imageSize.height * newZoom;
+    const { minX, maxX, minY, maxY } = getBounds(newZoom);
     setPosition({
-      x: position.x - (newWidth - prevWidth) / 2,
-      y: position.y - (newHeight - prevHeight) / 2
+      x: clamp(position.x - (newWidth - prevWidth) / 2, minX, maxX),
+      y: clamp(position.y - (newHeight - prevHeight) / 2, minY, maxY)
     });
     setZoom(newZoom);
   };

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import api from '@/utils/api';
 import Card from '../../../components/Card';
@@ -44,6 +44,14 @@ export default function CharacterNewPage() {
   const [showCropper, setShowCropper] = useState(false);
   const [previewUrl, setPreviewUrl] = useState('');
   const router = useRouter();
+
+  useEffect(() => {
+    return () => {
+      if (selectedImage) {
+        URL.revokeObjectURL(selectedImage);
+      }
+    };
+  }, [selectedImage]);
   
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -82,13 +90,14 @@ export default function CharacterNewPage() {
     }
     
     if (file.type.startsWith('image/')) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setSelectedImage(e.target.result);
-        setImageType(type);
-        setShowCropper(true);
-      };
-      reader.readAsDataURL(file);
+      const objectUrl = URL.createObjectURL(file);
+      if (selectedImage) {
+        URL.revokeObjectURL(selectedImage);
+      }
+      setSelectedImage(objectUrl);
+      setImageType(type);
+      setShowCropper(true);
+      e.target.value = '';
       return;
     }
     
@@ -119,12 +128,17 @@ export default function CharacterNewPage() {
         setUploadStatus({ ...uploadStatus, voice: 'アップロード失敗' });
         setToast({ show: true, message: '音声ファイルのアップロードに失敗しました', type: 'error' });
       }
+      e.target.value = '';
     }
   };
   
   const handleCropComplete = async (blob, dataUrl) => {
     setShowCropper(false);
     setPreviewUrl(dataUrl);
+    if (selectedImage) {
+      URL.revokeObjectURL(selectedImage);
+      setSelectedImage(null);
+    }
     
     const imageSizes = {
       characterSelect: '238x260',
