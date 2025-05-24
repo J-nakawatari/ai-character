@@ -35,11 +35,14 @@ router.post('/login', async (req, res) => {
       (err, token) => {
         if (err) throw err;
         
+        // cookie の属性は環境によって切り替える
         res.cookie('adminToken', token, {
           httpOnly: true,
           sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+
           maxAge: 24 * 60 * 60 * 1000, // 1日
           secure: process.env.NODE_ENV === 'production'
+
         });
         
         res.json({ success: true });
@@ -62,7 +65,11 @@ router.get('/user', adminAuth, async (req, res) => {
 });
 
 router.post('/logout', adminAuth, (req, res) => {
-  res.clearCookie('adminToken');
+  res.clearCookie('adminToken', {
+    path: '/',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    secure: process.env.NODE_ENV === 'production'
+  });
   res.json({ msg: 'ログアウトしました' });
 });
 
