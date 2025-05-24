@@ -13,36 +13,102 @@ mongoose.connect(uri, {
 
 const characters = [
   {
-    name: 'Miko',
-    description: 'A friendly AI assistant with a calm and helpful personality.',
-    imageUrl: '/characters/miko.png',
-    personality: 'Calm, helpful, and friendly'
+    name: { ja: 'Miko', en: 'Miko' },
+    description: {
+      ja: 'A friendly AI assistant with a calm and helpful personality.',
+      en: 'A friendly AI assistant with a calm and helpful personality.'
+    },
+    personality: 'Calm, helpful, and friendly',
+    personalityPrompt: { ja: '', en: '' },
+    adminPrompt: { ja: '', en: '' },
+    characterType: 'free',
+    price: 0,
+    purchaseType: 'buy',
+    voice: '',
+    defaultMessage: { ja: '', en: '' },
+    themeColor: '#000000',
+    isActive: true,
+    imageCharacterSelect: '/characters/miko.png',
+    imageDashboard: '',
+    imageChatBackground: '',
+    imageChatAvatar: '',
+    sampleVoiceUrl: ''
   },
   {
-    name: 'Robo',
-    description: 'A robot-like AI character with logical thinking and precise answers.',
-    imageUrl: '/characters/robo.png',
-    personality: 'Logical, precise, and technical'
+    name: { ja: 'Robo', en: 'Robo' },
+    description: {
+      ja: 'A robot-like AI character with logical thinking and precise answers.',
+      en: 'A robot-like AI character with logical thinking and precise answers.'
+    },
+    personality: 'Logical, precise, and technical',
+    personalityPrompt: { ja: '', en: '' },
+    adminPrompt: { ja: '', en: '' },
+    characterType: 'free',
+    price: 0,
+    purchaseType: 'buy',
+    voice: '',
+    defaultMessage: { ja: '', en: '' },
+    themeColor: '#000000',
+    isActive: true,
+    imageCharacterSelect: '/characters/robo.png',
+    imageDashboard: '',
+    imageChatBackground: '',
+    imageChatAvatar: '',
+    sampleVoiceUrl: ''
   },
   {
-    name: 'Luna',
-    description: 'A cheerful AI companion with a bubbly personality and creative thinking.',
-    imageUrl: '/characters/luna.png',
-    personality: 'Cheerful, creative, and engaging'
+    name: { ja: 'Luna', en: 'Luna' },
+    description: {
+      ja: 'A cheerful AI companion with a bubbly personality and creative thinking.',
+      en: 'A cheerful AI companion with a bubbly personality and creative thinking.'
+    },
+    personality: 'Cheerful, creative, and engaging',
+    personalityPrompt: { ja: '', en: '' },
+    adminPrompt: { ja: '', en: '' },
+    characterType: 'free',
+    price: 0,
+    purchaseType: 'buy',
+    voice: '',
+    defaultMessage: { ja: '', en: '' },
+    themeColor: '#000000',
+    isActive: true,
+    imageCharacterSelect: '/characters/luna.png',
+    imageDashboard: '',
+    imageChatBackground: '',
+    imageChatAvatar: '',
+    sampleVoiceUrl: ''
   },
   {
-    name: 'Zen',
-    description: 'A wise AI mentor with philosophical insights and thoughtful advice.',
-    imageUrl: '/characters/zen.png',
-    personality: 'Wise, thoughtful, and philosophical'
+    name: { ja: 'Zen', en: 'Zen' },
+    description: {
+      ja: 'A wise AI mentor with philosophical insights and thoughtful advice.',
+      en: 'A wise AI mentor with philosophical insights and thoughtful advice.'
+    },
+    personality: 'Wise, thoughtful, and philosophical',
+    personalityPrompt: { ja: '', en: '' },
+    adminPrompt: { ja: '', en: '' },
+    characterType: 'free',
+    price: 0,
+    purchaseType: 'buy',
+    voice: '',
+    defaultMessage: { ja: '', en: '' },
+    themeColor: '#000000',
+    isActive: true,
+    imageCharacterSelect: '/characters/zen.png',
+    imageDashboard: '',
+    imageChatBackground: '',
+    imageChatAvatar: '',
+    sampleVoiceUrl: ''
   }
 ];
 
 const seedCharacters = async () => {
   try {
     await Character.deleteMany({});
-    
-    await Character.insertMany(characters);
+
+    for (const char of characters) {
+      await Character.create(char);
+    }
     
     console.log('✅ Characters seeded successfully');
     process.exit(0);
