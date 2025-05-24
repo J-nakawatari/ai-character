@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const adminAuth = require('../../middleware/adminAuth');
 const Character = require('../../models/Character');
-const { uploadImage, uploadVoice } = require('../../utils/fileUpload');
+const { uploadImage, uploadVoice, resizeImage } = require('../../utils/fileUpload');
 
 router.get('/', adminAuth, async (req, res) => {
   try {
@@ -163,7 +163,7 @@ router.delete('/:id', adminAuth, async (req, res) => {
   }
 });
 
-router.post('/upload/image', adminAuth, uploadImage.single('image'), (req, res) => {
+router.post('/upload/image', adminAuth, uploadImage.single('image'), resizeImage(), (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ msg: 'アップロードするファイルが選択されていません' });
