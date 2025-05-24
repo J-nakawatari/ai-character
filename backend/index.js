@@ -21,7 +21,10 @@ mongoose.connect(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
-.then(() => console.log('✅ MongoDB connected'))
+.then(() => {
+  console.log('✅ MongoDB connected');
+  console.log('🧭 接続中のデータベース名:', mongoose.connection.name); 
+})
 .catch(err => console.error('❌ MongoDB connection error:', err));
 
 app.use('/api/auth', require('./routes/auth'));

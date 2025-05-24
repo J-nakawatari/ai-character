@@ -25,11 +25,13 @@ export default function ImageCropper({
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
   const [imageLoaded, setImageLoaded] = useState(false);
 
+
   const canvasRef = useRef(null);
   const imageRef = useRef(null);
 
   const displayWidth = 300;
   const displayHeight = 300;
+
   const displayScale = Math.min(
     displayWidth / Math.max(cropWidth, 100),
     displayHeight / Math.max(cropHeight, 100)
@@ -41,6 +43,7 @@ export default function ImageCropper({
     img.onload = () => {
       setImageSize({ width: img.width, height: img.height });
       setImageLoaded(true);
+
       let initialZoom;
       if (img.width < cropWidth || img.height < cropHeight) {
         initialZoom = Math.max(cropWidth / img.width, cropHeight / img.height) * 1.1;
@@ -48,15 +51,32 @@ export default function ImageCropper({
         initialZoom = Math.min(cropWidth / img.width, cropHeight / img.height) * 0.9;
       }
       setZoom(initialZoom);
+
+      
+      let initialZoom;
+      if (img.width < cropWidth || img.height < cropHeight) {
+        initialZoom = Math.max(
+          cropWidth / img.width,
+          cropHeight / img.height
+        ) * 1.1; // 少し余裕を持たせる
+      } else {
+        initialZoom = Math.min(
+          cropWidth / img.width,
+          cropHeight / img.height
+        ) * 0.9; // 少し余白を持たせる
+      }
+      
+      setZoom(initialZoom);
+      
       setPosition({
         x: (cropWidth - img.width * initialZoom) / 2,
         y: (cropHeight - img.height * initialZoom) / 2
       });
     };
+    
     img.src = image;
     imageRef.current = img;
   }, [image, cropWidth, cropHeight]);
-
   useEffect(() => {
     if (!canvasRef.current || !imageRef.current || !imageLoaded) return;
     const ctx = canvasRef.current.getContext('2d', { alpha: true });
@@ -94,6 +114,7 @@ export default function ImageCropper({
     ctx.lineWidth = 2;
     ctx.strokeRect(cropX, cropY, cropWidth * displayScale, cropHeight * displayScale);
 
+
     ctx.fillStyle = '#ffffff';
     ctx.font = '12px sans-serif';
     ctx.fillText(`${cropWidth} x ${cropHeight}px`, cropX + 5, cropY + 20);
@@ -104,6 +125,7 @@ export default function ImageCropper({
     const rect = canvasRef.current.getBoundingClientRect();
     setDragging(true);
     setDragStart({ x: e.clientX - rect.left - position.x, y: e.clientY - rect.top - position.y });
+
   };
 
   const handleMouseMove = (e) => {
@@ -112,6 +134,7 @@ export default function ImageCropper({
     const newX = e.clientX - rect.left - dragStart.x;
     const newY = e.clientY - rect.top - dragStart.y;
     setPosition({ x: newX, y: newY });
+
   };
 
   const handleMouseUp = () => {
@@ -133,6 +156,7 @@ export default function ImageCropper({
 
   const handleCrop = () => {
     if (!canvasRef.current || !imageRef.current || !imageLoaded) return;
+
     const cropCanvas = document.createElement('canvas');
     cropCanvas.width = cropWidth;
     cropCanvas.height = cropHeight;
@@ -153,19 +177,22 @@ export default function ImageCropper({
       0,
       cropWidth,
       cropHeight
+
     );
 
     cropCanvas.toBlob((blob) => {
       if (onCropComplete) {
-        onCropComplete(blob, cropCanvas.toDataURL('image/png'));
+        onCropComplete(blob, cropCanvas.toDataURL('image/jpeg'));
       }
-    }, 'image/png', 1.0);
+    }, 'image/jpeg', 0.95);
   };
+
 
   const minZoom = imageSize.width && imageSize.height ?
     Math.max(0.1, cropWidth / (imageSize.width * 2), cropHeight / (imageSize.height * 2)) : 0.1;
   const maxZoom = imageSize.width && imageSize.height ?
     Math.max(3, cropWidth / (imageSize.width * 0.5), cropHeight / (imageSize.height * 0.5)) : 3;
+
 
   return (
     <div className={`image-cropper ${className}`}>
@@ -179,8 +206,10 @@ export default function ImageCropper({
           onMouseUp={handleMouseUp}
           onMouseLeave={handleMouseUp}
           style={{ cursor: dragging ? 'grabbing' : 'grab' }}
+          className={className}
         />
       </div>
+
       <div className="image-cropper-controls">
         <div className="image-cropper-zoom">
           <span>縮小</span>
@@ -195,8 +224,10 @@ export default function ImageCropper({
           />
           <span>拡大</span>
         </div>
+
         <div className={`image-cropper-size-info ${sizeLabelClassName}`}>
           <div>サイズ: {cropWidth} x {cropHeight}px</div>
+
         </div>
         <div style={{ display: 'flex', gap: 16, marginTop: 18 }}>
           <Button onClick={handleCrop} className={saveButtonClassName}>{saveButtonText}</Button>
