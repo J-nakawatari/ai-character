@@ -89,6 +89,7 @@ export default function CharacterNewPage() {
         setShowCropper(true);
       };
       reader.readAsDataURL(file);
+      e.target.value = '';
       return;
     }
     
@@ -119,6 +120,7 @@ export default function CharacterNewPage() {
         setUploadStatus({ ...uploadStatus, voice: 'アップロード失敗' });
         setToast({ show: true, message: '音声ファイルのアップロードに失敗しました', type: 'error' });
       }
+      e.target.value = '';
     }
   };
   
