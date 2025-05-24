@@ -37,6 +37,15 @@ export default function ImageCropper({
     displayHeight / Math.max(cropHeight, 100)
   );
 
+  const clamp = (val, min, max) => Math.min(Math.max(val, min), max);
+
+  const getBounds = useCallback((zoomLevel) => ({
+    minX: cropWidth - imageSize.width * zoomLevel,
+    minY: cropHeight - imageSize.height * zoomLevel,
+    maxX: 0,
+    maxY: 0
+  }), [cropWidth, cropHeight, imageSize]);
+
   useEffect(() => {
     if (!image) return;
     const img = new Image();
@@ -50,27 +59,15 @@ export default function ImageCropper({
       } else {
         initialZoom = Math.min(cropWidth / img.width, cropHeight / img.height) * 0.9;
       }
+
       setZoom(initialZoom);
 
-      
-      let initialZoom;
-      if (img.width < cropWidth || img.height < cropHeight) {
-        initialZoom = Math.max(
-          cropWidth / img.width,
-          cropHeight / img.height
-        ) * 1.1; // 少し余裕を持たせる
-      } else {
-        initialZoom = Math.min(
-          cropWidth / img.width,
-          cropHeight / img.height
-        ) * 0.9; // 少し余白を持たせる
-      }
-      
-      setZoom(initialZoom);
-      
+      const bounds = getBounds(initialZoom);
+      const startX = (cropWidth - img.width * initialZoom) / 2;
+      const startY = (cropHeight - img.height * initialZoom) / 2;
       setPosition({
-        x: (cropWidth - img.width * initialZoom) / 2,
-        y: (cropHeight - img.height * initialZoom) / 2
+        x: clamp(startX, bounds.minX, bounds.maxX),
+        y: clamp(startY, bounds.minY, bounds.maxY)
       });
     };
     
@@ -133,7 +130,11 @@ export default function ImageCropper({
     const rect = canvasRef.current.getBoundingClientRect();
     const newX = e.clientX - rect.left - dragStart.x;
     const newY = e.clientY - rect.top - dragStart.y;
-    setPosition({ x: newX, y: newY });
+    const { minX, minY, maxX, maxY } = getBounds(zoom);
+    setPosition({
+      x: clamp(newX, minX, maxX),
+      y: clamp(newY, minY, maxY)
+    });
 
   };
 
@@ -147,9 +148,12 @@ export default function ImageCropper({
     const prevHeight = imageSize.height * zoom;
     const newWidth = imageSize.width * newZoom;
     const newHeight = imageSize.height * newZoom;
+    const offsetX = position.x - (newWidth - prevWidth) / 2;
+    const offsetY = position.y - (newHeight - prevHeight) / 2;
+    const { minX, minY, maxX, maxY } = getBounds(newZoom);
     setPosition({
-      x: position.x - (newWidth - prevWidth) / 2,
-      y: position.y - (newHeight - prevHeight) / 2
+      x: clamp(offsetX, minX, maxX),
+      y: clamp(offsetY, minY, maxY)
     });
     setZoom(newZoom);
   };
