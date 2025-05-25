@@ -153,7 +153,7 @@ export default function MyPage({ params }) {
             <div className="mypage__info-item">
               <div className="mypage__info-label">{t('member_type')}</div>
               <div className="mypage__info-value">
-                {user.membershipType === 'premium' ? t('premium_member') : t('free_member')}
+                {user.membershipType === 'subscription' ? t('premium_member') : t('free_member')}
               </div>
             </div>
             
@@ -185,7 +185,7 @@ export default function MyPage({ params }) {
               </div>
             </div>
             
-            {user.membershipType === 'premium' && (
+            {user.membershipType === 'subscription' && (
               <>
                 <div className="mypage__info-item">
                   <div className="mypage__info-label">{t('subscription_start')}</div>
@@ -205,7 +205,7 @@ export default function MyPage({ params }) {
             )}
           </div>
           
-          {user.membershipType !== 'premium' && (
+          {user.membershipType !== 'subscription' && (
             <button className="mypage__upgrade-button">
               {t('upgrade_button')}
             </button>
@@ -288,7 +288,7 @@ export default function MyPage({ params }) {
                 {t('delete_account_warning')}
               </p>
               
-              {user.membershipType === 'premium' && user.subscriptionStatus === 'active' && (
+              {user.membershipType === 'subscription' && user.subscriptionStatus === 'active' && (
                 <div className="mypage__modal-warning">
                   {t('premium_warning')}
                 </div>

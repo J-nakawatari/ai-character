@@ -119,7 +119,7 @@ export default function AdminUsers() {
                     <td>{user.email}</td>
                     <td>{user.hasCompletedSetup ? '完了' : '未完了'}</td>
                     <td>{user.selectedCharacter ? (user.selectedCharacter.name?.ja || user.selectedCharacter.name || user.selectedCharacter._id) : '未選択'}</td>
-                    <td>{user.membershipType === 'premium' ? 'プレミアム' : '無料'}</td>
+                    <td>{user.membershipType === 'subscription' ? 'サブスク' : '無料'}</td>
                     <td>{user.preferredLanguage}</td>
                     <td>{user.subscriptionStatus}</td>
                     <td>{user.subscriptionStartDate ? new Date(user.subscriptionStartDate).toLocaleString() : '-'}</td>
@@ -195,7 +195,7 @@ export default function AdminUsers() {
                   <div><div className="form-label">ID</div><div className="character-detail-value">{selectedUser._id}</div></div>
                   <div><div className="form-label">登録状況</div><div className="character-detail-value">{selectedUser.hasCompletedSetup ? '完了' : '未完了'}</div></div>
                   <div><div className="form-label">選択キャラクター</div><div className="character-detail-value">{selectedUser.selectedCharacter ? (selectedUser.selectedCharacter.name?.ja || selectedUser.selectedCharacter.name || selectedUser.selectedCharacter._id) : '未選択'}</div></div>
-                  <div><div className="form-label">会員種別</div><div className="character-detail-value">{selectedUser.membershipType === 'premium' ? 'プレミアム' : '無料'}</div></div>
+                  <div><div className="form-label">会員種別</div><div className="character-detail-value">{selectedUser.membershipType === 'subscription' ? 'サブスク' : '無料'}</div></div>
                   <div><div className="form-label">言語</div><div className="character-detail-value">{selectedUser.preferredLanguage}</div></div>
                   <div><div className="form-label">サブスク状態</div><div className="character-detail-value">{selectedUser.subscriptionStatus}</div></div>
                   <div><div className="form-label">サブスク開始</div><div className="character-detail-value">{selectedUser.subscriptionStartDate ? new Date(selectedUser.subscriptionStartDate).toLocaleString() : '-'}</div></div>

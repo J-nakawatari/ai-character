@@ -23,7 +23,7 @@ router.get('/', auth, async (req, res) => {
     }
 
     // キャラクターの種類に応じたチェック
-    if (character.characterType === 'paid') {
+    if (character.characterAccessType === 'paid') {
       const isPurchased = user.purchasedCharacters.some(
         pc => pc.character.toString() === characterId && pc.purchaseType === 'buy'
       );
@@ -31,8 +31,8 @@ router.get('/', auth, async (req, res) => {
       if (!isPurchased) {
         return res.status(403).json({ msg: 'このキャラクターは購入が必要です' });
       }
-    } else if (character.characterType === 'premium') {
-      if (user.membershipType !== 'premium' || user.subscriptionStatus !== 'active') {
+    } else if (character.characterAccessType === 'premium') {
+      if (user.membershipType !== 'subscription' || user.subscriptionStatus !== 'active') {
         return res.status(403).json({ msg: 'プレミアム会員のみ利用可能です' });
       }
     }
@@ -84,7 +84,7 @@ router.post('/', auth, async (req, res) => {
     }
 
     // キャラクターの種類に応じたチェック
-    if (character.characterType === 'paid') {
+    if (character.characterAccessType === 'paid') {
       const isPurchased = user.purchasedCharacters.some(
         pc => pc.character.toString() === characterId && pc.purchaseType === 'buy'
       );
@@ -92,8 +92,8 @@ router.post('/', auth, async (req, res) => {
       if (!isPurchased) {
         return res.status(403).json({ msg: 'このキャラクターは購入が必要です' });
       }
-    } else if (character.characterType === 'premium') {
-      if (user.membershipType !== 'premium' || user.subscriptionStatus !== 'active') {
+    } else if (character.characterAccessType === 'premium') {
+      if (user.membershipType !== 'subscription' || user.subscriptionStatus !== 'active') {
         return res.status(403).json({ msg: 'プレミアム会員のみ利用可能です' });
       }
     }

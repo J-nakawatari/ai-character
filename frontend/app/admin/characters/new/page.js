@@ -16,11 +16,15 @@ const initialState = {
   personality: '',
   personalityPrompt: { ja: '', en: '' },
   adminPrompt: { ja: '', en: '' },
-  characterType: 'free',
+  characterAccessType: 'free',
   price: 0,
   purchaseType: 'buy',
   voice: '',
   defaultMessage: { ja: '', en: '' },
+  limitMessage: { 
+    ja: '今日はもうお話しできないよ。また明日ね。',
+    en: 'Looks like we can\'t chat anymore today. Let\'s talk tomorrow!'
+  },
   themeColor: '#000000',
   isActive: true,
   imageCharacterSelect: '',
@@ -70,10 +74,40 @@ export default function CharacterNewPage() {
     setLoading(true);
     setError('');
     try {
-      await api.post('/admin/characters', form);
-      router.push('/admin/characters');
+      const fd = new FormData();
+      fd.append('name', JSON.stringify(form.name));
+      fd.append('description', JSON.stringify(form.description));
+      fd.append('personality', form.personality || '');
+      fd.append('personalityPrompt', JSON.stringify(form.personalityPrompt));
+      fd.append('adminPrompt', JSON.stringify(form.adminPrompt));
+      fd.append('characterAccessType', form.characterAccessType);
+      fd.append('price', form.price);
+      fd.append('purchaseType', form.purchaseType);
+      fd.append('voice', form.voice);
+      fd.append('defaultMessage', JSON.stringify(form.defaultMessage));
+      fd.append('limitMessage', JSON.stringify(form.limitMessage));
+      fd.append('themeColor', form.themeColor);
+      fd.append('isActive', form.isActive);
+      fd.append('imageCharacterSelect', form.imageCharacterSelect || '');
+      fd.append('imageDashboard', form.imageDashboard || '');
+      fd.append('imageChatBackground', form.imageChatBackground || '');
+      fd.append('imageChatAvatar', form.imageChatAvatar || '');
+      fd.append('sampleVoiceUrl', form.sampleVoiceUrl || '');
+
+      const response = await api.post('/admin/characters', fd, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+
+      if (response.data) {
+        setToast({ show: true, message: 'キャラクターを作成しました', type: 'success' });
+        setTimeout(() => {
+          router.push('/admin/characters');
+        }, 1500);
+      }
     } catch (err) {
-      setError('登録に失敗しました');
+      console.error('キャラクター登録に失敗:', err);
+      setError(err.response?.data?.msg || '登録に失敗しました');
+      setToast({ show: true, message: err.response?.data?.msg || '登録に失敗しました', type: 'error' });
     } finally {
       setLoading(false);
     }
@@ -338,28 +372,6 @@ export default function CharacterNewPage() {
                     className={styles['admin-form-input']}
                   />
                 </div>
-                <div className={styles['admin-form-group']}>
-                  <label htmlFor="defaultMessage.ja" className={styles['admin-form-label']}>デフォルトメッセージ（日本語）</label>
-                  <textarea
-                    id="defaultMessage.ja"
-                    name="defaultMessage.ja"
-                    value={form.defaultMessage.ja}
-                    onChange={handleChange}
-                    rows={2}
-                    className={styles['admin-form-input']}
-                  />
-                </div>
-                <div className={styles['admin-form-group']}>
-                  <label htmlFor="defaultMessage.en" className={styles['admin-form-label']}>デフォルトメッセージ（English）</label>
-                  <textarea
-                    id="defaultMessage.en"
-                    name="defaultMessage.en"
-                    value={form.defaultMessage.en}
-                    onChange={handleChange}
-                    rows={2}
-                    className={styles['admin-form-input']}
-                  />
-                </div>
               </div>
             </Card>
             {/* 販売設定セクション */}
@@ -373,9 +385,9 @@ export default function CharacterNewPage() {
                   <label className={styles.customRadio}>
                     <input
                       type="radio"
-                      name="characterType"
+                      name="characterAccessType"
                       value="free"
-                      checked={form.characterType === 'free'}
+                      checked={form.characterAccessType === 'free'}
                       onChange={handleChange}
                       className={styles.radioInput}
                     />
@@ -385,9 +397,9 @@ export default function CharacterNewPage() {
                   <label className={styles.customRadio}>
                     <input
                       type="radio"
-                      name="characterType"
-                      value="premium"
-                      checked={form.characterType === 'premium'}
+                      name="characterAccessType"
+                      value="subscription"
+                      checked={form.characterAccessType === 'subscription'}
                       onChange={handleChange}
                       className={styles.radioInput}
                     />
@@ -397,29 +409,18 @@ export default function CharacterNewPage() {
                   <label className={styles.customRadio}>
                     <input
                       type="radio"
-                      name="characterType"
-                      value="paid"
-                      checked={form.characterType === 'paid'}
+                      name="characterAccessType"
+                      value="purchaseOnly"
+                      checked={form.characterAccessType === 'purchaseOnly'}
                       onChange={handleChange}
                       className={styles.radioInput}
                     />
                     <span className={styles.radioMark}></span>
-                    <span className={styles.checkboxLabel}>課金キャラクター</span>
-                  </label>
-                  <label className={styles.customRadio}>
-                    <input
-                      type="radio"
-                      name="characterType"
-                      value="limited"
-                      checked={form.characterType === 'limited'}
-                      onChange={handleChange}
-                      className={styles.radioInput}
-                    />
-                    <span className={styles.radioMark}></span>
-                    <span className={styles.checkboxLabel}>期間限定キャラクター</span>
+                    <span className={styles.checkboxLabel}>買い切りキャラクター</span>
                   </label>
                 </div>
-                {form.characterType === 'paid' && (
+                
+                {form.characterAccessType === 'purchaseOnly' && (
                   <div className="space-y-4 pl-6 mt-2">
                     <div className={styles['admin-form-group']}>
                       <label htmlFor="price" className={styles['admin-form-label']}>価格</label>
@@ -431,18 +432,6 @@ export default function CharacterNewPage() {
                         min="0"
                         className={styles['admin-form-input']}
                       />
-                    </div>
-                    <div className={styles['admin-form-group']}>
-                      <label htmlFor="purchaseType" className={styles['admin-form-label']}>購入タイプ</label>
-                      <select
-                        id="purchaseType"
-                        value={form.purchaseType}
-                        onChange={handleChange}
-                        className={styles['admin-form-input']}
-                      >
-                        <option value="buy">買い切り</option>
-                        <option value="rent">月額課金</option>
-                      </select>
                     </div>
                   </div>
                 )}
@@ -552,6 +541,61 @@ export default function CharacterNewPage() {
                 </div>
               </div>
             </Card>
+            <div className="character-detail-section">
+              <h3 className="character-detail-section-title">メッセージ設定</h3>
+              <div className="character-detail-grid">
+                <div>
+                  <div className="character-detail-label">デフォルトメッセージ（日本語）</div>
+                  <textarea
+                    name="defaultMessage.ja"
+                    value={form.defaultMessage.ja}
+                    onChange={handleChange}
+                    className="admin-textarea"
+                    rows={4}
+                  />
+                </div>
+                <div>
+                  <div className="character-detail-label">デフォルトメッセージ（英語）</div>
+                  <textarea
+                    name="defaultMessage.en"
+                    value={form.defaultMessage.en}
+                    onChange={handleChange}
+                    className="admin-textarea"
+                    rows={4}
+                  />
+                </div>
+                <div>
+                  <div className="character-detail-label">制限メッセージ（日本語）</div>
+                  <textarea
+                    name="limitMessage.ja"
+                    value={form.limitMessage.ja}
+                    onChange={handleChange}
+                    className="admin-textarea"
+                    rows={4}
+                  />
+                </div>
+                <div>
+                  <div className="character-detail-label">制限メッセージ（英語）</div>
+                  <textarea
+                    name="limitMessage.en"
+                    value={form.limitMessage.en}
+                    onChange={handleChange}
+                    className="admin-textarea"
+                    rows={4}
+                  />
+                </div>
+                <div>
+                  <div className="character-detail-label">音声設定</div>
+                  <input
+                    type="text"
+                    name="voice"
+                    value={form.voice}
+                    onChange={handleChange}
+                    className="admin-input"
+                  />
+                </div>
+              </div>
+            </div>
             <div className="flex justify-end space-x-4 mt-6">
               <button
                 type="button"

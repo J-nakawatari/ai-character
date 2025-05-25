@@ -46,9 +46,9 @@ const CharacterSchema = new Schema({
       default: ''
     }
   },
-  characterType: {
+  characterAccessType: {
     type: String,
-    enum: ['free', 'premium', 'paid', 'limited'],
+    enum: ['free', 'subscription', 'purchaseOnly'],
     default: 'free',
   },
   price: {
@@ -57,6 +57,7 @@ const CharacterSchema = new Schema({
   },
   purchaseType: {
     type: String,
+    enum: ['buy'],
     default: 'buy'
   },
   voice: {
@@ -64,6 +65,16 @@ const CharacterSchema = new Schema({
     default: ''
   },
   defaultMessage: {
+    ja: {
+      type: String,
+      default: ''
+    },
+    en: {
+      type: String,
+      default: ''
+    }
+  },
+  limitMessage: {
     ja: {
       type: String,
       default: ''

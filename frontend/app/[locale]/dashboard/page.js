@@ -24,7 +24,7 @@ export default function Dashboard({ params }) {
     try {
       // キャラクターの購入状態をチェック
       const character = user.selectedCharacter;
-      if (character.characterType === 'paid') {
+      if (character.characterAccessType === 'paid') {
         const isPurchased = user.purchasedCharacters.some(
           pc => pc.character._id === character._id && pc.purchaseType === 'buy'
         );
@@ -34,8 +34,8 @@ export default function Dashboard({ params }) {
           router.push(`/${locale}/purchase/${character._id}`);
           return;
         }
-      } else if (character.characterType === 'premium') {
-        if (user.membershipType !== 'premium' || user.subscriptionStatus !== 'active') {
+      } else if (character.characterAccessType === 'premium') {
+        if (user.membershipType !== 'subscription' || user.subscriptionStatus !== 'active') {
           // プレミアム会員でない場合はアップグレードページに遷移
           router.push(`/${locale}/upgrade`);
           return;
@@ -122,15 +122,15 @@ export default function Dashboard({ params }) {
 
   // ボタンの表示テキストとタイプを取得する関数
   const getButtonProps = (character) => {
-    if (character.characterType === 'paid' && !isCharacterPurchased(character)) {
+    if (character.characterAccessType === 'paid' && !isCharacterPurchased(character)) {
       return {
         text: t('purchase_character', '購入する'),
         type: 'purchase'
       };
-    } else if (character.characterType === 'premium' && 
-               (user.membershipType !== 'premium' || user.subscriptionStatus !== 'active')) {
+    } else if (character.characterAccessType === 'premium' && 
+               (user.membershipType !== 'subscription' || user.subscriptionStatus !== 'active')) {
       return {
-        text: t('upgrade_to_premium', 'プレミアムにアップグレード'),
+        text: t('upgrade_to_premium', 'サブスクにアップグレード'),
         type: 'upgrade'
       };
     }
@@ -210,7 +210,7 @@ export default function Dashboard({ params }) {
               >
                 {buttonProps.text}
               </button>
-              {user.selectedCharacter?.characterType === 'paid' && !isCharacterPurchased(user.selectedCharacter) && (
+              {user.selectedCharacter?.characterAccessType === 'paid' && !isCharacterPurchased(user.selectedCharacter) && (
                 <div className={styles.dashboardPrice}>
                   {t('price', '価格')}: ¥{user.selectedCharacter.price.toLocaleString()}
                 </div>

@@ -49,7 +49,7 @@ export default function CharacterDetailPage() {
       <div className="admin-content-wrapper" style={{maxWidth:900, margin:'0 auto'}}>
         {/* ステータスバー */}
         <div style={{display:'flex', gap:12, marginBottom:24}}>
-          {badge(character.characterType, character.characterType==='free' ? '#3b82f6' : character.characterType==='premium' ? '#a21caf' : character.characterType==='paid' ? '#eab308' : '#f43f5e')}
+          {badge(character.characterAccessType, character.characterAccessType==='free' ? '#3b82f6' : character.characterAccessType==='subscription' ? '#a21caf' : character.characterAccessType==='purchaseOnly' ? '#eab308' : '#f43f5e')}
           {character.isActive ? badge('有効', '#22c55e') : badge('無効', '#e11d48')}
           <span style={{color:'#64748b', fontSize:14}}>作成日: {character.createdAt ? new Date(character.createdAt).toLocaleString() : '-'}</span>
         </div>

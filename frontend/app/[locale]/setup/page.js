@@ -224,7 +224,7 @@ export default function Setup({ params }) {
   const handleCharacterSelect = async (character) => {
     try {
       // キャラクターの種類に応じたチェック
-      if (character.characterType === 'paid') {
+      if (character.characterAccessType === 'paid') {
         const isPurchased = user.purchasedCharacters.some(
           pc => pc.character._id === character._id && pc.purchaseType === 'buy'
         );
@@ -234,8 +234,8 @@ export default function Setup({ params }) {
           router.push(`/${locale}/purchase/${character._id}`);
           return;
         }
-      } else if (character.characterType === 'premium') {
-        if (user.membershipType !== 'premium' || user.subscriptionStatus !== 'active') {
+      } else if (character.characterAccessType === 'premium') {
+        if (user.membershipType !== 'subscription' || user.subscriptionStatus !== 'active') {
           // プレミアム会員でない場合はアップグレードページに遷移
           router.push(`/${locale}/upgrade`);
           return;
@@ -277,15 +277,15 @@ export default function Setup({ params }) {
 
   // ボタンの表示テキストとタイプを取得する関数
   const getButtonProps = (character) => {
-    if (character.characterType === 'paid' && !isCharacterPurchased(character)) {
+    if (character.characterAccessType === 'paid' && !isCharacterPurchased(character)) {
       return {
         text: t('purchase_character', '購入する'),
         type: 'purchase'
       };
-    } else if (character.characterType === 'premium' && 
-               (user.membershipType !== 'premium' || user.subscriptionStatus !== 'active')) {
+    } else if (character.characterAccessType === 'premium' && 
+               (user.membershipType !== 'subscription' || user.subscriptionStatus !== 'active')) {
       return {
-        text: t('upgrade_to_premium', 'プレミアムにアップグレード'),
+        text: t('upgrade_to_premium', 'サブスクにアップグレード'),
         type: 'upgrade'
       };
     }
@@ -348,7 +348,7 @@ export default function Setup({ params }) {
         </h2>
         <div className="setup--main">
           <div className="setup--card-list">
-            {characters.slice(0, 4).map((character, idx) => {
+            {characters.map((character, idx) => {
               const characterName = character.name && typeof character.name === 'object' 
                 ? (character.name[locale] || character.name.ja || character.name) 
                 : character.name;

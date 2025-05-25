@@ -326,9 +326,25 @@
 
 .chat-welcome {
   text-align: center;
-  padding: 24px 0;
-  color: #999;
+  padding: 20px;
+  color: #666;
+}
+
+.chat-default-message {
+  margin-top: 20px;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  max-width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.chat-default-message p {
+  color: #232e43;
   font-size: 16px;
+  line-height: 1.5;
+  margin: 0;
 }
 
 /* スクロールバーのカスタム */

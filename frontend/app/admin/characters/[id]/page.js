@@ -49,7 +49,7 @@ export default function CharacterEditPage() {
       fd.append('personality', character.personality || '');
       fd.append('personalityPrompt', JSON.stringify(character.personalityPrompt));
       fd.append('adminPrompt', JSON.stringify(character.adminPrompt));
-      fd.append('characterType', character.characterType);
+      fd.append('characterAccessType', character.characterAccessType);
       fd.append('price', character.price);
       fd.append('purchaseType', character.purchaseType);
       fd.append('voice', character.voice);
@@ -61,6 +61,7 @@ export default function CharacterEditPage() {
       fd.append('imageChatBackground', character.imageChatBackground || '');
       fd.append('imageChatAvatar', character.imageChatAvatar || '');
       fd.append('sampleVoiceUrl', character.sampleVoiceUrl || '');
+      fd.append('limitMessage', JSON.stringify(character.limitMessage || {}));
 
       await api.put(`/admin/characters/${params.id}`, fd, {
         headers: { 'Content-Type': 'multipart/form-data' }
@@ -154,12 +155,12 @@ export default function CharacterEditPage() {
           <div className="form-group" style={{flex:1, minWidth:180}}>
             <label className="form-label">タイプ</label>
             <select 
-              value={character.characterType} 
-              onChange={(e) => handleChange('characterType', e.target.value)}
+              value={character.characterAccessType} 
+              onChange={(e) => handleChange('characterAccessType', e.target.value)}
               className="admin-select"
             >
               <option value="free">無料</option>
-              <option value="premium">プレミアム</option>
+              <option value="subscription">サブスク</option>
               <option value="paid">有料</option>
             </select>
           </div>
@@ -334,6 +335,26 @@ export default function CharacterEditPage() {
                     onChange={(e) => handleNestedChange('defaultMessage', 'en', e.target.value)}
                     className="admin-textarea"
                     rows={4}
+                  />
+                </div>
+                <div>
+                  <div className="character-detail-label">制限メッセージ（日本語）</div>
+                  <textarea
+                    value={character.limitMessage?.ja || ''}
+                    onChange={(e) => handleNestedChange('limitMessage', 'ja', e.target.value)}
+                    className="admin-textarea"
+                    rows={4}
+                    placeholder="今日はもうお話しできないよ。また明日ね。"
+                  />
+                </div>
+                <div>
+                  <div className="character-detail-label">制限メッセージ（英語）</div>
+                  <textarea
+                    value={character.limitMessage?.en || ''}
+                    onChange={(e) => handleNestedChange('limitMessage', 'en', e.target.value)}
+                    className="admin-textarea"
+                    rows={4}
+                    placeholder="Looks like we can't chat anymore today. Let's talk tomorrow!"
                   />
                 </div>
                 <div>

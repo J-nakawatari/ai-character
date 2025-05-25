@@ -30,7 +30,7 @@ export default function EditCharacter({ params }) {
       ja: '',
       en: ''
     },
-    characterType: 'premium', // 'premium' | 'paid' | 'limited'
+    characterAccessType: 'subscription', // 'subscription' | 'purchaseOnly' | 'free'
     price: 0,
     purchaseType: 'buy',
     voice: '',
@@ -131,7 +131,7 @@ export default function EditCharacter({ params }) {
       fd.append('description', JSON.stringify(formData.description));
       fd.append('personalityPrompt', JSON.stringify(formData.personalityPrompt));
       fd.append('adminPrompt', JSON.stringify(formData.adminPrompt));
-      fd.append('characterType', formData.characterType);
+      fd.append('characterAccessType', formData.characterAccessType);
       fd.append('price', formData.price);
       fd.append('purchaseType', formData.purchaseType);
       fd.append('voice', formData.voice);
@@ -462,9 +462,21 @@ export default function EditCharacter({ params }) {
                   <label className={styles.customRadio}>
                     <input
                       type="radio"
-                      name="characterType"
-                      value="premium"
-                      checked={formData.characterType === 'premium'}
+                      name="characterAccessType"
+                      value="free"
+                      checked={formData.characterAccessType === 'free'}
+                      onChange={handleChange}
+                      className={styles.radioInput}
+                    />
+                    <span className={styles.radioMark}></span>
+                    <span className={styles.checkboxLabel}>無料キャラ</span>
+                  </label>
+                  <label className={styles.customRadio}>
+                    <input
+                      type="radio"
+                      name="characterAccessType"
+                      value="subscription"
+                      checked={formData.characterAccessType === 'subscription'}
                       onChange={handleChange}
                       className={styles.radioInput}
                     />
@@ -474,41 +486,18 @@ export default function EditCharacter({ params }) {
                   <label className={styles.customRadio}>
                     <input
                       type="radio"
-                      name="characterType"
-                      value="paid"
-                      checked={formData.characterType === 'paid'}
+                      name="characterAccessType"
+                      value="purchaseOnly"
+                      checked={formData.characterAccessType === 'purchaseOnly'}
                       onChange={handleChange}
                       className={styles.radioInput}
                     />
                     <span className={styles.radioMark}></span>
-                    <span className={styles.checkboxLabel}>課金キャラクター</span>
-                  </label>
-                  <label className={styles.customRadio}>
-                    <input
-                      type="radio"
-                      name="characterType"
-                      value="limited"
-                      checked={formData.characterType === 'limited'}
-                      onChange={handleChange}
-                      className={styles.radioInput}
-                    />
-                    <span className={styles.radioMark}></span>
-                    <span className={styles.checkboxLabel}>期間限定キャラクター</span>
-                  </label>
-                  <label className={styles.customRadio}>
-                    <input
-                      type="radio"
-                      name="characterType"
-                      value="free"
-                      checked={formData.characterType === 'free'}
-                      onChange={handleChange}
-                      className={styles.radioInput}
-                    />
-                    <span className={styles.radioMark}></span>
-                    <span className={styles.checkboxLabel}>無料キャラ</span>
+                    <span className={styles.checkboxLabel}>買い切りキャラクター</span>
                   </label>
                 </div>
-                {formData.characterType === 'paid' && (
+                
+                {formData.characterAccessType === 'purchaseOnly' && (
                   <div className="space-y-4 pl-6 mt-2">
                     <div className={styles['admin-form-group']}>
                       <label htmlFor="price" className={styles['admin-form-label']}>価格</label>
@@ -520,18 +509,6 @@ export default function EditCharacter({ params }) {
                         min="0"
                         className={styles['admin-form-input']}
                       />
-                    </div>
-                    <div className={styles['admin-form-group']}>
-                      <label htmlFor="purchaseType" className={styles['admin-form-label']}>購入タイプ</label>
-                      <select
-                        id="purchaseType"
-                        value={formData.purchaseType}
-                        onChange={handleChange}
-                        className={styles['admin-form-input']}
-                      >
-                        <option value="buy">買い切り</option>
-                        <option value="rent">レンタル</option>
-                      </select>
                     </div>
                   </div>
                 )}

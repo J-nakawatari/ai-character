@@ -31,8 +31,18 @@ export default function Chat({ params }) {
       if (user?.selectedCharacter?._id) {
         try {
           const res = await api.get(`/chat?characterId=${user.selectedCharacter._id}`);
-          setMessages(res.data.messages || []);
+          const historyMessages = res.data.messages || [];
+          setMessages(historyMessages);
           setChatId(res.data._id);
+
+          if (historyMessages.length === 0 && user.selectedCharacter.defaultMessage) {
+            const defaultMessage = {
+              sender: 'ai',
+              content: user.selectedCharacter.defaultMessage[locale] || user.selectedCharacter.defaultMessage.ja || user.selectedCharacter.defaultMessage.en,
+              timestamp: new Date().toISOString()
+            };
+            setMessages([defaultMessage]);
+          }
           setError('');
         } catch (err) {
           setError(t('failed_load_history', 'チャット履歴の読み込みに失敗しました'));
@@ -47,7 +57,7 @@ export default function Chat({ params }) {
     if (!loading && user) {
       loadChatHistory();
     }
-  }, [loading, user, t]);
+  }, [loading, user, t, locale]);
   
   useEffect(() => {
     scrollToBottom();

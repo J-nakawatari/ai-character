@@ -26,7 +26,7 @@ const UserSchema = new Schema({
   },
   membershipType: {
     type: String,
-    enum: ['free', 'premium'],
+    enum: ['free', 'subscription'],
     default: 'free'
   },
   preferredLanguage: {
@@ -73,7 +73,11 @@ const UserSchema = new Schema({
   isActive: {
     type: Boolean,
     default: true
-  }
+  },
+  addOnSubscriptions: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Character'
+  }]
 });
 
 module.exports = mongoose.model('User', UserSchema);

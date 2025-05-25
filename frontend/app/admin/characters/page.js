@@ -91,12 +91,27 @@ export default function AdminCharacters() {
                   ) : (
                     <span style={{background:'#e11d48',color:'#fff',borderRadius:8,padding:'2px 10px',fontSize:13,marginLeft:8}}>無効</span>
                   )}
-                  <span style={{background:character.characterType==='free' ? '#3b82f6' : character.characterType==='premium' ? '#a21caf' : character.characterType==='paid' ? '#eab308' : '#f43f5e',color:'#fff',borderRadius:8,padding:'2px 10px',fontSize:13,marginLeft:8}}>{character.characterType}</span>
+                  <span style={{
+                    background: 
+                      character.characterAccessType === 'free' ? '#3b82f6' : 
+                      character.characterAccessType === 'subscription' ? '#a21caf' : 
+                      '#eab308',
+                    color:'#fff',
+                    borderRadius:8,
+                    padding:'2px 10px',
+                    fontSize:13,
+                    marginLeft:8
+                  }}>
+                    {character.characterAccessType === 'free' ? '無料' :
+                     character.characterAccessType === 'subscription' ? 'サブスク' :
+                     '買い切り'}
+                  </span>
                 </div>
                 <div style={{color:'#64748b',fontSize:14,marginTop:4,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{character.description?.ja}</div>
                 <div style={{display:'flex',alignItems:'center',gap:24,marginTop:8}}>
-                  <span style={{fontSize:13}}>価格: <b>{character.price}円</b></span>
-                  <span style={{fontSize:13}}>購入タイプ: {character.purchaseType}</span>
+                  {character.characterAccessType === 'purchaseOnly' && (
+                    <span style={{fontSize:13}}>価格: <b>{character.price}円</b></span>
+                  )}
                   <span style={{fontSize:13}}>作成日: {character.createdAt ? new Date(character.createdAt).toLocaleDateString() : '-'}</span>
                 </div>
               </div>
