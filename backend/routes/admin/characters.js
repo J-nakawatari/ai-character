@@ -4,6 +4,17 @@ const adminAuth = require('../../middleware/adminAuth');
 const Character = require('../../models/Character');
 const { uploadImage, resizeImage } = require('../../utils/fileUpload');
 
+// 一覧取得
+router.get('/', adminAuth, async (req, res) => {
+  try {
+    const characters = await Character.find().sort({ createdAt: -1 });
+    res.json(characters);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('サーバーエラー');
+  }
+});
+
 router.put('/:id', adminAuth, uploadImage.single('image'), resizeImage(), async (req, res) => {
   try {
     const character = await Character.findById(req.params.id);
