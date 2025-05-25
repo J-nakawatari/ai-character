@@ -37,7 +37,7 @@ const UserSchema = new Schema({
   subscriptionStatus: {
     type: String,
     enum: ['active', 'inactive', 'expired', 'canceled'],
-    default: 'active'
+    default: 'inactive'
   },
   subscriptionEndDate: {
     type: Date,
@@ -77,7 +77,15 @@ const UserSchema = new Schema({
   addOnSubscriptions: [{
     type: Schema.Types.ObjectId,
     ref: 'Character'
-  }]
+  }],
+  stripeCustomerId: {
+    type: String,
+    default: null
+  },
+  stripeSubscriptionId: {
+    type: String,
+    default: null
+  }
 });
 
 module.exports = mongoose.model('User', UserSchema);

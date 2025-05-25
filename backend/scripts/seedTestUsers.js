@@ -45,6 +45,7 @@ async function seed() {
     email: 'test_free@example.com',
     password: passwordHash,
     membershipType: 'free',
+    subscriptionStatus: 'inactive',
     selectedCharacter: freeChar._id,
     hasCompletedSetup: true
   });

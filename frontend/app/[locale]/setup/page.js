@@ -211,6 +211,18 @@ export default function Setup({ params }) {
     };
   }, []);
 
+  useEffect(() => {
+    const queryParams = new URLSearchParams(window.location.search);
+    if (queryParams.get('subscribed') === 'true') {
+      queryParams.delete('subscribed');
+      const newUrl =
+        window.location.pathname +
+        (queryParams.toString() ? '?' + queryParams.toString() : '');
+      window.history.replaceState(null, '', newUrl);
+      window.location.reload();
+    }
+  }, []);
+
   const onSubmit = async (data) => {
     setServerError('');
     const result = await completeSetup(data);
@@ -224,20 +236,23 @@ export default function Setup({ params }) {
   const handleCharacterSelect = async (character) => {
     try {
       // キャラクターの種類に応じたチェック
-      if (character.characterAccessType === 'paid') {
+      if (character.characterAccessType === 'purchaseOnly') {
         const isPurchased = user.purchasedCharacters.some(
-          pc => pc.character._id === character._id && pc.purchaseType === 'buy'
+          pc =>
+            (pc.character?._id?.toString?.() || pc.character?.toString?.()) === character._id?.toString() &&
+            pc.purchaseType === 'buy'
         );
         
         if (!isPurchased) {
-          // 未購入の場合は購入ページに遷移
-          router.push(`/${locale}/purchase/${character._id}`);
+          // 未購入の場合は購入モーダルを表示
+          setModalCharacter(character);
+          setShowPurchaseModal(true);
           return;
         }
-      } else if (character.characterAccessType === 'premium') {
+      } else if (character.characterAccessType === 'subscription') {
         if (user.membershipType !== 'subscription' || user.subscriptionStatus !== 'active') {
-          // プレミアム会員でない場合はアップグレードページに遷移
-          router.push(`/${locale}/upgrade`);
+          // サブスク会員でない場合はアップグレードモーダルを表示
+          setShowUpgradeModal(true);
           return;
         }
       }
@@ -271,22 +286,43 @@ export default function Setup({ params }) {
   const isCharacterPurchased = (character) => {
     if (!character || !user.purchasedCharacters) return false;
     return user.purchasedCharacters.some(
-      pc => pc.character._id === character._id && pc.purchaseType === 'buy'
+      pc =>
+        (pc.character?._id?.toString?.() || pc.character?.toString?.()) === character._id?.toString() &&
+        pc.purchaseType === 'buy'
     );
+  };
+
+  const handleUpgrade = async () => {
+    const res = await fetch('/api/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: user.email })
+    });
+    const data = await res.json();
+    window.location.href = data.url;
   };
 
   // ボタンの表示テキストとタイプを取得する関数
   const getButtonProps = (character) => {
-    if (character.characterAccessType === 'paid' && !isCharacterPurchased(character)) {
+    if (!user) {
+      return {
+        text: t('select_button', '選択する'),
+        type: 'select'
+      };
+    }
+    if (character.characterAccessType === 'purchaseOnly' && !isCharacterPurchased(character)) {
       return {
         text: t('purchase_character', '購入する'),
         type: 'purchase'
       };
-    } else if (character.characterAccessType === 'premium' && 
-               (user.membershipType !== 'subscription' || user.subscriptionStatus !== 'active')) {
+    } else if (
+      character.characterAccessType === 'subscription' &&
+      (user.membershipType !== 'subscription' || user.subscriptionStatus !== 'active')
+    ) {
       return {
         text: t('upgrade_to_premium', 'サブスクにアップグレード'),
-        type: 'upgrade'
+        type: 'upgrade',
+        onClick: handleUpgrade
       };
     }
     return {
@@ -470,7 +506,7 @@ export default function Setup({ params }) {
             </div>
             <div className="setup--modal-buttons">
               <button className="setup--modal-cancel" onClick={closeUpgradeModal}>{t('cancel')}</button>
-              <button className="setup--modal-confirm" data-type="upgrade" onClick={handleConfirmUpgrade}>{t('upgrade_to_premium')}</button>
+              <button className="setup--modal-confirm" data-type="upgrade" onClick={handleUpgrade}>{t('upgrade_to_premium')}</button>
             </div>
           </div>
         </div>

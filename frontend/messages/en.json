@@ -79,7 +79,7 @@
     "subscription_info": "Subscription Information",
     "status": "Status",
     "status_active": "Active",
-    "status_inactive": "Inactive",
+    "status_inactive": "Not Subscribed",
     "status_expired": "Expired",
     "status_canceled": "Canceled",
     "status_free": "Free Member",

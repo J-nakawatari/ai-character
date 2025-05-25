@@ -114,17 +114,21 @@ router.patch('/me/use-character', auth, async (req, res) => {
     }
 
     // キャラクターの種類に応じたチェック
-    if (character.characterAccessType === 'paid') {
+    if (character.characterAccessType === 'subscription') {
+      if (user.membershipType !== 'subscription' || user.subscriptionStatus !== 'active') {
+        return res.status(403).json({ msg: 'このキャラクターは有料会員限定です' });
+      }
+    } else if (character.characterAccessType === 'purchaseOnly') {
+      if (!Array.isArray(user.purchasedCharacters)) {
+        return res.status(403).json({ msg: 'このキャラクターは購入が必要です' });
+      }
+
       const isPurchased = user.purchasedCharacters.some(
         pc => pc.character.toString() === characterId && pc.purchaseType === 'buy'
       );
       
       if (!isPurchased) {
         return res.status(403).json({ msg: 'このキャラクターは購入が必要です' });
-      }
-    } else if (character.characterAccessType === 'premium') {
-      if (user.membershipType !== 'subscription' || user.subscriptionStatus !== 'active') {
-        return res.status(403).json({ msg: 'プレミアム会員のみ利用可能です' });
       }
     }
     

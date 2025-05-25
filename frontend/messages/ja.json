@@ -84,7 +84,7 @@
     "subscription_info": "サブスクリプション情報",
     "status": "ステータス",
     "status_active": "有効",
-    "status_inactive": "停止中",
+    "status_inactive": "未加入",
     "status_expired": "期限切れ",
     "status_canceled": "キャンセル済み",
     "status_free": "無料会員",

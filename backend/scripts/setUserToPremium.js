@@ -15,7 +15,7 @@ const setUserToPremium = async () => {
       process.exit(1);
     }
 
-    user.membershipType = 'premium';
+    user.membershipType = 'subscription';
     user.subscriptionStatus = 'active';
     user.subscriptionStartDate = new Date();
     user.subscriptionEndDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30日後

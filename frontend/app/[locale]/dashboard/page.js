@@ -24,20 +24,20 @@ export default function Dashboard({ params }) {
     try {
       // キャラクターの購入状態をチェック
       const character = user.selectedCharacter;
-      if (character.characterAccessType === 'paid') {
+      if (character.characterAccessType === 'purchaseOnly') {
         const isPurchased = user.purchasedCharacters.some(
           pc => pc.character._id === character._id && pc.purchaseType === 'buy'
         );
         
         if (!isPurchased) {
-          // 未購入の場合は購入ページに遷移
-          router.push(`/${locale}/purchase/${character._id}`);
+          // 未購入の場合は購入モーダルを表示
+          router.push(`/${locale}/setup?reselect=true`);
           return;
         }
-      } else if (character.characterAccessType === 'premium') {
+      } else if (character.characterAccessType === 'subscription') {
         if (user.membershipType !== 'subscription' || user.subscriptionStatus !== 'active') {
-          // プレミアム会員でない場合はアップグレードページに遷移
-          router.push(`/${locale}/upgrade`);
+          // サブスク会員でない場合はアップグレードモーダルを表示
+          router.push(`/${locale}/setup?reselect=true`);
           return;
         }
       }
@@ -122,12 +122,12 @@ export default function Dashboard({ params }) {
 
   // ボタンの表示テキストとタイプを取得する関数
   const getButtonProps = (character) => {
-    if (character.characterAccessType === 'paid' && !isCharacterPurchased(character)) {
+    if (character.characterAccessType === 'purchaseOnly' && !isCharacterPurchased(character)) {
       return {
         text: t('purchase_character', '購入する'),
         type: 'purchase'
       };
-    } else if (character.characterAccessType === 'premium' && 
+    } else if (character.characterAccessType === 'subscription' && 
                (user.membershipType !== 'subscription' || user.subscriptionStatus !== 'active')) {
       return {
         text: t('upgrade_to_premium', 'サブスクにアップグレード'),
@@ -198,9 +198,9 @@ export default function Dashboard({ params }) {
                 type="button"
                 onClick={() => {
                   if (buttonProps.type === 'purchase') {
-                    router.push(`/${locale}/purchase/${user.selectedCharacter._id}`);
+                    router.push(`/${locale}/setup?reselect=true`);
                   } else if (buttonProps.type === 'upgrade') {
-                    router.push(`/${locale}/upgrade`);
+                    router.push(`/${locale}/setup?reselect=true`);
                   } else {
                     router.push(`/${locale}/chat`);
                   }
@@ -210,7 +210,7 @@ export default function Dashboard({ params }) {
               >
                 {buttonProps.text}
               </button>
-              {user.selectedCharacter?.characterAccessType === 'paid' && !isCharacterPurchased(user.selectedCharacter) && (
+              {user.selectedCharacter?.characterAccessType === 'purchaseOnly' && !isCharacterPurchased(user.selectedCharacter) && (
                 <div className={styles.dashboardPrice}>
                   {t('price', '価格')}: ¥{user.selectedCharacter.price.toLocaleString()}
                 </div>

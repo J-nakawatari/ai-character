@@ -34,26 +34,24 @@ export function canAccessCharacter(user, character) {
   // 1. 無料キャラは全員OK
   if (character.characterAccessType === 'free') return true;
 
-  // 2. サブスクキャラは有料会員以上
+  // 2. サブスクキャラは有効なサブスク会員のみ
   if (character.characterAccessType === 'subscription') {
-    return user.membershipType === 'subscription' || user.membershipType === 'paid';
+    return user.membershipType === 'subscription' && user.subscriptionStatus === 'active';
   }
 
-  // 3. 購入専用キャラは有料会員以上＆購入済み
+  // 3. 買い切りキャラは購入済みのみ
   if (character.characterAccessType === 'purchaseOnly') {
-    const isPaidMember = user.membershipType === 'subscription' || user.membershipType === 'paid';
-    if (!isPaidMember) return false;
-
-    // purchasedCharacters: [{ character: ObjectId, ... }]
-    return Array.isArray(user.purchasedCharacters) &&
-      user.purchasedCharacters.some(pc => {
-        const purchasedCharId = pc.character?.toString();
-        const currentCharId = character._id?.toString();
-        return purchasedCharId && currentCharId && purchasedCharId === currentCharId;
-      });
+    if (!Array.isArray(user.purchasedCharacters)) return false;
+    
+    return user.purchasedCharacters.some(pc => {
+      const purchasedCharId = pc.character?.toString();
+      const currentCharId = character._id?.toString();
+      return purchasedCharId && currentCharId && 
+             purchasedCharId === currentCharId && 
+             pc.purchaseType === 'buy';
+    });
   }
 
-  // その他は不可
   return false;
 }
 
