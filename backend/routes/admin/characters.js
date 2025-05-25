@@ -15,6 +15,20 @@ router.get('/', adminAuth, async (req, res) => {
   }
 });
 
+// 詳細取得
+router.get('/:id', adminAuth, async (req, res) => {
+  try {
+    const character = await Character.findById(req.params.id);
+    if (!character) {
+      return res.status(404).json({ msg: 'キャラクターが見つかりません' });
+    }
+    res.json(character);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('サーバーエラー');
+  }
+});
+
 router.put('/:id', adminAuth, uploadImage.single('image'), resizeImage(), async (req, res) => {
   try {
     const character = await Character.findById(req.params.id);
