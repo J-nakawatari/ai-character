@@ -13,7 +13,7 @@ module.exports = (req, res, next) => {
   log('=== Admin Auth Middleware ===');
   log('Request path:', req.path);
   
-  const token = req.cookies.token;
+  const token = req.cookies.adminToken;
   
   log('Admin token from cookies:', token ? 'Found' : 'Not found');
   
