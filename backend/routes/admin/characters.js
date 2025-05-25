@@ -74,6 +74,12 @@ router.put('/:id', adminAuth, uploadImage.single('image'), resizeImage(), async 
       character.imageCharacterSelect = `/uploads/images/${req.file.filename}`;
     }
 
+    if (req.body.imageCharacterSelect) character.imageCharacterSelect = req.body.imageCharacterSelect;
+    if (req.body.imageDashboard) character.imageDashboard = req.body.imageDashboard;
+    if (req.body.imageChatBackground) character.imageChatBackground = req.body.imageChatBackground;
+    if (req.body.imageChatAvatar) character.imageChatAvatar = req.body.imageChatAvatar;
+    if (req.body.sampleVoiceUrl) character.sampleVoiceUrl = req.body.sampleVoiceUrl;
+
     await character.save();
     res.json(character);
   } catch (err) {

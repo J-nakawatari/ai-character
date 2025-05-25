@@ -172,118 +172,47 @@ export default function AdminUsers() {
       </div>
     </div>
     {showDetailModal && (
-      <div className="modal-overlay" onClick={closeDetailModal}>
+      <div className="modal-overlay" style={{zIndex: 2000, background: 'rgba(36,41,51,0.55)'}} onClick={closeDetailModal}>
         <div
-          className="modal-content"
-          style={{ maxWidth: '800px', width: '90%' }}
+          className="modal-content admin-stats-card-wrapper"
+          style={{ maxWidth: 700, width: '95%', borderRadius: 18, boxShadow: '0 8px 32px rgba(67,234,252,0.10), 0 4px 16px rgba(35,46,67,0.10)', padding: 32, position: 'relative', background: '#fff', display: 'flex', flexDirection: 'column', gap: 32 }}
           onClick={(e) => e.stopPropagation()}
         >
-          <button className="modal-close" onClick={closeDetailModal} aria-label="閉じる">×</button>
+          <button className="modal-close" onClick={closeDetailModal} aria-label="閉じる" style={{ position: 'absolute', top: 18, right: 18, fontSize: 28, background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', zIndex: 10, borderRadius: '50%', width: 40, height: 40, lineHeight: '40px', textAlign: 'center', transition: 'background 0.2s' }} onMouseOver={e => e.currentTarget.style.background='#f1f5f9'} onMouseOut={e => e.currentTarget.style.background='none'}>×</button>
           {detailLoading ? (
-            <div style={{ padding: '24px' }}>読み込み中...</div>
+            <div style={{ padding: '24px', textAlign: 'center', color: '#64748b' }}>読み込み中...</div>
           ) : detailError ? (
             <div className="admin-error-message" style={{ margin: '24px' }}>{detailError}</div>
           ) : selectedUser ? (
             <>
-              <div className="modal-header">
-                <div>
-                  <h2 className="modal-title">{selectedUser.name?.ja || selectedUser.name || ''}</h2>
-                  <div className="modal-subtitle">{selectedUser.email}</div>
+              <div style={{marginBottom: 8}}>
+                <h2 className="admin-dashboard-title" style={{fontSize: '1.5rem', marginBottom: 4}}>{selectedUser.name?.ja || selectedUser.name || ''}</h2>
+                <div style={{color: '#6b7280', fontSize: 15, marginBottom: 12}}>{selectedUser.email}</div>
+              </div>
+              <div className="admin-stats-card-wrapper" style={{margin:0, boxShadow:'none', padding: '20px 0 0 0', background:'none'}}>
+                <div className="admin-stats-title" style={{fontSize: '1.1rem', marginBottom: 18}}>ユーザー情報</div>
+                <div className="modal-detail-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16 }}>
+                  <div><div className="form-label">ID</div><div className="character-detail-value">{selectedUser._id}</div></div>
+                  <div><div className="form-label">登録状況</div><div className="character-detail-value">{selectedUser.hasCompletedSetup ? '完了' : '未完了'}</div></div>
+                  <div><div className="form-label">選択キャラクター</div><div className="character-detail-value">{selectedUser.selectedCharacter ? (selectedUser.selectedCharacter.name?.ja || selectedUser.selectedCharacter.name || selectedUser.selectedCharacter._id) : '未選択'}</div></div>
+                  <div><div className="form-label">会員種別</div><div className="character-detail-value">{selectedUser.membershipType === 'premium' ? 'プレミアム' : '無料'}</div></div>
+                  <div><div className="form-label">言語</div><div className="character-detail-value">{selectedUser.preferredLanguage}</div></div>
+                  <div><div className="form-label">サブスク状態</div><div className="character-detail-value">{selectedUser.subscriptionStatus}</div></div>
+                  <div><div className="form-label">サブスク開始</div><div className="character-detail-value">{selectedUser.subscriptionStartDate ? new Date(selectedUser.subscriptionStartDate).toLocaleString() : '-'}</div></div>
+                  <div><div className="form-label">サブスク終了</div><div className="character-detail-value">{selectedUser.subscriptionEndDate ? new Date(selectedUser.subscriptionEndDate).toLocaleString() : '-'}</div></div>
+                  <div><div className="form-label">最終ログイン</div><div className="character-detail-value">{selectedUser.lastLoginDate ? new Date(selectedUser.lastLoginDate).toLocaleString() : '-'}</div></div>
+                  <div><div className="form-label">作成日</div><div className="character-detail-value">{selectedUser.createdAt ? new Date(selectedUser.createdAt).toLocaleString() : '-'}</div></div>
+                  <div><div className="form-label">有効</div><div className="character-detail-value">{selectedUser.isActive ? '有効' : '無効'}</div></div>
                 </div>
               </div>
-              <div className="modal-detail-section">
-                <h3 className="modal-detail-title">ユーザー情報</h3>
-                <div
-                  className="modal-detail-grid"
-                  style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}
-                >
-                  <div className="modal-detail-item">
-                    <div className="modal-detail-label">ID</div>
-                    <div className="modal-detail-value">{selectedUser._id}</div>
-                  </div>
-                  <div className="modal-detail-item">
-                    <div className="modal-detail-label">登録状況</div>
-                    <div className="modal-detail-value">
-                      {selectedUser.hasCompletedSetup ? '完了' : '未完了'}
-                    </div>
-                  </div>
-                  <div className="modal-detail-item">
-                    <div className="modal-detail-label">選択キャラクター</div>
-                    <div className="modal-detail-value">
-                      {selectedUser.selectedCharacter
-                        ? selectedUser.selectedCharacter.name?.ja ||
-                          selectedUser.selectedCharacter.name ||
-                          selectedUser.selectedCharacter._id
-                        : '未選択'}
-                    </div>
-                  </div>
-                  <div className="modal-detail-item">
-                    <div className="modal-detail-label">会員種別</div>
-                    <div className="modal-detail-value">
-                      {selectedUser.membershipType === 'premium' ? 'プレミアム' : '無料'}
-                    </div>
-                  </div>
-                  <div className="modal-detail-item">
-                    <div className="modal-detail-label">言語</div>
-                    <div className="modal-detail-value">{selectedUser.preferredLanguage}</div>
-                  </div>
-                  <div className="modal-detail-item">
-                    <div className="modal-detail-label">サブスク状態</div>
-                    <div className="modal-detail-value">{selectedUser.subscriptionStatus}</div>
-                  </div>
-                  <div className="modal-detail-item">
-                    <div className="modal-detail-label">サブスク開始</div>
-                    <div className="modal-detail-value">
-                      {selectedUser.subscriptionStartDate
-                        ? new Date(selectedUser.subscriptionStartDate).toLocaleString()
-                        : '-'}
-                    </div>
-                  </div>
-                  <div className="modal-detail-item">
-                    <div className="modal-detail-label">サブスク終了</div>
-                    <div className="modal-detail-value">
-                      {selectedUser.subscriptionEndDate
-                        ? new Date(selectedUser.subscriptionEndDate).toLocaleString()
-                        : '-'}
-                    </div>
-                  </div>
-                  <div className="modal-detail-item">
-                    <div className="modal-detail-label">最終ログイン</div>
-                    <div className="modal-detail-value">
-                      {selectedUser.lastLoginDate
-                        ? new Date(selectedUser.lastLoginDate).toLocaleString()
-                        : '-'}
-                    </div>
-                  </div>
-                  <div className="modal-detail-item">
-                    <div className="modal-detail-label">作成日</div>
-                    <div className="modal-detail-value">
-                      {selectedUser.createdAt
-                        ? new Date(selectedUser.createdAt).toLocaleString()
-                        : '-'}
-                    </div>
-                  </div>
-                  <div className="modal-detail-item">
-                    <div className="modal-detail-label">有効</div>
-                    <div className="modal-detail-value">
-                      {selectedUser.isActive ? '有効' : '無効'}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="modal-detail-section">
-                <h3 className="modal-detail-title">購入キャラ</h3>
+              <div className="admin-stats-card-wrapper" style={{margin:0, boxShadow:'none', padding: '20px 0 0 0', background:'none'}}>
+                <div className="admin-stats-title" style={{fontSize: '1.1rem', marginBottom: 18}}>購入キャラ</div>
                 {selectedUser.purchasedCharacters && selectedUser.purchasedCharacters.length > 0 ? (
                   <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
                     {selectedUser.purchasedCharacters.map((pc, idx) => (
-                      <li key={idx} className="modal-detail-item">
-                        <div className="modal-detail-label">
-                          {pc.character?.name?.ja || pc.character?.name || pc.character || ''}
-                        </div>
-                        <div className="modal-detail-value">
-                          {pc.purchaseType} /
-                          {pc.purchaseDate ? new Date(pc.purchaseDate).toLocaleString() : ''}
-                        </div>
+                      <li key={idx} style={{marginBottom: 8, padding: 8, borderRadius: 8, background: '#f8fafc'}}>
+                        <div className="form-label">{pc.character?.name?.ja || pc.character?.name || pc.character || ''}</div>
+                        <div className="character-detail-value">{pc.purchaseType} / {pc.purchaseDate ? new Date(pc.purchaseDate).toLocaleString() : ''}</div>
                       </li>
                     ))}
                   </ul>
