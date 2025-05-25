@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import api from '@/utils/api';
 import Card from '@/components/Card';
+import ImageCropper from '@/components/ImageCropper';
 
 export default function CharacterEditPage() {
   const params = useParams();
@@ -12,6 +13,17 @@ export default function CharacterEditPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [showCropper, setShowCropper] = useState(false);
+  const [imageType, setImageType] = useState('');
+  const [aspect, setAspect] = useState('1:1');
+  const imageSizes = {
+    characterSelect: { width: 238, height: 260 },
+    dashboard: { width: 320, height: 528 },
+    chatBackground: { width: 455, height: 745 },
+    chatAvatar: { width: 400, height: 400 }
+  };
+  const [cropSize, setCropSize] = useState(imageSizes['characterSelect']);
 
   useEffect(() => {
     const fetchCharacter = async () => {
@@ -44,6 +56,11 @@ export default function CharacterEditPage() {
       fd.append('defaultMessage', JSON.stringify(character.defaultMessage));
       fd.append('themeColor', character.themeColor);
       fd.append('isActive', character.isActive);
+      fd.append('imageCharacterSelect', character.imageCharacterSelect || '');
+      fd.append('imageDashboard', character.imageDashboard || '');
+      fd.append('imageChatBackground', character.imageChatBackground || '');
+      fd.append('imageChatAvatar', character.imageChatAvatar || '');
+      fd.append('sampleVoiceUrl', character.sampleVoiceUrl || '');
 
       await api.put(`/admin/characters/${params.id}`, fd, {
         headers: { 'Content-Type': 'multipart/form-data' }
@@ -71,6 +88,49 @@ export default function CharacterEditPage() {
         [subfield]: value
       }
     }));
+  };
+
+  const handleImageUpload = async (e, type) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      setError('ファイルサイズは5MB以下である必要があります');
+      return;
+    }
+    if (file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setSelectedImage(e.target.result);
+        setImageType(type);
+        setCropSize(imageSizes[type]);
+        setShowCropper(true);
+      };
+      reader.readAsDataURL(file);
+      e.target.value = '';
+      return;
+    }
+  };
+
+  const handleCropComplete = async (blob, dataUrl) => {
+    setShowCropper(false);
+    const file = new File([blob], `upload_${Date.now()}.jpg`, { type: 'image/jpeg' });
+    const formData = new FormData();
+    formData.append('image', file);
+    try {
+      const res = await api.post('/admin/characters/upload/image', formData);
+      console.log('アップロード結果', imageType, res.data.imageUrl);
+      if (imageType === 'characterSelect') {
+        setCharacter(prev => ({ ...prev, imageCharacterSelect: res.data.imageUrl }));
+      } else if (imageType === 'dashboard') {
+        setCharacter(prev => ({ ...prev, imageDashboard: res.data.imageUrl }));
+      } else if (imageType === 'chatBackground') {
+        setCharacter(prev => ({ ...prev, imageChatBackground: res.data.imageUrl }));
+      } else if (imageType === 'chatAvatar') {
+        setCharacter(prev => ({ ...prev, imageChatAvatar: res.data.imageUrl }));
+      }
+    } catch (err) {
+      setError('画像のアップロードに失敗しました');
+    }
   };
 
   if (loading) return <div className="admin-content">読み込み中...</div>;
@@ -342,19 +402,7 @@ export default function CharacterEditPage() {
                     <input
                       type="file"
                       accept="image/*"
-                      onChange={async (e) => {
-                        const file = e.target.files[0];
-                        if (file) {
-                          const formData = new FormData();
-                          formData.append('image', file);
-                          try {
-                            const res = await api.post('/admin/characters/upload/image', formData);
-                            handleChange('imageCharacterSelect', res.data.imageUrl);
-                          } catch (err) {
-                            setError('画像のアップロードに失敗しました');
-                          }
-                        }
-                      }}
+                      onChange={(e) => handleImageUpload(e, 'characterSelect')}
                       className="admin-file-input"
                     />
                   </div>
@@ -370,19 +418,7 @@ export default function CharacterEditPage() {
                     <input
                       type="file"
                       accept="image/*"
-                      onChange={async (e) => {
-                        const file = e.target.files[0];
-                        if (file) {
-                          const formData = new FormData();
-                          formData.append('image', file);
-                          try {
-                            const res = await api.post('/admin/characters/upload/image', formData);
-                            handleChange('imageDashboard', res.data.imageUrl);
-                          } catch (err) {
-                            setError('画像のアップロードに失敗しました');
-                          }
-                        }
-                      }}
+                      onChange={(e) => handleImageUpload(e, 'dashboard')}
                       className="admin-file-input"
                     />
                   </div>
@@ -398,19 +434,7 @@ export default function CharacterEditPage() {
                     <input
                       type="file"
                       accept="image/*"
-                      onChange={async (e) => {
-                        const file = e.target.files[0];
-                        if (file) {
-                          const formData = new FormData();
-                          formData.append('image', file);
-                          try {
-                            const res = await api.post('/admin/characters/upload/image', formData);
-                            handleChange('imageChatBackground', res.data.imageUrl);
-                          } catch (err) {
-                            setError('画像のアップロードに失敗しました');
-                          }
-                        }
-                      }}
+                      onChange={(e) => handleImageUpload(e, 'chatBackground')}
                       className="admin-file-input"
                     />
                   </div>
@@ -426,19 +450,7 @@ export default function CharacterEditPage() {
                     <input
                       type="file"
                       accept="image/*"
-                      onChange={async (e) => {
-                        const file = e.target.files[0];
-                        if (file) {
-                          const formData = new FormData();
-                          formData.append('image', file);
-                          try {
-                            const res = await api.post('/admin/characters/upload/image', formData);
-                            handleChange('imageChatAvatar', res.data.imageUrl);
-                          } catch (err) {
-                            setError('画像のアップロードに失敗しました');
-                          }
-                        }
-                      }}
+                      onChange={(e) => handleImageUpload(e, 'chatAvatar')}
                       className="admin-file-input"
                     />
                   </div>
@@ -480,6 +492,27 @@ export default function CharacterEditPage() {
             </div>
           </div>
         </Card>
+
+        {/* Cropperモーダル */}
+        {showCropper && selectedImage && (
+          <div style={{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(36,41,51,0.55)',zIndex:1000,display:'flex',alignItems:'center',justifyContent:'center'}}>
+            <div style={{background:'#fff',borderRadius:18,boxShadow:'0 8px 32px rgba(67,234,252,0.10), 0 4px 16px rgba(35,46,67,0.10)',padding:32,minWidth:cropSize.width+100,maxWidth:'95vw',display:'flex',flexDirection:'column',alignItems:'center'}}>
+              <h3 style={{fontSize:'1.25rem',fontWeight:'bold',marginBottom:18,color:'#232e43'}}>画像のトリミング</h3>
+              <div style={{marginBottom:16}}>
+                <span style={{fontSize:13,color:'#6b7280'}}>推奨サイズ: {cropSize.width} x {cropSize.height}px</span>
+              </div>
+              <ImageCropper
+                image={selectedImage}
+                cropWidth={cropSize.width}
+                cropHeight={cropSize.height}
+                onCropComplete={handleCropComplete}
+                saveButtonText="切り抜いて保存"
+                cancelButtonText="キャンセル"
+                onCancel={() => setShowCropper(false)}
+              />
+            </div>
+          </div>
+        )}
 
         {/* 保存ボタン */}
         <div style={{display:'flex', justifyContent:'center', marginTop:32, marginBottom:48}}>
