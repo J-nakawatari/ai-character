@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const adminAuth = require('../../middleware/adminAuth');
 const Character = require('../../models/Character');
-const { uploadImage, resizeImage } = require('../../utils/fileUpload');
+const { uploadImage, uploadVoice, resizeImage } = require('../../utils/fileUpload');
 
 // 一覧取得
 router.get('/', adminAuth, async (req, res) => {
@@ -80,5 +80,21 @@ router.put('/:id', adminAuth, uploadImage.single('image'), resizeImage(), async 
     console.error(err.message);
     res.status(500).send('サーバーエラー');
   }
+});
+
+// 画像アップロード
+router.post('/upload/image', adminAuth, uploadImage.single('image'), resizeImage(), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ msg: '画像がありません' });
+  }
+  res.json({ imageUrl: `/uploads/images/${req.file.filename}` });
+});
+
+// 音声アップロード
+router.post('/upload/voice', adminAuth, uploadVoice.single('sampleVoice'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ msg: '音声ファイルがありません' });
+  }
+  res.json({ voiceUrl: `/uploads/voice/${req.file.filename}` });
 });
 module.exports = router;
