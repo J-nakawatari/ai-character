@@ -11,6 +11,10 @@ export default function AdminUsers() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [showDetailModal, setShowDetailModal] = useState(false);
+  const [detailLoading, setDetailLoading] = useState(false);
+  const [detailError, setDetailError] = useState('');
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -43,6 +47,28 @@ export default function AdminUsers() {
     }
   };
 
+  const handleShowDetail = async (userId) => {
+    setShowDetailModal(true);
+    setDetailLoading(true);
+    setSelectedUser(null);
+    try {
+      const res = await api.get(`/admin/users/${userId}`);
+      setSelectedUser(res.data);
+      setDetailError('');
+    } catch (err) {
+      console.error('ユーザー詳細の取得に失敗:', err);
+      setDetailError('ユーザー詳細の取得に失敗しました');
+    } finally {
+      setDetailLoading(false);
+    }
+  };
+
+  const closeDetailModal = () => {
+    setShowDetailModal(false);
+    setSelectedUser(null);
+    setDetailError('');
+  };
+
   if (loading) {
     return <GlobalLoading text="読み込み中..." />;
   }
@@ -56,6 +82,7 @@ export default function AdminUsers() {
   }
 
   return (
+    <>
     <div className="admin-content">
       <div className="admin-header">
         <h1 className="admin-dashboard-title">ユーザー管理</h1>
@@ -115,6 +142,12 @@ export default function AdminUsers() {
                     <td>
                       <div className="admin-button-group">
                         <button
+                          className="admin-button"
+                          onClick={() => handleShowDetail(user._id)}
+                        >
+                          詳細
+                        </button>
+                        <button
                           className="admin-button admin-button--danger"
                           onClick={() => handleDeleteUser(user._id)}
                         >
@@ -138,5 +171,131 @@ export default function AdminUsers() {
         </Card>
       </div>
     </div>
+    {showDetailModal && (
+      <div className="modal-overlay" onClick={closeDetailModal}>
+        <div
+          className="modal-content"
+          style={{ maxWidth: '800px', width: '90%' }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <button className="modal-close" onClick={closeDetailModal} aria-label="閉じる">×</button>
+          {detailLoading ? (
+            <div style={{ padding: '24px' }}>読み込み中...</div>
+          ) : detailError ? (
+            <div className="admin-error-message" style={{ margin: '24px' }}>{detailError}</div>
+          ) : selectedUser ? (
+            <>
+              <div className="modal-header">
+                <div>
+                  <h2 className="modal-title">{selectedUser.name?.ja || selectedUser.name || ''}</h2>
+                  <div className="modal-subtitle">{selectedUser.email}</div>
+                </div>
+              </div>
+              <div className="modal-detail-section">
+                <h3 className="modal-detail-title">ユーザー情報</h3>
+                <div
+                  className="modal-detail-grid"
+                  style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}
+                >
+                  <div className="modal-detail-item">
+                    <div className="modal-detail-label">ID</div>
+                    <div className="modal-detail-value">{selectedUser._id}</div>
+                  </div>
+                  <div className="modal-detail-item">
+                    <div className="modal-detail-label">登録状況</div>
+                    <div className="modal-detail-value">
+                      {selectedUser.hasCompletedSetup ? '完了' : '未完了'}
+                    </div>
+                  </div>
+                  <div className="modal-detail-item">
+                    <div className="modal-detail-label">選択キャラクター</div>
+                    <div className="modal-detail-value">
+                      {selectedUser.selectedCharacter
+                        ? selectedUser.selectedCharacter.name?.ja ||
+                          selectedUser.selectedCharacter.name ||
+                          selectedUser.selectedCharacter._id
+                        : '未選択'}
+                    </div>
+                  </div>
+                  <div className="modal-detail-item">
+                    <div className="modal-detail-label">会員種別</div>
+                    <div className="modal-detail-value">
+                      {selectedUser.membershipType === 'premium' ? 'プレミアム' : '無料'}
+                    </div>
+                  </div>
+                  <div className="modal-detail-item">
+                    <div className="modal-detail-label">言語</div>
+                    <div className="modal-detail-value">{selectedUser.preferredLanguage}</div>
+                  </div>
+                  <div className="modal-detail-item">
+                    <div className="modal-detail-label">サブスク状態</div>
+                    <div className="modal-detail-value">{selectedUser.subscriptionStatus}</div>
+                  </div>
+                  <div className="modal-detail-item">
+                    <div className="modal-detail-label">サブスク開始</div>
+                    <div className="modal-detail-value">
+                      {selectedUser.subscriptionStartDate
+                        ? new Date(selectedUser.subscriptionStartDate).toLocaleString()
+                        : '-'}
+                    </div>
+                  </div>
+                  <div className="modal-detail-item">
+                    <div className="modal-detail-label">サブスク終了</div>
+                    <div className="modal-detail-value">
+                      {selectedUser.subscriptionEndDate
+                        ? new Date(selectedUser.subscriptionEndDate).toLocaleString()
+                        : '-'}
+                    </div>
+                  </div>
+                  <div className="modal-detail-item">
+                    <div className="modal-detail-label">最終ログイン</div>
+                    <div className="modal-detail-value">
+                      {selectedUser.lastLoginDate
+                        ? new Date(selectedUser.lastLoginDate).toLocaleString()
+                        : '-'}
+                    </div>
+                  </div>
+                  <div className="modal-detail-item">
+                    <div className="modal-detail-label">作成日</div>
+                    <div className="modal-detail-value">
+                      {selectedUser.createdAt
+                        ? new Date(selectedUser.createdAt).toLocaleString()
+                        : '-'}
+                    </div>
+                  </div>
+                  <div className="modal-detail-item">
+                    <div className="modal-detail-label">有効</div>
+                    <div className="modal-detail-value">
+                      {selectedUser.isActive ? '有効' : '無効'}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="modal-detail-section">
+                <h3 className="modal-detail-title">購入キャラ</h3>
+                {selectedUser.purchasedCharacters && selectedUser.purchasedCharacters.length > 0 ? (
+                  <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
+                    {selectedUser.purchasedCharacters.map((pc, idx) => (
+                      <li key={idx} className="modal-detail-item">
+                        <div className="modal-detail-label">
+                          {pc.character?.name?.ja || pc.character?.name || pc.character || ''}
+                        </div>
+                        <div className="modal-detail-value">
+                          {pc.purchaseType} /
+                          {pc.purchaseDate ? new Date(pc.purchaseDate).toLocaleString() : ''}
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <div className="empty-message">なし</div>
+                )}
+              </div>
+            </>
+          ) : null}
+        </div>
+      </div>
+    )}
+    </>
   );
 } 
