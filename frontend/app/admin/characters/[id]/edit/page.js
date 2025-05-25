@@ -59,7 +59,7 @@ export default function EditCharacter({ params }) {
   const [imageType, setImageType] = useState('');
   const [showCropper, setShowCropper] = useState(false);
   const [previewUrl, setPreviewUrl] = useState('');
-  const [croppedImage, setCroppedImage] = useState(null);
+  const [croppedImages, setCroppedImages] = useState({});
   const ratioOptions = {
     '1:1': { width: 400, height: 400 },
     '16:9': { width: 480, height: 270 }
@@ -138,8 +138,8 @@ export default function EditCharacter({ params }) {
       fd.append('defaultMessage', JSON.stringify(formData.defaultMessage));
       fd.append('themeColor', formData.themeColor);
       fd.append('isActive', formData.isActive);
-      if (croppedImage) {
-        const file = new File([croppedImage], `upload_${Date.now()}.jpg`, { type: 'image/jpeg' });
+      if (croppedImages.characterSelect) {
+        const file = new File([croppedImages.characterSelect], `upload_${Date.now()}.jpg`, { type: 'image/jpeg' });
         fd.append('image', file);
       }
 
@@ -220,10 +220,10 @@ export default function EditCharacter({ params }) {
   const handleCropComplete = async (blob, dataUrl) => {
     setShowCropper(false);
     setPreviewUrl(dataUrl);
-    setCroppedImage(blob);
+    setCroppedImages(prev => ({ ...prev, [imageType]: blob }));
     setFormData(prev => ({
       ...prev,
-      imageCharacterSelect: dataUrl
+      [`image${imageType.charAt(0).toUpperCase() + imageType.slice(1)}`]: dataUrl
     }));
   };
   
