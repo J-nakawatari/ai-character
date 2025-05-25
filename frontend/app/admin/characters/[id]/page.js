@@ -31,7 +31,23 @@ export default function CharacterEditPage() {
     e.preventDefault();
     setSaving(true);
     try {
-      await api.put(`/admin/characters/${params.id}`, character);
+      const fd = new FormData();
+      fd.append('name', JSON.stringify(character.name));
+      fd.append('description', JSON.stringify(character.description));
+      fd.append('personality', character.personality || '');
+      fd.append('personalityPrompt', JSON.stringify(character.personalityPrompt));
+      fd.append('adminPrompt', JSON.stringify(character.adminPrompt));
+      fd.append('characterType', character.characterType);
+      fd.append('price', character.price);
+      fd.append('purchaseType', character.purchaseType);
+      fd.append('voice', character.voice);
+      fd.append('defaultMessage', JSON.stringify(character.defaultMessage));
+      fd.append('themeColor', character.themeColor);
+      fd.append('isActive', character.isActive);
+
+      await api.put(`/admin/characters/${params.id}`, fd, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
       router.push(`/admin/characters/${params.id}/detail`);
     } catch (err) {
       setError('保存に失敗しました');
