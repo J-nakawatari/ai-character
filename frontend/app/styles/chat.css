@@ -12,11 +12,11 @@
 
 .chat-bg-character-image {
   position: absolute;
-  bottom: -27%;
+  bottom: -147px;
   left: 50%;
   height: auto;
   transform: translate(-50%, -50%);
-  opacity: 0.8;
+  opacity: 0.9;
   pointer-events: none;
   z-index: -1;
 }
@@ -71,7 +71,7 @@
   justify-content: flex-end;
   height: 100%;
   z-index: 1;
-  padding: 0 0 16px 0;
+  padding: 0;
   max-width: 768px;
   margin: 0 auto;
   width: 100%;
@@ -145,7 +145,7 @@
 
 .chat-bubble--user {
   align-self: flex-end;
-  background: rgba(136, 51, 255, 0.6);
+  background: rgba(136, 51, 255, 0.4);
   color: #fff;
   border-top-right-radius: 0;
   margin-right: 8px;
@@ -159,7 +159,7 @@
   right: -8px;
   width: 8px;
   height: 16px;
-  background: rgba(136, 51, 255, 0.6);
+  background: rgba(136, 51, 255, 0.4);
   clip-path: polygon(0 0, 0 100%, 100% 0);
 }
 
