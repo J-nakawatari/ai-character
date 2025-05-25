@@ -53,8 +53,8 @@ router.put('/:id', adminAuth, uploadImage.single('image'), resizeImage(), async 
     // 多言語フィールドはJSON.parseで対応（フロント側でJSON.stringifyして送る）
     if (name) character.name = JSON.parse(name);
     if (description) character.description = JSON.parse(description);
-    if (personalityPrompt) character.personalityPrompt = personalityPrompt;
-    if (adminPrompt) character.adminPrompt = adminPrompt;
+    if (personalityPrompt) character.personalityPrompt = JSON.parse(personalityPrompt);
+    if (adminPrompt) character.adminPrompt = JSON.parse(adminPrompt);
     if (characterType) {
       character.characterType = characterType;
       character.isPremium = characterType === 'premium';
@@ -63,7 +63,7 @@ router.put('/:id', adminAuth, uploadImage.single('image'), resizeImage(), async 
     if (price) character.price = parseInt(price);
     if (purchaseType) character.purchaseType = purchaseType;
     if (voice) character.voice = voice;
-    if (defaultMessage) character.defaultMessage = defaultMessage;
+    if (defaultMessage) character.defaultMessage = JSON.parse(defaultMessage);
     if (themeColor) character.themeColor = themeColor;
     if (typeof isActive !== 'undefined') {
       character.isActive = typeof isActive === 'boolean' ? isActive : isActive === 'true';
