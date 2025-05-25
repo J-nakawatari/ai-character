@@ -59,7 +59,6 @@ export default function EditCharacter({ params }) {
   const [imageType, setImageType] = useState('');
   const [showCropper, setShowCropper] = useState(false);
   const [previewUrl, setPreviewUrl] = useState('');
-  const [croppedImages, setCroppedImages] = useState({});
   const ratioOptions = {
     '1:1': { width: 400, height: 400 },
     '16:9': { width: 480, height: 270 }
@@ -138,10 +137,6 @@ export default function EditCharacter({ params }) {
       fd.append('defaultMessage', JSON.stringify(formData.defaultMessage));
       fd.append('themeColor', formData.themeColor);
       fd.append('isActive', formData.isActive);
-      if (croppedImages.characterSelect) {
-        const file = new File([croppedImages.characterSelect], `upload_${Date.now()}.jpg`, { type: 'image/jpeg' });
-        fd.append('image', file);
-      }
 
       const res = await api.put(`/admin/characters/${id}`, fd, {
         headers: { 'Content-Type': 'multipart/form-data' }
@@ -220,11 +215,23 @@ export default function EditCharacter({ params }) {
   const handleCropComplete = async (blob, dataUrl) => {
     setShowCropper(false);
     setPreviewUrl(dataUrl);
-    setCroppedImages(prev => ({ ...prev, [imageType]: blob }));
-    setFormData(prev => ({
-      ...prev,
-      [`image${imageType.charAt(0).toUpperCase() + imageType.slice(1)}`]: dataUrl
-    }));
+
+    if (imageType === 'characterSelect') {
+      const file = new File([blob], `upload_${Date.now()}.jpg`, { type: 'image/jpeg' });
+      const fd = new FormData();
+      fd.append('image', file);
+
+      try {
+        const res = await api.put(`/admin/characters/${id}`, fd, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
+
+        setFormData(res.data);
+      } catch (err) {
+        console.error('画像アップロードに失敗:', err);
+        setToast({ show: true, message: '画像のアップロードに失敗しました', type: 'error' });
+      }
+    }
   };
   
   const handleVoiceUpload = async (e) => {
