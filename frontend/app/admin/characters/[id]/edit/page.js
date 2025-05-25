@@ -59,6 +59,13 @@ export default function EditCharacter({ params }) {
   const [imageType, setImageType] = useState('');
   const [showCropper, setShowCropper] = useState(false);
   const [previewUrl, setPreviewUrl] = useState('');
+  const [croppedImage, setCroppedImage] = useState(null);
+  const ratioOptions = {
+    '1:1': { width: 400, height: 400 },
+    '16:9': { width: 480, height: 270 }
+  };
+  const [aspect, setAspect] = useState('1:1');
+  const [cropSize, setCropSize] = useState(ratioOptions['1:1']);
 
   const router = useRouter();
 
@@ -106,21 +113,40 @@ export default function EditCharacter({ params }) {
       }));
     }
   };
+
+  const handleAspectChange = (e) => {
+    const val = e.target.value;
+    setAspect(val);
+    setCropSize(ratioOptions[val]);
+  };
   
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setSaving(true);
-    
+
     try {
-      console.log('送信するデータ:', formData);
-      const dataToSend = {
-        ...formData,
-        isActive: formData.isActive
-      };
-      console.log('実際に送信するデータ:', dataToSend);
-      
-      await api.put(`/admin/characters/${id}`, dataToSend);
+      const fd = new FormData();
+      fd.append('name', JSON.stringify(formData.name));
+      fd.append('description', JSON.stringify(formData.description));
+      fd.append('personalityPrompt', JSON.stringify(formData.personalityPrompt));
+      fd.append('adminPrompt', JSON.stringify(formData.adminPrompt));
+      fd.append('characterType', formData.characterType);
+      fd.append('price', formData.price);
+      fd.append('purchaseType', formData.purchaseType);
+      fd.append('voice', formData.voice);
+      fd.append('defaultMessage', JSON.stringify(formData.defaultMessage));
+      fd.append('themeColor', formData.themeColor);
+      fd.append('isActive', formData.isActive);
+      if (croppedImage) {
+        const file = new File([croppedImage], `upload_${Date.now()}.jpg`, { type: 'image/jpeg' });
+        fd.append('image', file);
+      }
+
+      const res = await api.put(`/admin/characters/${id}`, fd, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      setFormData(res.data);
       setToast({ show: true, message: 'キャラクターを更新しました', type: 'success' });
       setTimeout(() => {
         router.push('/admin/characters');
@@ -194,49 +220,11 @@ export default function EditCharacter({ params }) {
   const handleCropComplete = async (blob, dataUrl) => {
     setShowCropper(false);
     setPreviewUrl(dataUrl);
-    
-    const imageSizes = {
-      characterSelect: '238x260',
-      dashboard: '320x528',
-      chatBackground: '455x745',
-      chatAvatar: '400x400'
-    };
-    
-    const fileName = `cropped_${Date.now()}.jpg`;
-    const file = new File([blob], fileName, { type: 'image/jpeg' });
-    
-    const formData = new FormData();
-    formData.append('image', file);
-    
-    try {
-      setUploadStatus({ ...uploadStatus, image: 'アップロード中...' });
-      
-      const res = await api.post('/admin/characters/upload/image', formData);
-      
-      const imageUrl = res.data.imageUrl;
-      
-      await api.put(`/admin/characters/${id}/image`, {
-        imageType,
-        imageUrl
-      });
-      
-      setFormData(prev => ({
-        ...prev,
-        [`image${imageType.charAt(0).toUpperCase() + imageType.slice(1)}`]: imageUrl
-      }));
-      
-      setUploadStatus({ ...uploadStatus, image: 'アップロード完了' });
-      setToast({ show: true, message: '画像がアップロードされました', type: 'success' });
-      
-      setTimeout(() => {
-        setUploadStatus(prev => ({ ...prev, image: '' }));
-      }, 3000);
-    } catch (err) {
-      console.error('画像アップロードに失敗:', err);
-      setUploadStatus({ ...uploadStatus, image: 'アップロード失敗' });
-      setError('画像のアップロードに失敗しました');
-      setToast({ show: true, message: '画像のアップロードに失敗しました', type: 'error' });
-    }
+    setCroppedImage(blob);
+    setFormData(prev => ({
+      ...prev,
+      imageCharacterSelect: dataUrl
+    }));
   };
   
   const handleVoiceUpload = async (e) => {
@@ -679,10 +667,17 @@ export default function EditCharacter({ params }) {
         <div className={styles['cropper-modal-overlay']}>
           <div className={styles['cropper-modal-content']}>
             <h3 className={styles['cropper-modal-title']}>画像のトリミング</h3>
+            <div className="mb-4">
+              <label className="mr-2">アスペクト比:</label>
+              <select value={aspect} onChange={handleAspectChange}>
+                <option value="1:1">1:1</option>
+                <option value="16:9">16:9</option>
+              </select>
+            </div>
             <ImageCropper
               image={selectedImage}
-              cropWidth={imageType === 'characterSelect' ? 238 : imageType === 'dashboard' ? 320 : imageType === 'chatBackground' ? 455 : 400}
-              cropHeight={imageType === 'characterSelect' ? 260 : imageType === 'dashboard' ? 528 : imageType === 'chatBackground' ? 745 : 400}
+              cropWidth={cropSize.width}
+              cropHeight={cropSize.height}
               onCropComplete={handleCropComplete}
               className={styles['cropper-canvas']}
               sliderClassName={styles['cropper-slider']}
