@@ -2,10 +2,9 @@ import { NextResponse } from 'next/server';
 
 export async function POST(req) {
   const { default: Stripe } = await import('stripe');
-  console.log('STRIPE_SECRET_KEY:', process.env.STRIPE_SECRET_KEY);
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-  const { email } = await req.json();
+  const { email, returnTo } = await req.json();
 
   try {
     // 必要に応じてユーザー情報を取得
@@ -19,8 +18,8 @@ export async function POST(req) {
         },
       ],
       customer_email: email,
-      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/ja/setup?reselect=true&subscribed=true`,
-      cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/ja/setup?reselect=true`,
+      success_url: (returnTo || `${process.env.NEXT_PUBLIC_BASE_URL}/ja/mypage`) + '?subscribed=true',
+      cancel_url: returnTo || `${process.env.NEXT_PUBLIC_BASE_URL}/ja/mypage`,
     });
     return NextResponse.json({ url: session.url });
   } catch (err) {

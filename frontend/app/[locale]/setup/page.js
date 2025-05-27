@@ -48,15 +48,6 @@ export default function Setup({ params }) {
   const selectedCharacterId = watch('characterId');
 
   useEffect(() => {
-    const queryParams = new URLSearchParams(window.location.search);
-    const isReselect = queryParams.get('reselect') === 'true';
-    
-    if (!loading && user?.hasCompletedSetup && !isReselect) {
-      router.push(`/${locale}/dashboard`);
-    }
-  }, [user, loading, router, locale]);
-
-  useEffect(() => {
     if (loading) return; // wait for auth state
 
     if (!user) {
@@ -219,7 +210,6 @@ export default function Setup({ params }) {
         window.location.pathname +
         (queryParams.toString() ? '?' + queryParams.toString() : '');
       window.history.replaceState(null, '', newUrl);
-      window.location.reload();
     }
   }, []);
 
@@ -293,10 +283,11 @@ export default function Setup({ params }) {
   };
 
   const handleUpgrade = async () => {
+    const returnTo = window.location.href;
     const res = await fetch('/api/subscribe', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: user.email })
+      body: JSON.stringify({ email: user.email, returnTo })
     });
     const data = await res.json();
     window.location.href = data.url;

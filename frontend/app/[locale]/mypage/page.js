@@ -113,6 +113,25 @@ export default function MyPage({ params }) {
     }
   };
   
+  const handleUpgrade = async () => {
+    try {
+      const returnTo = window.location.href;
+      const res = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: user.email, returnTo })
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert('決済ページの取得に失敗しました');
+      }
+    } catch (e) {
+      alert('エラーが発生しました');
+    }
+  };
+  
   const formatDate = (dateString) => {
     if (!dateString) return t('not_set') || '未設定';
     const date = new Date(dateString);
@@ -206,7 +225,7 @@ export default function MyPage({ params }) {
           </div>
           
           {user.membershipType !== 'subscription' && (
-            <button className="mypage__upgrade-button">
+            <button className="mypage__upgrade-button" onClick={handleUpgrade}>
               {t('upgrade_button')}
             </button>
           )}

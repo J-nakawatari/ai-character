@@ -1,4 +1,9 @@
 {
+  "scripts": {
+    "dev": "concurrently \"npm run start:frontend\" \"npm run start:backend\"",
+    "start:frontend": "cd frontend && npm run dev",
+    "start:backend": "cd backend && nodemon index.js"
+  },
   "dependencies": {
     "@stripe/stripe-js": "^7.3.0",
     "i18next": "^25.2.0",
@@ -6,6 +11,10 @@
     "next-i18next": "^15.4.2",
     "next-intl": "^4.1.0",
     "react-i18next": "^15.5.1",
-    "stripe": "^18.1.1"
+    "stripe": "^18.1.1",
+    "node-schedule": "^2.1.1"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
   }
 }
