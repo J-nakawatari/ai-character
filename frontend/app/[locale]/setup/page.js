@@ -10,6 +10,7 @@ import api from '../../utils/api';
 import { useTranslations } from 'next-intl';
 import '../../styles/pages/setup.css';
 import GlobalLoading from '../../components/GlobalLoading';
+import ErrorMessage from '../../components/ErrorMessage';
 
 const schema = z.object({
   name: z.string().min(2, 'お名前は2文字以上で入力してください'),
@@ -370,6 +371,14 @@ export default function Setup({ params }) {
       </div>
       
       <form className="setup--form" onSubmit={handleSubmit(onSubmit)}>
+        {/* エラー表示 */}
+        {serverError && (
+          <ErrorMessage
+            message={serverError}
+            type="toast"
+            className="setup-error-message"
+          />
+        )}
         <h2 className="setup--section-title">
           {t('select_character')}
         </h2>

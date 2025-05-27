@@ -10,6 +10,7 @@ import ChatMessage from '../../components/ChatMessage';
 import '../../styles/chat.css';
 import { useTranslations } from 'next-intl';
 import GlobalLoading from '../../components/GlobalLoading';
+import ErrorMessage from '../../components/ErrorMessage';
 
 export default function Chat({ params }) {
   const { user, loading, logout } = useAuth();
@@ -196,6 +197,13 @@ export default function Chat({ params }) {
   return (
     <div className="chat-container">
       <main className="chat-main">
+        {error && (
+          <ErrorMessage
+            message={error}
+            type="toast"
+            className="chat-error-message"
+          />
+        )}
         {user.selectedCharacter?.imageChatBackground && (
           <img
             src={user.selectedCharacter.imageChatBackground}
@@ -250,11 +258,6 @@ export default function Chat({ params }) {
         </div>
         
         <div className="chat-input-container">
-          {error && (
-            <div className="chat-input-error">
-              {error}
-            </div>
-          )}
           <div className="chat-input-form">
             <div className="chat-input-wrapper">
               <textarea

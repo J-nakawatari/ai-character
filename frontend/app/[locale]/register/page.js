@@ -10,6 +10,7 @@ import { useAuth } from '../../utils/auth';
 import BackButton from '../../components/BackButton';
 import { useTranslations } from 'next-intl';
 import styles from '../login/page.module.css';
+import ErrorMessage from '../../components/ErrorMessage';
 
 const schema = (t) => z.object({
   name: z.string().min(2, t('validation.name_min_length')),
@@ -152,9 +153,11 @@ export default function Register({ params }) {
           <h1 className={styles['login-title']}>{t('register_title')}</h1>
 
           {serverError && (
-            <div className={styles['error-message']}>
-              {serverError}
-            </div>
+            <ErrorMessage
+              message={serverError}
+              type="inline"
+              className={styles['error-message']}
+            />
           )}
 
           <form onSubmit={handleSubmit(onSubmit)} className={styles['login-form']}>
@@ -167,7 +170,11 @@ export default function Register({ params }) {
                 {...register('name')}
               />
               {errors.name && (
-                <p className={styles['error-message']}>{errors.name.message}</p>
+                <ErrorMessage
+                  message={errors.name.message}
+                  type="inline"
+                  className={styles['error-message']}
+                />
               )}
             </div>
 
@@ -180,7 +187,11 @@ export default function Register({ params }) {
                 {...register('email')}
               />
               {errors.email && (
-                <p className={styles['error-message']}>{errors.email.message}</p>
+                <ErrorMessage
+                  message={errors.email.message}
+                  type="inline"
+                  className={styles['error-message']}
+                />
               )}
             </div>
 
@@ -193,7 +204,11 @@ export default function Register({ params }) {
                 {...register('password')}
               />
               {errors.password && (
-                <p className={styles['error-message']}>{errors.password.message}</p>
+                <ErrorMessage
+                  message={errors.password.message}
+                  type="inline"
+                  className={styles['error-message']}
+                />
               )}
             </div>
 

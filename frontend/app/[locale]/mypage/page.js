@@ -7,6 +7,7 @@ import api from '../../utils/api';
 import BackButton from '../../components/BackButton';
 import { useTranslations } from 'next-intl';
 import GlobalLoading from '../../components/GlobalLoading';
+import ErrorMessage from '../../components/ErrorMessage';
 
 export default function MyPage({ params }) {
   const { user, loading, logout, updateLanguage } = useAuth();
@@ -218,7 +219,7 @@ export default function MyPage({ params }) {
                   <button className="mypage__delete-button" onClick={handleUnsubscribe} disabled={isUnsubscribing}>
                     {isUnsubscribing ? t('processing', '処理中...') : t('unsubscribe_button', 'サブスクを解除する')}
                   </button>
-                  {unsubscribeError && <div className="error-message">{unsubscribeError}</div>}
+                  {unsubscribeError && <ErrorMessage message={unsubscribeError} type="toast" className="mypage-error-message" />}
                 </div>
               </>
             )}
@@ -322,7 +323,7 @@ export default function MyPage({ params }) {
                   className="input"
                   placeholder={t('password')}
                 />
-                {error && <p className="error-message">{error}</p>}
+                {error && <ErrorMessage message={error} type="inline" className="mypage-error-message" />}
               </div>
               
               <div className="mypage__modal-buttons">

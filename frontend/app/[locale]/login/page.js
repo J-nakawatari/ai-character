@@ -10,6 +10,7 @@ import { useAuth } from '../../utils/auth';
 import { useTranslations } from 'next-intl';
 import { Orbitron } from 'next/font/google';
 import styles from './page.module.css';
+import ErrorMessage from '../../components/ErrorMessage';
 
 const orbitron = Orbitron({ weight: '700', subsets: ['latin'] });
 
@@ -151,13 +152,11 @@ export default function Login({ params }) {
           <h1 className={`${orbitron.className} ${styles['login-title']}`}>{t('login_title')}</h1>
           
           {serverError && (
-            <div className={styles['error-message']}>
-              {serverError === 'Invalid credentials'
-                ? t('invalid_credentials')
-                : serverError === 'Login failed'
-                  ? t('login_failed')
-                  : serverError}
-            </div>
+            <ErrorMessage
+              message={serverError}
+              type="inline"
+              className={styles['error-message']}
+            />
           )}
           
           <form onSubmit={handleSubmit(onSubmit)} className={styles['login-form']}>
@@ -170,9 +169,11 @@ export default function Login({ params }) {
                 {...register('email')}
               />
               {errors.email && (
-                <p className={styles['error-message']}>
-                  {errors.email.message === 'Invalid email address' ? t('validation.invalid_email') : errors.email.message}
-                </p>
+                <ErrorMessage
+                  message={errors.email.message === 'Invalid email address' ? 'validation.invalid_email' : errors.email.message}
+                  type="inline"
+                  className={styles['error-message']}
+                />
               )}
             </div>
             
@@ -185,9 +186,11 @@ export default function Login({ params }) {
                 {...register('password')}
               />
               {errors.password && (
-                <p className={styles['error-message']}>
-                  {errors.password.message === 'Password is required' ? t('validation.password_required') : errors.password.message}
-                </p>
+                <ErrorMessage
+                  message={errors.password.message === 'Password is required' ? 'validation.password_required' : errors.password.message}
+                  type="inline"
+                  className={styles['error-message']}
+                />
               )}
             </div>
             
