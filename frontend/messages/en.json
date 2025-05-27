@@ -15,6 +15,7 @@
     "select_character": "Select an AI Character",
     "character_tags": "Tags",
     "select_button": "Select this character",
+    "select_button_short": "Select",
     "loading": "Loading...",
     "purchase_character": "Purchase",
     "upgrade_to_premium": "Upgrade to Premium",
@@ -26,7 +27,8 @@
     "buy_type_rental": "Rental",
     "confirm_purchase": "Confirm Purchase",
     "cancel": "Cancel",
-    "premium_price_period": "per month"
+    "premium_price_period": "per month",
+    "subscription_start": "Subscription Start Date"
   },
   "auth": {
     "name": "Name",
@@ -107,10 +109,14 @@
     "purchase_date": "Purchase Date:",
     "premium_warning": "You are currently subscribed to a premium plan. There will be no prorated refund if you delete your account.",
     "not_set": "Not set",
-    "subscription_start": "Subscription Start Date",
     "unsubscribe_button": "Cancel Subscription",
     "unsubscribe_confirm": "Are you sure you want to cancel your subscription?",
-    "unsubscribe_failed": "Failed to cancel subscription"
+    "unsubscribe_failed": "Failed to cancel subscription",
+    "price": "Price",
+    "type": "Type",
+    "buy_type_buy": "One-time purchase",
+    "buy_type_rental": "Rental",
+    "confirm_purchase": "Confirm Purchase"
   },
   "dashboard": {
     "name": "Name",
@@ -135,12 +141,6 @@
     "incomplete_character_data": "Character data is incomplete. Please reload.",
     "failed_send": "Failed to send message"
   },
-  "price": "Price",
-  "type": "Type",
-  "buy_type_buy": "One-time purchase",
-  "buy_type_rental": "Rental",
-  "confirm_purchase": "Confirm Purchase",
-  "cancel": "Cancel",
   "menu": {
     "dashboard": "Dashboard",
     "chat": "Chat",
