@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import useRequireAuth from '../../utils/useRequireAuth';
-import api from '../../utils/api';
+import { apiGet, apiPut } from '../../utils/api';
 import { useTranslations } from 'next-intl';
 import '../../styles/pages/setup.css';
 import GlobalLoading from '../../components/GlobalLoading';
@@ -50,23 +50,19 @@ export default function Setup({ params }) {
 
   useEffect(() => {
     if (loading) return; // wait for auth state
-
     if (!user) {
       router.push(`/${locale}/login`);
       return;
     }
-
     const fetchCharacters = async () => {
-      try {
-        const res = await api.get('/characters');
-        console.log('📦 APIレスポンス:', res.data);
+      const res = await apiGet('/characters');
+      if (res.success) {
         setCharacters(res.data);
         console.log('キャラクター取得結果:', res.data); 
-      } catch (err) {
+      } else {
         setServerError('キャラクターの取得に失敗しました');
-      } finally {
-        setLoadingCharacters(false);
       }
+      setLoadingCharacters(false);
     };
     fetchCharacters();
   }, [loading, user, router, locale]);

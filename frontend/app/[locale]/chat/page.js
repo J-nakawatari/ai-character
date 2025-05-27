@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, use } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
 import useRequireAuth from '../../utils/useRequireAuth';
-import api from '../../utils/api';
+import { apiGet, apiPost } from '../../utils/api';
 import Button from '../../components/Button';
 import ChatMessage from '../../components/ChatMessage';
 import '../../styles/chat.css';
@@ -31,20 +31,24 @@ export default function Chat({ params }) {
     const loadChatHistory = async () => {
       if (user?.selectedCharacter?._id) {
         try {
-          const res = await api.get(`/chat?characterId=${user.selectedCharacter._id}`);
-          const historyMessages = res.data.messages || [];
-          setMessages(historyMessages);
-          setChatId(res.data._id);
-
-          if (historyMessages.length === 0 && user.selectedCharacter.defaultMessage) {
-            const defaultMessage = {
-              sender: 'ai',
-              content: user.selectedCharacter.defaultMessage[locale] || user.selectedCharacter.defaultMessage.ja || user.selectedCharacter.defaultMessage.en,
-              timestamp: new Date().toISOString()
-            };
-            setMessages([defaultMessage]);
+          const res = await apiGet(`/chat?characterId=${user.selectedCharacter._id}`);
+          if (res.success) {
+            const historyMessages = res.data.messages || [];
+            setMessages(historyMessages);
+            setChatId(res.data._id);
+            if (historyMessages.length === 0 && user.selectedCharacter.defaultMessage) {
+              const defaultMessage = {
+                sender: 'ai',
+                content: user.selectedCharacter.defaultMessage[locale] || user.selectedCharacter.defaultMessage.ja || user.selectedCharacter.defaultMessage.en,
+                timestamp: new Date().toISOString()
+              };
+              setMessages([defaultMessage]);
+            }
+            setError('');
+          } else {
+            setError(t('failed_load_history', 'チャット履歴の読み込みに失敗しました'));
+            console.error('Failed to load chat history:', res.error);
           }
-          setError('');
         } catch (err) {
           setError(t('failed_load_history', 'チャット履歴の読み込みに失敗しました'));
           console.error('Failed to load chat history:', err);
@@ -151,23 +155,28 @@ export default function Chat({ params }) {
       setMessage('');
       setIsTyping(true);
       
-      const res = await api.post('/chat', {
+      const res = await apiPost('/chat', {
         characterId: user.selectedCharacter._id,
         message: message.trim()
       });
       
-      setTimeout(() => {
+      if (res.success) {
+        setTimeout(() => {
+          setIsTyping(false);
+          
+          const aiMessage = {
+            sender: 'ai',
+            content: res.data.reply,
+            timestamp: new Date().toISOString()
+          };
+          
+          setMessages(prev => [...prev, aiMessage]);
+        }, 1000);
+      } else {
+        setError(t('failed_send', 'メッセージの送信に失敗しました'));
         setIsTyping(false);
-        
-        const aiMessage = {
-          sender: 'ai',
-          content: res.data.reply,
-          timestamp: new Date().toISOString()
-        };
-        
-        setMessages(prev => [...prev, aiMessage]);
-      }, 1000);
-      
+        console.error(res.error);
+      }
     } catch (err) {
       setError(t('failed_send', 'メッセージの送信に失敗しました'));
       setIsTyping(false);

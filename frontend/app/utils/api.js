@@ -36,4 +36,41 @@ api.interceptors.response.use(
   }
 );
 
+// 共通APIラッパー
+export async function apiGet(url, config) {
+  try {
+    const res = await api.get(url, config);
+    return { success: true, data: res.data };
+  } catch (err) {
+    return { success: false, error: err.response?.data?.msg || err.message || 'API Error' };
+  }
+}
+
+export async function apiPost(url, data, config) {
+  try {
+    const res = await api.post(url, data, config);
+    return { success: true, data: res.data };
+  } catch (err) {
+    return { success: false, error: err.response?.data?.msg || err.message || 'API Error' };
+  }
+}
+
+export async function apiPut(url, data, config) {
+  try {
+    const res = await api.put(url, data, config);
+    return { success: true, data: res.data };
+  } catch (err) {
+    return { success: false, error: err.response?.data?.msg || err.message || 'API Error' };
+  }
+}
+
+export async function apiDelete(url, config) {
+  try {
+    const res = await api.delete(url, config);
+    return { success: true, data: res.data };
+  } catch (err) {
+    return { success: false, error: err.response?.data?.msg || err.message || 'API Error' };
+  }
+}
+
 export default api;

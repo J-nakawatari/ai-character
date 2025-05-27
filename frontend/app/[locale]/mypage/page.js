@@ -3,7 +3,7 @@
 import { useState, useEffect, use } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import useRequireAuth from '../../utils/useRequireAuth';
-import api from '../../utils/api';
+import { apiGet, apiPost, apiPatch } from '../../utils/api';
 import BackButton from '../../components/BackButton';
 import { useTranslations } from 'next-intl';
 import GlobalLoading from '../../components/GlobalLoading';
@@ -32,36 +32,32 @@ export default function MyPage({ params }) {
   }, [loading, user, router, locale]);
   
   const fetchPurchasedCharacters = async () => {
-    try {
-      const res = await api.get('/users/me/purchases');
+    const res = await apiGet('/users/me/purchases');
+    if (res.success) {
       setPurchasedCharacters(res.data);
-    } catch (err) {
-      console.error('購入済みキャラクターの取得に失敗しました', err);
+    } else {
+      console.error('購入済みキャラクターの取得に失敗しました', res.error);
     }
   };
   
   const handleSelectCharacter = async (characterId) => {
     try {
-      // 購入済みキャラクターかどうかをチェック
       const isPurchased = purchasedCharacters.some(
         item => item.character._id === characterId
       );
-
       if (!isPurchased) {
-        // 未購入の場合はエラーメッセージを表示
         alert('このキャラクターは購入が必要です。');
         return;
       }
-
-      await api.patch('/users/me/use-character', { characterId });
-      window.location.reload();
+      const res = await apiPatch('/users/me/use-character', { characterId });
+      if (res.success) {
+        window.location.reload();
+      } else {
+        alert(res.error || 'キャラクターの選択に失敗しました。');
+      }
     } catch (err) {
       console.error('キャラクター選択に失敗しました', err);
-      if (err.response?.data?.msg) {
-        alert(err.response.data.msg);
-      } else {
-        alert('キャラクターの選択に失敗しました。');
-      }
+      alert('キャラクターの選択に失敗しました。');
     }
   };
   
@@ -82,16 +78,18 @@ export default function MyPage({ params }) {
       setError(t('password_required') || 'パスワードを入力してください');
       return;
     }
-    
     setIsDeleting(true);
-    
     try {
-      await api.post('/users/me/delete', { password });
-      await logout();
-      router.push(`/${locale}/login`);
+      const res = await apiPost('/users/me/delete', { password });
+      if (res.success) {
+        await logout();
+        router.push(`/${locale}/login`);
+      } else {
+        setError(res.error || t('delete_account_failed') || 'アカウント削除に失敗しました');
+        setIsDeleting(false);
+      }
     } catch (err) {
-      console.error(t('delete_account_failed') || 'アカウント削除に失敗しました', err);
-      setError(err.response?.data?.msg || t('delete_account_failed') || 'アカウント削除に失敗しました');
+      setError(t('delete_account_failed') || 'アカウント削除に失敗しました');
       setIsDeleting(false);
     }
   };
@@ -105,11 +103,11 @@ export default function MyPage({ params }) {
     if (!window.confirm(t('unsubscribe_confirm', '本当にサブスクを解除しますか？'))) return;
     setIsUnsubscribing(true);
     setUnsubscribeError('');
-    try {
-      await api.post('/users/me/unsubscribe');
+    const res = await apiPost('/users/me/unsubscribe');
+    if (res.success) {
       window.location.reload();
-    } catch (err) {
-      setUnsubscribeError(err.response?.data?.msg || t('unsubscribe_failed', 'サブスク解除に失敗しました'));
+    } else {
+      setUnsubscribeError(res.error || t('unsubscribe_failed', 'サブスク解除に失敗しました'));
       setIsUnsubscribing(false);
     }
   };
