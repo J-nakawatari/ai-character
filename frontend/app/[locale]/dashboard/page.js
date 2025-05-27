@@ -3,7 +3,7 @@
 import { useEffect, use } from 'react';
 import { useRouter, usePathname, useParams } from 'next/navigation';
 import Image from 'next/image';
-import { useAuth } from '../../utils/auth';
+import useRequireAuth from '../../utils/useRequireAuth';
 import Button from '../../components/Button';
 import BackButton from '../../components/BackButton';
 import { useTranslations } from 'next-intl';
@@ -12,7 +12,7 @@ import styles from './dashboard.module.css';
 import GlobalLoading from '../../components/GlobalLoading';
 
 export default function Dashboard({ params }) {
-  const { user, loading, logout } = useAuth();
+  const { user, loading, element } = useRequireAuth();
   const router = useRouter();
   const pathname = usePathname();
   const urlParams = useParams();
@@ -60,9 +60,8 @@ export default function Dashboard({ params }) {
     }
   };
   
-  if (loading || !user) {
-    return <GlobalLoading text={t('loading', '読み込み中...')} />;
-  }
+  if (element) return element;
+  if (!user) return null;
 
   if (!user.selectedCharacter) {
     return (

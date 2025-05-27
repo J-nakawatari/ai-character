@@ -2,7 +2,7 @@
 
 import { useState, useEffect, use } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { useAuth } from '../../utils/auth';
+import useRequireAuth from '../../utils/useRequireAuth';
 import api from '../../utils/api';
 import BackButton from '../../components/BackButton';
 import { useTranslations } from 'next-intl';
@@ -10,7 +10,7 @@ import GlobalLoading from '../../components/GlobalLoading';
 import ErrorMessage from '../../components/ErrorMessage';
 
 export default function MyPage({ params }) {
-  const { user, loading, logout, updateLanguage } = useAuth();
+  const { user, loading, element } = useRequireAuth();
   const router = useRouter();
   const { locale } = typeof params.then === 'function' ? use(params) : params;
   const [purchasedCharacters, setPurchasedCharacters] = useState([]);
@@ -145,9 +145,8 @@ export default function MyPage({ params }) {
     }).format(date);
   };
   
-  if (loading || !user) {
-    return <GlobalLoading text={tApp('loading') || "読み込み中..."} />;
-  }
+  if (element) return element;
+  if (!user) return null;
   
   return (
     <main className="app-main">

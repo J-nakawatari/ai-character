@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, use } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
-import { useAuth } from '../../utils/auth';
+import useRequireAuth from '../../utils/useRequireAuth';
 import api from '../../utils/api';
 import Button from '../../components/Button';
 import ChatMessage from '../../components/ChatMessage';
@@ -13,7 +13,7 @@ import GlobalLoading from '../../components/GlobalLoading';
 import ErrorMessage from '../../components/ErrorMessage';
 
 export default function Chat({ params }) {
-  const { user, loading, logout } = useAuth();
+  const { user, loading, element } = useRequireAuth();
   const router = useRouter();
   const pathname = usePathname();
   const { locale } = typeof params.then === 'function' ? use(params) : params;
@@ -183,16 +183,8 @@ export default function Chat({ params }) {
     }
   };
   
-  const handleLogout = async () => {
-    const result = await logout();
-    if (result.success) {
-      router.push(`/${locale}/login`);
-    }
-  };
-  
-  if (loading || !user) {
-    return <GlobalLoading text={t('loading', '読み込み中...')} />;
-  }
+  if (element) return element;
+  if (!user) return null;
   
   return (
     <div className="chat-container">

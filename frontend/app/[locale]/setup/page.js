@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useAuth } from '../../utils/auth';
+import useRequireAuth from '../../utils/useRequireAuth';
 import api from '../../utils/api';
 import { useTranslations } from 'next-intl';
 import '../../styles/pages/setup.css';
@@ -18,7 +18,7 @@ const schema = z.object({
 });
 
 export default function Setup({ params }) {
-  const { user, completeSetup, loading } = useAuth();
+  const { user, loading, element } = useRequireAuth();
   const router = useRouter();
   const [characters, setCharacters] = useState([]);
   const [serverError, setServerError] = useState('');
@@ -354,6 +354,9 @@ export default function Setup({ params }) {
     closeUpgradeModal();
     window.location.reload();
   };
+
+  if (element) return element;
+  if (!user) return null;
 
   if (loading || loadingCharacters) {
     return <GlobalLoading text={t('loading')} />;
