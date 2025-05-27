@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from './utils/auth';
 import { Orbitron } from 'next/font/google';
+import GlobalLoading from './components/GlobalLoading';
 
 const chatMessages = [
   '今日は何のお話をする？✨',
@@ -224,11 +225,7 @@ export default function Home() {
   }, [rightVisible]);
   
   if (loading) {
-    return (
-      <div className="container">
-        <p>Loading...</p>
-      </div>
-    );
+    return <GlobalLoading text="Loading..." />;
   }
   
   return (
