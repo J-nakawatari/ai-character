@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { useEffect, useState } from 'react';
 
 export default function Toast({ show, message, type = 'success', duration = 3000, onClose }) {

@@ -8,11 +8,10 @@
   background: none;
   border-radius: 0;
   box-shadow: none;
-  padding: 40px 80px;
+  padding: 20px 80px;
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 24px;
 }
 
 .setup--section-title {

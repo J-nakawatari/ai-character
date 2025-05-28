@@ -18,8 +18,8 @@
     "select_button_short": "Select",
     "loading": "Loading...",
     "purchase_character": "Purchase",
-    "upgrade_to_premium": "Upgrade to Premium",
-    "premium_modal_description": "By subscribing, you can talk with many unique and diverse characters.",
+    "upgrade_to_premium": "Become a Premium Member",
+    "premium_modal_description": "Become a premium member to chat with many unique and diverse characters.",
     "premium_price": "{price} yen/month (tax included)",
     "price": "Price",
     "type": "Type",
@@ -28,7 +28,8 @@
     "confirm_purchase": "Confirm Purchase",
     "cancel": "Cancel",
     "premium_price_period": "per month",
-    "subscription_start": "Subscription Start Date"
+    "subscription_start": "Subscription Start Date",
+    "character_select_failed": "Failed to select character"
   },
   "auth": {
     "name": "Name",
@@ -86,7 +87,7 @@
     "status_canceled": "Canceled",
     "status_free": "Free Member",
     "next_billing": "Next Billing Date / Expiration Date",
-    "upgrade_button": "Upgrade to Premium",
+    "upgrade_button": "Become a Premium Member",
     "purchased_characters": "Purchased Characters",
     "no_purchased_characters": "No purchased characters",
     "delete_account": "Delete Account",

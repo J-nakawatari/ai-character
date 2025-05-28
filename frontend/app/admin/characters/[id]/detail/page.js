@@ -56,7 +56,7 @@ export default function CharacterDetailPage() {
 
         {/* 基本情報カード */}
         <Card className="admin-stats-card-wrapper" style={{marginBottom:24}}>
-          <h2 className="admin-stats-title" style={{marginBottom:24}}>基本情報</h2>
+          <h2 className="admin-stats-title" style={{marginBottom:24}}>基本情報（{params.id}）</h2>
           <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(300px, 1fr))', gap:24}}>
             {/* 名前系 */}
             <div className="character-detail-section">
@@ -83,6 +83,37 @@ export default function CharacterDetailPage() {
                 <div>
                   <div className="character-detail-label">英語</div>
                   <div className="character-detail-value">{character.description?.en}</div>
+                </div>
+              </div>
+            </div>
+            {/* 販売情報 */}
+            <div className="character-detail-section">
+              <h3 className="character-detail-section-title">販売情報</h3>
+              <div className="character-detail-grid">
+                <div>
+                  <div className="character-detail-label">販売種別</div>
+                  <div className="character-detail-value">
+                    {badge(
+                      character.characterAccessType === 'free' ? '無料' :
+                      character.characterAccessType === 'subscription' ? 'サブスクリプション' :
+                      '買い切り',
+                      character.characterAccessType === 'free' ? '#3b82f6' :
+                      character.characterAccessType === 'subscription' ? '#a21caf' :
+                      '#eab308'
+                    )}
+                  </div>
+                </div>
+                <div>
+                  <div className="character-detail-label">サブスクリプション状態</div>
+                  <div className="character-detail-value">
+                    {badge(character.isActive ? '有効' : '無効', character.isActive ? '#22c55e' : '#e11d48')}
+                  </div>
+                </div>
+                <div>
+                  <div className="character-detail-label">キャラクター作成日</div>
+                  <div className="character-detail-value">
+                    {character.createdAt ? new Date(character.createdAt).toLocaleString() : '-'}
+                  </div>
                 </div>
               </div>
             </div>

@@ -21,9 +21,7 @@ export default function Sidebar() {
 
   return (
     <aside className={styles.sidebar}>
-      <div className={styles.sidebar__logo}>
-        {/* ロゴや他の要素があればここに残す。戻るボタンは削除 */}
-      </div>
+      <p className={styles['sidebar--logo']}>Charactier AI</p>
       <nav className={styles.sidebar__nav}>
         <ul className={styles.sidebar__list}>
           <li className={pathname.startsWith(`/${locale}/dashboard`) ? styles.sidebar__item + ' ' + styles['sidebar__item--active'] : styles.sidebar__item}>
@@ -63,9 +61,10 @@ export default function Sidebar() {
           <li className={pathname.startsWith(`/${locale}/chat`) ? styles.sidebar__item + ' ' + styles['sidebar__item--active'] : styles.sidebar__item}>
             <Link href={`/${locale}/chat`} className={styles.sidebar__link}>
               <span className={styles.sidebar__icon}>
-                {/* Chat Icon (Outline) */}
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                  <path d="M4 4h16v12H5.17L4 17.17V4z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"/>
+                {/* Chat Icon (chat-right-heart.svg) inline */}
+                <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M2 1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h9.586a2 2 0 0 1 1.414.586l2 2V2a1 1 0 0 0-1-1zm12-1a2 2 0 0 1 2 2v12.793a.5.5 0 0 1-.854.353l-2.853-2.853a1 1 0 0 0-.707-.293H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2z" />
+                  <path d="M8 3.993c1.664-1.711 5.825 1.283 0 5.132-5.825-3.85-1.664-6.843 0-5.132" />
                 </svg>
               </span>
               <span className={styles.sidebar__text}>{t('chat')}</span>
@@ -74,9 +73,10 @@ export default function Sidebar() {
           <li className={pathname.startsWith(`/${locale}/setup`) ? styles.sidebar__item + ' ' + styles['sidebar__item--active'] : styles.sidebar__item}>
             <Link href={`/${locale}/setup?reselect=true`} className={styles.sidebar__link}>
               <span className={styles.sidebar__icon}>
-                {/* Edit/Pen Icon (Outline) */}
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                  <path d="M16.862 5.487l1.65-1.65a1.5 1.5 0 1 1 2.121 2.122l-1.65 1.65m-2.121-2.122l-9.193 9.193a2 2 0 0 0-.497.828l-1.03 3.09a.5.5 0 0 0 .632.632l3.09-1.03a2 2 0 0 0 .828-.497l9.193-9.193m-2.121-2.122 2.121 2.122" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                {/* Setup Icon (person-badge.svg) inline */}
+                <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M6.5 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zM11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                  <path d="M4.5 0A2.5 2.5 0 0 0 2 2.5V14a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2.5A2.5 2.5 0 0 0 11.5 0zM3 2.5A1.5 1.5 0 0 1 4.5 1h7A1.5 1.5 0 0 1 13 2.5v10.795a4.2 4.2 0 0 0-.776-.492C11.392 12.387 10.063 12 8 12s-3.392.387-4.224.803a4.2 4.2 0 0 0-.776.492z"/>
                 </svg>
               </span>
               <span className={styles.sidebar__text}>{t('setup')}</span>
@@ -85,10 +85,10 @@ export default function Sidebar() {
           <li className={pathname.startsWith(`/${locale}/mypage`) ? styles.sidebar__item + ' ' + styles['sidebar__item--active'] : styles.sidebar__item}>
             <Link href={`/${locale}/mypage`} className={styles.sidebar__link}>
               <span className={styles.sidebar__icon}>
-                {/* User Icon (Outline) */}
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                  <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="2"/>
-                  <path d="M4 20c0-4 4-7 8-7s8 3 8 7" stroke="currentColor" strokeWidth="2"/>
+                {/* Mypage Icon (person-vcard.svg) inline */}
+                <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M5 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4m4-2.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5M9 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4A.5.5 0 0 1 9 8m1 2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5"/>
+                  <path d="M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zM1 4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H8.96q.04-.245.04-.5C9 10.567 7.21 9 5 9c-2.086 0-3.8 1.398-3.984 3.181A1 1 0 0 1 1 12z"/>
                 </svg>
               </span>
               <span className={styles.sidebar__text}>{t('mypage')}</span>

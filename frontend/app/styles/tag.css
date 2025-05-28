@@ -1,0 +1,37 @@
+.tag {
+  border-radius: 20px;
+  padding: 0 16px;
+  font-size: 14px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  font-weight: normal;
+  width: max-content;
+}
+
+.tag--sub {
+  background: #f3e8ff;
+  color: #a21caf;
+}
+.tag--free {
+  background: #e0f2fe;
+  color: #2563eb;
+}
+.tag--paid {
+  background: #fef9c3;
+  color: #eab308;
+}
+.tag--character {
+  background: #e5eaf2;
+  color: #2563eb;
+}
+.tag--active {
+  background: #d1fae5;
+  color: #059669;
+}
+.tag--inactive {
+  background: #fee2e2;
+  color: #e11d48;
+} 

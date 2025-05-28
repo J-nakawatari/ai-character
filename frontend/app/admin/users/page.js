@@ -94,19 +94,13 @@ export default function AdminUsers() {
             <table className="admin-table">
               <thead>
                 <tr>
-                  <th>ID</th>
                   <th>名前</th>
                   <th>メールアドレス</th>
                   <th>登録状況</th>
-                  <th>選択キャラクター</th>
                   <th>会員種別</th>
                   <th>言語</th>
                   <th>サブスク状態</th>
                   <th>サブスク開始</th>
-                  <th>サブスク終了</th>
-                  <th>購入キャラ</th>
-                  <th>最終ログイン</th>
-                  <th>作成日</th>
                   <th>有効</th>
                   <th>操作</th>
                 </tr>
@@ -114,30 +108,13 @@ export default function AdminUsers() {
               <tbody>
                 {users.map(user => (
                   <tr key={user._id}>
-                    <td>{user._id}</td>
                     <td>{user.name?.ja || user.name || ''}</td>
                     <td>{user.email}</td>
                     <td>{user.hasCompletedSetup ? '完了' : '未完了'}</td>
-                    <td>{user.selectedCharacter ? (user.selectedCharacter.name?.ja || user.selectedCharacter.name || user.selectedCharacter._id) : '未選択'}</td>
                     <td>{user.membershipType === 'subscription' ? 'サブスク' : '無料'}</td>
                     <td>{user.preferredLanguage}</td>
                     <td>{user.subscriptionStatus}</td>
                     <td>{user.subscriptionStartDate ? new Date(user.subscriptionStartDate).toLocaleString() : '-'}</td>
-                    <td>{user.subscriptionEndDate ? new Date(user.subscriptionEndDate).toLocaleString() : '-'}</td>
-                    <td>
-                      {user.purchasedCharacters && user.purchasedCharacters.length > 0 ? (
-                        <ul style={{margin:0,padding:0,listStyle:'none'}}>
-                          {user.purchasedCharacters.map((pc, idx) => (
-                            <li key={idx}>
-                              {pc.character?.name?.ja || pc.character?.name || pc.character || ''}（{pc.purchaseType}）
-                              <br />{pc.purchaseDate ? new Date(pc.purchaseDate).toLocaleString() : ''}
-                            </li>
-                          ))}
-                        </ul>
-                      ) : 'なし'}
-                    </td>
-                    <td>{user.lastLoginDate ? new Date(user.lastLoginDate).toLocaleString() : '-'}</td>
-                    <td>{user.createdAt ? new Date(user.createdAt).toLocaleString() : '-'}</td>
                     <td>{user.isActive ? '有効' : '無効'}</td>
                     <td>
                       <div className="admin-button-group">
@@ -199,10 +176,6 @@ export default function AdminUsers() {
                   <div><div className="form-label">言語</div><div className="character-detail-value">{selectedUser.preferredLanguage}</div></div>
                   <div><div className="form-label">サブスク状態</div><div className="character-detail-value">{selectedUser.subscriptionStatus}</div></div>
                   <div><div className="form-label">サブスク開始</div><div className="character-detail-value">{selectedUser.subscriptionStartDate ? new Date(selectedUser.subscriptionStartDate).toLocaleString() : '-'}</div></div>
-                  <div><div className="form-label">サブスク終了</div><div className="character-detail-value">{selectedUser.subscriptionEndDate ? new Date(selectedUser.subscriptionEndDate).toLocaleString() : '-'}</div></div>
-                  <div><div className="form-label">最終ログイン</div><div className="character-detail-value">{selectedUser.lastLoginDate ? new Date(selectedUser.lastLoginDate).toLocaleString() : '-'}</div></div>
-                  <div><div className="form-label">作成日</div><div className="character-detail-value">{selectedUser.createdAt ? new Date(selectedUser.createdAt).toLocaleString() : '-'}</div></div>
-                  <div><div className="form-label">有効</div><div className="character-detail-value">{selectedUser.isActive ? '有効' : '無効'}</div></div>
                 </div>
               </div>
               <div className="admin-stats-card-wrapper" style={{margin:0, boxShadow:'none', padding: '20px 0 0 0', background:'none'}}>

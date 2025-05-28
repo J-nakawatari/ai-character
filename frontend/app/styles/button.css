@@ -1,0 +1,94 @@
+.button {
+  display: inline-block;
+  font-size: 16px;
+  padding: 10px 24px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: normal;
+  transition: background 0.2s, color 0.2s;
+  background: #f5f5f5;
+  color: #232e43;
+}
+
+.button--primary {
+  background: #75C6D1;
+  color: #fff;
+}
+
+.button--primary:hover:not(:disabled) {
+  background: #5bb0c0;
+}
+
+.button--secondary {
+  background: #e5eaf2;
+  color: #2563eb;
+}
+
+.button--secondary:hover:not(:disabled) {
+  background: #d1d5db;
+}
+
+.button--sm {
+  font-size: 14px;
+  padding: 6px 16px;
+}
+
+.button--md {
+  font-size: 16px;
+  padding: 10px 24px;
+}
+
+.button--fullWidth {
+  width: 100%;
+  display: block;
+}
+
+.button:disabled,
+.button--disabled {
+  background: #e6e6e6;
+  color: #999;
+  cursor: not-allowed;
+}
+
+.button--custom-class {
+  border: 2px dashed #75C6D1;
+  background: #fff;
+  color: #75C6D1;
+}
+
+.button--danger {
+  background: #e5eaf2;
+  color: #e11d48;
+}
+
+.button--danger:hover:not(:disabled) {
+  background: #f3f4f6;
+}
+
+.button--confirm {
+  background: #e5eaf2;
+  color: #2563eb;
+}
+
+.button--confirm:hover:not(:disabled) {
+  background: #d1d5db;
+}
+
+.button--edit {
+  background: #202B40;
+  color: #fff;
+}
+
+.button--edit:hover:not(:disabled) {
+  background: #33405c;
+}
+
+.button--submit {
+  background: #202B40;
+  color: #fff;
+}
+
+.button--submit:hover:not(:disabled) {
+  background: #33405c;
+} 

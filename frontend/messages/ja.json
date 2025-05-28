@@ -19,7 +19,7 @@
     "select_button": "このキャラクターを選択",
     "loading": "読み込み中...",
     "purchase_character": "購入する",
-    "upgrade_to_premium": "プレミアムにアップグレード",
+    "upgrade_to_premium": "プレミアム会員になる",
     "select_button_short": "選択する",
     "premium_modal_description": "サブスクに加入すると個性豊かなたくさんのキャラクターとお話することができるようになります。",
     "premium_price": "月額{price}円（税込）",
@@ -30,7 +30,8 @@
     "confirm_purchase": "購入を確定",
     "cancel": "キャンセル",
     "premium_price_period": "月額",
-    "subscription_start": "サブスク加入時期"
+    "subscription_start": "サブスク加入時期",
+    "character_select_failed": "キャラクターの選択に失敗しました"
   },
   "auth": {
     "name": "お名前",
@@ -89,7 +90,7 @@
     "status_canceled": "キャンセル済み",
     "status_free": "無料会員",
     "next_billing": "次回請求日 / 有効期限",
-    "upgrade_button": "プレミアムにアップグレード",
+    "upgrade_button": "プレミアム会員になる",
     "purchased_characters": "購入済みキャラクター",
     "no_purchased_characters": "購入済みのキャラクターはありません",
     "delete_account": "退会する",

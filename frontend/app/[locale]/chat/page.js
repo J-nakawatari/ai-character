@@ -12,6 +12,19 @@ import { useTranslations } from 'next-intl';
 import GlobalLoading from '../../components/GlobalLoading';
 import ErrorMessage from '../../components/ErrorMessage';
 
+// HEX→RGBA変換関数
+function hexToRgba(hex, alpha = 0.1) {
+  hex = hex.replace('#', '');
+  if (hex.length === 3) {
+    hex = hex.split('').map(x => x + x).join('');
+  }
+  const num = parseInt(hex, 16);
+  const r = (num >> 16) & 255;
+  const g = (num >> 8) & 255;
+  const b = num & 255;
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
 export default function Chat({ params }) {
   const { user, loading, element } = useRequireAuth();
   const router = useRouter();
@@ -195,9 +208,13 @@ export default function Chat({ params }) {
   if (element) return element;
   if (!user) return null;
   
+  // テーマカラー取得
+  const themeColor = user.selectedCharacter?.themeColor || '#75C6D1';
+  const chatMainBg = hexToRgba(themeColor, 0.1);
+
   return (
-    <div className="chat-container">
-      <main className="chat-main">
+    <div className="chat-container" style={{ '--theme-color': themeColor, position: 'relative' }}>
+      <main className="chat-main" style={{ background: chatMainBg }}>
         {error && (
           <ErrorMessage
             message={error}
@@ -234,12 +251,21 @@ export default function Chat({ params }) {
                       />
                     </div>
                   )}
-                  <div className={`chat-bubble ${msg.sender === 'user' ? 'chat-bubble--user' : 'chat-bubble--ai'}`}>
-                    <span className="chat-bubble-text">{msg.content}</span>
-                    <span className="chat-bubble-time">
-                      {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </span>
-                  </div>
+                    <div className="chat-message-content">
+                      {msg.sender === 'ai' && (
+                        <div className="chat-character-name">
+                          {typeof user.selectedCharacter.name === 'object'
+                            ? (user.selectedCharacter.name[locale] || user.selectedCharacter.name.ja || user.selectedCharacter.name.en || 'AIキャラクター')
+                            : (user.selectedCharacter.name || 'AIキャラクター')}
+                        </div>
+                      )}
+                      <div className={`chat-bubble ${msg.sender === 'user' ? 'chat-bubble--user' : 'chat-bubble--ai'}`}>
+                        <span className="chat-bubble-text">{msg.content}</span>
+                        <span className="chat-bubble-time">
+                          {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </span>
+                      </div>
+                    </div>
                 </div>
               ))}
               {isTyping && (

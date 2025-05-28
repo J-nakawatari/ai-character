@@ -1,13 +1,12 @@
 'use client';
 
+import React from 'react';
 import { useTranslations } from 'next-intl';
 
 export default function ErrorMessage({ 
   message, 
-  type = 'inline', // 'inline' | 'toast' | 'modal'
-  className = '',
-  onClose,
-  duration = 3000
+  type = 'inline', // 'inline' | 'modal'
+  className = ''
 }) {
   const t = useTranslations('errors');
 
@@ -22,19 +21,6 @@ export default function ErrorMessage({
       <p className={`error-message ${className}`}>
         {translatedMessage}
       </p>
-    );
-  }
-
-  // トースト表示（画面中央）
-  if (type === 'toast') {
-    return (
-      <div className={`toast-center ${className}`}>
-        <div className="toast-title">
-          <span className="toast-icon">✕</span>
-          Error
-        </div>
-        <div className="toast-message">{translatedMessage}</div>
-      </div>
     );
   }
 

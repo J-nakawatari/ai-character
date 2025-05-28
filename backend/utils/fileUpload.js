@@ -18,8 +18,7 @@ const imageStorage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    const ext = path.extname(file.originalname);
-    cb(null, file.fieldname + '-' + uniqueSuffix + ext);
+    cb(null, file.fieldname + '-' + uniqueSuffix + '.png');
   }
 });
 
@@ -70,8 +69,12 @@ const resizeImage = (width = 512, height = 512) => async (req, res, next) => {
     const tmpPath = req.file.path + '.tmp';
     await sharp(req.file.path)
       .resize(width, height, { fit: 'inside' })
+      .png()
       .toFile(tmpPath);
     await fs.promises.rename(tmpPath, req.file.path);
+    // Log image metadata for debugging transparency
+    const meta = await sharp(req.file.path).metadata();
+    console.log('[resizeImage] Saved:', req.file.path, 'format:', meta.format, 'hasAlpha:', meta.hasAlpha);
     next();
   } catch (err) {
     next(err);

@@ -3,6 +3,7 @@
 @import './styles/reset.css';
 @import './styles/layout.css';
 @import './styles/language-selector.css';
+@import './styles/tag.css';
 
 :root {
   --primary-color: #0070f3;

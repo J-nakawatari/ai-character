@@ -201,11 +201,11 @@ export default function Dashboard({ params }) {
                   } else if (buttonProps.type === 'upgrade') {
                     router.push(`/${locale}/setup?reselect=true`);
                   } else {
-                    router.push(`/${locale}/chat`);
+                    handleStartChat();
                   }
                 }}
-                className={`button button--primary button--lg button--full button--chat-start`}
-                data-type={buttonProps.type}
+                style={buttonProps.type === 'chat' ? { background: '#75C6D1', color: '#fff', fontWeight: 700, border: 'none', borderRadius: 8, padding: '12px 32px', fontSize: '1.1rem', cursor: 'pointer', transition: 'background 0.2s' } : {}}
+                className={buttonProps.type === 'chat' ? undefined : styles.dashboardSecondaryButton}
               >
                 {buttonProps.text}
               </button>

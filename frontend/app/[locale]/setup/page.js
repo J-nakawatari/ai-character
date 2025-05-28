@@ -11,6 +11,7 @@ import { useTranslations } from 'next-intl';
 import '../../styles/pages/setup.css';
 import GlobalLoading from '../../components/GlobalLoading';
 import ErrorMessage from '../../components/ErrorMessage';
+import { useAuth } from '../../utils/auth';
 
 const schema = z.object({
   name: z.string().min(2, 'お名前は2文字以上で入力してください'),
@@ -18,7 +19,7 @@ const schema = z.object({
 });
 
 export default function Setup({ params }) {
-  const { user, loading, element } = useRequireAuth();
+  const { user, loading, element, completeSetup } = useAuth();
   const router = useRouter();
   const [characters, setCharacters] = useState([]);
   const [serverError, setServerError] = useState('');
@@ -363,12 +364,6 @@ export default function Setup({ params }) {
   return (
     <div className="setup--root">
       <canvas ref={canvasRef} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: -1 }}></canvas>
-      
-      <div className="setup--header">
-        <h1>{t('title')}</h1>
-        <p>{t('description')}</p>
-      </div>
-      
       <form className="setup--form" onSubmit={handleSubmit(onSubmit)}>
         {/* エラー表示 */}
         {serverError && (
@@ -378,9 +373,7 @@ export default function Setup({ params }) {
             className="setup-error-message"
           />
         )}
-        <h2 className="setup--section-title">
-          {t('select_character')}
-        </h2>
+        <h1 class="mypage__title">{t('title')}</h1>
         <div className="setup--main">
           <div className="setup--card-list">
             {characters.map((character, idx) => {

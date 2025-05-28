@@ -2,7 +2,8 @@
   "scripts": {
     "dev": "concurrently \"npm run start:frontend\" \"npm run start:backend\"",
     "start:frontend": "cd frontend && npm run dev",
-    "start:backend": "cd backend && nodemon index.js"
+    "start:backend": "cd backend && nodemon index.js",
+    "test": "npm --prefix frontend test"
   },
   "dependencies": {
     "@stripe/stripe-js": "^7.3.0",
@@ -10,11 +11,17 @@
     "js-cookie": "^3.0.5",
     "next-i18next": "^15.4.2",
     "next-intl": "^4.1.0",
+    "node-schedule": "^2.1.1",
     "react-i18next": "^15.5.1",
-    "stripe": "^18.1.1",
-    "node-schedule": "^2.1.1"
+    "stripe": "^18.1.1"
   },
   "devDependencies": {
-    "concurrently": "^9.1.2"
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "babel-jest": "^30.0.0-beta.3",
+    "concurrently": "^9.1.2",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^30.0.0-beta.3"
   }
 }

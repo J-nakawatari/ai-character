@@ -3,6 +3,7 @@
 import { useState, useCallback } from 'react';
 import Cropper from 'react-easy-crop';
 import Button from './Button';
+import '../styles/button.css';
 
 async function createImage(url) {
   return new Promise((resolve, reject) => {
@@ -39,7 +40,7 @@ async function getCroppedImg(imageSrc, crop, width, height) {
   return new Promise((resolve) => {
     canvas.toBlob((blob) => {
       resolve(blob);
-    }, 'image/jpeg', 0.95);
+    }, 'image/png');
   });
 }
 
@@ -101,10 +102,10 @@ export default function ImageCropper({
         </div>
         <div className={`image-cropper-size-info ${sizeLabelClassName}`}>サイズ: {cropWidth} x {cropHeight}px</div>
         <div style={{ display: 'flex', gap: 16, marginTop: 18 }}>
-          <Button onClick={handleSave} className={saveButtonClassName}>{saveButtonText}</Button>
           {onCancel && (
-            <Button onClick={onCancel} className={cancelButtonClassName}>{cancelButtonText}</Button>
+            <Button onClick={onCancel} variant="secondary" size="md" className={cancelButtonClassName}>{cancelButtonText}</Button>
           )}
+          <Button onClick={handleSave} variant="primary" size="md" className={saveButtonClassName}>{saveButtonText}</Button>
         </div>
       </div>
     </div>

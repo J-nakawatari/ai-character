@@ -78,7 +78,8 @@ router.post('/login', async (req, res) => {
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ msg: 'Invalid credentials' });
+      // TODO: i18n対応する場合はリクエストのロケールを参照して返す
+      return res.status(400).json({ msg: 'メールアドレスまたはパスワードが正しくありません' });
     }
 
     const payload = {

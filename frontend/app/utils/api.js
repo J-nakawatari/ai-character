@@ -73,4 +73,13 @@ export async function apiDelete(url, config) {
   }
 }
 
+export async function apiPatch(url, data, config) {
+  try {
+    const res = await api.patch(url, data, config);
+    return { success: true, data: res.data };
+  } catch (err) {
+    return { success: false, error: err.response?.data?.msg || err.message || 'API Error' };
+  }
+}
+
 export default api;
