@@ -10,9 +10,11 @@ import { useTranslations } from 'next-intl';
 import Card from '../../components/Card';
 import styles from './dashboard.module.css';
 import GlobalLoading from '../../components/GlobalLoading';
+import { useAuth } from '../../utils/auth';
 
 export default function Dashboard({ params }) {
   const { user, loading, element } = useRequireAuth();
+  const { logout } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
   const urlParams = useParams();
@@ -204,8 +206,7 @@ export default function Dashboard({ params }) {
                     handleStartChat();
                   }
                 }}
-                style={buttonProps.type === 'chat' ? { background: '#75C6D1', color: '#fff', fontWeight: 700, border: 'none', borderRadius: 8, padding: '12px 32px', fontSize: '1.1rem', cursor: 'pointer', transition: 'background 0.2s' } : {}}
-                className={buttonProps.type === 'chat' ? undefined : styles.dashboardSecondaryButton}
+                className={buttonProps.type === 'chat' ? styles.dashboardPrimaryButton : styles.dashboardSecondaryButton}
               >
                 {buttonProps.text}
               </button>
