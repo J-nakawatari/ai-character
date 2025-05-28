@@ -135,3 +135,25 @@
   margin-bottom: 16px;
   text-align: center;
 }
+
+.dashboardPrice {
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 8px;
+}
+
+.dashboardPrimaryButton {
+  background: #75C6D1;
+  color: #fff;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 32px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.dashboardPrimaryButton:hover {
+  background: #5db6c1;
+}
