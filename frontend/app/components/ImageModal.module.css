@@ -60,6 +60,12 @@
   max-height: calc(90vh - 120px);
   object-fit: contain;
   border-radius: 8px;
+  transition: opacity 0.3s ease-in-out;
+  opacity: 1;
+}
+
+.imageTransitioning {
+  opacity: 0;
 }
 
 .navButton {
