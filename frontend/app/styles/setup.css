@@ -39,9 +39,9 @@
   flex: 1 1 0;
   min-width: 260px;
   max-width: 320px;
-  background: #f9fafc;
+  background: #ffffff;
   border-radius: 14px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04);
   padding: 32px 24px;
   display: flex;
   flex-direction: column;
@@ -101,13 +101,14 @@
   transition: box-shadow 0.2s;
   overflow: hidden;
   padding-bottom: 16px;
-  background: #FFFFFF;
-  box-shadow: 0px 1px 3px rgba(96, 108, 128, 0.05);
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04);
   border-radius: 8px;
+  border: 1px solid rgba(0,0,0,0.05);
 }
 .setup--character-card.selected {
   border: 2px solid #4f8cff;
-  box-shadow: 0 4px 16px rgba(79,140,255,0.08);
+  box-shadow: 0 4px 16px rgba(79,140,255,0.12), 0 2px 8px rgba(0,0,0,0.08);
 }
 .setup--character-img-wrapper {
   width: 100%;
@@ -127,12 +128,13 @@
 }
 .setup--character-tag {
   display: inline-block;
-  background: #eaf1fb;
-  color: #4f8cff;
+  background: #f5f5f5;
+  color: #666;
   border-radius: 100px;
   font-size: 12px;
   padding: 4px 8px;
   margin: 0 4px 4px 0;
+  border: 1px solid rgba(0,0,0,0.08);
 }
 
 .setup--character-tags {

@@ -10,7 +10,7 @@
     "loading": "Loading..."
   },
   "setup": {
-    "title": "Welcome to Setup",
+    "title": "Choose your favorite AI character and start a special experience",
     "description": "Let's start setting up your character.",
     "select_character": "Select an AI Character",
     "character_tags": "Tags",

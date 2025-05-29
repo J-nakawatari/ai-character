@@ -12,7 +12,7 @@
     "loading": "読み込み中..."
   },
   "setup": {
-    "title": "セットアップへようこそ",
+    "title": "お気に入りのAIキャラクターを選んで、特別な体験を始めましょう",
     "description": "ここからあなたのキャラクター設定を始めましょう。",
     "select_character": "AIキャラクターを選択",
     "character_tags": "タグ",

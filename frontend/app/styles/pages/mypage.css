@@ -17,7 +17,8 @@
   border-radius: 8px;
   padding: 24px;
   margin-bottom: 24px;
-  box-shadow: 0px 1px 3px rgba(96, 108, 128, 0.05);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04);
+  border: 1px solid rgba(0,0,0,0.05);
 }
 
 .mypage__section-title {
@@ -94,17 +95,19 @@
 }
 
 .mypage__character-item {
-  background-color: #f9f9f9;
+  background-color: #ffffff;
   border-radius: 8px;
   padding: 16px;
   text-align: center;
   position: relative;
-  border: 1px solid #e0e0e0;
+  border: 1px solid rgba(0,0,0,0.08);
   width: 190px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
 }
 
 .mypage__character-item--selected {
-  border: 2px solid #43eafc;
+  border: 2px solid #4f8cff;
+  box-shadow: 0 2px 8px rgba(79,140,255,0.12), 0 1px 4px rgba(0,0,0,0.04);
 }
 
 .mypage__character-image {
@@ -133,12 +136,12 @@
 }
 
 .mypage__upgrade-button {
-  background: linear-gradient(90deg, #43eafc 0%, #fa7be6 100%);
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
   color: #fff;
   padding: 12px 24px;
   border-radius: 6px;
   font-weight: 500;
-  box-shadow: 0 4px 16px 0 rgba(250, 123, 230, 0.2), 0 2px 8px 0 rgba(67, 234, 252, 0.15);
+  box-shadow: 0 4px 16px 0 rgba(118, 75, 162, 0.2), 0 2px 8px 0 rgba(102, 126, 234, 0.15);
   border: none;
   cursor: pointer;
   margin-top: 16px;
@@ -146,7 +149,7 @@
 }
 
 .mypage__upgrade-button:hover {
-  box-shadow: 0 6px 24px 0 rgba(250, 123, 230, 0.3), 0 4px 12px 0 rgba(67, 234, 252, 0.2);
+  box-shadow: 0 6px 24px 0 rgba(118, 75, 162, 0.3), 0 4px 12px 0 rgba(102, 126, 234, 0.2);
 }
 
 .mypage__delete-button {
@@ -268,6 +271,6 @@
 }
 .mypage__language-select:focus {
   outline: none;
-  border-color: #43eafc;
-  box-shadow: 0 0 0 2px #43eafc33;
+  border-color: #4f8cff;
+  box-shadow: 0 0 0 2px rgba(79,140,255,0.2);
 }
