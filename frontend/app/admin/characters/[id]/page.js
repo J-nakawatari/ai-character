@@ -140,6 +140,18 @@ export default function CharacterEditPage() {
 
   return (
     <div className="admin-content">
+      <div style={{
+        background: '#ff6b6b',
+        color: 'white',
+        padding: '1rem',
+        margin: '1rem 0',
+        borderRadius: '8px',
+        fontSize: '1.2rem',
+        fontWeight: 'bold',
+        textAlign: 'center'
+      }}>
+        🚨 テストメッセージ - 詳細ページ更新確認用 🚨
+      </div>
       <div className="admin-header">
         <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
           <h1 className="admin-dashboard-title">キャラクター編集</h1>
