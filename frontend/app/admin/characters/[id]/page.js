@@ -62,6 +62,11 @@ export default function CharacterEditPage() {
       fd.append('imageChatAvatar', character.imageChatAvatar || '');
       fd.append('sampleVoiceUrl', character.sampleVoiceUrl || '');
       fd.append('limitMessage', JSON.stringify(character.limitMessage || {}));
+      
+      // ギャラリー画像を追加
+      for (let i = 1; i <= 10; i++) {
+        fd.append(`galleryImage${i}`, character[`galleryImage${i}`] || '');
+      }
 
       await api.put(`/admin/characters/${params.id}`, fd, {
         headers: { 'Content-Type': 'multipart/form-data' }
@@ -128,6 +133,9 @@ export default function CharacterEditPage() {
         setCharacter(prev => ({ ...prev, imageChatBackground: res.data.imageUrl }));
       } else if (imageType === 'chatAvatar') {
         setCharacter(prev => ({ ...prev, imageChatAvatar: res.data.imageUrl }));
+      } else if (imageType.startsWith('gallery')) {
+        const galleryField = `galleryImage${imageType.replace('gallery', '')}`;
+        setCharacter(prev => ({ ...prev, [galleryField]: res.data.imageUrl }));
       }
     } catch (err) {
       setError('画像のアップロードに失敗しました');
@@ -603,9 +611,10 @@ export default function CharacterEditPage() {
               margin: 0
             }}>メディア情報</h2>
           </div>
-          <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(300px, 1fr))', gap:24}}>
+          <div style={{display:'flex', flexDirection:'column', gap:32}}>
+            {/* 基本画像セクション */}
             <div className="character-detail-section">
-              <h3 className="character-detail-section-title">画像</h3>
+              <h3 className="character-detail-section-title">基本画像</h3>
               <div className="character-detail-grid">
                 <div>
                   <div className="character-detail-label">キャラクター選択画像</div>
@@ -704,6 +713,69 @@ export default function CharacterEditPage() {
                     />
                   </div>
                 </div>
+              </div>
+            </div>
+            
+            {/* ギャラリー画像セクション */}
+            <div className="character-detail-section">
+              <h3 className="character-detail-section-title">ダッシュボードギャラリー（10枚）</h3>
+              <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(200px, 1fr))', gap:20}}>
+                {Array.from({length: 10}, (_, index) => (
+                  <div key={index} style={{textAlign:'center'}}>
+                    <div className="character-detail-label">ギャラリー画像 {index + 1}</div>
+                    <div className="admin-image-upload">
+                      {character[`galleryImage${index + 1}`] ? (
+                        <img 
+                          src={character[`galleryImage${index + 1}`]} 
+                          alt={`gallery-${index + 1}`} 
+                          style={{width:150, height:150, borderRadius:12, objectFit:'cover', background:'#f3f4f6'}} 
+                        />
+                      ) : (
+                        <div style={{
+                          width:150, 
+                          height:150, 
+                          borderRadius:12, 
+                          background:'#f3f4f6', 
+                          display:'flex', 
+                          alignItems:'center', 
+                          justifyContent:'center', 
+                          color:'#64748b',
+                          fontSize:'0.875rem',
+                          textAlign:'center',
+                          border: '2px dashed #d1d5db'
+                        }}>
+                          画像{index + 1}<br/>未設定
+                        </div>
+                      )}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => handleImageUpload(e, `gallery${index + 1}`)}
+                        className="admin-file-input"
+                        style={{marginTop: 8}}
+                      />
+                      <div style={{
+                        fontSize: '0.75rem',
+                        color: '#6b7280',
+                        marginTop: 4,
+                        textAlign: 'center'
+                      }}>
+                        推奨: 400x400px
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div style={{
+                marginTop: 16,
+                padding: 12,
+                background: '#f0f9ff',
+                borderRadius: 8,
+                border: '1px solid #0ea5e9',
+                fontSize: '0.875rem',
+                color: '#0369a1'
+              }}>
+                💡 ヒント: ギャラリー画像は親密度レベルに応じてユーザーダッシュボードで段階的に解放されます
               </div>
             </div>
           </div>

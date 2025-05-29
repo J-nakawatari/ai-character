@@ -32,6 +32,16 @@ const initialState = {
   imageChatBackground: '',
   imageChatAvatar: '',
   sampleVoiceUrl: '',
+  galleryImage1: '',
+  galleryImage2: '',
+  galleryImage3: '',
+  galleryImage4: '',
+  galleryImage5: '',
+  galleryImage6: '',
+  galleryImage7: '',
+  galleryImage8: '',
+  galleryImage9: '',
+  galleryImage10: '',
 };
 
 export default function CharacterNewPage() {
@@ -538,6 +548,63 @@ export default function CharacterNewPage() {
                       className={styles['media-upload-file-input']}
                     />
                   </label>
+                </div>
+                
+                {/* ギャラリー画像セクション */}
+                <div style={{marginTop: '2rem'}}>
+                  <div className="admin-stats-title-rapper border-b border-gray-200 pb-4 mb-6">
+                    <h3 className="admin-stats-title">ダッシュボードギャラリー（10枚）</h3>
+                    <p className="mt-1 text-sm text-gray-500">親密度レベルに応じて段階的に解放される画像を設定します</p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+                    {Array.from({length: 10}, (_, index) => (
+                      <div key={index} className={styles['media-upload-section']} style={{textAlign:'center'}}>
+                        <div className={styles['media-upload-label']} style={{fontSize:'0.875rem'}}>
+                          ギャラリー{index + 1}
+                        </div>
+                        {form[`galleryImage${index + 1}`] && (
+                          <img
+                            src={form[`galleryImage${index + 1}`]}
+                            alt={`Gallery ${index + 1}`}
+                            style={{
+                              width: '120px',
+                              height: '120px',
+                              objectFit: 'cover',
+                              borderRadius: '8px',
+                              marginBottom: '8px'
+                            }}
+                          />
+                        )}
+                        <label className={styles['media-upload-btn']} style={{fontSize:'0.75rem', padding:'8px 12px'}}>
+                          選択
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => handleImageUpload(e, `gallery${index + 1}`)}
+                            className={styles['media-upload-file-input']}
+                          />
+                        </label>
+                        <div style={{
+                          fontSize: '0.625rem',
+                          color: '#6b7280',
+                          marginTop: '4px'
+                        }}>
+                          推奨: 400x400px
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{
+                    marginTop: '1rem',
+                    padding: '12px',
+                    background: '#f0f9ff',
+                    borderRadius: '8px',
+                    border: '1px solid #0ea5e9',
+                    fontSize: '0.875rem',
+                    color: '#0369a1'
+                  }}>
+                    💡 ヒント: ギャラリー画像は親密度レベル10, 20, 30...のように段階的に解放されます
+                  </div>
                 </div>
               </div>
             </Card>
