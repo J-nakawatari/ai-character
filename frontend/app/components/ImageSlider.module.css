@@ -45,7 +45,6 @@
   background-color: rgba(255, 255, 255, 0.9);
   color: #333;
   border: 1px solid #ddd;
-  font-size: 28px;
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -56,6 +55,7 @@
   align-items: center;
   justify-content: center;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 0;
 }
 
 .carouselButton:hover:not(:disabled) {
@@ -117,6 +117,14 @@
   .carouselButton {
     width: 32px;
     height: 32px;
-    font-size: 20px;
   }
+}
+
+.arrowIcon {
+  width: 20px;
+  height: 20px;
+}
+
+.prevButton .arrowIcon {
+  transform: rotate(180deg);
 }
