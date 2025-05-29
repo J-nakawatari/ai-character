@@ -232,12 +232,6 @@ export default function Chat({ params }) {
     <div className="chat-container" style={{ '--theme-color': themeColor, position: 'relative' }}>
       {/* チャットヘッダー */}
       <div className="chat-header">
-        <button
-          className="chat-back-button"
-          onClick={() => router.push(`/${locale}/dashboard`)}
-        >
-          ← 戻る
-        </button>
         <div className="chat-header-character-info">
           {user.selectedCharacter?.imageChatAvatar && (
             <img
