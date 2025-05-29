@@ -157,3 +157,9 @@
 .dashboardPrimaryButton:hover {
   background: #5db6c1;
 }
+
+.dashboardRoot > div:first-child {
+  max-width: 900px;
+  margin: 0 auto;
+  margin-bottom: 24px;
+}
