@@ -29,7 +29,8 @@ const videoFiles = [
 ];
 
 export default function Home({ params }) {
-  const { user, loading } = useAuth();
+  const auth = useAuth();
+  const { user, loading } = auth || {};
   const router = useRouter();
   const { locale } = typeof params.then === 'function' ? use(params) : params;
   const [isMobile, setIsMobile] = useState(false);

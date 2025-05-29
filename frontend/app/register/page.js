@@ -10,6 +10,8 @@ import { useAuth } from '../utils/auth';
 import BackButton from '../components/BackButton';
 import { useTranslations } from 'next-intl';
 
+export const dynamic = 'force-dynamic';
+
 const schema = z.object({
   name: z.string().min(2, 'お名前は2文字以上で入力してください'),
   email: z.string().email('有効なメールアドレスを入力してください'),
@@ -18,7 +20,8 @@ const schema = z.object({
 });
 
 export default function Register() {
-  const { register: registerUser } = useAuth();
+  const auth = useAuth();
+  const { register: registerUser } = auth || {};
   const router = useRouter();
   const [serverError, setServerError] = useState('');
   const t = useTranslations('auth');
@@ -34,6 +37,11 @@ export default function Register() {
   
   const onSubmit = async (data) => {
     setServerError('');
+    
+    if (!registerUser) {
+      setServerError('認証システムが初期化されていません');
+      return;
+    }
     
     const result = await registerUser(data);
     

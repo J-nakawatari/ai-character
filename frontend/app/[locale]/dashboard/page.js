@@ -19,7 +19,8 @@ import AffinityBar from '../../components/AffinityBar';
 
 export default function Dashboard({ params }) {
   const { user, loading, element } = useRequireAuth();
-  const { logout } = useAuth();
+  const auth = useAuth();
+  const { logout } = auth || {};
   const router = useRouter();
   const pathname = usePathname();
   const urlParams = useParams();

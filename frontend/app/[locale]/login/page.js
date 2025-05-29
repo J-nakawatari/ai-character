@@ -26,7 +26,8 @@ const videoFiles = [
 ];
 
 export default function Login({ params }) {
-  const { login, user } = useAuth();
+  const auth = useAuth();
+  const { login, user } = auth || {};
   const router = useRouter();
   const [serverError, setServerError] = useState('');
   const t = useTranslations('auth');

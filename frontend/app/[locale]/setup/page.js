@@ -20,7 +20,8 @@ const schema = z.object({
 });
 
 export default function Setup({ params }) {
-  const { user, loading, element, completeSetup } = useAuth();
+  const auth = useAuth();
+  const { user, loading, element, completeSetup } = auth || {};
   const router = useRouter();
   const [characters, setCharacters] = useState([]);
   const [serverError, setServerError] = useState('');

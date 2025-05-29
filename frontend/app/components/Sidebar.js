@@ -6,7 +6,8 @@ import styles from './Sidebar.module.css';
 import { useTranslations } from 'next-intl';
 
 export default function Sidebar() {
-  const { logout } = useAuth();
+  const auth = useAuth();
+  const { logout } = auth || {};
   const router = useRouter();
   const pathname = usePathname();
   const locale = getLocaleFromPath(pathname);
