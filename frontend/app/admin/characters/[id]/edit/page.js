@@ -306,6 +306,7 @@ export default function EditCharacter({ params }) {
                     onChange={handleChange}
                     required
                     className={styles['admin-form-input']}
+                    placeholder="キャラクターの日本語名を入力してください"
                   />
                 </div>
                 <div className={styles.languageTab}>
@@ -319,6 +320,7 @@ export default function EditCharacter({ params }) {
                     value={formData.name.en}
                     onChange={handleChange}
                     className={styles['admin-form-input']}
+                    placeholder="Enter character name in English"
                   />
                 </div>
               </div>
@@ -354,8 +356,9 @@ export default function EditCharacter({ params }) {
                     name="description.ja"
                     value={formData.description.ja}
                     onChange={handleChange}
-                    rows={3}
+                    rows={4}
                     className={styles['admin-form-input']}
+                    placeholder="キャラクターの説明を日本語で入力してください..."
                   />
                 </div>
                 <div className={styles.languageTab}>
@@ -368,8 +371,9 @@ export default function EditCharacter({ params }) {
                     name="description.en"
                     value={formData.description.en}
                     onChange={handleChange}
-                    rows={3}
+                    rows={4}
                     className={styles['admin-form-input']}
+                    placeholder="Enter character description in English..."
                   />
                 </div>
               </div>
@@ -398,8 +402,9 @@ export default function EditCharacter({ params }) {
                     name="personalityPrompt.ja"
                     value={formData.personalityPrompt.ja}
                     onChange={handleChange}
-                    rows={4}
+                    rows={6}
                     className={styles['admin-form-input']}
+                    placeholder="キャラクターの性格や話し方について日本語で記述してください..."
                   />
                 </div>
                 <div className={styles.languageTab}>
@@ -412,8 +417,9 @@ export default function EditCharacter({ params }) {
                     name="personalityPrompt.en"
                     value={formData.personalityPrompt.en}
                     onChange={handleChange}
-                    rows={4}
+                    rows={6}
                     className={styles['admin-form-input']}
+                    placeholder="Describe the character's personality and speaking style in English..."
                   />
                 </div>
               </div>
@@ -431,8 +437,9 @@ export default function EditCharacter({ params }) {
                     name="adminPrompt.ja"
                     value={formData.adminPrompt.ja}
                     onChange={handleChange}
-                    rows={4}
+                    rows={6}
                     className={styles['admin-form-input']}
+                    placeholder="管理者向けの追加設定や注意事項を日本語で記述してください..."
                   />
                 </div>
                 <div className={styles.languageTab}>
@@ -445,8 +452,9 @@ export default function EditCharacter({ params }) {
                     name="adminPrompt.en"
                     value={formData.adminPrompt.en}
                     onChange={handleChange}
-                    rows={4}
+                    rows={6}
                     className={styles['admin-form-input']}
+                    placeholder="Describe admin settings and guidelines in English..."
                   />
                 </div>
               </div>
@@ -464,8 +472,9 @@ export default function EditCharacter({ params }) {
                     name="defaultMessage.ja"
                     value={formData.defaultMessage.ja}
                     onChange={handleChange}
-                    rows={2}
+                    rows={3}
                     className={styles['admin-form-input']}
+                    placeholder="キャラクターの最初の挨拶メッセージを日本語で入力してください..."
                   />
                 </div>
                 <div className={styles.languageTab}>
@@ -478,8 +487,9 @@ export default function EditCharacter({ params }) {
                     name="defaultMessage.en"
                     value={formData.defaultMessage.en}
                     onChange={handleChange}
-                    rows={2}
+                    rows={3}
                     className={styles['admin-form-input']}
+                    placeholder="Enter the character's first greeting message in English..."
                   />
                 </div>
               </div>
