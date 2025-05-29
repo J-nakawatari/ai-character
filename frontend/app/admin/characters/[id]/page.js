@@ -140,46 +140,139 @@ export default function CharacterEditPage() {
 
   return (
     <div className="admin-content">
-      <div className="admin-header">
-        <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
-          <h1 className="admin-dashboard-title">キャラクター編集</h1>
-          <div style={{display:'flex', gap:12}}>
-            <button className="admin-button" onClick={() => router.push(`/admin/characters/${params.id}/detail`)}>詳細に戻る</button>
-            <button className="admin-button admin-button--danger" onClick={() => router.push('/admin/characters')}>一覧に戻る</button>
+      {/* ヘッダー */}
+      <div style={{
+        marginBottom: '2rem',
+        background: 'white',
+        padding: '2rem',
+        borderRadius: '16px',
+        boxShadow: '0 4px 16px rgba(0, 0, 0, 0.04)',
+        border: '1px solid #e2e8f0'
+      }}>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: '1rem'
+        }}>
+          <div style={{flex: 1}}>
+            <h1 style={{
+              fontSize: '2rem',
+              fontWeight: '700',
+              color: '#1e293b',
+              margin: '0 0 0.5rem 0'
+            }}>キャラクター編集</h1>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '1rem',
+              flexWrap: 'wrap'
+            }}>
+              <span style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                padding: '6px 12px',
+                borderRadius: '20px',
+                fontSize: '0.875rem',
+                fontWeight: '600',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+                background: character.characterAccessType === 'free' ? 
+                  'linear-gradient(135deg, #10b981 0%, #059669 100%)' :
+                  character.characterAccessType === 'subscription' ?
+                  'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)' :
+                  'linear-gradient(135deg, #6b7280 0%, #4b5563 100%)',
+                color: 'white'
+              }}>
+                {character.characterAccessType === 'free' ? '無料' :
+                 character.characterAccessType === 'subscription' ? 'サブスク' : '買い切り'}
+              </span>
+              <span style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                padding: '6px 12px',
+                borderRadius: '20px',
+                fontSize: '0.875rem',
+                fontWeight: '600',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+                background: character.isActive ? 
+                  'linear-gradient(135deg, #10b981 0%, #059669 100%)' :
+                  'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+                color: 'white'
+              }}>
+                {character.isActive ? '✅ 有効' : '❌ 無効'}
+              </span>
+              <span style={{
+                color: '#64748b',
+                fontSize: '0.875rem',
+                fontWeight: '500'
+              }}>
+                ID: {params.id}
+              </span>
+            </div>
+          </div>
+          <div style={{
+            display: 'flex',
+            gap: '0.75rem',
+            flexWrap: 'wrap'
+          }}>
+            <button 
+              onClick={() => router.push(`/admin/characters/${params.id}/detail`)}
+              style={{
+                background: '#f1f5f9',
+                color: '#475569',
+                padding: '12px 24px',
+                borderRadius: '12px',
+                border: 'none',
+                fontWeight: '600',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease'
+              }}
+            >詳細に戻る</button>
+            <button 
+              onClick={() => router.push('/admin/characters')}
+              style={{
+                background: '#f1f5f9',
+                color: '#475569',
+                padding: '12px 24px',
+                borderRadius: '12px',
+                border: 'none',
+                fontWeight: '600',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease'
+              }}
+            >一覧に戻る</button>
           </div>
         </div>
       </div>
-      <form onSubmit={handleSubmit} className="admin-content-wrapper" style={{maxWidth:900, margin:'0 auto'}}>
-        {/* ステータスバー */}
-        <div style={{display:'flex', gap:12, marginBottom:24}}>
-          <div className="form-group" style={{flex:1, minWidth:180}}>
-            <label className="form-label">タイプ</label>
-            <select 
-              value={character.characterAccessType} 
-              onChange={(e) => handleChange('characterAccessType', e.target.value)}
-              className="admin-select"
-            >
-              <option value="free">無料</option>
-              <option value="subscription">サブスク</option>
-              <option value="paid">有料</option>
-            </select>
-          </div>
-          <div className="form-group" style={{flex:1, minWidth:120, marginTop:28}}>
-            <label className="form-label" style={{marginBottom:0}}>　</label>
-            <label className="admin-checkbox">
-              <input 
-                type="checkbox" 
-                checked={character.isActive} 
-                onChange={(e) => handleChange('isActive', e.target.checked)}
-              />
-              <span>有効</span>
-            </label>
-          </div>
-        </div>
+      <form onSubmit={handleSubmit} className="admin-content-wrapper" style={{maxWidth:1200, margin:'0 auto'}}>
 
         {/* 基本情報カード */}
-        <Card className="admin-stats-card-wrapper" style={{marginBottom:24}}>
-          <h2 className="admin-stats-title form-title" style={{marginBottom:24}}>基本情報</h2>
+        <div style={{
+          background: 'white',
+          borderRadius: '16px',
+          padding: '2rem',
+          marginBottom: '2rem',
+          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.04)',
+          border: '1px solid #e2e8f0',
+          transition: 'all 0.3s ease'
+        }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.75rem',
+            marginBottom: '1.5rem'
+          }}>
+            <span style={{fontSize: '1.5rem'}}>👤</span>
+            <h2 style={{
+              fontSize: '1.25rem',
+              fontWeight: '600',
+              color: '#1e293b',
+              margin: 0
+            }}>基本情報</h2>
+          </div>
           <div>
             {/* 名前系 */}
             <div className="character-detail-section">
@@ -265,11 +358,32 @@ export default function CharacterEditPage() {
               </div>
             </div>
           </div>
-        </Card>
+        </div>
 
         {/* 会話設定カード */}
-        <Card className="admin-stats-card-wrapper" style={{marginBottom:24}}>
-          <h2 className="admin-stats-title" style={{marginBottom:24}}>会話設定</h2>
+        <div style={{
+          background: 'white',
+          borderRadius: '16px',
+          padding: '2rem',
+          marginBottom: '2rem',
+          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.04)',
+          border: '1px solid #e2e8f0',
+          transition: 'all 0.3s ease'
+        }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.75rem',
+            marginBottom: '1.5rem'
+          }}>
+            <span style={{fontSize: '1.5rem'}}>💬</span>
+            <h2 style={{
+              fontSize: '1.25rem',
+              fontWeight: '600',
+              color: '#1e293b',
+              margin: 0
+            }}>会話設定</h2>
+          </div>
           <div style={{display:'flex', flexDirection:'column', gap:'24px'}}>
             {/* 性格プロンプト - 日本語 */}
             <div className="form-group">
@@ -408,11 +522,32 @@ export default function CharacterEditPage() {
               />
             </div>
           </div>
-        </Card>
+        </div>
 
         {/* 販売情報カード */}
-        <Card className="admin-stats-card-wrapper" style={{marginBottom:24}}>
-          <h2 className="admin-stats-title" style={{marginBottom:24}}>販売情報</h2>
+        <div style={{
+          background: 'white',
+          borderRadius: '16px',
+          padding: '2rem',
+          marginBottom: '2rem',
+          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.04)',
+          border: '1px solid #e2e8f0',
+          transition: 'all 0.3s ease'
+        }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.75rem',
+            marginBottom: '1.5rem'
+          }}>
+            <span style={{fontSize: '1.5rem'}}>💰</span>
+            <h2 style={{
+              fontSize: '1.25rem',
+              fontWeight: '600',
+              color: '#1e293b',
+              margin: 0
+            }}>販売情報</h2>
+          </div>
           <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(300px, 1fr))', gap:24}}>
             <div className="character-detail-section">
               <h3 className="character-detail-section-title">価格設定</h3>
@@ -442,11 +577,32 @@ export default function CharacterEditPage() {
               </div>
             </div>
           </div>
-        </Card>
+        </div>
 
         {/* メディア情報カード */}
-        <Card className="admin-stats-card-wrapper">
-          <h2 className="admin-stats-title" style={{marginBottom:24}}>メディア情報</h2>
+        <div style={{
+          background: 'white',
+          borderRadius: '16px',
+          padding: '2rem',
+          marginBottom: '2rem',
+          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.04)',
+          border: '1px solid #e2e8f0',
+          transition: 'all 0.3s ease'
+        }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.75rem',
+            marginBottom: '1.5rem'
+          }}>
+            <span style={{fontSize: '1.5rem'}}>🎨</span>
+            <h2 style={{
+              fontSize: '1.25rem',
+              fontWeight: '600',
+              color: '#1e293b',
+              margin: 0
+            }}>メディア情報</h2>
+          </div>
           <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(300px, 1fr))', gap:24}}>
             <div className="character-detail-section">
               <h3 className="character-detail-section-title">画像</h3>
@@ -551,7 +707,7 @@ export default function CharacterEditPage() {
               </div>
             </div>
           </div>
-        </Card>
+        </div>
 
         {/* Cropperモーダル */}
         {showCropper && selectedImage && (
@@ -575,14 +731,45 @@ export default function CharacterEditPage() {
         )}
 
         {/* 保存ボタン */}
-        <div style={{display:'flex', justifyContent:'center', marginTop:32, marginBottom:48}}>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          marginTop: '2rem',
+          marginBottom: '3rem'
+        }}>
           <button 
             type="submit" 
-            className="admin-button admin-button--edit"
             disabled={saving}
-            style={{padding:'12px 48px', fontSize:16}}
+            style={{
+              background: saving ? '#94a3b8' : 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
+              color: 'white',
+              padding: '16px 48px',
+              borderRadius: '12px',
+              border: 'none',
+              fontWeight: '600',
+              fontSize: '1rem',
+              cursor: saving ? 'not-allowed' : 'pointer',
+              transition: 'all 0.2s ease',
+              transform: saving ? 'none' : 'translateY(0)',
+              boxShadow: saving ? 'none' : '0 4px 16px rgba(59, 130, 246, 0.2)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}
+            onMouseEnter={(e) => {
+              if (!saving) {
+                e.target.style.transform = 'translateY(-2px)';
+                e.target.style.boxShadow = '0 8px 24px rgba(59, 130, 246, 0.3)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (!saving) {
+                e.target.style.transform = 'translateY(0)';
+                e.target.style.boxShadow = '0 4px 16px rgba(59, 130, 246, 0.2)';
+              }
+            }}
           >
-            {saving ? '保存中...' : '保存'}
+            {saving ? '💾 保存中...' : '💾 保存'}
           </button>
         </div>
       </form>
