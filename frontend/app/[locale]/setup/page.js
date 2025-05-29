@@ -399,9 +399,6 @@ export default function Setup({ params }) {
             <span className="setup--title-icon">🎭</span>
             {t('title')}
           </h1>
-          <p className="setup--subtitle">
-            お気に入りのAIキャラクターを選んで、特別な体験を始めましょう
-          </p>
         </div>
       </div>
 
