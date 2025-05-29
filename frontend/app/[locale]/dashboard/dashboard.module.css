@@ -1,10 +1,7 @@
 .dashboardRoot {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
   min-height: 100vh;
   background: #f7f8fa;
-  padding: 40px 0;
+  padding: 40px;
 }
 
 .dashboardCard {
@@ -159,7 +156,6 @@
 }
 
 .dashboardRoot > div:first-child {
-  max-width: 900px;
   margin: 0 auto;
   margin-bottom: 24px;
 }
