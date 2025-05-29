@@ -1,0 +1,44 @@
+.affinityInfo {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  color: #666;
+  margin-top: 8px;
+  padding: 6px 10px;
+  background: rgba(248, 144, 182, 0.1);
+  border-radius: 12px;
+  border: 1px solid rgba(248, 144, 182, 0.2);
+}
+
+.affinityLabel {
+  font-weight: 500;
+}
+
+.affinityLevel {
+  font-weight: bold;
+  color: rgb(248, 144, 182);
+}
+
+.affinityMax {
+  color: #999;
+}
+
+.affinityDescription {
+  margin-left: 8px;
+  font-size: 13px;
+  color: rgb(248, 144, 182);
+  font-weight: 500;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  .affinityInfo {
+    font-size: 13px;
+    padding: 5px 8px;
+  }
+  
+  .affinityDescription {
+    font-size: 12px;
+  }
+}
