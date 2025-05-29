@@ -22,14 +22,10 @@ export default function AffinityBar({ level = 0, streak = 0, description }) {
     
     if (heartIndex < heartsToFill) {
       // 完全に塗りつぶされたハート
-      if (level >= 85) return '#FF1493'; // ピンク（恋人）
-      if (level >= 60) return '#FFD700'; // ゴールド（親友）
-      if (level >= 40) return '#32CD32'; // グリーン（友達）
-      if (level >= 20) return '#87CEEB'; // ライトブルー（知り合い）
-      return '#FF69B4'; // 基本ピンク
+      return 'rgb(248, 144, 182)'; // 指定されたピンク色
     } else if (heartIndex === heartsToFill && partialFill > 0) {
       // 部分的に塗りつぶされたハート
-      return '#FFB6C1'; // 薄いピンク
+      return 'rgb(255, 229, 239)'; // 指定された薄いピンク色
     }
     // 空のハート
     return '#E5E5E5';
