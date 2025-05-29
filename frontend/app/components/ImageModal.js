@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import styles from './ImageModal.module.css';
 
 export default function ImageModal({ images, initialIndex, onClose }) {
@@ -82,7 +83,13 @@ export default function ImageModal({ images, initialIndex, onClose }) {
                 onClick={prevImage}
                 aria-label="前の画像"
               >
-                &#8249;
+                <Image
+                  src="/icon/arrow.svg"
+                  alt=""
+                  width={24}
+                  height={24}
+                  className={styles.arrowIcon}
+                />
               </button>
               
               <button
@@ -90,7 +97,13 @@ export default function ImageModal({ images, initialIndex, onClose }) {
                 onClick={nextImage}
                 aria-label="次の画像"
               >
-                &#8250;
+                <Image
+                  src="/icon/arrow.svg"
+                  alt=""
+                  width={24}
+                  height={24}
+                  className={styles.arrowIcon}
+                />
               </button>
             </>
           )}
