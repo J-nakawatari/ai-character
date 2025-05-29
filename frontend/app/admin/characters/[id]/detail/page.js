@@ -346,6 +346,37 @@ export default function CharacterDetailPage() {
                 </div>
               </div>
 
+              {/* ギャラリー画像セクション */}
+              <div className={styles.mediaSection}>
+                <div className={styles.mediaSectionTitle}>
+                  ダッシュボードギャラリー画像
+                </div>
+                <div className={styles.galleryGrid}>
+                  {Array.from({ length: 10 }, (_, index) => {
+                    const galleryKey = `galleryImage${index + 1}`;
+                    const imageUrl = character[galleryKey];
+                    return (
+                      <div key={galleryKey} className={styles.galleryItem}>
+                        <div className={styles.galleryLabel}>
+                          スロット {index + 1}
+                        </div>
+                        {imageUrl ? (
+                          <img 
+                            src={imageUrl} 
+                            alt={`ギャラリー画像 ${index + 1}`} 
+                            className={styles.galleryImage}
+                          />
+                        ) : (
+                          <div className={styles.galleryPlaceholder}>
+                            🖼️
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
               {/* 音声セクション */}
               <div className={styles.audioSection}>
                 <div className={styles.mediaSectionTitle}>
