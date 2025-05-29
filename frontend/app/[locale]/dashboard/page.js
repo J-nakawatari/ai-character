@@ -10,6 +10,7 @@ import { useTranslations } from 'next-intl';
 import Card from '../../components/Card';
 import styles from './dashboard.module.css';
 import GlobalLoading from '../../components/GlobalLoading';
+import { useAuth } from '../../utils/auth';
 
 import ImageSlider from '../../components/ImageSlider';
 
