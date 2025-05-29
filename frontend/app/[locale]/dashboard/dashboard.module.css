@@ -4,7 +4,7 @@
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   position: relative;
   overflow-x: hidden;
-  padding-top: 0;
+  padding: 0 40px;
 }
 
 /* スライダーコンテナ */
@@ -21,9 +21,7 @@
 
 /* ダッシュボードコンテナ */
 .dashboardContainer {
-  max-width: 1200px;
   margin: 0 auto;
-  padding: 0 2rem 2rem;
 }
 
 /* 親密度コンテナ */
