@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import api from '@/utils/api';
+import styles from './page.module.css';
 
 export default function CharacterDetailPage() {
   const params = useParams();
@@ -27,9 +28,9 @@ export default function CharacterDetailPage() {
 
   if (loading) {
     return (
-      <div className="admin-content">
-        <div className="admin-card" style={{textAlign: 'center', padding: '4rem'}}>
-          <div style={{fontSize: '1.125rem', color: 'var(--admin-gray-600)'}}>読み込み中...</div>
+      <div className={styles.characterDetailPage}>
+        <div className={styles.loadingContainer}>
+          <div className={styles.loadingText}>読み込み中...</div>
         </div>
       </div>
     );
@@ -37,14 +38,13 @@ export default function CharacterDetailPage() {
   
   if (error) {
     return (
-      <div className="admin-content">
-        <div className="admin-card" style={{textAlign: 'center', padding: '4rem'}}>
-          <div style={{fontSize: '1.125rem', color: 'var(--admin-error-500)'}}>
+      <div className={styles.characterDetailPage}>
+        <div className={styles.errorContainer}>
+          <div className={styles.errorText}>
             ❌ {error}
           </div>
           <button 
-            className="admin-btn admin-btn--secondary" 
-            style={{marginTop: '1rem'}}
+            className={styles.errorButton}
             onClick={() => router.push('/admin/characters')}
           >
             一覧に戻る
@@ -58,441 +58,311 @@ export default function CharacterDetailPage() {
 
   const getAccessTypeBadge = (type) => {
     const badges = {
-      free: { text: '無料', class: 'admin-badge--success' },
-      subscription: { text: 'サブスク', class: 'admin-badge--warning' },
-      purchaseOnly: { text: '買い切り', class: 'admin-badge--neutral' }
+      free: { text: '無料', class: styles.badgeSuccess },
+      subscription: { text: 'サブスク', class: styles.badgeWarning },
+      purchaseOnly: { text: '買い切り', class: styles.badgeNeutral }
     };
-    const badge = badges[type] || { text: type, class: 'admin-badge--neutral' };
-    return <span className={`admin-badge ${badge.class}`}>{badge.text}</span>;
+    const badge = badges[type] || { text: type, class: styles.badgeNeutral };
+    return <span className={`${styles.badge} ${badge.class}`}>{badge.text}</span>;
   };
 
   const getStatusBadge = (isActive) => {
     return (
-      <span className={`admin-badge ${isActive ? 'admin-badge--success' : 'admin-badge--error'}`}>
+      <span className={`${styles.badge} ${isActive ? styles.badgeSuccess : styles.badgeError}`}>
         {isActive ? '✅ 有効' : '❌ 無効'}
       </span>
     );
   };
 
   return (
-    <div className="admin-content">
-      {/* ヘッダー */}
-      <div style={{marginBottom: '2rem'}}>
-        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem'}}>
-          <div>
-            <h1 style={{fontSize: '2rem', fontWeight: '700', color: 'var(--admin-gray-900)', margin: '0 0 0.5rem 0'}}>
-              キャラクター詳細
-            </h1>
-            <div style={{display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap'}}>
-              {getAccessTypeBadge(character.characterAccessType)}
-              {getStatusBadge(character.isActive)}
-              <span style={{color: 'var(--admin-gray-500)', fontSize: '0.875rem'}}>
-                ID: {params.id}
-              </span>
+    <div className={styles.characterDetailPage}>
+      <div className="admin-content">
+        {/* ヘッダー */}
+        <div className={styles.header}>
+          <div className={styles.headerContent}>
+            <div className={styles.headerLeft}>
+              <h1 className={styles.title}>キャラクター詳細</h1>
+              <div className={styles.headerMeta}>
+                {getAccessTypeBadge(character.characterAccessType)}
+                {getStatusBadge(character.isActive)}
+                <span className={styles.idText}>
+                  ID: {params.id}
+                </span>
+              </div>
             </div>
-          </div>
-          <div style={{display: 'flex', gap: '0.75rem'}}>
-            <button 
-              className="admin-btn admin-btn--primary"
-              onClick={() => router.push(`/admin/characters/${params.id}`)}
-            >
-              ✏️ 編集
-            </button>
-            <button 
-              className="admin-btn admin-btn--secondary"
-              onClick={() => router.push('/admin/characters')}
-            >
-              ← 一覧に戻る
-            </button>
+            <div className={styles.headerButtons}>
+              <button 
+                className={styles.editButton}
+                onClick={() => router.push(`/admin/characters/${params.id}`)}
+              >
+                ✏️ 編集
+              </button>
+              <button 
+                className={styles.backButton}
+                onClick={() => router.push('/admin/characters')}
+              >
+                ← 一覧に戻る
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-      {/* メインコンテンツ */}
-      <div style={{maxWidth: '1200px', margin: '0 auto'}}>
-        {/* キャラクター概要カード */}
-        <div className="admin-card admin-card--elevated" style={{marginBottom: '2rem'}}>
-          <div style={{display: 'grid', gridTemplateColumns: 'auto 1fr auto', gap: '2rem', alignItems: 'start'}}>
-            {/* キャラクター画像 */}
-            <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem'}}>
-              {character.imageCharacterSelect ? (
-                <img 
-                  src={character.imageCharacterSelect} 
-                  alt={character.name?.ja || 'Character'} 
-                  style={{
-                    width: '160px', 
-                    height: '160px', 
-                    borderRadius: 'var(--admin-radius-2xl)', 
-                    objectFit: 'cover',
-                    border: '4px solid var(--admin-primary-100)'
-                  }} 
-                />
-              ) : (
-                <div style={{
-                  width: '160px', 
-                  height: '160px', 
-                  borderRadius: 'var(--admin-radius-2xl)', 
-                  background: 'var(--admin-gray-100)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: 'var(--admin-gray-500)',
-                  fontSize: '2rem'
-                }}>
-                  👤
-                </div>
-              )}
-              {character.themeColor && (
-                <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
-                  <div style={{
-                    width: '24px',
-                    height: '24px',
-                    borderRadius: '50%',
-                    background: character.themeColor,
-                    border: '2px solid var(--admin-gray-200)'
-                  }}></div>
-                  <span style={{fontSize: '0.875rem', color: 'var(--admin-gray-600)'}}>
-                    {character.themeColor}
-                  </span>
-                </div>
-              )}
-            </div>
-
-            {/* 基本情報 */}
-            <div>
-              <h2 style={{fontSize: '1.5rem', fontWeight: '700', color: 'var(--admin-gray-900)', margin: '0 0 1rem 0'}}>
-                {character.name?.ja || 'No Name'}
-              </h2>
-              {character.name?.en && (
-                <p style={{fontSize: '1.125rem', color: 'var(--admin-gray-600)', margin: '0 0 1rem 0'}}>
-                  {character.name.en}
-                </p>
-              )}
-              <p style={{color: 'var(--admin-gray-700)', lineHeight: '1.6', margin: '0 0 1.5rem 0'}}>
-                {character.description?.ja || 'No description'}
-              </p>
-              <div style={{display: 'flex', flexWrap: 'wrap', gap: '0.5rem'}}>
-                <span style={{fontSize: '0.875rem', color: 'var(--admin-gray-500)'}}>
-                  📅 {character.createdAt ? new Date(character.createdAt).toLocaleDateString('ja-JP') : '-'}
-                </span>
-                {character.personality && (
-                  <span style={{fontSize: '0.875rem', color: 'var(--admin-gray-500)'}}>
-                    🎭 {character.personality}
-                  </span>
+        {/* メインコンテンツ */}
+        <div className={styles.mainContent}>
+          {/* キャラクター概要カード */}
+          <div className={styles.overviewCard}>
+            <div className={styles.overviewGrid}>
+              {/* キャラクター画像 */}
+              <div className={styles.characterImageSection}>
+                {character.imageCharacterSelect ? (
+                  <img 
+                    src={character.imageCharacterSelect} 
+                    alt={character.name?.ja || 'Character'} 
+                    className={styles.characterImage}
+                  />
+                ) : (
+                  <div className={styles.imagePlaceholder}>
+                    👤
+                  </div>
+                )}
+                {character.themeColor && (
+                  <div className={styles.themeColorSection}>
+                    <div 
+                      className={styles.themeColorSwatch}
+                      style={{ background: character.themeColor }}
+                    ></div>
+                    <span className={styles.themeColorText}>
+                      {character.themeColor}
+                    </span>
+                  </div>
                 )}
               </div>
-            </div>
 
-            {/* 販売情報 */}
-            <div style={{textAlign: 'right'}}>
-              {character.price && character.characterAccessType === 'purchaseOnly' && (
-                <div style={{fontSize: '1.5rem', fontWeight: '700', color: 'var(--admin-gray-900)', marginBottom: '0.5rem'}}>
-                  ¥{character.price?.toLocaleString()}
+              {/* 基本情報 */}
+              <div className={styles.basicInfo}>
+                <h2 className={styles.characterName}>
+                  {character.name?.ja || 'No Name'}
+                </h2>
+                {character.name?.en && (
+                  <p className={styles.englishName}>
+                    {character.name.en}
+                  </p>
+                )}
+                <p className={styles.description}>
+                  {character.description?.ja || 'No description'}
+                </p>
+                <div className={styles.metaInfo}>
+                  <span className={styles.metaItem}>
+                    📅 {character.createdAt ? new Date(character.createdAt).toLocaleDateString('ja-JP') : '-'}
+                  </span>
+                  {character.personality && (
+                    <span className={styles.metaItem}>
+                      🎭 {character.personality}
+                    </span>
+                  )}
                 </div>
-              )}
-              <div style={{fontSize: '0.875rem', color: 'var(--admin-gray-600)'}}>
-                {character.purchaseType}
               </div>
-            </div>
-          </div>
-        </div>
 
-        {/* 詳細情報グリッド */}
-        <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '2rem'}}>
-          {/* 多言語情報 */}
-          <div className="admin-card">
-            <h3 style={{fontSize: '1.25rem', fontWeight: '600', color: 'var(--admin-gray-900)', margin: '0 0 1.5rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
-              🌍 多言語情報
-            </h3>
-            <div style={{display: 'grid', gap: '1.5rem'}}>
-              <div>
-                <div style={{fontSize: '0.875rem', fontWeight: '500', color: 'var(--admin-gray-600)', marginBottom: '0.5rem'}}>
-                  日本語名
-                </div>
-                <div style={{fontSize: '1rem', color: 'var(--admin-gray-900)'}}>
-                  {character.name?.ja || '-'}
-                </div>
-              </div>
-              <div>
-                <div style={{fontSize: '0.875rem', fontWeight: '500', color: 'var(--admin-gray-600)', marginBottom: '0.5rem'}}>
-                  英語名
-                </div>
-                <div style={{fontSize: '1rem', color: 'var(--admin-gray-900)'}}>
-                  {character.name?.en || '-'}
-                </div>
-              </div>
-              <div>
-                <div style={{fontSize: '0.875rem', fontWeight: '500', color: 'var(--admin-gray-600)', marginBottom: '0.5rem'}}>
-                  日本語説明
-                </div>
-                <div style={{
-                  fontSize: '0.875rem', 
-                  color: 'var(--admin-gray-700)', 
-                  lineHeight: '1.5',
-                  background: 'var(--admin-gray-50)',
-                  padding: '0.75rem',
-                  borderRadius: 'var(--admin-radius-lg)',
-                  maxHeight: '100px',
-                  overflow: 'auto'
-                }}>
-                  {character.description?.ja || '-'}
-                </div>
-              </div>
-              <div>
-                <div style={{fontSize: '0.875rem', fontWeight: '500', color: 'var(--admin-gray-600)', marginBottom: '0.5rem'}}>
-                  英語説明
-                </div>
-                <div style={{
-                  fontSize: '0.875rem', 
-                  color: 'var(--admin-gray-700)', 
-                  lineHeight: '1.5',
-                  background: 'var(--admin-gray-50)',
-                  padding: '0.75rem',
-                  borderRadius: 'var(--admin-radius-lg)',
-                  maxHeight: '100px',
-                  overflow: 'auto'
-                }}>
-                  {character.description?.en || '-'}
+              {/* 販売情報 */}
+              <div className={styles.salesInfo}>
+                {character.price && character.characterAccessType === 'purchaseOnly' && (
+                  <div className={styles.price}>
+                    ¥{character.price?.toLocaleString()}
+                  </div>
+                )}
+                <div className={styles.purchaseType}>
+                  {character.purchaseType}
                 </div>
               </div>
             </div>
           </div>
 
-          {/* AI設定 */}
-          <div className="admin-card">
-            <h3 style={{fontSize: '1.25rem', fontWeight: '600', color: 'var(--admin-gray-900)', margin: '0 0 1.5rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
-              🤖 AI設定
-            </h3>
-            <div style={{display: 'grid', gap: '1.5rem'}}>
-              <div>
-                <div style={{fontSize: '0.875rem', fontWeight: '500', color: 'var(--admin-gray-600)', marginBottom: '0.5rem'}}>
-                  音声設定
-                </div>
-                <div style={{fontSize: '1rem', color: 'var(--admin-gray-900)'}}>
-                  🎤 {character.voice || '-'}
-                </div>
+          {/* 詳細情報グリッド */}
+          <div className={styles.detailGrid}>
+            {/* 多言語情報 */}
+            <div className={styles.detailCard}>
+              <div className={styles.detailHeader}>
+                <span className={styles.detailIcon}>🌍</span>
+                <h3 className={styles.detailTitle}>多言語情報</h3>
               </div>
-              <div>
-                <div style={{fontSize: '0.875rem', fontWeight: '500', color: 'var(--admin-gray-600)', marginBottom: '0.5rem'}}>
-                  デフォルトメッセージ（日本語）
+              <div className={styles.detailContent}>
+                <div className={styles.fieldGroup}>
+                  <div className={styles.fieldLabel}>
+                    日本語名
+                  </div>
+                  <div className={styles.fieldValue}>
+                    {character.name?.ja || '-'}
+                  </div>
                 </div>
-                <div style={{
-                  fontSize: '0.875rem', 
-                  color: 'var(--admin-gray-700)', 
-                  lineHeight: '1.5',
-                  background: 'var(--admin-gray-50)',
-                  padding: '0.75rem',
-                  borderRadius: 'var(--admin-radius-lg)',
-                  maxHeight: '100px',
-                  overflow: 'auto'
-                }}>
-                  {character.defaultMessage?.ja || '-'}
+                <div className={styles.fieldGroup}>
+                  <div className={styles.fieldLabel}>
+                    英語名
+                  </div>
+                  <div className={styles.fieldValue}>
+                    {character.name?.en || '-'}
+                  </div>
                 </div>
-              </div>
-              <div>
-                <div style={{fontSize: '0.875rem', fontWeight: '500', color: 'var(--admin-gray-600)', marginBottom: '0.5rem'}}>
-                  デフォルトメッセージ（英語）
+                <div className={styles.fieldGroup}>
+                  <div className={styles.fieldLabel}>
+                    日本語説明
+                  </div>
+                  <div className={styles.fieldTextArea}>
+                    {character.description?.ja || '-'}
+                  </div>
                 </div>
-                <div style={{
-                  fontSize: '0.875rem', 
-                  color: 'var(--admin-gray-700)', 
-                  lineHeight: '1.5',
-                  background: 'var(--admin-gray-50)',
-                  padding: '0.75rem',
-                  borderRadius: 'var(--admin-radius-lg)',
-                  maxHeight: '100px',
-                  overflow: 'auto'
-                }}>
-                  {character.defaultMessage?.en || '-'}
+                <div className={styles.fieldGroup}>
+                  <div className={styles.fieldLabel}>
+                    英語説明
+                  </div>
+                  <div className={styles.fieldTextArea}>
+                    {character.description?.en || '-'}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* プロンプト設定 */}
-          <div className="admin-card" style={{gridColumn: 'span 2'}}>
-            <h3 style={{fontSize: '1.25rem', fontWeight: '600', color: 'var(--admin-gray-900)', margin: '0 0 1.5rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
-              📝 プロンプト設定
-            </h3>
-            <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '2rem'}}>
-              <div>
-                <div style={{fontSize: '1rem', fontWeight: '500', color: 'var(--admin-gray-700)', marginBottom: '1rem'}}>
-                  性格プロンプト
+            {/* AI設定 */}
+            <div className={styles.detailCard}>
+              <div className={styles.detailHeader}>
+                <span className={styles.detailIcon}>🤖</span>
+                <h3 className={styles.detailTitle}>AI設定</h3>
+              </div>
+              <div className={styles.detailContent}>
+                <div className={styles.fieldGroup}>
+                  <div className={styles.fieldLabel}>
+                    音声設定
+                  </div>
+                  <div className={styles.fieldValue}>
+                    🎤 {character.voice || '-'}
+                  </div>
                 </div>
-                <div style={{display: 'grid', gap: '1rem'}}>
-                  <div>
-                    <div style={{fontSize: '0.875rem', fontWeight: '500', color: 'var(--admin-gray-600)', marginBottom: '0.5rem'}}>
+                <div className={styles.fieldGroup}>
+                  <div className={styles.fieldLabel}>
+                    デフォルトメッセージ（日本語）
+                  </div>
+                  <div className={styles.fieldTextArea}>
+                    {character.defaultMessage?.ja || '-'}
+                  </div>
+                </div>
+                <div className={styles.fieldGroup}>
+                  <div className={styles.fieldLabel}>
+                    デフォルトメッセージ（英語）
+                  </div>
+                  <div className={styles.fieldTextArea}>
+                    {character.defaultMessage?.en || '-'}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* プロンプト設定 */}
+            <div className={`${styles.detailCard} ${styles.detailCardWide}`}>
+              <div className={styles.detailHeader}>
+                <span className={styles.detailIcon}>📝</span>
+                <h3 className={styles.detailTitle}>プロンプト設定</h3>
+              </div>
+              <div className={styles.promptGrid}>
+                <div className={styles.promptSection}>
+                  <div className={styles.promptSectionTitle}>
+                    性格プロンプト
+                  </div>
+                  <div className={styles.fieldGroup}>
+                    <div className={styles.fieldLabel}>
                       日本語
                     </div>
-                    <div style={{
-                      fontSize: '0.875rem', 
-                      color: 'var(--admin-gray-700)', 
-                      lineHeight: '1.5',
-                      background: 'var(--admin-gray-50)',
-                      padding: '1rem',
-                      borderRadius: 'var(--admin-radius-lg)',
-                      maxHeight: '200px',
-                      overflow: 'auto',
-                      fontFamily: 'monospace',
-                      whiteSpace: 'pre-wrap'
-                    }}>
+                    <div className={`${styles.fieldTextArea} ${styles.promptField}`}>
                       {character.personalityPrompt?.ja || '-'}
                     </div>
                   </div>
-                  <div>
-                    <div style={{fontSize: '0.875rem', fontWeight: '500', color: 'var(--admin-gray-600)', marginBottom: '0.5rem'}}>
+                  <div className={styles.fieldGroup}>
+                    <div className={styles.fieldLabel}>
                       英語
                     </div>
-                    <div style={{
-                      fontSize: '0.875rem', 
-                      color: 'var(--admin-gray-700)', 
-                      lineHeight: '1.5',
-                      background: 'var(--admin-gray-50)',
-                      padding: '1rem',
-                      borderRadius: 'var(--admin-radius-lg)',
-                      maxHeight: '200px',
-                      overflow: 'auto',
-                      fontFamily: 'monospace',
-                      whiteSpace: 'pre-wrap'
-                    }}>
+                    <div className={`${styles.fieldTextArea} ${styles.promptField}`}>
                       {character.personalityPrompt?.en || '-'}
                     </div>
                   </div>
                 </div>
-              </div>
-              <div>
-                <div style={{fontSize: '1rem', fontWeight: '500', color: 'var(--admin-gray-700)', marginBottom: '1rem'}}>
-                  管理者プロンプト
-                </div>
-                <div style={{display: 'grid', gap: '1rem'}}>
-                  <div>
-                    <div style={{fontSize: '0.875rem', fontWeight: '500', color: 'var(--admin-gray-600)', marginBottom: '0.5rem'}}>
+                <div className={styles.promptSection}>
+                  <div className={styles.promptSectionTitle}>
+                    管理者プロンプト
+                  </div>
+                  <div className={styles.fieldGroup}>
+                    <div className={styles.fieldLabel}>
                       日本語
                     </div>
-                    <div style={{
-                      fontSize: '0.875rem', 
-                      color: 'var(--admin-gray-700)', 
-                      lineHeight: '1.5',
-                      background: 'var(--admin-gray-50)',
-                      padding: '1rem',
-                      borderRadius: 'var(--admin-radius-lg)',
-                      maxHeight: '200px',
-                      overflow: 'auto',
-                      fontFamily: 'monospace',
-                      whiteSpace: 'pre-wrap'
-                    }}>
+                    <div className={`${styles.fieldTextArea} ${styles.promptField}`}>
                       {character.adminPrompt?.ja || '-'}
                     </div>
                   </div>
-                  <div>
-                    <div style={{fontSize: '0.875rem', fontWeight: '500', color: 'var(--admin-gray-600)', marginBottom: '0.5rem'}}>
+                  <div className={styles.fieldGroup}>
+                    <div className={styles.fieldLabel}>
                       英語
                     </div>
-                    <div style={{
-                      fontSize: '0.875rem', 
-                      color: 'var(--admin-gray-700)', 
-                      lineHeight: '1.5',
-                      background: 'var(--admin-gray-50)',
-                      padding: '1rem',
-                      borderRadius: 'var(--admin-radius-lg)',
-                      maxHeight: '200px',
-                      overflow: 'auto',
-                      fontFamily: 'monospace',
-                      whiteSpace: 'pre-wrap'
-                    }}>
+                    <div className={`${styles.fieldTextArea} ${styles.promptField}`}>
                       {character.adminPrompt?.en || '-'}
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* メディア情報 */}
-          <div className="admin-card" style={{gridColumn: 'span 2'}}>
-            <h3 style={{fontSize: '1.25rem', fontWeight: '600', color: 'var(--admin-gray-900)', margin: '0 0 1.5rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
-              🎨 メディア情報
-            </h3>
-            
-            {/* 画像セクション */}
-            <div style={{marginBottom: '2rem'}}>
-              <div style={{fontSize: '1rem', fontWeight: '500', color: 'var(--admin-gray-700)', marginBottom: '1rem'}}>
-                画像
+            {/* メディア情報 */}
+            <div className={`${styles.detailCard} ${styles.detailCardWide}`}>
+              <div className={styles.detailHeader}>
+                <span className={styles.detailIcon}>🎨</span>
+                <h3 className={styles.detailTitle}>メディア情報</h3>
               </div>
-              <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1.5rem'}}>
-                {[
-                  { key: 'imageCharacterSelect', label: 'キャラクター選択', icon: '👤' },
-                  { key: 'imageDashboard', label: 'ダッシュボード', icon: '📊' },
-                  { key: 'imageChatBackground', label: 'チャット背景', icon: '🖼️' },
-                  { key: 'imageChatAvatar', label: 'チャットアバター', icon: '💬' }
-                ].map(({ key, label, icon }) => (
-                  <div key={key} style={{textAlign: 'center'}}>
-                    <div style={{fontSize: '0.875rem', fontWeight: '500', color: 'var(--admin-gray-600)', marginBottom: '0.5rem'}}>
-                      {icon} {label}
-                    </div>
-                    {character[key] ? (
-                      <img 
-                        src={character[key]} 
-                        alt={label} 
-                        style={{
-                          width: '100%', 
-                          maxWidth: '150px',
-                          height: '150px', 
-                          borderRadius: 'var(--admin-radius-lg)', 
-                          objectFit: 'cover',
-                          border: '2px solid var(--admin-gray-200)'
-                        }} 
-                      />
-                    ) : (
-                      <div style={{
-                        width: '100%',
-                        maxWidth: '150px',
-                        height: '150px',
-                        margin: '0 auto',
-                        borderRadius: 'var(--admin-radius-lg)',
-                        background: 'var(--admin-gray-100)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'var(--admin-gray-500)',
-                        fontSize: '2rem',
-                        border: '2px dashed var(--admin-gray-300)'
-                      }}>
-                        {icon}
+              
+              {/* 画像セクション */}
+              <div className={styles.mediaSection}>
+                <div className={styles.mediaSectionTitle}>
+                  画像
+                </div>
+                <div className={styles.imageGrid}>
+                  {[
+                    { key: 'imageCharacterSelect', label: 'キャラクター選択', icon: '👤' },
+                    { key: 'imageDashboard', label: 'ダッシュボード', icon: '📊' },
+                    { key: 'imageChatBackground', label: 'チャット背景', icon: '🖼️' },
+                    { key: 'imageChatAvatar', label: 'チャットアバター', icon: '💬' }
+                  ].map(({ key, label, icon }) => (
+                    <div key={key} className={styles.mediaItem}>
+                      <div className={styles.mediaLabel}>
+                        <span>{icon}</span>
+                        <span>{label}</span>
                       </div>
-                    )}
-                  </div>
-                ))}
+                      {character[key] ? (
+                        <img 
+                          src={character[key]} 
+                          alt={label} 
+                          className={styles.mediaImage}
+                        />
+                      ) : (
+                        <div className={styles.mediaPlaceholder}>
+                          {icon}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
 
-            {/* 音声セクション */}
-            <div>
-              <div style={{fontSize: '1rem', fontWeight: '500', color: 'var(--admin-gray-700)', marginBottom: '1rem'}}>
-                音声
-              </div>
-              <div>
-                <div style={{fontSize: '0.875rem', fontWeight: '500', color: 'var(--admin-gray-600)', marginBottom: '0.5rem'}}>
-                  🎵 サンプル音声
+              {/* 音声セクション */}
+              <div className={styles.audioSection}>
+                <div className={styles.mediaSectionTitle}>
+                  音声
+                </div>
+                <div className={styles.audioLabel}>
+                  <span>🎵</span>
+                  <span>サンプル音声</span>
                 </div>
                 {character.sampleVoiceUrl ? (
                   <audio 
                     src={character.sampleVoiceUrl} 
                     controls 
-                    style={{
-                      width: '100%',
-                      maxWidth: '400px',
-                      height: '40px'
-                    }} 
+                    className={styles.audioPlayer}
                   />
                 ) : (
-                  <div style={{
-                    padding: '1rem',
-                    background: 'var(--admin-gray-100)',
-                    borderRadius: 'var(--admin-radius-lg)',
-                    color: 'var(--admin-gray-500)',
-                    textAlign: 'center',
-                    border: '2px dashed var(--admin-gray-300)'
-                  }}>
+                  <div className={styles.audioPlaceholder}>
                     🎤 音声ファイルが設定されていません
                   </div>
                 )}
