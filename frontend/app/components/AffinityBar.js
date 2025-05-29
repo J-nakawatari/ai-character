@@ -1,25 +1,65 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import styles from './AffinityBar.module.css';
 
 export default function AffinityBar({ level = 0, streak = 0, description }) {
-  const [animatedLevel, setAnimatedLevel] = useState(0);
+  const [animatedHearts, setAnimatedHearts] = useState(0);
 
   useEffect(() => {
-    // アニメーション効果
+    // ハートのアニメーション効果（レベル10ごとに1ハート）
+    const targetHearts = Math.floor(level / 10);
     const timer = setTimeout(() => {
-      setAnimatedLevel(level);
+      setAnimatedHearts(targetHearts);
     }, 100);
     return () => clearTimeout(timer);
   }, [level]);
 
-  const getGradientColor = (level) => {
-    if (level >= 85) return 'linear-gradient(90deg, #FF69B4 0%, #FF1493 100%)';
-    if (level >= 60) return 'linear-gradient(90deg, #FFD700 0%, #FFA500 100%)';
-    if (level >= 40) return 'linear-gradient(90deg, #32CD32 0%, #228B22 100%)';
-    if (level >= 20) return 'linear-gradient(90deg, #87CEEB 0%, #4682B4 100%)';
-    return 'linear-gradient(90deg, #C0C0C0 0%, #808080 100%)';
+  const getHeartColor = (heartIndex, level) => {
+    const heartsToFill = Math.floor(level / 10);
+    const partialFill = level % 10;
+    
+    if (heartIndex < heartsToFill) {
+      // 完全に塗りつぶされたハート
+      if (level >= 85) return '#FF1493'; // ピンク（恋人）
+      if (level >= 60) return '#FFD700'; // ゴールド（親友）
+      if (level >= 40) return '#32CD32'; // グリーン（友達）
+      if (level >= 20) return '#87CEEB'; // ライトブルー（知り合い）
+      return '#FF69B4'; // 基本ピンク
+    } else if (heartIndex === heartsToFill && partialFill > 0) {
+      // 部分的に塗りつぶされたハート
+      return '#FFB6C1'; // 薄いピンク
+    }
+    // 空のハート
+    return '#E5E5E5';
+  };
+
+  const renderHearts = () => {
+    const hearts = [];
+    for (let i = 0; i < 10; i++) {
+      const isAnimated = i < animatedHearts;
+      hearts.push(
+        <div 
+          key={i} 
+          className={`${styles.heartWrapper} ${isAnimated ? styles.heartAnimated : ''}`}
+          style={{ animationDelay: `${i * 100}ms` }}
+        >
+          <Image
+            src="/icon/heart.svg"
+            alt=""
+            width={20}
+            height={20}
+            className={styles.heartIcon}
+            style={{ 
+              color: getHeartColor(i, level),
+              fill: getHeartColor(i, level)
+            }}
+          />
+        </div>
+      );
+    }
+    return hearts;
   };
 
   return (
@@ -37,14 +77,8 @@ export default function AffinityBar({ level = 0, streak = 0, description }) {
         )}
       </div>
       
-      <div className={styles.progressBar}>
-        <div 
-          className={styles.progressFill}
-          style={{
-            width: `${animatedLevel}%`,
-            background: getGradientColor(animatedLevel)
-          }}
-        />
+      <div className={styles.heartsContainer}>
+        {renderHearts()}
       </div>
       
       {streak > 0 && (

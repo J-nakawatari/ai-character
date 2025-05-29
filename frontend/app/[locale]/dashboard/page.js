@@ -188,10 +188,15 @@ export default function Dashboard({ params }) {
       }))
     : [
         { src: '/images/hero-images_01.png', alt: 'ヒーロー画像1', unlockLevel: 0 },
-        { src: '/images/hero-images_02.png', alt: 'ヒーロー画像2', unlockLevel: 20 },
-        { src: '/images/character_01.png', alt: 'キャラクター画像1', unlockLevel: 40 },
+        { src: '/images/hero-images_02.png', alt: 'ヒーロー画像2', unlockLevel: 10 },
+        { src: '/characters/luna.png', alt: 'ルナ', unlockLevel: 20 },
+        { src: '/characters/miko.png', alt: 'ミコ', unlockLevel: 30 },
+        { src: '/characters/robo.png', alt: 'ロボ', unlockLevel: 40 },
+        { src: '/characters/zen.png', alt: 'ゼン', unlockLevel: 50 },
         { src: '/images/room_01.jpg', alt: 'ルーム画像1', unlockLevel: 60 },
-        { src: '/images/room_02.jpg', alt: 'ルーム画像2', unlockLevel: 85 }
+        { src: '/images/room_02.jpg', alt: 'ルーム画像2', unlockLevel: 70 },
+        { src: '/images/room_03.jpg', alt: 'ルーム画像3', unlockLevel: 80 },
+        { src: '/images/room_04.jpg', alt: 'ルーム画像4', unlockLevel: 90 }
       ];
 
   return (
@@ -207,6 +212,7 @@ export default function Dashboard({ params }) {
           images={sliderImages}
           initialIndex={modalInitialIndex}
           onClose={() => setModalOpen(false)}
+          affinityLevel={affinityData?.level || 0}
         />
       )}
       <Card className={styles.dashboardCard}>
