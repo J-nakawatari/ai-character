@@ -275,18 +275,6 @@ export default function EditCharacter({ params }) {
   return (
     <div className={styles.editCharacterPage}>
       <div className="admin-content">
-        <div style={{
-          background: '#ff6b6b',
-          color: 'white',
-          padding: '1rem',
-          margin: '1rem 0',
-          borderRadius: '8px',
-          fontSize: '1.2rem',
-          fontWeight: 'bold',
-          textAlign: 'center'
-        }}>
-          🚨 テストメッセージ - ページ更新確認用 🚨
-        </div>
         <div className={styles.pageHeader}>
           <h1 className={styles.pageTitle}>キャラクター編集</h1>
         </div>
