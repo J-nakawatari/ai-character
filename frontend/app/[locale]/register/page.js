@@ -26,7 +26,8 @@ const videoFiles = [
 ];
 
 export default function Register({ params }) {
-  const { register: registerUser } = useAuth();
+  const auth = useAuth();
+  const { register: registerUser } = auth || {};
   const router = useRouter();
   const [serverError, setServerError] = useState('');
   const t = useTranslations('auth');

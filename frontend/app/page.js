@@ -27,7 +27,8 @@ const videoFiles = [
 ];
 
 export default function Home() {
-  const { user, loading } = useAuth();
+  const auth = useAuth();
+  const { user, loading } = auth || {};
   const router = useRouter();
   const [isMobile, setIsMobile] = useState(false);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
@@ -318,7 +319,7 @@ export default function Home() {
         </p>
         <div style={{ width: '100%', maxWidth: '300px' }}>
           <Link
-            href={`/${locale}/login`}
+            href="/login"
             className={`${orbitron.className} button`}
             style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', paddingRight: '16px', paddingLeft: '16px', overflow: 'hidden', position: 'relative' }}
             onMouseEnter={() => setArrowHover(true)}
