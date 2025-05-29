@@ -21,7 +21,17 @@ export default function CharacterEditPage() {
     characterSelect: { width: 238, height: 260 },
     dashboard: { width: 320, height: 528 },
     chatBackground: { width: 455, height: 745 },
-    chatAvatar: { width: 400, height: 400 }
+    chatAvatar: { width: 400, height: 400 },
+    gallery1: { width: 400, height: 400 },
+    gallery2: { width: 400, height: 400 },
+    gallery3: { width: 400, height: 400 },
+    gallery4: { width: 400, height: 400 },
+    gallery5: { width: 400, height: 400 },
+    gallery6: { width: 400, height: 400 },
+    gallery7: { width: 400, height: 400 },
+    gallery8: { width: 400, height: 400 },
+    gallery9: { width: 400, height: 400 },
+    gallery10: { width: 400, height: 400 }
   };
   const [cropSize, setCropSize] = useState(imageSizes['characterSelect']);
 
