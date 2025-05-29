@@ -5,6 +5,7 @@ import { useAdminAuth } from '@/utils/adminAuth';
 import api from '@/utils/api';
 import GlobalLoading from '@/components/GlobalLoading';
 import Card from '@/components/Card';
+import '../../../styles/admin-design-system.css';
 
 export default function AdminUsers() {
   const { admin } = useAdminAuth();
@@ -81,120 +82,333 @@ export default function AdminUsers() {
     );
   }
 
+  // ステータスバッジの取得
+  const getStatusBadge = (user) => {
+    if (!user.isActive) return <span className="admin-badge admin-badge--error">無効</span>;
+    if (!user.hasCompletedSetup) return <span className="admin-badge admin-badge--warning">未完了</span>;
+    if (user.membershipType === 'subscription' && user.subscriptionStatus === 'active') {
+      return <span className="admin-badge admin-badge--success">プレミアム</span>;
+    }
+    return <span className="admin-badge admin-badge--neutral">無料</span>;
+  };
+
+  // 親密度統計の計算
+  const getUserAffinityStats = (user) => {
+    if (!user.affinities || user.affinities.length === 0) {
+      return { average: 0, count: 0, maxLevel: 0 };
+    }
+    
+    const levels = user.affinities.map(a => a.level || 0);
+    const average = Math.round(levels.reduce((sum, level) => sum + level, 0) / levels.length);
+    const maxLevel = Math.max(...levels);
+    
+    return { average, count: levels.length, maxLevel };
+  };
+
   return (
     <>
     <div className="admin-content">
-      <div className="admin-header">
-        <h1 className="admin-dashboard-title">ユーザー管理</h1>
+      <div style={{ marginBottom: 'var(--admin-space-8)' }}>
+        <h1 style={{ 
+          fontSize: 'var(--admin-font-size-3xl)', 
+          fontWeight: '700', 
+          color: 'var(--admin-gray-900)', 
+          margin: '0 0 var(--admin-space-2) 0' 
+        }}>
+          ユーザー管理
+        </h1>
+        <p style={{ 
+          fontSize: 'var(--admin-font-size-base)', 
+          color: 'var(--admin-gray-600)', 
+          margin: 0 
+        }}>
+          {users.length}名のユーザーを管理中
+        </p>
       </div>
-      <div className="admin-content-wrapper">
-        <Card className="admin-stats-card-wrapper">
-          <div className="admin-stats-title">ユーザー一覧</div>
-          <div className="admin-table-container">
-            <table className="admin-table">
-              <thead>
-                <tr>
-                  <th>名前</th>
-                  <th>メールアドレス</th>
-                  <th>登録状況</th>
-                  <th>会員種別</th>
-                  <th>言語</th>
-                  <th>サブスク状態</th>
-                  <th>サブスク開始</th>
-                  <th>有効</th>
-                  <th>操作</th>
-                </tr>
-              </thead>
-              <tbody>
-                {users.map(user => (
+      
+      <div className="admin-table-wrapper">
+        <div className="admin-table-header">
+          <div className="admin-table-title">ユーザー一覧</div>
+        </div>
+        <div className="admin-table-container">
+          <table className="admin-table">
+            <thead>
+              <tr>
+                <th>ユーザー情報</th>
+                <th>ステータス</th>
+                <th>会員種別</th>
+                <th>親密度統計</th>
+                <th>最終活動</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.map(user => {
+                const affinityStats = getUserAffinityStats(user);
+                return (
                   <tr key={user._id}>
-                    <td>{user.name?.ja || user.name || ''}</td>
-                    <td>{user.email}</td>
-                    <td>{user.hasCompletedSetup ? '完了' : '未完了'}</td>
-                    <td>{user.membershipType === 'subscription' ? 'サブスク' : '無料'}</td>
-                    <td>{user.preferredLanguage}</td>
-                    <td>{user.subscriptionStatus}</td>
-                    <td>{user.subscriptionStartDate ? new Date(user.subscriptionStartDate).toLocaleString() : '-'}</td>
-                    <td>{user.isActive ? '有効' : '無効'}</td>
                     <td>
-                      <div className="admin-button-group">
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--admin-space-1)' }}>
+                        <div style={{ fontWeight: '600', fontSize: 'var(--admin-font-size-sm)', color: 'var(--admin-gray-900)' }}>
+                          {user.name?.ja || user.name || 'Unknown'}
+                        </div>
+                        <div style={{ fontSize: 'var(--admin-font-size-xs)', color: 'var(--admin-gray-500)' }}>
+                          {user.email}
+                        </div>
+                        <div style={{ fontSize: 'var(--admin-font-size-xs)', color: 'var(--admin-gray-500)' }}>
+                          ID: {user._id.substring(0, 8)}...
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--admin-space-2)' }}>
+                        {getStatusBadge(user)}
+                        <div style={{ fontSize: 'var(--admin-font-size-xs)', color: 'var(--admin-gray-500)' }}>
+                          {user.preferredLanguage || 'ja'}
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--admin-space-1)' }}>
+                        <div style={{ fontSize: 'var(--admin-font-size-sm)', fontWeight: '500' }}>
+                          {user.membershipType === 'subscription' ? 'サブスクリプション' : '無料プラン'}
+                        </div>
+                        {user.membershipType === 'subscription' && (
+                          <div style={{ fontSize: 'var(--admin-font-size-xs)', color: 'var(--admin-gray-500)' }}>
+                            状態: {user.subscriptionStatus || 'unknown'}
+                          </div>
+                        )}
+                        {user.subscriptionStartDate && (
+                          <div style={{ fontSize: 'var(--admin-font-size-xs)', color: 'var(--admin-gray-500)' }}>
+                            開始: {new Date(user.subscriptionStartDate).toLocaleDateString()}
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                    <td>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--admin-space-1)' }}>
+                        <div style={{ fontSize: 'var(--admin-font-size-sm)', fontWeight: '600', color: 'var(--admin-primary-600)' }}>
+                          平均: {affinityStats.average}
+                        </div>
+                        <div style={{ fontSize: 'var(--admin-font-size-xs)', color: 'var(--admin-gray-500)' }}>
+                          最高: {affinityStats.maxLevel} | {affinityStats.count}キャラ
+                        </div>
+                        {affinityStats.count > 0 && (
+                          <div className="admin-progress" style={{ marginTop: 'var(--admin-space-1)' }}>
+                            <div 
+                              className="admin-progress-bar" 
+                              style={{ width: `${affinityStats.average}%` }}
+                            ></div>
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                    <td>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--admin-space-1)' }}>
+                        <div style={{ fontSize: 'var(--admin-font-size-xs)', color: 'var(--admin-gray-500)' }}>
+                          {user.selectedCharacter ? 
+                            (user.selectedCharacter.name?.ja || user.selectedCharacter.name || 'Unknown Character') 
+                            : '未選択'
+                          }
+                        </div>
+                        <div style={{ fontSize: 'var(--admin-font-size-xs)', color: 'var(--admin-gray-400)' }}>
+                          {user.lastLoginAt ? new Date(user.lastLoginAt).toLocaleDateString() : '未記録'}
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--admin-space-2)', minWidth: '120px' }}>
                         <button
-                          className="admin-button"
+                          className="admin-btn admin-btn--secondary admin-btn--sm"
                           onClick={() => handleShowDetail(user._id)}
                         >
-                          詳細
+                          詳細表示
                         </button>
                         <button
-                          className="admin-button admin-button--danger"
+                          className="admin-btn admin-btn--error admin-btn--sm"
                           onClick={() => handleDeleteUser(user._id)}
                         >
                           削除
                         </button>
-                        {user.isActive && (
-                          <button
-                            className="admin-button admin-button--ban"
-                            onClick={() => handleBanUser(user._id)}
-                          >
-                            BAN
-                          </button>
-                        )}
                       </div>
                     </td>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </Card>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
     {showDetailModal && (
-      <div className="modal-overlay" style={{zIndex: 2000, background: 'rgba(36,41,51,0.55)'}} onClick={closeDetailModal}>
-        <div
-          className="modal-content admin-stats-card-wrapper"
-          style={{ maxWidth: 700, width: '95%', borderRadius: 18, boxShadow: '0 8px 32px rgba(67,234,252,0.10), 0 4px 16px rgba(35,46,67,0.10)', padding: 32, position: 'relative', background: '#fff', display: 'flex', flexDirection: 'column', gap: 32 }}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <button className="modal-close" onClick={closeDetailModal} aria-label="閉じる" style={{ position: 'absolute', top: 18, right: 18, fontSize: 28, background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', zIndex: 10, borderRadius: '50%', width: 40, height: 40, lineHeight: '40px', textAlign: 'center', transition: 'background 0.2s' }} onMouseOver={e => e.currentTarget.style.background='#f1f5f9'} onMouseOut={e => e.currentTarget.style.background='none'}>×</button>
-          {detailLoading ? (
-            <div style={{ padding: '24px', textAlign: 'center', color: '#64748b' }}>読み込み中...</div>
-          ) : detailError ? (
-            <div className="admin-error-message" style={{ margin: '24px' }}>{detailError}</div>
-          ) : selectedUser ? (
-            <>
-              <div style={{marginBottom: 8}}>
-                <h2 className="admin-dashboard-title" style={{fontSize: '1.5rem', marginBottom: 4}}>{selectedUser.name?.ja || selectedUser.name || ''}</h2>
-                <div style={{color: '#6b7280', fontSize: 15, marginBottom: 12}}>{selectedUser.email}</div>
+      <div className="admin-modal-overlay" onClick={closeDetailModal}>
+        <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
+          <div className="admin-modal-header">
+            <h2 className="admin-modal-title">
+              {selectedUser ? (selectedUser.name?.ja || selectedUser.name || 'Unknown User') : 'ユーザー詳細'}
+            </h2>
+            <button className="admin-modal-close" onClick={closeDetailModal} aria-label="閉じる">
+              ×
+            </button>
+          </div>
+          
+          <div className="admin-modal-body">
+            {detailLoading ? (
+              <div style={{ padding: 'var(--admin-space-6)', textAlign: 'center', color: 'var(--admin-gray-500)' }}>
+                読み込み中...
               </div>
-              <div className="admin-stats-card-wrapper" style={{margin:0, boxShadow:'none', padding: '20px 0 0 0', background:'none'}}>
-                <div className="admin-stats-title" style={{fontSize: '1.1rem', marginBottom: 18}}>ユーザー情報</div>
-                <div className="modal-detail-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16 }}>
-                  <div><div className="form-label">ID</div><div className="character-detail-value">{selectedUser._id}</div></div>
-                  <div><div className="form-label">登録状況</div><div className="character-detail-value">{selectedUser.hasCompletedSetup ? '完了' : '未完了'}</div></div>
-                  <div><div className="form-label">選択キャラクター</div><div className="character-detail-value">{selectedUser.selectedCharacter ? (selectedUser.selectedCharacter.name?.ja || selectedUser.selectedCharacter.name || selectedUser.selectedCharacter._id) : '未選択'}</div></div>
-                  <div><div className="form-label">会員種別</div><div className="character-detail-value">{selectedUser.membershipType === 'subscription' ? 'サブスク' : '無料'}</div></div>
-                  <div><div className="form-label">言語</div><div className="character-detail-value">{selectedUser.preferredLanguage}</div></div>
-                  <div><div className="form-label">サブスク状態</div><div className="character-detail-value">{selectedUser.subscriptionStatus}</div></div>
-                  <div><div className="form-label">サブスク開始</div><div className="character-detail-value">{selectedUser.subscriptionStartDate ? new Date(selectedUser.subscriptionStartDate).toLocaleString() : '-'}</div></div>
+            ) : detailError ? (
+              <div className="admin-badge admin-badge--error" style={{ margin: 'var(--admin-space-4)' }}>
+                {detailError}
+              </div>
+            ) : selectedUser ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--admin-space-6)' }}>
+                {/* ユーザー基本情報 */}
+                <div className="admin-card">
+                  <h3 style={{ margin: '0 0 var(--admin-space-4) 0', fontSize: 'var(--admin-font-size-lg)', fontWeight: '600' }}>
+                    基本情報
+                  </h3>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 'var(--admin-space-4)' }}>
+                    <div>
+                      <div className="admin-form-label">メールアドレス</div>
+                      <div style={{ fontSize: 'var(--admin-font-size-sm)', color: 'var(--admin-gray-700)' }}>
+                        {selectedUser.email}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="admin-form-label">ユーザーID</div>
+                      <div style={{ fontSize: 'var(--admin-font-size-sm)', color: 'var(--admin-gray-700)', fontFamily: 'monospace' }}>
+                        {selectedUser._id}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="admin-form-label">ステータス</div>
+                      {getStatusBadge(selectedUser)}
+                    </div>
+                    <div>
+                      <div className="admin-form-label">言語設定</div>
+                      <div style={{ fontSize: 'var(--admin-font-size-sm)', color: 'var(--admin-gray-700)' }}>
+                        {selectedUser.preferredLanguage || 'ja'}
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div className="admin-stats-card-wrapper" style={{margin:0, boxShadow:'none', padding: '20px 0 0 0', background:'none'}}>
-                <div className="admin-stats-title" style={{fontSize: '1.1rem', marginBottom: 18}}>購入キャラ</div>
-                {selectedUser.purchasedCharacters && selectedUser.purchasedCharacters.length > 0 ? (
-                  <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
-                    {selectedUser.purchasedCharacters.map((pc, idx) => (
-                      <li key={idx} style={{marginBottom: 8, padding: 8, borderRadius: 8, background: '#f8fafc'}}>
-                        <div className="form-label">{pc.character?.name?.ja || pc.character?.name || pc.character || ''}</div>
-                        <div className="character-detail-value">{pc.purchaseType} / {pc.purchaseDate ? new Date(pc.purchaseDate).toLocaleString() : ''}</div>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <div className="empty-message">なし</div>
+
+                {/* 会員情報 */}
+                <div className="admin-card">
+                  <h3 style={{ margin: '0 0 var(--admin-space-4) 0', fontSize: 'var(--admin-font-size-lg)', fontWeight: '600' }}>
+                    会員情報
+                  </h3>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 'var(--admin-space-4)' }}>
+                    <div>
+                      <div className="admin-form-label">会員種別</div>
+                      <div style={{ fontSize: 'var(--admin-font-size-sm)', color: 'var(--admin-gray-700)' }}>
+                        {selectedUser.membershipType === 'subscription' ? 'サブスクリプション' : '無料プラン'}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="admin-form-label">サブスク状態</div>
+                      <div style={{ fontSize: 'var(--admin-font-size-sm)', color: 'var(--admin-gray-700)' }}>
+                        {selectedUser.subscriptionStatus || '-'}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="admin-form-label">開始日</div>
+                      <div style={{ fontSize: 'var(--admin-font-size-sm)', color: 'var(--admin-gray-700)' }}>
+                        {selectedUser.subscriptionStartDate ? 
+                          new Date(selectedUser.subscriptionStartDate).toLocaleDateString() : '-'}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="admin-form-label">選択キャラクター</div>
+                      <div style={{ fontSize: 'var(--admin-font-size-sm)', color: 'var(--admin-gray-700)' }}>
+                        {selectedUser.selectedCharacter ? 
+                          (selectedUser.selectedCharacter.name?.ja || selectedUser.selectedCharacter.name || 'Unknown') 
+                          : '未選択'}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 親密度情報 */}
+                {selectedUser.affinities && selectedUser.affinities.length > 0 && (
+                  <div className="admin-card">
+                    <h3 style={{ margin: '0 0 var(--admin-space-4) 0', fontSize: 'var(--admin-font-size-lg)', fontWeight: '600' }}>
+                      親密度情報
+                    </h3>
+                    <div style={{ display: 'grid', gap: 'var(--admin-space-3)' }}>
+                      {selectedUser.affinities.map((affinity, idx) => (
+                        <div key={idx} style={{ 
+                          padding: 'var(--admin-space-3)', 
+                          background: 'var(--admin-gray-50)', 
+                          borderRadius: 'var(--admin-radius-lg)',
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center'
+                        }}>
+                          <div>
+                            <div style={{ fontSize: 'var(--admin-font-size-sm)', fontWeight: '500' }}>
+                              {affinity.character?.name?.ja || affinity.character?.name || 'Unknown Character'}
+                            </div>
+                            <div style={{ fontSize: 'var(--admin-font-size-xs)', color: 'var(--admin-gray-500)' }}>
+                              最終対話: {affinity.lastInteractedAt ? 
+                                new Date(affinity.lastInteractedAt).toLocaleDateString() : 'なし'}
+                            </div>
+                          </div>
+                          <div style={{ textAlign: 'right' }}>
+                            <div style={{ 
+                              fontSize: 'var(--admin-font-size-lg)', 
+                              fontWeight: '700', 
+                              color: 'var(--admin-primary-600)' 
+                            }}>
+                              Lv.{affinity.level || 0}
+                            </div>
+                            <div style={{ fontSize: 'var(--admin-font-size-xs)', color: 'var(--admin-gray-500)' }}>
+                              連続: {affinity.lastVisitStreak || 0}日
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* 購入キャラクター */}
+                {selectedUser.purchasedCharacters && selectedUser.purchasedCharacters.length > 0 && (
+                  <div className="admin-card">
+                    <h3 style={{ margin: '0 0 var(--admin-space-4) 0', fontSize: 'var(--admin-font-size-lg)', fontWeight: '600' }}>
+                      購入キャラクター
+                    </h3>
+                    <div style={{ display: 'grid', gap: 'var(--admin-space-3)' }}>
+                      {selectedUser.purchasedCharacters.map((pc, idx) => (
+                        <div key={idx} style={{ 
+                          padding: 'var(--admin-space-3)', 
+                          background: 'var(--admin-gray-50)', 
+                          borderRadius: 'var(--admin-radius-lg)',
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center'
+                        }}>
+                          <div>
+                            <div style={{ fontSize: 'var(--admin-font-size-sm)', fontWeight: '500' }}>
+                              {pc.character?.name?.ja || pc.character?.name || 'Unknown Character'}
+                            </div>
+                            <div style={{ fontSize: 'var(--admin-font-size-xs)', color: 'var(--admin-gray-500)' }}>
+                              購入日: {pc.purchaseDate ? 
+                                new Date(pc.purchaseDate).toLocaleDateString() : 'なし'}
+                            </div>
+                          </div>
+                          <div className="admin-badge admin-badge--success">
+                            {pc.purchaseType}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 )}
               </div>
-            </>
-          ) : null}
+            ) : null}
+          </div>
         </div>
       </div>
     )}
