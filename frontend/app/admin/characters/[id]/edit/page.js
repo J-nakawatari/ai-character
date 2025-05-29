@@ -8,6 +8,7 @@ import Input from '../../../../components/Input';
 import Button from '../../../../components/Button';
 import Toast from '../../../../components/Toast';
 import ImageCropper from '../../../../components/ImageCropper';
+import '../../../../styles/admin-design-system.css';
 import styles from './page.module.css';
 
 export default function EditCharacter({ params }) {
