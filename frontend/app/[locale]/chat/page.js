@@ -227,9 +227,10 @@ export default function Chat({ params }) {
   // テーマカラー取得
   const themeColor = user.selectedCharacter?.themeColor || '#75C6D1';
   const chatMainBg = hexToRgba(themeColor, 0.1);
+  const userBubbleBg = hexToRgba(themeColor, 0.3);
 
   return (
-    <div className="chat-container" style={{ '--theme-color': themeColor, position: 'relative' }}>
+    <div className="chat-container" style={{ '--theme-color': themeColor, '--user-bubble-bg': userBubbleBg, position: 'relative' }}>
       {/* チャットヘッダー */}
       <div className="chat-header">
         <div className="chat-header-character-info">

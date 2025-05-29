@@ -162,7 +162,7 @@
 }
 
 .chat-bubble--user {
-  background: var(--theme-color, #75C6D1);
+  background: var(--user-bubble-bg, rgba(117, 198, 209, 0.3));
   color: white;
   border-bottom-right-radius: 0.25rem;
 }
