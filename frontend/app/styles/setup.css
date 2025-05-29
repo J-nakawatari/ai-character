@@ -43,9 +43,18 @@
   gap: 1rem;
 }
 
-.setup--title-icon {
-  font-size: 3.5rem;
-  animation: float 3s ease-in-out infinite;
+.setup--detail {
+  flex: 1 1 0;
+  min-width: 260px;
+  max-width: 320px;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04);
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 8px;
 }
 
 @keyframes float {
@@ -112,22 +121,17 @@
 .setup--badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
-  padding: 0.5rem 0.75rem;
-  border-radius: 1rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.2s;
+  overflow: hidden;
+  padding-bottom: 16px;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04);
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,0.05);
 }
-
-.setup--badge--free {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  color: white;
-}
-
-.setup--badge--premium {
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-  color: white;
+.setup--character-card.selected {
+  border: 2px solid #4f8cff;
+  box-shadow: 0 4px 16px rgba(79,140,255,0.12), 0 2px 8px rgba(0,0,0,0.08);
 }
 
 .setup--badge--purchase {
@@ -228,10 +232,15 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
-
-/* 親密度 */
-.setup--affinity-container {
-  margin: 0.5rem 0;
+.setup--character-tag {
+  display: inline-block;
+  background: #f5f5f5;
+  color: #666;
+  border-radius: 100px;
+  font-size: 12px;
+  padding: 4px 8px;
+  margin: 0 4px 4px 0;
+  border: 1px solid rgba(0,0,0,0.08);
 }
 
 /* 性格タグ */
