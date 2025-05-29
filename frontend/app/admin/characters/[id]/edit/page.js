@@ -291,56 +291,54 @@ export default function EditCharacter({ params }) {
               </h2>
               <p className={styles.sectionDescription}>キャラクターの基本的な情報を設定します</p>
             </div>
-            <div className={styles.formGridTwoColumns}>
-              <div className={styles['admin-form-group']}>
-                <label className={styles['admin-form-label']}>キャラクター名</label>
-                <div className={styles.languageTabs}>
-                  <div className={styles.languageTab}>
-                    <div className={styles.languageLabel}>
-                      <span className={styles.languageFlag}>🇯🇵</span>
-                      日本語
-                    </div>
-                    <input
-                      id="name.ja"
-                      name="name.ja"
-                      value={formData.name.ja}
-                      onChange={handleChange}
-                      required
-                      className={styles['admin-form-input']}
-                    />
+            <div className={styles['admin-form-group']}>
+              <label className={styles['admin-form-label']}>キャラクター名</label>
+              <div className={styles.languageTabs}>
+                <div className={styles.languageTab}>
+                  <div className={styles.languageLabel}>
+                    <span className={styles.languageFlag}>🇯🇵</span>
+                    日本語
                   </div>
-                  <div className={styles.languageTab}>
-                    <div className={styles.languageLabel}>
-                      <span className={styles.languageFlag}>🇺🇸</span>
-                      English
-                    </div>
-                    <input
-                      id="name.en"
-                      name="name.en"
-                      value={formData.name.en}
-                      onChange={handleChange}
-                      className={styles['admin-form-input']}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className={styles['admin-form-group']}>
-                <label htmlFor="themeColor" className={styles['admin-form-label']}>テーマカラー</label>
-                <div className={styles.themeColorGroup}>
                   <input
-                    type="color"
-                    id="themeColor"
-                    value={formData.themeColor}
+                    id="name.ja"
+                    name="name.ja"
+                    value={formData.name.ja}
                     onChange={handleChange}
-                    className={styles.colorPicker}
+                    required
+                    className={styles['admin-form-input']}
                   />
+                </div>
+                <div className={styles.languageTab}>
+                  <div className={styles.languageLabel}>
+                    <span className={styles.languageFlag}>🇺🇸</span>
+                    English
+                  </div>
                   <input
-                    value={formData.themeColor}
+                    id="name.en"
+                    name="name.en"
+                    value={formData.name.en}
                     onChange={handleChange}
                     className={styles['admin-form-input']}
-                    style={{ flex: 1 }}
                   />
                 </div>
+              </div>
+            </div>
+            <div className={styles['admin-form-group']}>
+              <label htmlFor="themeColor" className={styles['admin-form-label']}>テーマカラー</label>
+              <div className={styles.themeColorGroup}>
+                <input
+                  type="color"
+                  id="themeColor"
+                  value={formData.themeColor}
+                  onChange={handleChange}
+                  className={styles.colorPicker}
+                />
+                <input
+                  value={formData.themeColor}
+                  onChange={handleChange}
+                  className={styles['admin-form-input']}
+                  style={{ flex: 1 }}
+                />
               </div>
             </div>
             <div className={styles['admin-form-group']}>
@@ -562,93 +560,91 @@ export default function EditCharacter({ params }) {
               </h2>
               <p className={styles.sectionDescription}>キャラクターの画像と音声を設定します</p>
             </div>
-            <div className={styles.formGridTwoColumns}>
-              <div className={styles['media-upload-section']}>
-                <div className={styles['media-upload-label']}>
-                  👤 キャラクター選択画面画像
-                </div>
-                {formData.imageCharacterSelect && (
-                  <img
-                    src={formData.imageCharacterSelect}
-                    alt="Character Select"
-                    className={styles['media-upload-preview']}
-                  />
-                )}
-                <label className={styles['media-upload-btn']}>
-                  📁 ファイルを選択
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => handleImageUpload(e, 'characterSelect')}
-                    className={styles['media-upload-file-input']}
-                  />
-                </label>
+            <div className={styles['media-upload-section']}>
+              <div className={styles['media-upload-label']}>
+                👤 キャラクター選択画面画像
               </div>
-              <div className={styles['media-upload-section']}>
-                <div className={styles['media-upload-label']}>
-                  📊 ダッシュボード画像
-                </div>
-                {formData.imageDashboard && (
-                  <img
-                    src={formData.imageDashboard}
-                    alt="Dashboard"
-                    className={styles['media-upload-preview']}
-                  />
-                )}
-                <label className={styles['media-upload-btn']}>
-                  📁 ファイルを選択
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => handleImageUpload(e, 'dashboard')}
-                    className={styles['media-upload-file-input']}
-                  />
-                </label>
-              </div>
-              <div className={styles['media-upload-section']}>
-                <div className={styles['media-upload-label']}>
-                  🖼️ チャット背景画像
-                </div>
-                {formData.imageChatBackground && (
-                  <img
-                    src={formData.imageChatBackground}
-                    alt="Chat Background"
-                    className={styles['media-upload-preview']}
-                  />
-                )}
-                <label className={styles['media-upload-btn']}>
-                  📁 ファイルを選択
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => handleImageUpload(e, 'chatBackground')}
-                    className={styles['media-upload-file-input']}
-                  />
-                </label>
-              </div>
-              <div className={styles['media-upload-section']}>
-                <div className={styles['media-upload-label']}>
-                  💬 チャットアバター画像
-                </div>
-                {formData.imageChatAvatar && (
-                  <img
-                    src={formData.imageChatAvatar}
-                    alt="Chat Avatar"
-                    className={styles['media-upload-preview']}
-                  />
-                )}
-                <label className={styles['media-upload-btn']}>
-                  📁 ファイルを選択
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => handleImageUpload(e, 'chatAvatar')}
-                    className={styles['media-upload-file-input']}
-                  />
-                </label>
-              </div>
+              {formData.imageCharacterSelect && (
+                <img
+                  src={formData.imageCharacterSelect}
+                  alt="Character Select"
+                  className={styles['media-upload-preview']}
+                />
+              )}
+              <label className={styles['media-upload-btn']}>
+                📁 ファイルを選択
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleImageUpload(e, 'characterSelect')}
+                  className={styles['media-upload-file-input']}
+                />
+              </label>
             </div>
-            <div className={styles['media-upload-section']} style={{maxWidth:'400px'}}>
+            <div className={styles['media-upload-section']}>
+              <div className={styles['media-upload-label']}>
+                📊 ダッシュボード画像
+              </div>
+              {formData.imageDashboard && (
+                <img
+                  src={formData.imageDashboard}
+                  alt="Dashboard"
+                  className={styles['media-upload-preview']}
+                />
+              )}
+              <label className={styles['media-upload-btn']}>
+                📁 ファイルを選択
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleImageUpload(e, 'dashboard')}
+                  className={styles['media-upload-file-input']}
+                />
+              </label>
+            </div>
+            <div className={styles['media-upload-section']}>
+              <div className={styles['media-upload-label']}>
+                🖼️ チャット背景画像
+              </div>
+              {formData.imageChatBackground && (
+                <img
+                  src={formData.imageChatBackground}
+                  alt="Chat Background"
+                  className={styles['media-upload-preview']}
+                />
+              )}
+              <label className={styles['media-upload-btn']}>
+                📁 ファイルを選択
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleImageUpload(e, 'chatBackground')}
+                  className={styles['media-upload-file-input']}
+                />
+              </label>
+            </div>
+            <div className={styles['media-upload-section']}>
+              <div className={styles['media-upload-label']}>
+                💬 チャットアバター画像
+              </div>
+              {formData.imageChatAvatar && (
+                <img
+                  src={formData.imageChatAvatar}
+                  alt="Chat Avatar"
+                  className={styles['media-upload-preview']}
+                />
+              )}
+              <label className={styles['media-upload-btn']}>
+                📁 ファイルを選択
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleImageUpload(e, 'chatAvatar')}
+                  className={styles['media-upload-file-input']}
+                />
+              </label>
+            </div>
+            <div className={styles['media-upload-section']}>
               <div className={styles['media-upload-label']}>
                 🎵 サンプル音声
               </div>
