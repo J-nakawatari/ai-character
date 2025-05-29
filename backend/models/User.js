@@ -85,7 +85,32 @@ const UserSchema = new Schema({
   stripeSubscriptionId: {
     type: String,
     default: null
-  }
+  },
+  affinities: [{
+    character: {
+      type: Schema.Types.ObjectId,
+      ref: 'Character',
+      required: true
+    },
+    level: {
+      type: Number,
+      default: 0,
+      min: 0,
+      max: 100
+    },
+    lastInteractedAt: {
+      type: Date,
+      default: Date.now
+    },
+    lastVisitStreak: {
+      type: Number,
+      default: 0
+    },
+    decayStartAt: {
+      type: Date,
+      default: null
+    }
+  }]
 });
 
 module.exports = mongoose.model('User', UserSchema);
