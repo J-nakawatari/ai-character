@@ -70,6 +70,19 @@ export default function AffinityBar({ level = 0, streak = 0, description }) {
         )}
       </div>
       
+      {/* 進捗バー */}
+      <div className={styles.progressContainer}>
+        <div className={styles.progressBar}>
+          <div 
+            className={styles.progressFill}
+            style={{ width: `${level}%` }}
+          ></div>
+        </div>
+        <div className={styles.progressText}>
+          {level}% 完了
+        </div>
+      </div>
+      
       <div className={styles.heartsContainer}>
         {renderHearts()}
       </div>
