@@ -11,10 +11,12 @@
 .sliderContainer {
   margin-bottom: 2rem;
   padding-top: 2rem;
+  padding-bottom: 2rem;
   border-radius: 0 0 2rem 2rem;
   overflow: hidden;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   background: white;
+  position: relative;
 }
 
 /* ダッシュボードコンテナ */
