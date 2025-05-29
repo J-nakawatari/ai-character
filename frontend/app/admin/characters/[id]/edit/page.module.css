@@ -286,6 +286,12 @@
   gap: 2rem;
 }
 
+.formGridSingleColumn {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: 1fr;
+}
+
 .formGridTwoColumns {
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
@@ -300,6 +306,7 @@
   flex-direction: column;
   align-items: flex-start;
   transition: all 0.2s ease;
+  max-width: 100%;
 }
 
 .media-upload-section:hover {
@@ -574,6 +581,10 @@
   
   .formCard {
     padding: 1.5rem;
+  }
+  
+  .formGridSingleColumn {
+    gap: 1.5rem;
   }
   
   .formGridTwoColumns {
