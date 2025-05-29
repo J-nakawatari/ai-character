@@ -128,7 +128,15 @@ export default function AdminUsers() {
           <div className="admin-table-title">ユーザー一覧</div>
         </div>
         <div className="admin-table-container">
-          <table className="admin-table">
+          <table className="admin-table" style={{ tableLayout: 'fixed', width: '100%' }}>
+            <colgroup>
+              <col style={{ width: '25%' }} />
+              <col style={{ width: '15%' }} />
+              <col style={{ width: '15%' }} />
+              <col style={{ width: '20%' }} />
+              <col style={{ width: '15%' }} />
+              <col style={{ width: '10%' }} />
+            </colgroup>
             <thead>
               <tr>
                 <th>ユーザー情報</th>
@@ -214,16 +222,18 @@ export default function AdminUsers() {
                       </div>
                     </td>
                     <td>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--admin-space-2)', minWidth: '120px' }}>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--admin-space-1)' }}>
                         <button
                           className="admin-btn admin-btn--secondary admin-btn--sm"
                           onClick={() => handleShowDetail(user._id)}
+                          style={{ fontSize: 'var(--admin-font-size-xs)', padding: '4px 8px' }}
                         >
-                          詳細表示
+                          詳細
                         </button>
                         <button
                           className="admin-btn admin-btn--error admin-btn--sm"
                           onClick={() => handleDeleteUser(user._id)}
+                          style={{ fontSize: 'var(--admin-font-size-xs)', padding: '4px 8px' }}
                         >
                           削除
                         </button>
