@@ -390,110 +390,107 @@ export default function EditCharacter({ params }) {
               </h2>
               <p className={styles.sectionDescription}>キャラクターの会話に関する設定を行います</p>
             </div>
+            
+            {/* 性格プロンプト - 日本語 */}
             <div className={styles['admin-form-group']}>
-              <label className={styles['admin-form-label']}>性格プロンプト</label>
-              <div className={styles.languageTabs}>
-                <div className={styles.languageTab}>
-                  <div className={styles.languageLabel}>
-                    <span className={styles.languageFlag}>🇯🇵</span>
-                    日本語
-                  </div>
-                  <textarea
-                    id="personalityPrompt.ja"
-                    name="personalityPrompt.ja"
-                    value={formData.personalityPrompt.ja}
-                    onChange={handleChange}
-                    rows={6}
-                    className={styles['admin-form-input']}
-                    placeholder="キャラクターの性格や話し方について日本語で記述してください..."
-                  />
-                </div>
-                <div className={styles.languageTab}>
-                  <div className={styles.languageLabel}>
-                    <span className={styles.languageFlag}>🇺🇸</span>
-                    English
-                  </div>
-                  <textarea
-                    id="personalityPrompt.en"
-                    name="personalityPrompt.en"
-                    value={formData.personalityPrompt.en}
-                    onChange={handleChange}
-                    rows={6}
-                    className={styles['admin-form-input']}
-                    placeholder="Describe the character's personality and speaking style in English..."
-                  />
-                </div>
-              </div>
+              <label className={styles['admin-form-label']}>
+                <span className={styles.languageFlag}>🇯🇵</span>
+                性格プロンプト（日本語）
+              </label>
+              <textarea
+                id="personalityPrompt.ja"
+                name="personalityPrompt.ja"
+                value={formData.personalityPrompt.ja}
+                onChange={handleChange}
+                rows={6}
+                className={styles['admin-form-input']}
+                placeholder="キャラクターの性格や話し方について日本語で記述してください..."
+              />
             </div>
+
+            {/* 性格プロンプト - 英語 */}
             <div className={styles['admin-form-group']}>
-              <label className={styles['admin-form-label']}>管理者プロンプト</label>
-              <div className={styles.languageTabs}>
-                <div className={styles.languageTab}>
-                  <div className={styles.languageLabel}>
-                    <span className={styles.languageFlag}>🇯🇵</span>
-                    日本語
-                  </div>
-                  <textarea
-                    id="adminPrompt.ja"
-                    name="adminPrompt.ja"
-                    value={formData.adminPrompt.ja}
-                    onChange={handleChange}
-                    rows={6}
-                    className={styles['admin-form-input']}
-                    placeholder="管理者向けの追加設定や注意事項を日本語で記述してください..."
-                  />
-                </div>
-                <div className={styles.languageTab}>
-                  <div className={styles.languageLabel}>
-                    <span className={styles.languageFlag}>🇺🇸</span>
-                    English
-                  </div>
-                  <textarea
-                    id="adminPrompt.en"
-                    name="adminPrompt.en"
-                    value={formData.adminPrompt.en}
-                    onChange={handleChange}
-                    rows={6}
-                    className={styles['admin-form-input']}
-                    placeholder="Describe admin settings and guidelines in English..."
-                  />
-                </div>
-              </div>
+              <label className={styles['admin-form-label']}>
+                <span className={styles.languageFlag}>🇺🇸</span>
+                性格プロンプト（English）
+              </label>
+              <textarea
+                id="personalityPrompt.en"
+                name="personalityPrompt.en"
+                value={formData.personalityPrompt.en}
+                onChange={handleChange}
+                rows={6}
+                className={styles['admin-form-input']}
+                placeholder="Describe the character's personality and speaking style in English..."
+              />
             </div>
+
+            {/* 管理者プロンプト - 日本語 */}
             <div className={styles['admin-form-group']}>
-              <label className={styles['admin-form-label']}>デフォルトメッセージ</label>
-              <div className={styles.languageTabs}>
-                <div className={styles.languageTab}>
-                  <div className={styles.languageLabel}>
-                    <span className={styles.languageFlag}>🇯🇵</span>
-                    日本語
-                  </div>
-                  <textarea
-                    id="defaultMessage.ja"
-                    name="defaultMessage.ja"
-                    value={formData.defaultMessage.ja}
-                    onChange={handleChange}
-                    rows={3}
-                    className={styles['admin-form-input']}
-                    placeholder="キャラクターの最初の挨拶メッセージを日本語で入力してください..."
-                  />
-                </div>
-                <div className={styles.languageTab}>
-                  <div className={styles.languageLabel}>
-                    <span className={styles.languageFlag}>🇺🇸</span>
-                    English
-                  </div>
-                  <textarea
-                    id="defaultMessage.en"
-                    name="defaultMessage.en"
-                    value={formData.defaultMessage.en}
-                    onChange={handleChange}
-                    rows={3}
-                    className={styles['admin-form-input']}
-                    placeholder="Enter the character's first greeting message in English..."
-                  />
-                </div>
-              </div>
+              <label className={styles['admin-form-label']}>
+                <span className={styles.languageFlag}>🇯🇵</span>
+                管理者プロンプト（日本語）
+              </label>
+              <textarea
+                id="adminPrompt.ja"
+                name="adminPrompt.ja"
+                value={formData.adminPrompt.ja}
+                onChange={handleChange}
+                rows={6}
+                className={styles['admin-form-input']}
+                placeholder="管理者向けの追加設定や注意事項を日本語で記述してください..."
+              />
+            </div>
+
+            {/* 管理者プロンプト - 英語 */}
+            <div className={styles['admin-form-group']}>
+              <label className={styles['admin-form-label']}>
+                <span className={styles.languageFlag}>🇺🇸</span>
+                管理者プロンプト（English）
+              </label>
+              <textarea
+                id="adminPrompt.en"
+                name="adminPrompt.en"
+                value={formData.adminPrompt.en}
+                onChange={handleChange}
+                rows={6}
+                className={styles['admin-form-input']}
+                placeholder="Describe admin settings and guidelines in English..."
+              />
+            </div>
+
+            {/* デフォルトメッセージ - 日本語 */}
+            <div className={styles['admin-form-group']}>
+              <label className={styles['admin-form-label']}>
+                <span className={styles.languageFlag}>🇯🇵</span>
+                デフォルトメッセージ（日本語）
+              </label>
+              <textarea
+                id="defaultMessage.ja"
+                name="defaultMessage.ja"
+                value={formData.defaultMessage.ja}
+                onChange={handleChange}
+                rows={3}
+                className={styles['admin-form-input']}
+                placeholder="キャラクターの最初の挨拶メッセージを日本語で入力してください..."
+              />
+            </div>
+
+            {/* デフォルトメッセージ - 英語 */}
+            <div className={styles['admin-form-group']}>
+              <label className={styles['admin-form-label']}>
+                <span className={styles.languageFlag}>🇺🇸</span>
+                デフォルトメッセージ（English）
+              </label>
+              <textarea
+                id="defaultMessage.en"
+                name="defaultMessage.en"
+                value={formData.defaultMessage.en}
+                onChange={handleChange}
+                rows={3}
+                className={styles['admin-form-input']}
+                placeholder="Enter the character's first greeting message in English..."
+              />
             </div>
           </div>
 
