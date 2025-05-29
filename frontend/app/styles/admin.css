@@ -326,9 +326,8 @@
 }
 
 .admin-table-container {
-  width: calc(100% - 48px);
+  width: 100%;
   overflow-x: auto;
-  white-space: nowrap;
 }
 
 .admin-table {
