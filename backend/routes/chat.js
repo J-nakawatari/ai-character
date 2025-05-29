@@ -5,6 +5,7 @@ const Chat = require('../models/Chat');
 const User = require('../models/User');
 const Character = require('../models/Character');
 const OpenAI = require('openai');
+const { updateAffinity, getToneStyle } = require('../utils/affinity');
 
 router.get('/', auth, async (req, res) => {
   try {
@@ -125,17 +126,31 @@ router.post('/', auth, async (req, res) => {
       apiKey: process.env.OPENAI_API_KEY
     });
 
+    // 親密度を更新
+    await updateAffinity(user, characterId, 'chat');
+    await user.save();
+    
+    // 親密度を取得
+    const affinity = user.affinities.find(
+      a => a.character.toString() === characterId.toString()
+    );
+    const affinityLevel = affinity ? affinity.level : 0;
+    const toneStyle = getToneStyle(affinityLevel);
+    
     // localeの取得
     const locale = user.preferredLanguage || 'ja';
     // システムメッセージの文字列化
     const systemPrompt = getString(character.personalityPrompt, locale);
+    
+    // 親密度に応じたプロンプトを追加
+    const enhancedPrompt = `${systemPrompt}\n\n現在の親密度レベル: ${affinityLevel}/100\n話し方: ${toneStyle}`;
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4",
       messages: [
         {
           role: "system",
-          content: systemPrompt
+          content: enhancedPrompt
         },
         ...chat.messages.map(msg => ({
           role: msg.sender === 'user' ? 'user' : 'assistant',
@@ -155,7 +170,13 @@ router.post('/', auth, async (req, res) => {
     
     await chat.save();
     
-    res.json({ reply: aiReply });
+    res.json({ 
+      reply: aiReply,
+      affinity: {
+        level: affinityLevel,
+        streak: affinity ? affinity.lastVisitStreak : 0
+      }
+    });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');

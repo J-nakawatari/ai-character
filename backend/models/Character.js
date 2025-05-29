@@ -112,6 +112,22 @@ const CharacterSchema = new Schema({
     type: String,
     default: ''
   },
+  images: [{
+    url: {
+      type: String,
+      required: true
+    },
+    unlockLevel: {
+      type: Number,
+      default: 0,
+      min: 0,
+      max: 100
+    },
+    isDefault: {
+      type: Boolean,
+      default: false
+    }
+  }],
   createdAt: {
     type: Date,
     default: Date.now

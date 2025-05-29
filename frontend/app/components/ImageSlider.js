@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import styles from './ImageSlider.module.css';
 
-export default function ImageSlider({ images, interval = 5000, onImageClick }) {
+export default function ImageSlider({ images, interval = 5000, onImageClick, affinityLevel = 0 }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const scrollContainerRef = useRef(null);
@@ -37,7 +37,10 @@ export default function ImageSlider({ images, interval = 5000, onImageClick }) {
   };
 
   const handleImageClick = (index) => {
-    if (onImageClick) {
+    const image = images[index];
+    const isLocked = image.unlockLevel && image.unlockLevel > affinityLevel;
+    
+    if (!isLocked && onImageClick) {
       onImageClick(index);
     }
   };
@@ -85,16 +88,35 @@ export default function ImageSlider({ images, interval = 5000, onImageClick }) {
           style={{ transform: `translateX(-${currentIndex * 20}%)` }}
           ref={scrollContainerRef}
         >
-          {images.map((image, index) => (
-            <div key={index} className={styles.carouselSlide}>
-              <img
-                src={image.src}
-                alt={image.alt || ''}
-                className={styles.carouselImage}
-                onClick={() => handleImageClick(index)}
-              />
-            </div>
-          ))}
+          {images.map((image, index) => {
+            const isLocked = image.unlockLevel && image.unlockLevel > affinityLevel;
+            return (
+              <div key={index} className={styles.carouselSlide}>
+                <div className={styles.imageWrapper}>
+                  <img
+                    src={image.src}
+                    alt={image.alt || ''}
+                    className={`${styles.carouselImage} ${isLocked ? styles.lockedImage : ''}`}
+                    onClick={() => handleImageClick(index)}
+                  />
+                  {isLocked && (
+                    <div className={styles.lockOverlay}>
+                      <Image
+                        src="/icon/lock.svg"
+                        alt="ロック"
+                        width={32}
+                        height={32}
+                        className={styles.lockIcon}
+                      />
+                      <span className={styles.unlockText}>
+                        Lv.{image.unlockLevel}で解放
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
       

@@ -14,6 +14,7 @@ import { useAuth } from '../../utils/auth';
 
 import ImageSlider from '../../components/ImageSlider';
 import ImageModal from '../../components/ImageModal';
+import AffinityBar from '../../components/AffinityBar';
 
 
 export default function Dashboard({ params }) {
@@ -27,6 +28,30 @@ export default function Dashboard({ params }) {
   const tMenu = useTranslations('menu');
   const [modalOpen, setModalOpen] = useState(false);
   const [modalInitialIndex, setModalInitialIndex] = useState(0);
+  const [affinityData, setAffinityData] = useState(null);
+  
+  // 親密度情報を取得
+  useEffect(() => {
+    const fetchAffinity = async () => {
+      if (user?.selectedCharacter?._id) {
+        try {
+          const response = await fetch(`/api/users/me/affinity/${user.selectedCharacter._id}`, {
+            headers: {
+              'x-auth-token': localStorage.getItem('token')
+            }
+          });
+          if (response.ok) {
+            const data = await response.json();
+            setAffinityData(data);
+          }
+        } catch (err) {
+          console.error('Failed to fetch affinity:', err);
+        }
+      }
+    };
+    
+    fetchAffinity();
+  }, [user?.selectedCharacter?._id]);
   
   const handleStartChat = async () => {
     try {
@@ -154,18 +179,20 @@ export default function Dashboard({ params }) {
     setModalOpen(true);
   };
 
-  const sliderImages = [
-    { src: '/images/hero-images_01.png', alt: 'ヒーロー画像1' },
-    { src: '/images/hero-images_02.png', alt: 'ヒーロー画像2' },
-    { src: '/images/character_01.png', alt: 'キャラクター画像1' },
-    { src: '/images/room_01.jpg', alt: 'ルーム画像1' },
-    { src: '/images/room_02.jpg', alt: 'ルーム画像2' },
-    { src: '/images/room_03.jpg', alt: 'ルーム画像3' },
-    { src: '/images/room_04.jpg', alt: 'ルーム画像4' },
-    { src: '/images/hero-images_01.png', alt: 'ヒーロー画像3' },
-    { src: '/images/hero-images_02.png', alt: 'ヒーロー画像4' },
-    { src: '/images/character_01.png', alt: 'キャラクター画像2' }
-  ];
+  // キャラクターの画像を取得（親密度によるロック情報付き）
+  const sliderImages = user?.selectedCharacter?.images?.length > 0 
+    ? user.selectedCharacter.images.map(img => ({
+        src: img.url,
+        alt: user.selectedCharacter.name,
+        unlockLevel: img.unlockLevel || 0
+      }))
+    : [
+        { src: '/images/hero-images_01.png', alt: 'ヒーロー画像1', unlockLevel: 0 },
+        { src: '/images/hero-images_02.png', alt: 'ヒーロー画像2', unlockLevel: 20 },
+        { src: '/images/character_01.png', alt: 'キャラクター画像1', unlockLevel: 40 },
+        { src: '/images/room_01.jpg', alt: 'ルーム画像1', unlockLevel: 60 },
+        { src: '/images/room_02.jpg', alt: 'ルーム画像2', unlockLevel: 85 }
+      ];
 
   return (
     <div className={styles.dashboardRoot}>
@@ -173,6 +200,7 @@ export default function Dashboard({ params }) {
         images={sliderImages}
         interval={4000}
         onImageClick={handleImageClick}
+        affinityLevel={affinityData?.level || 0}
       />
       {modalOpen && (
         <ImageModal
@@ -182,6 +210,13 @@ export default function Dashboard({ params }) {
         />
       )}
       <Card className={styles.dashboardCard}>
+        {affinityData && (
+          <AffinityBar
+            level={affinityData.level}
+            streak={affinityData.streak}
+            description={affinityData.description}
+          />
+        )}
         <div className={styles.dashboardGrid}>
           <div className={styles.dashboardImageWrapper}>
             {user.selectedCharacter?.imageDashboard ? (

@@ -4,6 +4,7 @@ const auth = require('../middleware/auth');
 const User = require('../models/User');
 const Character = require('../models/Character');
 const bcrypt = require('bcryptjs');
+const { getAffinityLevelDescription, updateAffinity } = require('../utils/affinity');
 
 router.put('/setup', auth, async (req, res) => {
   const { name, characterId } = req.body;
@@ -196,6 +197,44 @@ router.post('/me/delete', auth, async (req, res) => {
     
     await User.findByIdAndDelete(req.user.id);
     res.json({ msg: 'アカウントが削除されました' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('サーバーエラー');
+  }
+});
+
+// 親密度情報を取得
+router.get('/me/affinity/:characterId', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    const { characterId } = req.params;
+    
+    if (!user) {
+      return res.status(404).json({ msg: 'ユーザーが見つかりません' });
+    }
+    
+    // キャラクターの訪問で親密度を更新
+    await updateAffinity(user, characterId, 'visit');
+    await user.save();
+    
+    const affinity = user.affinities.find(
+      a => a.character.toString() === characterId.toString()
+    );
+    
+    if (!affinity) {
+      return res.json({ 
+        level: 0, 
+        streak: 0,
+        description: getAffinityLevelDescription(0)
+      });
+    }
+    
+    res.json({
+      level: affinity.level,
+      streak: affinity.lastVisitStreak,
+      lastInteracted: affinity.lastInteractedAt,
+      description: getAffinityLevelDescription(affinity.level)
+    });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('サーバーエラー');
