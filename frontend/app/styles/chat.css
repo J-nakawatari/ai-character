@@ -131,8 +131,6 @@
   height: 40px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid var(--theme-color, #75C6D1);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   transition: border-color 0.2s;
 }
 
@@ -170,7 +168,7 @@
 }
 
 .chat-bubble--ai {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.3);
   color: #1f2937;
   border-bottom-left-radius: 0.25rem;
   border: 1px solid rgba(0, 0, 0, 0.05);
@@ -261,7 +259,7 @@
 .chat-input-wrapper {
   display: flex;
   border: 2px solid #e5e7eb;
-  border-radius: 1.5rem;
+  border-radius: 8px;
   overflow: hidden;
   transition: all 0.2s;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
@@ -292,14 +290,14 @@
 
 .chat-send-button {
   border: none;
-  width: 48px;
+  width: 96px;
   height: 48px;
   background: var(--theme-color, #75C6D1);
   color: #fff;
   font-weight: 700;
   transition: all 0.2s;
   cursor: pointer;
-  border-radius: 50%;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
