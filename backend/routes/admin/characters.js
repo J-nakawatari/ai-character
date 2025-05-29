@@ -51,7 +51,17 @@ router.post('/', adminAuth, uploadImage.single('image'), resizeImage(), async (r
       imageDashboard,
       imageChatBackground,
       imageChatAvatar,
-      sampleVoiceUrl
+      sampleVoiceUrl,
+      galleryImage1,
+      galleryImage2,
+      galleryImage3,
+      galleryImage4,
+      galleryImage5,
+      galleryImage6,
+      galleryImage7,
+      galleryImage8,
+      galleryImage9,
+      galleryImage10
     } = req.body;
 
     // 必須フィールドのバリデーション
@@ -86,6 +96,16 @@ router.post('/', adminAuth, uploadImage.single('image'), resizeImage(), async (r
         imageChatBackground: imageChatBackground || '',
         imageChatAvatar: imageChatAvatar || '',
         sampleVoiceUrl: sampleVoiceUrl || '',
+        galleryImage1: galleryImage1 || '',
+        galleryImage2: galleryImage2 || '',
+        galleryImage3: galleryImage3 || '',
+        galleryImage4: galleryImage4 || '',
+        galleryImage5: galleryImage5 || '',
+        galleryImage6: galleryImage6 || '',
+        galleryImage7: galleryImage7 || '',
+        galleryImage8: galleryImage8 || '',
+        galleryImage9: galleryImage9 || '',
+        galleryImage10: galleryImage10 || '',
         isPremium: characterAccessType === 'premium',
         isLimited: characterAccessType === 'limited'
       });
@@ -158,6 +178,14 @@ router.put('/:id', adminAuth, uploadImage.single('image'), resizeImage(), async 
     if (req.body.imageChatBackground) character.imageChatBackground = req.body.imageChatBackground;
     if (req.body.imageChatAvatar) character.imageChatAvatar = req.body.imageChatAvatar;
     if (req.body.sampleVoiceUrl) character.sampleVoiceUrl = req.body.sampleVoiceUrl;
+    
+    // ギャラリー画像の更新
+    for (let i = 1; i <= 10; i++) {
+      const galleryField = `galleryImage${i}`;
+      if (req.body[galleryField]) {
+        character[galleryField] = req.body[galleryField];
+      }
+    }
 
     await character.save();
     res.json(character);

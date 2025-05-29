@@ -112,6 +112,48 @@ const CharacterSchema = new Schema({
     type: String,
     default: ''
   },
+  
+  // 個別ギャラリー画像フィールド（フロントエンド互換性のため）
+  galleryImage1: {
+    type: String,
+    default: ''
+  },
+  galleryImage2: {
+    type: String,
+    default: ''
+  },
+  galleryImage3: {
+    type: String,
+    default: ''
+  },
+  galleryImage4: {
+    type: String,
+    default: ''
+  },
+  galleryImage5: {
+    type: String,
+    default: ''
+  },
+  galleryImage6: {
+    type: String,
+    default: ''
+  },
+  galleryImage7: {
+    type: String,
+    default: ''
+  },
+  galleryImage8: {
+    type: String,
+    default: ''
+  },
+  galleryImage9: {
+    type: String,
+    default: ''
+  },
+  galleryImage10: {
+    type: String,
+    default: ''
+  },
   images: [{
     url: {
       type: String,
