@@ -7,6 +7,7 @@ import useRequireAuth from '../../utils/useRequireAuth';
 import { apiGet, apiPost } from '../../utils/api';
 import Button from '../../components/Button';
 import ChatMessage from '../../components/ChatMessage';
+import AffinityInfo from '../../components/AffinityInfo';
 import '../../styles/chat.css';
 import { useTranslations } from 'next-intl';
 import GlobalLoading from '../../components/GlobalLoading';
@@ -36,6 +37,7 @@ export default function Chat({ params }) {
   const [isTyping, setIsTyping] = useState(false);
   const [chatId, setChatId] = useState(null);
   const [error, setError] = useState('');
+  const [affinityData, setAffinityData] = useState(null);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const canvasRef = useRef(null);
@@ -72,8 +74,22 @@ export default function Chat({ params }) {
       }
     };
     
+    const loadAffinityData = async () => {
+      if (user?.selectedCharacter?._id) {
+        try {
+          const affinityRes = await apiGet(`/users/me/affinity/${user.selectedCharacter._id}`);
+          if (affinityRes.success) {
+            setAffinityData(affinityRes.data);
+          }
+        } catch (err) {
+          console.error('Failed to load affinity data:', err);
+        }
+      }
+    };
+    
     if (!loading && user) {
       loadChatHistory();
+      loadAffinityData();
     }
   }, [loading, user, t, locale]);
   
@@ -214,6 +230,42 @@ export default function Chat({ params }) {
 
   return (
     <div className="chat-container" style={{ '--theme-color': themeColor, position: 'relative' }}>
+      {/* チャットヘッダー */}
+      <div className="chat-header">
+        <button
+          className="chat-back-button"
+          onClick={() => router.push(`/${locale}/dashboard`)}
+        >
+          ← 戻る
+        </button>
+        <div className="chat-header-character-info">
+          {user.selectedCharacter?.imageChatAvatar && (
+            <img
+              src={user.selectedCharacter.imageChatAvatar}
+              alt={typeof user.selectedCharacter.name === 'object' 
+                ? (user.selectedCharacter.name[locale] || user.selectedCharacter.name.ja || user.selectedCharacter.name.en || 'AI Character') 
+                : (user.selectedCharacter.name || 'AI Character')}
+              className="chat-header-avatar"
+            />
+          )}
+          <div className="chat-header-details">
+            <h1 className="chat-header-title">
+              {typeof user.selectedCharacter?.name === 'object'
+                ? (user.selectedCharacter.name[locale] || user.selectedCharacter.name.ja || user.selectedCharacter.name.en || 'AIキャラクター')
+                : (user.selectedCharacter?.name || 'AIキャラクター')}
+            </h1>
+            {affinityData && (
+              <div className="chat-header-affinity">
+                <AffinityInfo 
+                  level={affinityData.level} 
+                  description={affinityData.description}
+                />
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
       <main className="chat-main" style={{ background: chatMainBg }}>
         {error && (
           <ErrorMessage
