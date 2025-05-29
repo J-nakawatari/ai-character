@@ -180,25 +180,63 @@ export default function Dashboard({ params }) {
     setModalOpen(true);
   };
 
-  // キャラクターの画像を取得（親密度によるロック情報付き）
-  const sliderImages = user?.selectedCharacter?.images?.length > 0 
-    ? user.selectedCharacter.images.map(img => ({
+  // キャラクターのギャラリー画像を取得（親密度によるロック情報付き）
+  const getSliderImages = () => {
+    if (!user?.selectedCharacter) return [];
+    
+    const galleryImages = [];
+    
+    // ギャラリー画像1-10をチェック
+    for (let i = 1; i <= 10; i++) {
+      const imageUrl = user.selectedCharacter[`galleryImage${i}`];
+      if (imageUrl) {
+        galleryImages.push({
+          src: imageUrl,
+          alt: `${user.selectedCharacter.name} - ギャラリー画像 ${i}`,
+          unlockLevel: (i - 1) * 10 // レベル0, 10, 20, 30...で解放
+        });
+      }
+    }
+    
+    // ギャラリー画像がある場合はそれを使用
+    if (galleryImages.length > 0) {
+      return galleryImages;
+    }
+    
+    // 新しいgalleryImagesスキーマがある場合
+    if (user.selectedCharacter.galleryImages?.length > 0) {
+      return user.selectedCharacter.galleryImages.map(img => ({
+        src: img.url,
+        alt: img.title?.ja || img.title?.en || user.selectedCharacter.name,
+        unlockLevel: img.unlockLevel || 0
+      }));
+    }
+    
+    // 従来のimagesフィールドがある場合
+    if (user.selectedCharacter.images?.length > 0) {
+      return user.selectedCharacter.images.map(img => ({
         src: img.url,
         alt: user.selectedCharacter.name,
         unlockLevel: img.unlockLevel || 0
-      }))
-    : [
-        { src: '/images/hero-images_01.png', alt: 'ヒーロー画像1', unlockLevel: 0 },
-        { src: '/images/hero-images_02.png', alt: 'ヒーロー画像2', unlockLevel: 10 },
-        { src: '/characters/luna.png', alt: 'ルナ', unlockLevel: 20 },
-        { src: '/characters/miko.png', alt: 'ミコ', unlockLevel: 30 },
-        { src: '/characters/robo.png', alt: 'ロボ', unlockLevel: 40 },
-        { src: '/characters/zen.png', alt: 'ゼン', unlockLevel: 50 },
-        { src: '/images/room_01.jpg', alt: 'ルーム画像1', unlockLevel: 60 },
-        { src: '/images/room_02.jpg', alt: 'ルーム画像2', unlockLevel: 70 },
-        { src: '/images/room_03.jpg', alt: 'ルーム画像3', unlockLevel: 80 },
-        { src: '/images/room_04.jpg', alt: 'ルーム画像4', unlockLevel: 90 }
-      ];
+      }));
+    }
+    
+    // フォールバック：デフォルト画像
+    return [
+      { src: '/images/hero-images_01.png', alt: 'ヒーロー画像1', unlockLevel: 0 },
+      { src: '/images/hero-images_02.png', alt: 'ヒーロー画像2', unlockLevel: 10 },
+      { src: '/characters/luna.png', alt: 'ルナ', unlockLevel: 20 },
+      { src: '/characters/miko.png', alt: 'ミコ', unlockLevel: 30 },
+      { src: '/characters/robo.png', alt: 'ロボ', unlockLevel: 40 },
+      { src: '/characters/zen.png', alt: 'ゼン', unlockLevel: 50 },
+      { src: '/images/room_01.jpg', alt: 'ルーム画像1', unlockLevel: 60 },
+      { src: '/images/room_02.jpg', alt: 'ルーム画像2', unlockLevel: 70 },
+      { src: '/images/room_03.jpg', alt: 'ルーム画像3', unlockLevel: 80 },
+      { src: '/images/room_04.jpg', alt: 'ルーム画像4', unlockLevel: 90 }
+    ];
+  };
+
+  const sliderImages = getSliderImages();
 
   return (
     <div className={styles.dashboardRoot}>
