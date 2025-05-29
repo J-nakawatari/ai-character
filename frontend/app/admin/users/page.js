@@ -5,7 +5,7 @@ import { useAdminAuth } from '@/utils/adminAuth';
 import api from '@/utils/api';
 import GlobalLoading from '@/components/GlobalLoading';
 import Card from '@/components/Card';
-import '../../../styles/admin-design-system.css';
+import '../../styles/admin-design-system.css';
 
 export default function AdminUsers() {
   const { admin } = useAdminAuth();
