@@ -122,7 +122,8 @@
 .setup--character-name {
   font-weight: bold;
   margin: 16px 0;
-  text-align: center;
+  text-align: left;
+  width: calc(100% - 32px);
 }
 .setup--character-tag {
   display: inline-block;
