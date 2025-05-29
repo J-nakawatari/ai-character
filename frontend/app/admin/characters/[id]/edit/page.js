@@ -263,381 +263,431 @@ export default function EditCharacter({ params }) {
   
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-full">
-        <p className="text-gray-600">読み込み中...</p>
+      <div className={styles.editCharacterPage}>
+        <div className={styles.loadingContainer}>
+          <div className={styles.loadingText}>読み込み中...</div>
+        </div>
       </div>
     );
   }
   
   return (
-    <div className="admin-content">
-      <h1 className="admin-dashboard-title">キャラクター編集</h1>
-      <div className="admin-content-wrapper">
-        {error && (
-          <div className="admin-stats-card-wrapper error">{error}</div>
-        )}
-        <div className="admin-stats-card-wrapper">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* 基本情報セクション */}
-            <Card>
-              <div className="space-y-6">
-                <div className="admin-stats-title-rapper">
-                  <h2 className="admin-stats-title">基本情報</h2>
-                  <p className="mt-1 text-sm text-gray-500">キャラクターの基本的な情報を設定します</p>
-                </div>
-                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                  <div className={styles['admin-form-group']}>
-                    <label className={styles['admin-form-label']}>キャラクター名</label>
-                    <div className="language-tabs">
-                      <div className="language-tab">
-                        <div className="language-label">🇯🇵 日本語</div>
-                        <Input
-                          id="name.ja"
-                          name="name.ja"
-                          value={formData.name.ja}
-                          onChange={handleChange}
-                          required
-                          className={styles['admin-form-input']}
-                        />
-                      </div>
-                      <div className="language-tab">
-                        <div className="language-label">🇺🇸 English</div>
-                        <Input
-                          id="name.en"
-                          name="name.en"
-                          value={formData.name.en}
-                          onChange={handleChange}
-                          className={styles['admin-form-input']}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className={styles['admin-form-group']}>
-                    <label htmlFor="themeColor" className={styles['admin-form-label']}>テーマカラー</label>
-                    <div className="admin-form-group-themeColor">
-                      <input
-                        type="color"
-                        id="themeColor"
-                        value={formData.themeColor}
-                        onChange={handleChange}
-                        className="h-8 w-8 rounded border border-gray-300"
-                      />
-                      <Input
-                        value={formData.themeColor}
-                        onChange={handleChange}
-                        className={styles['admin-form-input'] + ' flex-1'}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className={styles['admin-form-group']}>
-                  <label className={styles['admin-form-label']}>キャラクター説明</label>
-                  <div className="language-tabs">
-                    <div className="language-tab">
-                      <div className="language-label">🇯🇵 日本語</div>
-                      <textarea
-                        id="description.ja"
-                        name="description.ja"
-                        value={formData.description.ja}
-                        onChange={handleChange}
-                        rows={3}
-                        className={styles['admin-form-input']}
-                      />
-                    </div>
-                    <div className="language-tab">
-                      <div className="language-label">🇺🇸 English</div>
-                      <textarea
-                        id="description.en"
-                        name="description.en"
-                        value={formData.description.en}
-                        onChange={handleChange}
-                        rows={3}
-                        className={styles['admin-form-input']}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Card>
-
-            {/* 会話設定セクション */}
-            <Card>
-              <div className="space-y-6">
-                <div className="admin-stats-title-rapper">
-                  <h2 className="admin-stats-title">会話設定</h2>
-                  <p className="mt-1 text-sm text-gray-500">キャラクターの会話に関する設定を行います</p>
-                </div>
-                <div className={styles['admin-form-group']}>
-                  <label className={styles['admin-form-label']}>性格プロンプト</label>
-                  <div className="language-tabs">
-                    <div className="language-tab">
-                      <div className="language-label">🇯🇵 日本語</div>
-                      <textarea
-                        id="personalityPrompt.ja"
-                        name="personalityPrompt.ja"
-                        value={formData.personalityPrompt.ja}
-                        onChange={handleChange}
-                        rows={4}
-                        className={styles['admin-form-input']}
-                      />
-                    </div>
-                    <div className="language-tab">
-                      <div className="language-label">🇺🇸 English</div>
-                      <textarea
-                        id="personalityPrompt.en"
-                        name="personalityPrompt.en"
-                        value={formData.personalityPrompt.en}
-                        onChange={handleChange}
-                        rows={4}
-                        className={styles['admin-form-input']}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className={styles['admin-form-group']}>
-                  <label className={styles['admin-form-label']}>管理者プロンプト</label>
-                  <div className="language-tabs">
-                    <div className="language-tab">
-                      <div className="language-label">🇯🇵 日本語</div>
-                      <textarea
-                        id="adminPrompt.ja"
-                        name="adminPrompt.ja"
-                        value={formData.adminPrompt.ja}
-                        onChange={handleChange}
-                        rows={4}
-                        className={styles['admin-form-input']}
-                      />
-                    </div>
-                    <div className="language-tab">
-                      <div className="language-label">🇺🇸 English</div>
-                      <textarea
-                        id="adminPrompt.en"
-                        name="adminPrompt.en"
-                        value={formData.adminPrompt.en}
-                        onChange={handleChange}
-                        rows={4}
-                        className={styles['admin-form-input']}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className={styles['admin-form-group']}>
-                  <label className={styles['admin-form-label']}>デフォルトメッセージ</label>
-                  <div className="language-tabs">
-                    <div className="language-tab">
-                      <div className="language-label">🇯🇵 日本語</div>
-                      <textarea
-                        id="defaultMessage.ja"
-                        name="defaultMessage.ja"
-                        value={formData.defaultMessage.ja}
-                        onChange={handleChange}
-                        rows={2}
-                        className={styles['admin-form-input']}
-                      />
-                    </div>
-                    <div className="language-tab">
-                      <div className="language-label">🇺🇸 English</div>
-                      <textarea
-                        id="defaultMessage.en"
-                        name="defaultMessage.en"
-                        value={formData.defaultMessage.en}
-                        onChange={handleChange}
-                        rows={2}
-                        className={styles['admin-form-input']}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Card>
-
-            {/* 販売設定セクション */}
-            <Card>
-              <div className="space-y-6">
-                <div className="admin-stats-title-rapper">
-                  <h2 className="admin-stats-title">販売設定</h2>
-                  <p className="mt-1 text-sm text-gray-500">キャラクターの販売に関する設定を行います</p>
-                </div>
-                <div className={styles['admin-form-group']} style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
-                  <label className={styles.customRadio}>
-                    <input
-                      type="radio"
-                      name="characterAccessType"
-                      value="free"
-                      checked={formData.characterAccessType === 'free'}
-                      onChange={handleChange}
-                      className={styles.radioInput}
-                    />
-                    <span className={styles.radioMark}></span>
-                    <span className={styles.checkboxLabel}>無料キャラ</span>
-                  </label>
-                  <label className={styles.customRadio}>
-                    <input
-                      type="radio"
-                      name="characterAccessType"
-                      value="subscription"
-                      checked={formData.characterAccessType === 'subscription'}
-                      onChange={handleChange}
-                      className={styles.radioInput}
-                    />
-                    <span className={styles.radioMark}></span>
-                    <span className={styles.checkboxLabel}>サブスク会員用キャラクター</span>
-                  </label>
-                  <label className={styles.customRadio}>
-                    <input
-                      type="radio"
-                      name="characterAccessType"
-                      value="purchaseOnly"
-                      checked={formData.characterAccessType === 'purchaseOnly'}
-                      onChange={handleChange}
-                      className={styles.radioInput}
-                    />
-                    <span className={styles.radioMark}></span>
-                    <span className={styles.checkboxLabel}>買い切りキャラクター</span>
-                  </label>
-                </div>
-                
-                {formData.characterAccessType === 'purchaseOnly' && (
-                  <div className="space-y-4 pl-6 mt-2">
-                    <div className={styles['admin-form-group']}>
-                      <label htmlFor="price" className={styles['admin-form-label']}>価格</label>
-                      <Input
-                        type="number"
-                        id="price"
-                        value={formData.price}
-                        onChange={handleChange}
-                        min="0"
-                        className={styles['admin-form-input']}
-                      />
-                    </div>
-                  </div>
-                )}
-              </div>
-            </Card>
-
-            {/* メディア設定セクション */}
-            <Card>
-              <div className="space-y-6">
-                <div className="admin-stats-title-rapper">
-                  <h2 className="admin-stats-title">メディア設定</h2>
-                  <p className="mt-1 text-sm text-gray-500">キャラクターの画像と音声を設定します</p>
-                </div>
-                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                  <div className={styles['media-upload-section']}>
-                    <div className={styles['media-upload-label']}>キャラクター選択画面画像</div>
-                    {formData.imageCharacterSelect && (
-                      <img
-                        src={formData.imageCharacterSelect}
-                        alt="Character Select"
-                        className={styles['media-upload-preview']}
-                      />
-                    )}
-                    <label className={styles['media-upload-btn']}>
-                      ファイルを選択
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => handleImageUpload(e, 'characterSelect')}
-                        className={styles['media-upload-file-input']}
-                      />
-                    </label>
-                  </div>
-                  <div className={styles['media-upload-section']}>
-                    <div className={styles['media-upload-label']}>ダッシュボード画像</div>
-                    {formData.imageDashboard && (
-                      <img
-                        src={formData.imageDashboard}
-                        alt="Dashboard"
-                        className={styles['media-upload-preview']}
-                      />
-                    )}
-                    <label className={styles['media-upload-btn']}>
-                      ファイルを選択
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => handleImageUpload(e, 'dashboard')}
-                        className={styles['media-upload-file-input']}
-                      />
-                    </label>
-                  </div>
-                  <div className={styles['media-upload-section']}>
-                    <div className={styles['media-upload-label']}>チャット背景画像</div>
-                    {formData.imageChatBackground && (
-                      <img
-                        src={formData.imageChatBackground}
-                        alt="Chat Background"
-                        className={styles['media-upload-preview']}
-                      />
-                    )}
-                    <label className={styles['media-upload-btn']}>
-                      ファイルを選択
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => handleImageUpload(e, 'chatBackground')}
-                        className={styles['media-upload-file-input']}
-                      />
-                    </label>
-                  </div>
-                  <div className={styles['media-upload-section']}>
-                    <div className={styles['media-upload-label']}>チャットアバター画像</div>
-                    {formData.imageChatAvatar && (
-                      <img
-                        src={formData.imageChatAvatar}
-                        alt="Chat Avatar"
-                        className={styles['media-upload-preview']}
-                      />
-                    )}
-                    <label className={styles['media-upload-btn']}>
-                      ファイルを選択
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => handleImageUpload(e, 'chatAvatar')}
-                        className={styles['media-upload-file-input']}
-                      />
-                    </label>
-                  </div>
-                </div>
-                <div className={styles['media-upload-section']} style={{maxWidth:'400px'}}>
-                  <div className={styles['media-upload-label']}>サンプル音声</div>
-                  {formData.sampleVoiceUrl && (
-                    <audio controls className={styles['audio-preview']}>
-                      <source src={formData.sampleVoiceUrl} type="audio/mpeg" />
-                    </audio>
-                  )}
-                  <label className={styles['media-upload-btn']}>
-                    ファイルを選択
-                    <input
-                      type="file"
-                      accept="audio/*"
-                      onChange={handleVoiceUpload}
-                      className={styles['media-upload-file-input']}
-                    />
-                  </label>
-                </div>
-              </div>
-            </Card>
-            <div className="flex justify-end space-x-4 mt-6">
-              <button
-                type="button"
-                onClick={() => router.push('/admin/characters')}
-                className={styles['cancel-btn']}
-                disabled={saving}
-              >
-                キャンセル
-              </button>
-              <button
-                type="submit"
-                className={styles['save-btn']}
-                disabled={saving}
-              >
-                {saving ? '保存中...' : '保存'}
-              </button>
-            </div>
-          </form>
+    <div className={styles.editCharacterPage}>
+      <div className="admin-content">
+        <div className={styles.pageHeader}>
+          <h1 className={styles.pageTitle}>キャラクター編集</h1>
         </div>
+        
+        {error && (
+          <div className={styles.errorContainer}>{error}</div>
+        )}
+        <form onSubmit={handleSubmit}>
+          {/* 基本情報セクション */}
+          <div className={styles.formCard}>
+            <div className={styles.sectionHeader}>
+              <h2 className={styles.sectionTitle}>
+                <span className={styles.sectionIcon}>👤</span>
+                基本情報
+              </h2>
+              <p className={styles.sectionDescription}>キャラクターの基本的な情報を設定します</p>
+            </div>
+            <div className={styles.formGridTwoColumns}>
+              <div className={styles['admin-form-group']}>
+                <label className={styles['admin-form-label']}>キャラクター名</label>
+                <div className={styles.languageTabs}>
+                  <div className={styles.languageTab}>
+                    <div className={styles.languageLabel}>
+                      <span className={styles.languageFlag}>🇯🇵</span>
+                      日本語
+                    </div>
+                    <input
+                      id="name.ja"
+                      name="name.ja"
+                      value={formData.name.ja}
+                      onChange={handleChange}
+                      required
+                      className={styles['admin-form-input']}
+                    />
+                  </div>
+                  <div className={styles.languageTab}>
+                    <div className={styles.languageLabel}>
+                      <span className={styles.languageFlag}>🇺🇸</span>
+                      English
+                    </div>
+                    <input
+                      id="name.en"
+                      name="name.en"
+                      value={formData.name.en}
+                      onChange={handleChange}
+                      className={styles['admin-form-input']}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className={styles['admin-form-group']}>
+                <label htmlFor="themeColor" className={styles['admin-form-label']}>テーマカラー</label>
+                <div className={styles.themeColorGroup}>
+                  <input
+                    type="color"
+                    id="themeColor"
+                    value={formData.themeColor}
+                    onChange={handleChange}
+                    className={styles.colorPicker}
+                  />
+                  <input
+                    value={formData.themeColor}
+                    onChange={handleChange}
+                    className={styles['admin-form-input']}
+                    style={{ flex: 1 }}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className={styles['admin-form-group']}>
+              <label className={styles['admin-form-label']}>キャラクター説明</label>
+              <div className={styles.languageTabs}>
+                <div className={styles.languageTab}>
+                  <div className={styles.languageLabel}>
+                    <span className={styles.languageFlag}>🇯🇵</span>
+                    日本語
+                  </div>
+                  <textarea
+                    id="description.ja"
+                    name="description.ja"
+                    value={formData.description.ja}
+                    onChange={handleChange}
+                    rows={3}
+                    className={styles['admin-form-input']}
+                  />
+                </div>
+                <div className={styles.languageTab}>
+                  <div className={styles.languageLabel}>
+                    <span className={styles.languageFlag}>🇺🇸</span>
+                    English
+                  </div>
+                  <textarea
+                    id="description.en"
+                    name="description.en"
+                    value={formData.description.en}
+                    onChange={handleChange}
+                    rows={3}
+                    className={styles['admin-form-input']}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 会話設定セクション */}
+          <div className={styles.formCard}>
+            <div className={styles.sectionHeader}>
+              <h2 className={styles.sectionTitle}>
+                <span className={styles.sectionIcon}>💬</span>
+                会話設定
+              </h2>
+              <p className={styles.sectionDescription}>キャラクターの会話に関する設定を行います</p>
+            </div>
+            <div className={styles['admin-form-group']}>
+              <label className={styles['admin-form-label']}>性格プロンプト</label>
+              <div className={styles.languageTabs}>
+                <div className={styles.languageTab}>
+                  <div className={styles.languageLabel}>
+                    <span className={styles.languageFlag}>🇯🇵</span>
+                    日本語
+                  </div>
+                  <textarea
+                    id="personalityPrompt.ja"
+                    name="personalityPrompt.ja"
+                    value={formData.personalityPrompt.ja}
+                    onChange={handleChange}
+                    rows={4}
+                    className={styles['admin-form-input']}
+                  />
+                </div>
+                <div className={styles.languageTab}>
+                  <div className={styles.languageLabel}>
+                    <span className={styles.languageFlag}>🇺🇸</span>
+                    English
+                  </div>
+                  <textarea
+                    id="personalityPrompt.en"
+                    name="personalityPrompt.en"
+                    value={formData.personalityPrompt.en}
+                    onChange={handleChange}
+                    rows={4}
+                    className={styles['admin-form-input']}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className={styles['admin-form-group']}>
+              <label className={styles['admin-form-label']}>管理者プロンプト</label>
+              <div className={styles.languageTabs}>
+                <div className={styles.languageTab}>
+                  <div className={styles.languageLabel}>
+                    <span className={styles.languageFlag}>🇯🇵</span>
+                    日本語
+                  </div>
+                  <textarea
+                    id="adminPrompt.ja"
+                    name="adminPrompt.ja"
+                    value={formData.adminPrompt.ja}
+                    onChange={handleChange}
+                    rows={4}
+                    className={styles['admin-form-input']}
+                  />
+                </div>
+                <div className={styles.languageTab}>
+                  <div className={styles.languageLabel}>
+                    <span className={styles.languageFlag}>🇺🇸</span>
+                    English
+                  </div>
+                  <textarea
+                    id="adminPrompt.en"
+                    name="adminPrompt.en"
+                    value={formData.adminPrompt.en}
+                    onChange={handleChange}
+                    rows={4}
+                    className={styles['admin-form-input']}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className={styles['admin-form-group']}>
+              <label className={styles['admin-form-label']}>デフォルトメッセージ</label>
+              <div className={styles.languageTabs}>
+                <div className={styles.languageTab}>
+                  <div className={styles.languageLabel}>
+                    <span className={styles.languageFlag}>🇯🇵</span>
+                    日本語
+                  </div>
+                  <textarea
+                    id="defaultMessage.ja"
+                    name="defaultMessage.ja"
+                    value={formData.defaultMessage.ja}
+                    onChange={handleChange}
+                    rows={2}
+                    className={styles['admin-form-input']}
+                  />
+                </div>
+                <div className={styles.languageTab}>
+                  <div className={styles.languageLabel}>
+                    <span className={styles.languageFlag}>🇺🇸</span>
+                    English
+                  </div>
+                  <textarea
+                    id="defaultMessage.en"
+                    name="defaultMessage.en"
+                    value={formData.defaultMessage.en}
+                    onChange={handleChange}
+                    rows={2}
+                    className={styles['admin-form-input']}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 販売設定セクション */}
+          <div className={styles.formCard}>
+            <div className={styles.sectionHeader}>
+              <h2 className={styles.sectionTitle}>
+                <span className={styles.sectionIcon}>💰</span>
+                販売設定
+              </h2>
+              <p className={styles.sectionDescription}>キャラクターの販売に関する設定を行います</p>
+            </div>
+            <div className={styles['admin-form-group']} style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
+              <label className={styles.customRadio}>
+                <input
+                  type="radio"
+                  name="characterAccessType"
+                  value="free"
+                  checked={formData.characterAccessType === 'free'}
+                  onChange={handleChange}
+                  className={styles.radioInput}
+                />
+                <span className={styles.radioMark}></span>
+                <span className={styles.checkboxLabel}>無料キャラ</span>
+              </label>
+              <label className={styles.customRadio}>
+                <input
+                  type="radio"
+                  name="characterAccessType"
+                  value="subscription"
+                  checked={formData.characterAccessType === 'subscription'}
+                  onChange={handleChange}
+                  className={styles.radioInput}
+                />
+                <span className={styles.radioMark}></span>
+                <span className={styles.checkboxLabel}>サブスク会員用キャラクター</span>
+              </label>
+              <label className={styles.customRadio}>
+                <input
+                  type="radio"
+                  name="characterAccessType"
+                  value="purchaseOnly"
+                  checked={formData.characterAccessType === 'purchaseOnly'}
+                  onChange={handleChange}
+                  className={styles.radioInput}
+                />
+                <span className={styles.radioMark}></span>
+                <span className={styles.checkboxLabel}>買い切りキャラクター</span>
+              </label>
+            </div>
+            
+            {formData.characterAccessType === 'purchaseOnly' && (
+              <div style={{paddingLeft: '1.5rem', marginTop: '1rem'}}>
+                <div className={styles['admin-form-group']}>
+                  <label htmlFor="price" className={styles['admin-form-label']}>価格</label>
+                  <input
+                    type="number"
+                    id="price"
+                    value={formData.price}
+                    onChange={handleChange}
+                    min="0"
+                    className={styles['admin-form-input']}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* メディア設定セクション */}
+          <div className={styles.formCard}>
+            <div className={styles.sectionHeader}>
+              <h2 className={styles.sectionTitle}>
+                <span className={styles.sectionIcon}>🎨</span>
+                メディア設定
+              </h2>
+              <p className={styles.sectionDescription}>キャラクターの画像と音声を設定します</p>
+            </div>
+            <div className={styles.formGridTwoColumns}>
+              <div className={styles['media-upload-section']}>
+                <div className={styles['media-upload-label']}>
+                  👤 キャラクター選択画面画像
+                </div>
+                {formData.imageCharacterSelect && (
+                  <img
+                    src={formData.imageCharacterSelect}
+                    alt="Character Select"
+                    className={styles['media-upload-preview']}
+                  />
+                )}
+                <label className={styles['media-upload-btn']}>
+                  📁 ファイルを選択
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => handleImageUpload(e, 'characterSelect')}
+                    className={styles['media-upload-file-input']}
+                  />
+                </label>
+              </div>
+              <div className={styles['media-upload-section']}>
+                <div className={styles['media-upload-label']}>
+                  📊 ダッシュボード画像
+                </div>
+                {formData.imageDashboard && (
+                  <img
+                    src={formData.imageDashboard}
+                    alt="Dashboard"
+                    className={styles['media-upload-preview']}
+                  />
+                )}
+                <label className={styles['media-upload-btn']}>
+                  📁 ファイルを選択
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => handleImageUpload(e, 'dashboard')}
+                    className={styles['media-upload-file-input']}
+                  />
+                </label>
+              </div>
+              <div className={styles['media-upload-section']}>
+                <div className={styles['media-upload-label']}>
+                  🖼️ チャット背景画像
+                </div>
+                {formData.imageChatBackground && (
+                  <img
+                    src={formData.imageChatBackground}
+                    alt="Chat Background"
+                    className={styles['media-upload-preview']}
+                  />
+                )}
+                <label className={styles['media-upload-btn']}>
+                  📁 ファイルを選択
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => handleImageUpload(e, 'chatBackground')}
+                    className={styles['media-upload-file-input']}
+                  />
+                </label>
+              </div>
+              <div className={styles['media-upload-section']}>
+                <div className={styles['media-upload-label']}>
+                  💬 チャットアバター画像
+                </div>
+                {formData.imageChatAvatar && (
+                  <img
+                    src={formData.imageChatAvatar}
+                    alt="Chat Avatar"
+                    className={styles['media-upload-preview']}
+                  />
+                )}
+                <label className={styles['media-upload-btn']}>
+                  📁 ファイルを選択
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => handleImageUpload(e, 'chatAvatar')}
+                    className={styles['media-upload-file-input']}
+                  />
+                </label>
+              </div>
+            </div>
+            <div className={styles['media-upload-section']} style={{maxWidth:'400px'}}>
+              <div className={styles['media-upload-label']}>
+                🎵 サンプル音声
+              </div>
+              {formData.sampleVoiceUrl && (
+                <audio controls className={styles['audio-preview']}>
+                  <source src={formData.sampleVoiceUrl} type="audio/mpeg" />
+                </audio>
+              )}
+              <label className={styles['media-upload-btn']}>
+                📁 ファイルを選択
+                <input
+                  type="file"
+                  accept="audio/*"
+                  onChange={handleVoiceUpload}
+                  className={styles['media-upload-file-input']}
+                />
+              </label>
+            </div>
+          </div>
+
+          {/* アクションボタン */}
+          <div className={styles.actionButtons}>
+            <button
+              type="button"
+              onClick={() => router.push('/admin/characters')}
+              className={styles['cancel-btn']}
+              disabled={saving}
+            >
+              キャンセル
+            </button>
+            <button
+              type="submit"
+              className={styles['save-btn']}
+              disabled={saving}
+            >
+              {saving ? '💾 保存中...' : '💾 保存'}
+            </button>
+          </div>
+        </form>
       </div>
 
       {showCropper && selectedImage && (
