@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import api from '@/utils/api';
 import Card from '@/components/Card';
 import ImageCropper from '@/components/ImageCropper';
+import { getAllImageSizes } from '@/config/imageSizes';
 
 export default function CharacterEditPage() {
   const params = useParams();
@@ -17,22 +18,7 @@ export default function CharacterEditPage() {
   const [showCropper, setShowCropper] = useState(false);
   const [imageType, setImageType] = useState('');
   const [aspect, setAspect] = useState('1:1');
-  const imageSizes = {
-    characterSelect: { width: 238, height: 260 },
-    dashboard: { width: 320, height: 528 },
-    chatBackground: { width: 455, height: 745 },
-    chatAvatar: { width: 400, height: 400 },
-    gallery1: { width: 400, height: 400 },
-    gallery2: { width: 400, height: 400 },
-    gallery3: { width: 400, height: 400 },
-    gallery4: { width: 400, height: 400 },
-    gallery5: { width: 400, height: 400 },
-    gallery6: { width: 400, height: 400 },
-    gallery7: { width: 400, height: 400 },
-    gallery8: { width: 400, height: 400 },
-    gallery9: { width: 400, height: 400 },
-    gallery10: { width: 400, height: 400 }
-  };
+  const imageSizes = getAllImageSizes();
   const [cropSize, setCropSize] = useState(imageSizes['characterSelect']);
 
   useEffect(() => {
