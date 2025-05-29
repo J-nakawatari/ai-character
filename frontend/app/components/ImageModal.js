@@ -5,6 +5,7 @@ import styles from './ImageModal.module.css';
 
 export default function ImageModal({ images, initialIndex, onClose }) {
   const [currentIndex, setCurrentIndex] = useState(initialIndex || 0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -26,16 +27,26 @@ export default function ImageModal({ images, initialIndex, onClose }) {
     };
   }, [currentIndex]);
 
+  const changeImage = (newIndex) => {
+    if (isTransitioning) return;
+    
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setCurrentIndex(newIndex);
+      setTimeout(() => {
+        setIsTransitioning(false);
+      }, 50);
+    }, 150);
+  };
+
   const nextImage = () => {
-    setCurrentIndex((prevIndex) => 
-      prevIndex === images.length - 1 ? 0 : prevIndex + 1
-    );
+    const newIndex = currentIndex === images.length - 1 ? 0 : currentIndex + 1;
+    changeImage(newIndex);
   };
 
   const prevImage = () => {
-    setCurrentIndex((prevIndex) => 
-      prevIndex === 0 ? images.length - 1 : prevIndex - 1
-    );
+    const newIndex = currentIndex === 0 ? images.length - 1 : currentIndex - 1;
+    changeImage(newIndex);
   };
 
   const handleBackdropClick = (e) => {
@@ -61,7 +72,7 @@ export default function ImageModal({ images, initialIndex, onClose }) {
           <img
             src={images[currentIndex].src}
             alt={images[currentIndex].alt || ''}
-            className={styles.modalImage}
+            className={`${styles.modalImage} ${isTransitioning ? styles.imageTransitioning : ''}`}
           />
           
           {images.length > 1 && (
@@ -96,7 +107,7 @@ export default function ImageModal({ images, initialIndex, onClose }) {
             <button
               key={index}
               className={`${styles.thumbnail} ${index === currentIndex ? styles.activeThumbnail : ''}`}
-              onClick={() => setCurrentIndex(index)}
+              onClick={() => changeImage(index)}
               aria-label={`画像 ${index + 1}`}
             >
               <img
