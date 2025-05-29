@@ -82,14 +82,11 @@ export default function AdminUsers() {
     );
   }
 
-  // ステータスバッジの取得
+  // アカウント状態バッジの取得
   const getStatusBadge = (user) => {
-    if (!user.isActive) return <span className="admin-badge admin-badge--error">無効</span>;
-    if (!user.hasCompletedSetup) return <span className="admin-badge admin-badge--warning">未完了</span>;
-    if (user.membershipType === 'subscription' && user.subscriptionStatus === 'active') {
-      return <span className="admin-badge admin-badge--success">プレミアム</span>;
-    }
-    return <span className="admin-badge admin-badge--neutral">無料</span>;
+    if (!user.isActive) return <span className="admin-badge admin-badge--error">❌ 無効</span>;
+    if (!user.hasCompletedSetup) return <span className="admin-badge admin-badge--warning">⚠️ セットアップ未完了</span>;
+    return <span className="admin-badge admin-badge--success">✅ 有効</span>;
   };
 
   // 親密度統計の計算
@@ -135,7 +132,7 @@ export default function AdminUsers() {
             <thead>
               <tr>
                 <th>ユーザー情報</th>
-                <th>ステータス</th>
+                <th>アカウント状態</th>
                 <th>会員種別</th>
                 <th>親密度統計</th>
                 <th>最終活動</th>
