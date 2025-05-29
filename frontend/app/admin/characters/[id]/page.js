@@ -140,18 +140,6 @@ export default function CharacterEditPage() {
 
   return (
     <div className="admin-content">
-      <div style={{
-        background: '#ff6b6b',
-        color: 'white',
-        padding: '1rem',
-        margin: '1rem 0',
-        borderRadius: '8px',
-        fontSize: '1.2rem',
-        fontWeight: 'bold',
-        textAlign: 'center'
-      }}>
-        🚨 テストメッセージ - 詳細ページ更新確認用 🚨
-      </div>
       <div className="admin-header">
         <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
           <h1 className="admin-dashboard-title">キャラクター編集</h1>
@@ -282,103 +270,142 @@ export default function CharacterEditPage() {
         {/* 会話設定カード */}
         <Card className="admin-stats-card-wrapper" style={{marginBottom:24}}>
           <h2 className="admin-stats-title" style={{marginBottom:24}}>会話設定</h2>
-          <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(300px, 1fr))', gap:24}}>
-            <div className="character-detail-section">
-              <h3 className="character-detail-section-title">プロンプト</h3>
-              <div>
-                <div className="form-group">
-                  <label className="form-label">性格プロンプト（日本語）</label>
-                  <textarea
-                    value={character.personalityPrompt?.ja || ''}
-                    onChange={(e) => handleNestedChange('personalityPrompt', 'ja', e.target.value)}
-                    className="admin-textarea"
-                    rows={6}
-                    style={{width:'100%'}}
-                  />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">性格プロンプト（英語）</label>
-                  <textarea
-                    value={character.personalityPrompt?.en || ''}
-                    onChange={(e) => handleNestedChange('personalityPrompt', 'en', e.target.value)}
-                    className="admin-textarea"
-                    rows={6}
-                    style={{width:'100%'}}
-                  />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">管理者プロンプト（日本語）</label>
-                  <textarea
-                    value={character.adminPrompt?.ja || ''}
-                    onChange={(e) => handleNestedChange('adminPrompt', 'ja', e.target.value)}
-                    className="admin-textarea"
-                    rows={6}
-                    style={{width:'100%'}}
-                  />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">管理者プロンプト（英語）</label>
-                  <textarea
-                    value={character.adminPrompt?.en || ''}
-                    onChange={(e) => handleNestedChange('adminPrompt', 'en', e.target.value)}
-                    className="admin-textarea"
-                    rows={6}
-                    style={{width:'100%'}}
-                  />
-                </div>
-              </div>
+          <div style={{display:'flex', flexDirection:'column', gap:'24px'}}>
+            {/* 性格プロンプト - 日本語 */}
+            <div className="form-group">
+              <label className="form-label">
+                <span style={{marginRight: '8px'}}>🇯🇵</span>
+                性格プロンプト（日本語）
+              </label>
+              <textarea
+                value={character.personalityPrompt?.ja || ''}
+                onChange={(e) => handleNestedChange('personalityPrompt', 'ja', e.target.value)}
+                className="admin-textarea"
+                rows={6}
+                style={{width:'100%'}}
+              />
             </div>
-            <div className="character-detail-section">
-              <h3 className="character-detail-section-title">メッセージ設定</h3>
-              <div className="character-detail-grid">
-                <div>
-                  <div className="character-detail-label">デフォルトメッセージ（日本語）</div>
-                  <textarea
-                    value={character.defaultMessage?.ja || ''}
-                    onChange={(e) => handleNestedChange('defaultMessage', 'ja', e.target.value)}
-                    className="admin-textarea"
-                    rows={4}
-                  />
-                </div>
-                <div>
-                  <div className="character-detail-label">デフォルトメッセージ（英語）</div>
-                  <textarea
-                    value={character.defaultMessage?.en || ''}
-                    onChange={(e) => handleNestedChange('defaultMessage', 'en', e.target.value)}
-                    className="admin-textarea"
-                    rows={4}
-                  />
-                </div>
-                <div>
-                  <div className="character-detail-label">制限メッセージ（日本語）</div>
-                  <textarea
-                    value={character.limitMessage?.ja || ''}
-                    onChange={(e) => handleNestedChange('limitMessage', 'ja', e.target.value)}
-                    className="admin-textarea"
-                    rows={4}
-                    placeholder="今日はもうお話しできないよ。また明日ね。"
-                  />
-                </div>
-                <div>
-                  <div className="character-detail-label">制限メッセージ（英語）</div>
-                  <textarea
-                    value={character.limitMessage?.en || ''}
-                    onChange={(e) => handleNestedChange('limitMessage', 'en', e.target.value)}
-                    className="admin-textarea"
-                    rows={4}
-                    placeholder="Looks like we can't chat anymore today. Let's talk tomorrow!"
-                  />
-                </div>
-                <div>
-                  <div className="character-detail-label">音声設定</div>
-                  <input
-                    type="text"
-                    value={character.voice || ''}
-                    onChange={(e) => handleChange('voice', e.target.value)}
-                    className="admin-input"
-                  />
-                </div>
-              </div>
+
+            {/* 性格プロンプト - 英語 */}
+            <div className="form-group">
+              <label className="form-label">
+                <span style={{marginRight: '8px'}}>🇺🇸</span>
+                性格プロンプト（English）
+              </label>
+              <textarea
+                value={character.personalityPrompt?.en || ''}
+                onChange={(e) => handleNestedChange('personalityPrompt', 'en', e.target.value)}
+                className="admin-textarea"
+                rows={6}
+                style={{width:'100%'}}
+              />
+            </div>
+
+            {/* 管理者プロンプト - 日本語 */}
+            <div className="form-group">
+              <label className="form-label">
+                <span style={{marginRight: '8px'}}>🇯🇵</span>
+                管理者プロンプト（日本語）
+              </label>
+              <textarea
+                value={character.adminPrompt?.ja || ''}
+                onChange={(e) => handleNestedChange('adminPrompt', 'ja', e.target.value)}
+                className="admin-textarea"
+                rows={6}
+                style={{width:'100%'}}
+              />
+            </div>
+
+            {/* 管理者プロンプト - 英語 */}
+            <div className="form-group">
+              <label className="form-label">
+                <span style={{marginRight: '8px'}}>🇺🇸</span>
+                管理者プロンプト（English）
+              </label>
+              <textarea
+                value={character.adminPrompt?.en || ''}
+                onChange={(e) => handleNestedChange('adminPrompt', 'en', e.target.value)}
+                className="admin-textarea"
+                rows={6}
+                style={{width:'100%'}}
+              />
+            </div>
+
+            {/* デフォルトメッセージ - 日本語 */}
+            <div className="form-group">
+              <label className="form-label">
+                <span style={{marginRight: '8px'}}>🇯🇵</span>
+                デフォルトメッセージ（日本語）
+              </label>
+              <textarea
+                value={character.defaultMessage?.ja || ''}
+                onChange={(e) => handleNestedChange('defaultMessage', 'ja', e.target.value)}
+                className="admin-textarea"
+                rows={4}
+                style={{width:'100%'}}
+              />
+            </div>
+
+            {/* デフォルトメッセージ - 英語 */}
+            <div className="form-group">
+              <label className="form-label">
+                <span style={{marginRight: '8px'}}>🇺🇸</span>
+                デフォルトメッセージ（English）
+              </label>
+              <textarea
+                value={character.defaultMessage?.en || ''}
+                onChange={(e) => handleNestedChange('defaultMessage', 'en', e.target.value)}
+                className="admin-textarea"
+                rows={4}
+                style={{width:'100%'}}
+              />
+            </div>
+
+            {/* 制限メッセージ - 日本語 */}
+            <div className="form-group">
+              <label className="form-label">
+                <span style={{marginRight: '8px'}}>🇯🇵</span>
+                制限メッセージ（日本語）
+              </label>
+              <textarea
+                value={character.limitMessage?.ja || ''}
+                onChange={(e) => handleNestedChange('limitMessage', 'ja', e.target.value)}
+                className="admin-textarea"
+                rows={4}
+                placeholder="今日はもうお話しできないよ。また明日ね。"
+                style={{width:'100%'}}
+              />
+            </div>
+
+            {/* 制限メッセージ - 英語 */}
+            <div className="form-group">
+              <label className="form-label">
+                <span style={{marginRight: '8px'}}>🇺🇸</span>
+                制限メッセージ（English）
+              </label>
+              <textarea
+                value={character.limitMessage?.en || ''}
+                onChange={(e) => handleNestedChange('limitMessage', 'en', e.target.value)}
+                className="admin-textarea"
+                rows={4}
+                placeholder="Looks like we can't chat anymore today. Let's talk tomorrow!"
+                style={{width:'100%'}}
+              />
+            </div>
+
+            {/* 音声設定 */}
+            <div className="form-group">
+              <label className="form-label">
+                <span style={{marginRight: '8px'}}>🎵</span>
+                音声設定
+              </label>
+              <input
+                type="text"
+                value={character.voice || ''}
+                onChange={(e) => handleChange('voice', e.target.value)}
+                className="admin-input"
+                style={{width:'100%'}}
+              />
             </div>
           </div>
         </Card>
