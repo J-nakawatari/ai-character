@@ -4,8 +4,15 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import styles from './ImageModal.module.css';
 
-export default function ImageModal({ images, initialIndex, onClose }) {
-  const [currentIndex, setCurrentIndex] = useState(initialIndex || 0);
+export default function ImageModal({ images, initialIndex, onClose, affinityLevel = 0 }) {
+  // 解放済み画像のみをフィルタリング
+  const unlockedImages = images.filter(image => !image.unlockLevel || image.unlockLevel <= affinityLevel);
+  
+  // initialIndexを解放済み画像のインデックスに変換
+  const originalImage = images[initialIndex];
+  const unlockedInitialIndex = unlockedImages.findIndex(img => img.src === originalImage?.src);
+  
+  const [currentIndex, setCurrentIndex] = useState(Math.max(0, unlockedInitialIndex));
   const [isTransitioning, setIsTransitioning] = useState(false);
 
   useEffect(() => {
@@ -41,12 +48,12 @@ export default function ImageModal({ images, initialIndex, onClose }) {
   };
 
   const nextImage = () => {
-    const newIndex = currentIndex === images.length - 1 ? 0 : currentIndex + 1;
+    const newIndex = currentIndex === unlockedImages.length - 1 ? 0 : currentIndex + 1;
     changeImage(newIndex);
   };
 
   const prevImage = () => {
-    const newIndex = currentIndex === 0 ? images.length - 1 : currentIndex - 1;
+    const newIndex = currentIndex === 0 ? unlockedImages.length - 1 : currentIndex - 1;
     changeImage(newIndex);
   };
 
@@ -56,7 +63,7 @@ export default function ImageModal({ images, initialIndex, onClose }) {
     }
   };
 
-  if (!images || images.length === 0) return null;
+  if (!unlockedImages || unlockedImages.length === 0) return null;
 
   return (
     <div className={styles.modalBackdrop} onClick={handleBackdropClick}>
@@ -71,12 +78,12 @@ export default function ImageModal({ images, initialIndex, onClose }) {
 
         <div className={styles.imageContainer}>
           <img
-            src={images[currentIndex].src}
-            alt={images[currentIndex].alt || ''}
+            src={unlockedImages[currentIndex].src}
+            alt={unlockedImages[currentIndex].alt || ''}
             className={`${styles.modalImage} ${isTransitioning ? styles.imageTransitioning : ''}`}
           />
           
-          {images.length > 1 && (
+          {unlockedImages.length > 1 && (
             <>
               <button
                 className={`${styles.navButton} ${styles.prevButton}`}
@@ -109,14 +116,14 @@ export default function ImageModal({ images, initialIndex, onClose }) {
           )}
         </div>
 
-        {images.length > 1 && (
+        {unlockedImages.length > 1 && (
           <div className={styles.imageCounter}>
-            {currentIndex + 1} / {images.length}
+            {currentIndex + 1} / {unlockedImages.length}
           </div>
         )}
 
         <div className={styles.thumbnailContainer}>
-          {images.map((image, index) => (
+          {unlockedImages.map((image, index) => (
             <button
               key={index}
               className={`${styles.thumbnail} ${index === currentIndex ? styles.activeThumbnail : ''}`}
