@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import styles from './ImageSlider.module.css';
 
 export default function ImageSlider({ images, interval = 5000, onImageClick }) {
@@ -68,7 +69,13 @@ export default function ImageSlider({ images, interval = 5000, onImageClick }) {
           aria-label="前の画像グループ"
           disabled={currentIndex === 0}
         >
-          &#8249;
+          <Image
+            src="/icon/arrow.svg"
+            alt=""
+            width={20}
+            height={20}
+            className={styles.arrowIcon}
+          />
         </button>
       )}
       
@@ -98,7 +105,13 @@ export default function ImageSlider({ images, interval = 5000, onImageClick }) {
           aria-label="次の画像グループ"
           disabled={currentIndex >= maxIndex}
         >
-          &#8250;
+          <Image
+            src="/icon/arrow.svg"
+            alt=""
+            width={20}
+            height={20}
+            className={styles.arrowIcon}
+          />
         </button>
       )}
     </div>
