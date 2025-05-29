@@ -56,20 +56,22 @@
 .admin-form-input {
   width: 100%;
   border-radius: 12px;
-  border: 2px solid #e2e8f0;
-  padding: 16px 20px;
-  font-size: 15px;
-  background: #fff;
+  border: 1px solid #e2e8f0;
+  padding: 12px 16px;
+  font-size: 14px;
+  background: #f8fafc;
   color: #1f2937;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   transition: all 0.2s ease;
   font-family: inherit;
+  line-height: 1.5;
 }
 
 .admin-form-input:focus {
   border-color: #3b82f6;
   outline: none;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  background: #fff;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
 }
 
 .admin-form-input:hover {
@@ -80,33 +82,66 @@
   margin-bottom: 24px;
 }
 
-/* Language Tabs */
-.languageTabs {
+/* Field Group Styles - Similar to Detail Page */
+.fieldGroup {
   display: grid;
   gap: 1rem;
 }
 
-.languageTab {
+.fieldLabel {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #64748b;
+  margin-bottom: 0.5rem;
+}
+
+.fieldValue {
+  font-size: 1rem;
+  color: #1e293b;
+  font-weight: 500;
+}
+
+.fieldTextArea {
+  font-size: 0.875rem;
+  color: #475569;
+  line-height: 1.5;
   background: #f8fafc;
-  border: 2px solid #e2e8f0;
+  padding: 1rem;
   border-radius: 12px;
-  padding: 1.5rem;
+  max-height: 120px;
+  overflow: auto;
+  border: 1px solid #e2e8f0;
+}
+
+/* Language Tabs - Vertical Layout */
+.languageTabs {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.languageTab {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1rem;
   transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .languageTab:hover {
   border-color: #cbd5e1;
-  background: #f1f5f9;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .languageLabel {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 14px;
-  font-weight: 600;
-  color: #374151;
-  margin-bottom: 12px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #64748b;
+  margin-bottom: 8px;
 }
 
 .languageFlag {
@@ -297,31 +332,32 @@
 }
 
 .media-upload-section {
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-  border: 2px solid #e2e8f0;
+  background: white;
+  border: 1px solid #e2e8f0;
   border-radius: 16px;
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
+  padding: 2rem;
+  margin-bottom: 2rem;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   max-width: 100%;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
 }
 
 .media-upload-section:hover {
-  border-color: #cbd5e1;
-  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
 }
 
 .media-upload-label {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 14px;
+  font-size: 1rem;
   font-weight: 600;
-  color: #374151;
-  margin-bottom: 1rem;
+  color: #1e293b;
+  margin-bottom: 1.5rem;
 }
 
 .media-upload-preview {
@@ -349,12 +385,12 @@
   color: white;
   font-weight: 600;
   border: none;
-  border-radius: 10px;
-  padding: 12px 20px;
+  border-radius: 12px;
+  padding: 12px 24px;
   font-size: 14px;
   cursor: pointer;
   transition: all 0.2s ease;
-  margin-bottom: 0.5rem;
+  margin-top: 1rem;
 }
 
 .media-upload-btn:hover {
