@@ -716,9 +716,14 @@ export default function CharacterEditPage() {
             <div className="character-detail-section">
               <h3 className="character-detail-section-title">ダッシュボードギャラリー（10枚）</h3>
               <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(200px, 1fr))', gap:20}}>
-                {Array.from({length: 10}, (_, index) => (
+                {Array.from({length: 10}, (_, index) => {
+                  const isPremium = index >= 8; // スロット9,10がプレミア枠
+                  const slotLabel = isPremium ? `プレミア枠${index - 7}` : `ギャラリー画像 ${index + 1}`;
+                  return (
                   <div key={index} style={{textAlign:'center'}}>
-                    <div className="character-detail-label">ギャラリー画像 {index + 1}</div>
+                    <div className="character-detail-label" style={{color: isPremium ? '#f59e0b' : undefined, fontWeight: isPremium ? '600' : undefined}}>
+                      {isPremium && '⭐ '}{slotLabel}
+                    </div>
                     <div className="admin-image-upload">
                       {character[`galleryImage${index + 1}`] ? (
                         <img 
@@ -760,7 +765,8 @@ export default function CharacterEditPage() {
                       </div>
                     </div>
                   </div>
-                ))}
+                  );
+                })}
               </div>
               <div style={{
                 marginTop: 16,

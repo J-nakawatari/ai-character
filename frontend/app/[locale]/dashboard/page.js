@@ -190,10 +190,13 @@ export default function Dashboard({ params }) {
     for (let i = 1; i <= 10; i++) {
       const imageUrl = user.selectedCharacter[`galleryImage${i}`];
       if (imageUrl) {
+        const isPremium = i >= 9; // スロット9,10がプレミア枠
+        const slotLabel = isPremium ? `プレミア枠${i - 8}` : `ギャラリー画像 ${i}`;
         galleryImages.push({
           src: imageUrl,
-          alt: `${user.selectedCharacter.name} - ギャラリー画像 ${i}`,
-          unlockLevel: (i - 1) * 10 // レベル0, 10, 20, 30...で解放
+          alt: `${user.selectedCharacter.name} - ${slotLabel}`,
+          unlockLevel: (i - 1) * 10, // レベル0, 10, 20, 30...で解放
+          isPremium: isPremium
         });
       }
     }

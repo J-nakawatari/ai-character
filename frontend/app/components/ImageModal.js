@@ -77,6 +77,11 @@ export default function ImageModal({ images, initialIndex, onClose, affinityLeve
         </button>
 
         <div className={styles.imageContainer}>
+          {unlockedImages[currentIndex].isPremium && (
+            <div className={styles.premiumBadge}>
+              ⭐ PREMIUM
+            </div>
+          )}
           <img
             src={unlockedImages[currentIndex].src}
             alt={unlockedImages[currentIndex].alt || ''}

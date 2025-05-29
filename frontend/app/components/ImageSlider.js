@@ -93,6 +93,11 @@ export default function ImageSlider({ images, interval = 5000, onImageClick, aff
             return (
               <div key={index} className={styles.carouselSlide}>
                 <div className={styles.imageWrapper}>
+                  {image.isPremium && !isLocked && (
+                    <div className={styles.premiumBadge}>
+                      ⭐ PREMIUM
+                    </div>
+                  )}
                   <img
                     src={image.src}
                     alt={image.alt || ''}
@@ -110,6 +115,7 @@ export default function ImageSlider({ images, interval = 5000, onImageClick, aff
                       />
                       <span className={styles.unlockText}>
                         Lv.{image.unlockLevel}で解放
+                        {image.isPremium && <><br/>⭐ プレミア枠</>}
                       </span>
                     </div>
                   )}

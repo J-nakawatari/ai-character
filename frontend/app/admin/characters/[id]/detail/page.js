@@ -355,10 +355,13 @@ export default function CharacterDetailPage() {
                   {Array.from({ length: 10 }, (_, index) => {
                     const galleryKey = `galleryImage${index + 1}`;
                     const imageUrl = character[galleryKey];
+                    const isPremium = index >= 8; // スロット9,10がプレミア枠
+                    const slotLabel = isPremium ? `プレミア枠${index - 7}` : `スロット ${index + 1}`;
+                    
                     return (
                       <div key={galleryKey} className={styles.galleryItem}>
-                        <div className={styles.galleryLabel}>
-                          スロット {index + 1}
+                        <div className={`${styles.galleryLabel} ${isPremium ? styles.premiumLabel : ''}`}>
+                          {isPremium && '⭐ '}{slotLabel}
                         </div>
                         {imageUrl ? (
                           <img 
@@ -368,7 +371,7 @@ export default function CharacterDetailPage() {
                           />
                         ) : (
                           <div className={styles.galleryPlaceholder}>
-                            🖼️
+                            {isPremium ? '⭐' : '🖼️'}
                           </div>
                         )}
                       </div>
