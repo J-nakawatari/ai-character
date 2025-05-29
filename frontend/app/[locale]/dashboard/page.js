@@ -10,6 +10,7 @@ import { useTranslations } from 'next-intl';
 import Card from '../../components/Card';
 import styles from './dashboard.module.css';
 import GlobalLoading from '../../components/GlobalLoading';
+import ImageSlider from '../../components/ImageSlider';
 
 export default function Dashboard({ params }) {
   const { user, loading, element } = useRequireAuth();
@@ -146,6 +147,15 @@ export default function Dashboard({ params }) {
       <Card className={styles.dashboardCard}>
         <div className={styles.dashboardGrid}>
           <div className={styles.dashboardImageWrapper}>
+            <ImageSlider
+              images={[
+                { src: '/images/room_01.jpg', alt: 'ルーム画像1' },
+                { src: '/images/room_02.jpg', alt: 'ルーム画像2' },
+                { src: '/images/room_03.jpg', alt: 'ルーム画像3' },
+                { src: '/images/room_04.jpg', alt: 'ルーム画像4' }
+              ]}
+              interval={4000}
+            />
             {user.selectedCharacter?.imageDashboard ? (
               <img
                 src={user.selectedCharacter.imageDashboard}
