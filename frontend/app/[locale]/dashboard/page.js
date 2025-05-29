@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, use } from 'react';
+import { useEffect, use, useState } from 'react';
 import { useRouter, usePathname, useParams } from 'next/navigation';
 import Image from 'next/image';
 import useRequireAuth from '../../utils/useRequireAuth';
@@ -13,6 +13,7 @@ import GlobalLoading from '../../components/GlobalLoading';
 import { useAuth } from '../../utils/auth';
 
 import ImageSlider from '../../components/ImageSlider';
+import ImageModal from '../../components/ImageModal';
 
 
 export default function Dashboard({ params }) {
@@ -24,6 +25,8 @@ export default function Dashboard({ params }) {
   const locale = urlParams.locale || 'ja';
   const t = useTranslations('dashboard');
   const tMenu = useTranslations('menu');
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalInitialIndex, setModalInitialIndex] = useState(0);
   
   const handleStartChat = async () => {
     try {
@@ -146,20 +149,41 @@ export default function Dashboard({ params }) {
 
   const buttonProps = getButtonProps(user.selectedCharacter);
 
+  const handleImageClick = (index) => {
+    setModalInitialIndex(index);
+    setModalOpen(true);
+  };
+
+  const sliderImages = [
+    { src: '/images/hero-images_01.png', alt: 'ヒーロー画像1' },
+    { src: '/images/hero-images_02.png', alt: 'ヒーロー画像2' },
+    { src: '/images/character_01.png', alt: 'キャラクター画像1' },
+    { src: '/images/room_01.jpg', alt: 'ルーム画像1' },
+    { src: '/images/room_02.jpg', alt: 'ルーム画像2' },
+    { src: '/images/room_03.jpg', alt: 'ルーム画像3' },
+    { src: '/images/room_04.jpg', alt: 'ルーム画像4' },
+    { src: '/images/hero-images_01.png', alt: 'ヒーロー画像3' },
+    { src: '/images/hero-images_02.png', alt: 'ヒーロー画像4' },
+    { src: '/images/character_01.png', alt: 'キャラクター画像2' }
+  ];
+
   return (
     <div className={styles.dashboardRoot}>
+      <ImageSlider
+        images={sliderImages}
+        interval={4000}
+        onImageClick={handleImageClick}
+      />
+      {modalOpen && (
+        <ImageModal
+          images={sliderImages}
+          initialIndex={modalInitialIndex}
+          onClose={() => setModalOpen(false)}
+        />
+      )}
       <Card className={styles.dashboardCard}>
         <div className={styles.dashboardGrid}>
           <div className={styles.dashboardImageWrapper}>
-            <ImageSlider
-              images={[
-                { src: '/images/room_01.jpg', alt: 'ルーム画像1' },
-                { src: '/images/room_02.jpg', alt: 'ルーム画像2' },
-                { src: '/images/room_03.jpg', alt: 'ルーム画像3' },
-                { src: '/images/room_04.jpg', alt: 'ルーム画像4' }
-              ]}
-              interval={4000}
-            />
             {user.selectedCharacter?.imageDashboard ? (
               <img
                 src={user.selectedCharacter.imageDashboard}
