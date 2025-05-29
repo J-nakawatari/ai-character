@@ -169,10 +169,10 @@ export default function AdminUsers() {
                       </div>
                     </td>
                     <td>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--admin-space-1)' }}>
-                        <div style={{ fontSize: 'var(--admin-font-size-sm)', fontWeight: '500' }}>
-                          {user.membershipType === 'subscription' ? 'サブスクリプション' : '無料プラン'}
-                        </div>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--admin-space-2)' }}>
+                        <span className={`admin-badge ${user.membershipType === 'subscription' ? 'admin-badge--warning' : 'admin-badge--neutral'}`}>
+                          {user.membershipType === 'subscription' ? '🔥 プレミアム' : '🆓 無料'}
+                        </span>
                         {user.membershipType === 'subscription' && (
                           <div style={{ fontSize: 'var(--admin-font-size-xs)', color: 'var(--admin-gray-500)' }}>
                             状態: {user.subscriptionStatus || 'unknown'}
