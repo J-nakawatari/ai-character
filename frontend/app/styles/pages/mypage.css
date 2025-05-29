@@ -7,7 +7,7 @@
 
 /* ヘッダー */
 .mypage__header {
-  padding: 2rem 2rem 1rem;
+  padding: 32px 32px 16px;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
@@ -18,8 +18,8 @@
   margin: 0 auto;
   display: flex;
   align-items: center;
-  gap: 2rem;
-  margin-top: 1rem;
+  gap: 32px;
+  margin-top: 16px;
 }
 
 .mypage__user-avatar {
@@ -34,7 +34,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2rem;
+  font-size: 32px;
   font-weight: 700;
   color: #4b5563;
   border: 4px solid rgba(255, 255, 255, 0.3);
@@ -46,33 +46,33 @@
 }
 
 .mypage__title {
-  font-size: 2rem;
+  font-size: 32px;
   font-weight: 700;
   color: white;
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 8px 0;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
 .mypage__welcome {
   display: block;
-  font-size: 1.25rem;
+  font-size: 20px;
   font-weight: 400;
-  margin-top: 0.5rem;
+  margin-top: 8px;
   opacity: 0.9;
 }
 
 .mypage__member-badge {
-  margin-top: 1rem;
+  margin-top: 16px;
 }
 
 .mypage__badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  border-radius: 2rem;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 32px;
   font-weight: 600;
-  font-size: 0.875rem;
+  font-size: 14px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
@@ -90,10 +90,10 @@
 .mypage__content {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 32px;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 32px;
 }
 
 /* セクション */
@@ -109,31 +109,31 @@
 .mypage__section-title {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  font-size: 1.5rem;
+  gap: 12px;
+  font-size: 24px;
   font-weight: 700;
   color: #1f2937;
   margin: 0;
 }
 
 .mypage__section-icon {
-  font-size: 1.75rem;
+  font-size: 28px;
 }
 
 /* 情報カード */
 .mypage__info-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
+  gap: 24px;
 }
 
 .mypage__info-card {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 1.5rem;
+  gap: 16px;
+  padding: 24px;
   background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-  border-radius: 1.5rem;
+  border-radius: 24px;
   border: 1px solid #e2e8f0;
   transition: all 0.2s ease;
 }
@@ -144,14 +144,14 @@
 }
 
 .mypage__info-icon {
-  font-size: 2rem;
+  font-size: 32px;
   width: 60px;
   height: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 1rem;
+  border-radius: 16px;
   color: white;
   flex-shrink: 0;
 }
@@ -161,14 +161,14 @@
 }
 
 .mypage__info-label {
-  font-size: 0.875rem;
+  font-size: 14px;
   color: #64748b;
   font-weight: 500;
-  margin-bottom: 0.25rem;
+  margin-bottom: 4px;
 }
 
 .mypage__info-value {
-  font-size: 1.125rem;
+  font-size: 18px;
   font-weight: 600;
   color: #1e293b;
 }
@@ -177,32 +177,32 @@
 .mypage__subscription-content {
   display: grid;
   grid-template-columns: 1fr auto;
-  gap: 2rem;
+  gap: 32px;
   align-items: start;
 }
 
 .mypage__status-card {
   background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-  border-radius: 1.5rem;
-  padding: 2rem;
+  border-radius: 24px;
+  padding: 32px;
   border: 1px solid #e2e8f0;
 }
 
 .mypage__status-header {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  gap: 16px;
+  margin-bottom: 24px;
 }
 
 .mypage__status-indicator {
-  font-size: 2rem;
+  font-size: 32px;
   width: 60px;
   height: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 1rem;
+  border-radius: 16px;
 }
 
 .mypage__status--active .mypage__status-indicator {
@@ -224,29 +224,29 @@
 }
 
 .mypage__status-title {
-  font-size: 1.25rem;
+  font-size: 20px;
   font-weight: 700;
   color: #1f2937;
-  margin-bottom: 0.25rem;
+  margin-bottom: 4px;
 }
 
 .mypage__status-subtitle {
-  font-size: 0.875rem;
+  font-size: 14px;
   color: #64748b;
 }
 
 .mypage__subscription-details {
   display: grid;
-  gap: 1rem;
+  gap: 16px;
 }
 
 .mypage__detail-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
+  padding: 16px;
   background: rgba(255, 255, 255, 0.7);
-  border-radius: 0.75rem;
+  border-radius: 12px;
 }
 
 .mypage__detail-label {
@@ -262,19 +262,19 @@
 .mypage__subscription-actions {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 16px;
 }
 
 .mypage__upgrade-section {
   background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-  border-radius: 1.5rem;
-  padding: 2rem;
+  border-radius: 24px;
+  padding: 32px;
   border: 1px solid #fbbf24;
   text-align: center;
 }
 
 .mypage__upgrade-benefits h4 {
-  margin: 0 0 1rem 0;
+  margin: 0 0 16px 0;
   color: #92400e;
   font-weight: 700;
 }
@@ -282,12 +282,12 @@
 .mypage__benefits-list {
   list-style: none;
   padding: 0;
-  margin: 0 0 1.5rem 0;
+  margin: 0 0 24px 0;
   text-align: left;
 }
 
 .mypage__benefits-list li {
-  padding: 0.5rem 0;
+  padding: 8px 0;
   color: #92400e;
   font-weight: 500;
 }
@@ -297,37 +297,37 @@
   border-radius: 8px;
   padding: 16px;
   text-align: center;
-  padding: 3rem 2rem;
+  padding: 48px 32px;
   color: #64748b;
 }
 
 .mypage__empty-icon {
-  font-size: 4rem;
-  margin-bottom: 1rem;
+  font-size: 64px;
+  margin-bottom: 16px;
 }
 
 .mypage__empty-title {
-  font-size: 1.25rem;
+  font-size: 20px;
   font-weight: 600;
   color: #374151;
-  margin-bottom: 0.5rem;
+  margin-bottom: 8px;
 }
 
 .mypage__empty-description {
-  font-size: 1rem;
+  font-size: 16px;
   line-height: 1.6;
 }
 
 .mypage__character-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 1.5rem;
+  gap: 24px;
 }
 
 .mypage__character-card {
   background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-  border-radius: 1.5rem;
-  padding: 1.5rem;
+  border-radius: 24px;
+  padding: 24px;
   text-align: center;
   border: 1px solid #e2e8f0;
   transition: all 0.3s ease;
@@ -347,7 +347,7 @@
   max-width: 140px;
   height: 140px;
   object-fit: cover;
-  border-radius: 1rem;
+  border-radius: 16px;
   border: 2px solid #e2e8f0;
 }
 
@@ -363,28 +363,28 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1rem;
+  font-size: 16px;
   box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
 }
 
 .mypage__character-name {
-  font-size: 1.125rem;
+  font-size: 18px;
   font-weight: 600;
   color: #1f2937;
-  margin-bottom: 0.5rem;
+  margin-bottom: 8px;
 }
 
 .mypage__character-date {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  font-size: 0.875rem;
+  gap: 8px;
+  font-size: 14px;
   color: #64748b;
 }
 
 .mypage__date-icon {
-  font-size: 1rem;
+  font-size: 16px;
 }
 
 /* ボタン */
@@ -405,14 +405,14 @@
 }
 
 .mypage__upgrade-icon {
-  font-size: 1.5rem;
+  font-size: 24px;
 }
 
 .mypage__unsubscribe-button {
   background: linear-gradient(135deg, #fecaca 0%, #fca5a5 100%);
   color: #dc2626;
-  padding: 1rem 2rem;
-  border-radius: 1rem;
+  padding: 16px 32px;
+  border-radius: 16px;
   font-weight: 600;
   border: 1px solid #f87171;
   cursor: pointer;
@@ -428,15 +428,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
+  gap: 12px;
   background: linear-gradient(135deg, #fecaca 0%, #fca5a5 100%);
   color: #dc2626;
-  padding: 1rem 2rem;
-  border-radius: 1rem;
+  padding: 16px 32px;
+  border-radius: 16px;
   font-weight: 600;
   border: 1px solid #f87171;
   cursor: pointer;
-  margin-top: 1rem;
+  margin-top: 16px;
   transition: all 0.3s ease;
 }
 
@@ -446,20 +446,20 @@
 }
 
 .mypage__danger-icon {
-  font-size: 1.25rem;
+  font-size: 20px;
 }
 
 /* 設定 */
 .mypage__settings-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: 2rem;
+  gap: 32px;
 }
 
 .mypage__setting-content {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 16px;
 }
 
 .mypage__setting-description {
@@ -474,17 +474,17 @@
 }
 
 .mypage__language-selector {
-  margin-top: 0.5rem;
+  margin-top: 8px;
 }
 
 .mypage__language-select {
   width: 100%;
   max-width: 280px;
-  padding: 1rem 1.5rem;
-  border-radius: 1rem;
+  padding: 16px 24px;
+  border-radius: 16px;
   border: 2px solid #e2e8f0;
   background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-  font-size: 1rem;
+  font-size: 16px;
   font-weight: 500;
   color: #1f2937;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
@@ -511,13 +511,13 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  padding: 2rem;
+  padding: 32px;
 }
 
 .mypage__modal-content {
   background: white;
-  padding: 2.5rem;
-  border-radius: 2rem;
+  padding: 40px;
+  border-radius: 32px;
   max-width: 500px;
   width: 100%;
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
@@ -525,16 +525,16 @@
 }
 
 .mypage__modal-title {
-  margin: 0 0 1.5rem 0;
-  font-size: 1.5rem;
+  margin: 0 0 24px 0;
+  font-size: 24px;
   font-weight: 700;
   color: #1f2937;
   text-align: center;
 }
 
 .mypage__modal-message {
-  margin-bottom: 2rem;
-  font-size: 1rem;
+  margin-bottom: 32px;
+  font-size: 16px;
   line-height: 1.6;
   color: #4b5563;
   text-align: center;
@@ -543,31 +543,31 @@
 .mypage__modal-warning {
   background: linear-gradient(135deg, #fecaca 0%, #fca5a5 100%);
   color: #dc2626;
-  padding: 1.5rem;
-  border-radius: 1rem;
-  margin-bottom: 2rem;
-  font-size: 0.875rem;
+  padding: 24px;
+  border-radius: 16px;
+  margin-bottom: 32px;
+  font-size: 14px;
   font-weight: 500;
   border: 1px solid #f87171;
 }
 
 .mypage__modal-form {
-  margin-bottom: 2rem;
+  margin-bottom: 32px;
 }
 
 .mypage__modal-form .mypage__info-label {
   display: block;
-  margin-bottom: 0.5rem;
+  margin-bottom: 8px;
   font-weight: 600;
   color: #374151;
 }
 
 .mypage__modal-form .input {
   width: 100%;
-  padding: 1rem 1.5rem;
-  border-radius: 1rem;
+  padding: 16px 24px;
+  border-radius: 16px;
   border: 2px solid #e5e7eb;
-  font-size: 1rem;
+  font-size: 16px;
   transition: all 0.2s ease;
 }
 
@@ -579,13 +579,13 @@
 
 .mypage__modal-buttons {
   display: flex;
-  gap: 1rem;
+  gap: 16px;
   justify-content: center;
 }
 
 .mypage__modal-button {
-  padding: 1rem 2rem;
-  border-radius: 1rem;
+  padding: 16px 32px;
+  border-radius: 16px;
   font-weight: 600;
   cursor: pointer;
   border: none;
@@ -618,25 +618,25 @@
 /* レスポンシブ */
 @media (max-width: 768px) {
   .mypage__header {
-    padding: 1.5rem 1rem 1rem;
+    padding: 24px 16px 16px;
   }
   
   .mypage__header-content {
     flex-direction: column;
     text-align: center;
-    gap: 1.5rem;
+    gap: 24px;
   }
   
   .mypage__title {
-    font-size: 1.75rem;
+    font-size: 28px;
   }
   
   .mypage__content {
-    padding: 1rem;
+    padding: 16px;
   }
   
   .mypage__section {
-    padding: 2rem 1.5rem;
+    padding: 32px 24px;
   }
   
   .mypage__info-cards {
@@ -656,11 +656,11 @@
   }
   
   .mypage__modal-overlay {
-    padding: 1rem;
+    padding: 16px;
   }
   
   .mypage__modal-content {
-    padding: 2rem 1.5rem;
+    padding: 32px 24px;
   }
   
   .mypage__modal-buttons {
@@ -678,7 +678,7 @@
   border-radius: 6px;
   border: 1px solid #e0e0e0;
   background: #f9f9f9;
-  font-size: 1rem;
+  font-size: 16px;
   font-weight: 500;
   color: #333;
   margin-top: 12px;

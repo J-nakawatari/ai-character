@@ -1,17 +1,17 @@
 /* 言語選択UI用のスタイル */
 .language-options {
   display: flex;
-  gap: 1rem;
-  margin-top: 0.5rem;
+  gap: 16px;
+  margin-top: 8px;
 }
 
 .language-option {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
+  gap: 8px;
+  padding: 8px 16px;
   border: 1px solid #e2e8f0;
-  border-radius: 0.5rem;
+  border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -21,31 +21,31 @@
 }
 
 .language-option input {
-  margin-right: 0.5rem;
+  margin-right: 8px;
 }
 
 .language-flag {
-  font-size: 1.5rem;
+  font-size: 24px;
 }
 
 .language-name {
-  font-size: 0.875rem;
+  font-size: 14px;
 }
 
 /* マイページの言語選択 */
 .mypage__language-selection {
   display: flex;
-  gap: 1rem;
-  margin-top: 1rem;
+  gap: 16px;
+  margin-top: 16px;
 }
 
 .mypage__language-option {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 1rem;
+  gap: 8px;
+  padding: 16px;
   border: 1px solid #e2e8f0;
-  border-radius: 0.5rem;
+  border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -60,11 +60,11 @@
 }
 
 .mypage__language-flag {
-  font-size: 1.5rem;
+  font-size: 24px;
 }
 
 .mypage__language-name {
-  font-size: 1rem;
+  font-size: 16px;
   font-weight: 500;
 }
 
@@ -72,18 +72,18 @@
 .language-tabs {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 16px;
 }
 
 .language-tab {
   border: 1px solid #e2e8f0;
-  border-radius: 0.5rem;
-  padding: 1rem;
+  border-radius: 8px;
+  padding: 16px;
 }
 
 .language-label {
-  font-size: 0.875rem;
+  font-size: 14px;
   font-weight: 500;
-  margin-bottom: 0.5rem;
+  margin-bottom: 8px;
   color: #4a5568;
 }
