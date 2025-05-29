@@ -12,6 +12,7 @@ import '../../styles/pages/setup.css';
 import GlobalLoading from '../../components/GlobalLoading';
 import ErrorMessage from '../../components/ErrorMessage';
 import { useAuth } from '../../utils/auth';
+import AffinityInfo from '../../components/AffinityInfo';
 
 const schema = z.object({
   name: z.string().min(2, 'お名前は2文字以上で入力してください'),
@@ -24,6 +25,7 @@ export default function Setup({ params }) {
   const [characters, setCharacters] = useState([]);
   const [serverError, setServerError] = useState('');
   const [loadingCharacters, setLoadingCharacters] = useState(true);
+  const [affinityData, setAffinityData] = useState({});
   const canvasRef = useRef(null);
   const audioRef = useRef(null);
   const t = useTranslations('setup');
@@ -60,6 +62,31 @@ export default function Setup({ params }) {
       if (res.success) {
         setCharacters(res.data);
         console.log('キャラクター取得結果:', res.data); 
+        
+        // 各キャラクターの親密度データを取得
+        const affinityPromises = res.data.map(async (character) => {
+          try {
+            const affinityRes = await fetch(`/api/users/me/affinity/${character._id}`, {
+              headers: {
+                'x-auth-token': localStorage.getItem('token')
+              }
+            });
+            if (affinityRes.ok) {
+              const data = await affinityRes.json();
+              return { characterId: character._id, data };
+            }
+          } catch (err) {
+            console.error(`Failed to fetch affinity for character ${character._id}:`, err);
+          }
+          return { characterId: character._id, data: { level: 0, description: { title: "初対面", color: "#C0C0C0" } } };
+        });
+        
+        const affinityResults = await Promise.all(affinityPromises);
+        const affinityMap = {};
+        affinityResults.forEach(result => {
+          affinityMap[result.characterId] = result.data;
+        });
+        setAffinityData(affinityMap);
       } else {
         setServerError('キャラクターの取得に失敗しました');
       }
@@ -386,6 +413,7 @@ export default function Setup({ params }) {
                 : character.description;
               
               const buttonProps = getButtonProps(character);
+              const characterAffinity = affinityData[character._id];
 
               return (
                 <div
@@ -416,6 +444,12 @@ export default function Setup({ params }) {
                     />
                   </div>
                   <div className="setup--character-name">{characterName}</div>
+                  {characterAffinity && (
+                    <AffinityInfo 
+                      level={characterAffinity.level} 
+                      description={characterAffinity.description}
+                    />
+                  )}
                   <div className="setup--character-tags">
                     {(character.personality || character.personalityPrompt) ?
                       ((() => {
