@@ -201,12 +201,16 @@ export default function Dashboard({ params }) {
 
   return (
     <div className={styles.dashboardRoot}>
-      <ImageSlider
-        images={sliderImages}
-        interval={4000}
-        onImageClick={handleImageClick}
-        affinityLevel={affinityData?.level || 0}
-      />
+      {/* ヘロー画像スライダー */}
+      <div className={styles.sliderContainer}>
+        <ImageSlider
+          images={sliderImages}
+          interval={4000}
+          onImageClick={handleImageClick}
+          affinityLevel={affinityData?.level || 0}
+        />
+      </div>
+      
       {modalOpen && (
         <ImageModal
           images={sliderImages}
@@ -215,87 +219,167 @@ export default function Dashboard({ params }) {
           affinityLevel={affinityData?.level || 0}
         />
       )}
-      <Card className={styles.dashboardCard}>
+
+      {/* ダッシュボードコンテンツ */}
+      <div className={styles.dashboardContainer}>
+        {/* 親密度バー */}
         {affinityData && (
-          <AffinityBar
-            level={affinityData.level}
-            streak={affinityData.streak}
-            description={affinityData.description}
-          />
+          <div className={styles.affinityContainer}>
+            <AffinityBar
+              level={affinityData.level}
+              streak={affinityData.streak}
+              description={affinityData.description}
+            />
+          </div>
         )}
-        <div className={styles.dashboardGrid}>
-          <div className={styles.dashboardImageWrapper}>
-            {user.selectedCharacter?.imageDashboard ? (
-              <img
-                src={user.selectedCharacter.imageDashboard}
-                alt={user.selectedCharacter.name}
-                width={320}
-                height={400}
-                className={styles.dashboardCharacterImg}
-              />
-            ) : (
-              <div className={styles.dashboardCharacterImgPlaceholder}>
-                画像がありません
+
+        {/* メインコンテンツ */}
+        <div className={styles.dashboardContent}>
+          {/* キャラクター情報カード */}
+          <Card className={styles.characterCard}>
+            <div className={styles.characterHeader}>
+              <div className={styles.characterImageSection}>
+                {user.selectedCharacter?.imageDashboard ? (
+                  <div className={styles.imageContainer}>
+                    <img
+                      src={user.selectedCharacter.imageDashboard}
+                      alt={user.selectedCharacter.name}
+                      className={styles.characterImage}
+                    />
+                    <div className={styles.imageOverlay}>
+                      <div className={styles.characterStatus}>
+                        <span className={styles.statusIcon}>🟢</span>
+                        <span className={styles.statusText}>オンライン</span>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className={styles.imagePlaceholder}>
+                    <div className={styles.placeholderIcon}>👤</div>
+                    <span>画像なし</span>
+                  </div>
+                )}
               </div>
+              
+              <div className={styles.characterInfo}>
+                <h1 className={styles.characterName}>
+                  {typeof user.selectedCharacter?.name === 'object'
+                    ? (user.selectedCharacter.name[locale] || user.selectedCharacter.name.ja || user.selectedCharacter.name.en || '')
+                    : user.selectedCharacter?.name}
+                </h1>
+                
+                {personalityTags.length > 0 && (
+                  <div className={styles.personalitySection}>
+                    <div className={styles.personalityTags}>
+                      {personalityTags.map((tag, index) => (
+                        <span key={index} className={styles.personalityTag}>
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div className={styles.characterActions}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (buttonProps.type === 'purchase') {
+                        router.push(`/${locale}/setup?reselect=true`);
+                      } else if (buttonProps.type === 'upgrade') {
+                        router.push(`/${locale}/setup?reselect=true`);
+                      } else {
+                        handleStartChat();
+                      }
+                    }}
+                    className={`${styles.actionButton} ${
+                      buttonProps.type === 'chat' ? styles.chatButton : styles.upgradeButton
+                    }`}
+                  >
+                    <span className={styles.buttonIcon}>
+                      {buttonProps.type === 'chat' ? '💬' : buttonProps.type === 'purchase' ? '🛒' : '⭐'}
+                    </span>
+                    {buttonProps.text}
+                  </button>
+                  
+                  <button
+                    type="button"
+                    onClick={handleChangeCharacter}
+                    className={styles.secondaryButton}
+                  >
+                    🔄 {tMenu('setup', 'キャラ変更')}
+                  </button>
+                </div>
+
+                {user.selectedCharacter?.characterAccessType === 'purchaseOnly' && !isCharacterPurchased(user.selectedCharacter) && (
+                  <div className={styles.priceInfo}>
+                    💰 {t('price', '価格')}: <span className={styles.price}>¥{user.selectedCharacter.price.toLocaleString()}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          </Card>
+
+          {/* 詳細情報グリッド */}
+          <div className={styles.detailsGrid}>
+            {/* 性格詳細 */}
+            <Card className={styles.detailCard}>
+              <div className={styles.detailHeader}>
+                <h3 className={styles.detailTitle}>
+                  <span className={styles.detailIcon}>🎭</span>
+                  {t('personality', '性格')}
+                </h3>
+              </div>
+              <div className={styles.detailContent}>
+                <p className={styles.detailText}>
+                  {typeof user.selectedCharacter?.personalityPrompt === 'object'
+                    ? (user.selectedCharacter.personalityPrompt[locale] || user.selectedCharacter.personalityPrompt.ja || user.selectedCharacter.personalityPrompt.en || t('no_info', '情報なし'))
+                    : (user.selectedCharacter?.personalityPrompt || t('no_info', '情報なし'))}
+                </p>
+              </div>
+            </Card>
+
+            {/* 説明 */}
+            <Card className={styles.detailCard}>
+              <div className={styles.detailHeader}>
+                <h3 className={styles.detailTitle}>
+                  <span className={styles.detailIcon}>📖</span>
+                  {t('description', '説明')}
+                </h3>
+              </div>
+              <div className={styles.detailContent}>
+                <p className={styles.detailText}>
+                  {typeof user.selectedCharacter?.description === 'object'
+                    ? (user.selectedCharacter.description[locale] || user.selectedCharacter.description.ja || user.selectedCharacter.description.en || t('no_info', '情報なし'))
+                    : (user.selectedCharacter?.description || t('no_info', '情報なし'))}
+                </p>
+              </div>
+            </Card>
+
+            {/* 統計情報 */}
+            {affinityData && (
+              <Card className={styles.detailCard}>
+                <div className={styles.detailHeader}>
+                  <h3 className={styles.detailTitle}>
+                    <span className={styles.detailIcon}>📊</span>
+                    統計情報
+                  </h3>
+                </div>
+                <div className={styles.statsContent}>
+                  <div className={styles.statItem}>
+                    <span className={styles.statLabel}>親密度レベル</span>
+                    <span className={styles.statValue}>{affinityData.level}</span>
+                  </div>
+                  <div className={styles.statItem}>
+                    <span className={styles.statLabel}>連続日数</span>
+                    <span className={styles.statValue}>{affinityData.streak}日</span>
+                  </div>
+                </div>
+              </Card>
             )}
           </div>
-          <div className={styles.dashboardInfoSection}>
-            <section className={styles.dashboardSection}>
-              <h2 className={styles.dashboardLabel}>{t('name', '名前')}</h2>
-              <p className={styles.dashboardTitle}>{
-                typeof user.selectedCharacter?.name === 'object'
-                  ? (user.selectedCharacter.name[locale] || user.selectedCharacter.name.ja || user.selectedCharacter.name.en || '')
-                  : user.selectedCharacter?.name
-              }</p>
-            </section>
-            <section className={styles.dashboardSection}>
-              <h2 className={styles.dashboardLabel}>{t('personality', '性格')}</h2>
-              <div className={styles.dashboardPersonalityTags}>
-                {personalityTags.map((tag, index) => (
-                  <span key={index} className={styles.dashboardPersonalityTag}>
-                    {tag}
-                  </span>
-                ))}
-              </div>
-              <p className={styles.dashboardDesc}>
-                {typeof user.selectedCharacter?.personalityPrompt === 'object'
-                  ? (user.selectedCharacter.personalityPrompt[locale] || user.selectedCharacter.personalityPrompt.ja || user.selectedCharacter.personalityPrompt.en || t('no_info', '情報なし'))
-                  : (user.selectedCharacter?.personalityPrompt || t('no_info', '情報なし'))}
-              </p>
-            </section>
-            <section className={styles.dashboardSection}>
-              <h2 className={styles.dashboardLabel}>{t('description', '説明')}</h2>
-              <p className={styles.dashboardDesc}>
-                {typeof user.selectedCharacter?.description === 'object'
-                  ? (user.selectedCharacter.description[locale] || user.selectedCharacter.description.ja || user.selectedCharacter.description.en || t('no_info', '情報なし'))
-                  : (user.selectedCharacter?.description || t('no_info', '情報なし'))}
-              </p>
-            </section>
-            <div className={styles.dashboardButtonWrapper}>
-              <button
-                type="button"
-                onClick={() => {
-                  if (buttonProps.type === 'purchase') {
-                    router.push(`/${locale}/setup?reselect=true`);
-                  } else if (buttonProps.type === 'upgrade') {
-                    router.push(`/${locale}/setup?reselect=true`);
-                  } else {
-                    handleStartChat();
-                  }
-                }}
-                className={buttonProps.type === 'chat' ? styles.dashboardPrimaryButton : styles.dashboardSecondaryButton}
-              >
-                {buttonProps.text}
-              </button>
-              {user.selectedCharacter?.characterAccessType === 'purchaseOnly' && !isCharacterPurchased(user.selectedCharacter) && (
-                <div className={styles.dashboardPrice}>
-                  {t('price', '価格')}: ¥{user.selectedCharacter.price.toLocaleString()}
-                </div>
-              )}
-            </div>
-          </div>
         </div>
-      </Card>
+      </div>
     </div>
   );
 }

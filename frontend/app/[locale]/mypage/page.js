@@ -148,143 +148,253 @@ export default function MyPage({ params }) {
   
   return (
     <div className="mypage">
-      <BackButton href={`/${locale}/dashboard`} label={t('back_to_dashboard') || "ダッシュボードに戻る"} />
-      
-      <h1 className="mypage__title">{t('title')}</h1>
-      
-      {/* アカウント情報 */}
-      <section className="mypage__section">
-        <h2 className="mypage__section-title">{t('account_info')}</h2>
-        <div className="mypage__info-grid">
-          <div className="mypage__info-item">
-            <div className="mypage__info-label">{t('username')}</div>
-            <div className="mypage__info-value">{user.name}</div>
-          </div>
-          
-          <div className="mypage__info-item">
-            <div className="mypage__info-label">{t('email')}</div>
-            <div className="mypage__info-value">{user.email}</div>
-          </div>
-          
-          <div className="mypage__info-item">
-            <div className="mypage__info-label">{t('member_type')}</div>
-            <div className="mypage__info-value">
-              {user.membershipType === 'subscription' ? t('premium_member') : t('free_member')}
+      <div className="mypage__header">
+        <BackButton href={`/${locale}/dashboard`} label={t('back_to_dashboard') || "ダッシュボードに戻る"} />
+        <div className="mypage__header-content">
+          <div className="mypage__user-avatar">
+            <div className="mypage__avatar-circle">
+              {user.name?.charAt(0)?.toUpperCase() || '👤'}
             </div>
           </div>
-          
-          <div className="mypage__info-item">
-            <div className="mypage__info-label">{t('register_date')}</div>
-            <div className="mypage__info-value">{formatDate(user.createdAt)}</div>
-          </div>
-          
-          <div className="mypage__info-item">
-            <div className="mypage__info-label">{t('last_login')}</div>
-            <div className="mypage__info-value">{formatDate(user.lastLoginDate)}</div>
-          </div>
-        </div>
-      </section>
-      
-      {/* サブスクリプション情報 */}
-      <section className="mypage__section">
-        <h2 className="mypage__section-title">{t('subscription_info')}</h2>
-        <div className="mypage__info-grid">
-          <div className="mypage__info-item">
-            <div className="mypage__info-label">{t('status')}</div>
-            <div className="mypage__info-value mypage__status-row">
-              <span className={`mypage__status mypage__status--${user.subscriptionStatus || 'active'}`}>
-                {user.subscriptionStatus === 'active' ? t('status_active') : 
-                 user.subscriptionStatus === 'inactive' ? t('status_inactive') : 
-                 user.subscriptionStatus === 'expired' ? t('status_expired') : 
-                 user.subscriptionStatus === 'canceled' ? t('status_canceled') : t('status_free')}
+          <div className="mypage__user-info">
+            <h1 className="mypage__title">
+              {t('title')} 
+              <span className="mypage__welcome">
+                {user.name}さん、こんにちは！
+              </span>
+            </h1>
+            <div className="mypage__member-badge">
+              <span className={`mypage__badge ${user.membershipType === 'subscription' ? 'mypage__badge--premium' : 'mypage__badge--free'}`}>
+                {user.membershipType === 'subscription' ? '👑 プレミアム会員' : '🌟 フリー会員'}
               </span>
             </div>
           </div>
-          
-          {user.membershipType === 'subscription' && (
-            <>
-              <div className="mypage__info-item">
-                <div className="mypage__info-label">{t('subscription_start')}</div>
-                <div className="mypage__info-value">{formatDate(user.subscriptionStartDate)}</div>
-              </div>
-              <div className="mypage__info-item">
-                <div className="mypage__info-label">{t('next_billing')}</div>
-                <div className="mypage__info-value">{formatDate(user.subscriptionEndDate)}</div>
-              </div>
-              <div className="mypage__info-item" style={{gridColumn: '1 / -1'}}>
-                <button className="mypage__delete-button" onClick={handleUnsubscribe} disabled={isUnsubscribing}>
-                  {isUnsubscribing ? t('processing', '処理中...') : t('unsubscribe_button', 'サブスクを解除する')}
-                </button>
-                {unsubscribeError && <ErrorMessage message={unsubscribeError} type="toast" className="mypage-error-message" />}
-              </div>
-            </>
-          )}
         </div>
-        
-        {user.membershipType !== 'subscription' && (
-          <button className="mypage__upgrade-button" onClick={handleUpgrade}>
-            {t('upgrade_button')}
-          </button>
-        )}
-      </section>
+      </div>
       
-      {/* 購入済みキャラクター */}
-      <section className="mypage__section">
-        <h2 className="mypage__section-title">{t('purchased_characters')}</h2>
-        
-        {purchasedCharacters.length === 0 ? (
-          <p>{t('no_purchased_characters')}</p>
-        ) : (
-          <div className="mypage__character-list">
-            {purchasedCharacters.map((item) => (
-              <div 
-                key={item.character?._id || `no-character-${Math.random()}`}
-                className="mypage__character-item"
-              >
-                <img 
-                  src={item.character?.imageCharacterSelect || '/images/character-placeholder.png'} 
-                  alt={item.character?.name?.ja || item.character?.name || 'Character'}
-                  className="mypage__character-image"
-                />
-                <div className="mypage__character-name">
-                  {item.character?.name?.ja || item.character?.name || 'キャラクター名不明'}
-                </div>
-                <div className="mypage__character-date">
-                  {t('purchase_date')} {formatDate(item.purchaseDate)}
-                </div>
-              </div>
-            ))}
+      <div className="mypage__content">
+        {/* アカウント情報 */}
+        <section className="mypage__section mypage__section--account">
+          <div className="mypage__section-header">
+            <h2 className="mypage__section-title">
+              <span className="mypage__section-icon">👤</span>
+              {t('account_info')}
+            </h2>
           </div>
-        )}
-      </section>
+          <div className="mypage__info-cards">
+            <div className="mypage__info-card">
+              <div className="mypage__info-icon">👤</div>
+              <div className="mypage__info-content">
+                <div className="mypage__info-label">{t('username')}</div>
+                <div className="mypage__info-value">{user.name}</div>
+              </div>
+            </div>
+            
+            <div className="mypage__info-card">
+              <div className="mypage__info-icon">📧</div>
+              <div className="mypage__info-content">
+                <div className="mypage__info-label">{t('email')}</div>
+                <div className="mypage__info-value">{user.email}</div>
+              </div>
+            </div>
+            
+            <div className="mypage__info-card">
+              <div className="mypage__info-icon">🎯</div>
+              <div className="mypage__info-content">
+                <div className="mypage__info-label">{t('member_type')}</div>
+                <div className="mypage__info-value">
+                  {user.membershipType === 'subscription' ? t('premium_member') : t('free_member')}
+                </div>
+              </div>
+            </div>
+            
+            <div className="mypage__info-card">
+              <div className="mypage__info-icon">📅</div>
+              <div className="mypage__info-content">
+                <div className="mypage__info-label">{t('register_date')}</div>
+                <div className="mypage__info-value">{formatDate(user.createdAt)}</div>
+              </div>
+            </div>
+            
+            <div className="mypage__info-card">
+              <div className="mypage__info-icon">🕒</div>
+              <div className="mypage__info-content">
+                <div className="mypage__info-label">{t('last_login')}</div>
+                <div className="mypage__info-value">{formatDate(user.lastLoginDate)}</div>
+              </div>
+            </div>
+          </div>
+        </section>
       
-      {/* 言語設定 */}
-      <section className="mypage__section">
-        <h2 className="mypage__section-title">{t('language_settings')}</h2>
-        <p>{t('select_language')}</p>
-        <div className="mypage__language-selection">
-          <select
-            className="mypage__language-select"
-            value={user.preferredLanguage}
-            onChange={e => handleLanguageChange(e.target.value)}
-          >
-            <option value="ja">🇯🇵 {t('language_japanese')}</option>
-            <option value="en">🇺🇸 {t('language_english')}</option>
-          </select>
+        {/* サブスクリプション情報 */}
+        <section className="mypage__section mypage__section--subscription">
+          <div className="mypage__section-header">
+            <h2 className="mypage__section-title">
+              <span className="mypage__section-icon">💳</span>
+              {t('subscription_info')}
+            </h2>
+          </div>
+          
+          <div className="mypage__subscription-content">
+            <div className="mypage__subscription-status">
+              <div className="mypage__status-card">
+                <div className="mypage__status-header">
+                  <span className={`mypage__status-indicator mypage__status--${user.subscriptionStatus || 'free'}`}>
+                    {user.subscriptionStatus === 'active' ? '✅' : 
+                     user.subscriptionStatus === 'inactive' ? '⚠️' : 
+                     user.subscriptionStatus === 'expired' ? '❌' : 
+                     user.subscriptionStatus === 'canceled' ? '🚫' : '🆓'}
+                  </span>
+                  <div className="mypage__status-text">
+                    <div className="mypage__status-title">
+                      {user.subscriptionStatus === 'active' ? t('status_active') : 
+                       user.subscriptionStatus === 'inactive' ? t('status_inactive') : 
+                       user.subscriptionStatus === 'expired' ? t('status_expired') : 
+                       user.subscriptionStatus === 'canceled' ? t('status_canceled') : t('status_free')}
+                    </div>
+                    <div className="mypage__status-subtitle">
+                      {user.membershipType === 'subscription' ? 'プレミアム会員' : 'フリー会員'}
+                    </div>
+                  </div>
+                </div>
+                
+                {user.membershipType === 'subscription' && (
+                  <div className="mypage__subscription-details">
+                    <div className="mypage__detail-row">
+                      <span className="mypage__detail-label">🚀 開始日</span>
+                      <span className="mypage__detail-value">{formatDate(user.subscriptionStartDate)}</span>
+                    </div>
+                    <div className="mypage__detail-row">
+                      <span className="mypage__detail-label">🔄 次回請求日</span>
+                      <span className="mypage__detail-value">{formatDate(user.subscriptionEndDate)}</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+            
+            <div className="mypage__subscription-actions">
+              {user.membershipType === 'subscription' ? (
+                <div className="mypage__action-section">
+                  <button className="mypage__unsubscribe-button" onClick={handleUnsubscribe} disabled={isUnsubscribing}>
+                    {isUnsubscribing ? '⏳ 処理中...' : '❌ サブスクを解除する'}
+                  </button>
+                  {unsubscribeError && <ErrorMessage message={unsubscribeError} type="toast" className="mypage-error-message" />}
+                </div>
+              ) : (
+                <div className="mypage__upgrade-section">
+                  <div className="mypage__upgrade-benefits">
+                    <h4>プレミアム会員の特典</h4>
+                    <ul className="mypage__benefits-list">
+                      <li>🎭 すべてのプレミアムキャラクターにアクセス</li>
+                      <li>💬 無制限チャット</li>
+                      <li>🎨 特別な画像とボイス</li>
+                      <li>⭐ 優先サポート</li>
+                    </ul>
+                  </div>
+                  <button className="mypage__upgrade-button" onClick={handleUpgrade}>
+                    <span className="mypage__upgrade-icon">👑</span>
+                    {t('upgrade_button')}
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+        
+        {/* 購入済みキャラクター */}
+        <section className="mypage__section mypage__section--characters">
+          <div className="mypage__section-header">
+            <h2 className="mypage__section-title">
+              <span className="mypage__section-icon">🎭</span>
+              {t('purchased_characters')}
+            </h2>
+          </div>
+          
+          {purchasedCharacters.length === 0 ? (
+            <div className="mypage__empty-state">
+              <div className="mypage__empty-icon">🛒</div>
+              <div className="mypage__empty-title">まだキャラクターを購入していません</div>
+              <div className="mypage__empty-description">
+                ストアでお気に入りのキャラクターを見つけて、特別な体験を始めましょう！
+              </div>
+            </div>
+          ) : (
+            <div className="mypage__character-grid">
+              {purchasedCharacters.map((item) => (
+                <div 
+                  key={item.character?._id || `no-character-${Math.random()}`}
+                  className="mypage__character-card"
+                >
+                  <div className="mypage__character-image-container">
+                    <img 
+                      src={item.character?.imageCharacterSelect || '/images/character-placeholder.png'} 
+                      alt={item.character?.name?.ja || item.character?.name || 'Character'}
+                      className="mypage__character-image"
+                    />
+                    <div className="mypage__character-badge">✅</div>
+                  </div>
+                  <div className="mypage__character-info">
+                    <div className="mypage__character-name">
+                      {item.character?.name?.ja || item.character?.name || 'キャラクター名不明'}
+                    </div>
+                    <div className="mypage__character-date">
+                      <span className="mypage__date-icon">📅</span>
+                      {formatDate(item.purchaseDate)}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+        
+        {/* 設定セクション */}
+        <div className="mypage__settings-grid">
+          {/* 言語設定 */}
+          <section className="mypage__section mypage__section--settings">
+            <div className="mypage__section-header">
+              <h2 className="mypage__section-title">
+                <span className="mypage__section-icon">🌍</span>
+                {t('language_settings')}
+              </h2>
+            </div>
+            <div className="mypage__setting-content">
+              <p className="mypage__setting-description">{t('select_language')}</p>
+              <div className="mypage__language-selector">
+                <select
+                  className="mypage__language-select"
+                  value={user.preferredLanguage}
+                  onChange={e => handleLanguageChange(e.target.value)}
+                >
+                  <option value="ja">🇯🇵 {t('language_japanese')}</option>
+                  <option value="en">🇺🇸 {t('language_english')}</option>
+                </select>
+              </div>
+            </div>
+          </section>
+          
+          {/* アカウント削除 */}
+          <section className="mypage__section mypage__section--danger">
+            <div className="mypage__section-header">
+              <h2 className="mypage__section-title">
+                <span className="mypage__section-icon">⚠️</span>
+                {t('delete_account')}
+              </h2>
+            </div>
+            <div className="mypage__setting-content">
+              <p className="mypage__danger-description">{t('delete_account_description')}</p>
+              <button 
+                className="mypage__danger-button"
+                onClick={() => setShowDeleteModal(true)}
+              >
+                <span className="mypage__danger-icon">🗑️</span>
+                {t('delete_account')}
+              </button>
+            </div>
+          </section>
         </div>
-      </section>
-      
-      {/* 退会 */}
-      <section className="mypage__section">
-        <h2 className="mypage__section-title">{t('delete_account')}</h2>
-        <p>{t('delete_account_description')}</p>
-        <button 
-          className="mypage__delete-button"
-          onClick={() => setShowDeleteModal(true)}
-        >
-          {t('delete_account')}
-        </button>
-      </section>
+      </div>
       
       {/* 退会確認モーダル */}
       {showDeleteModal && (

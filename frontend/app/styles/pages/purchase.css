@@ -1,0 +1,507 @@
+/* 購入ページのスタイル */
+
+.purchase-root {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  position: relative;
+}
+
+/* ヘッダー */
+.purchase-header {
+  padding: 2rem 2rem 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* コンテナ */
+.purchase-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.purchase-content {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+/* キャラクターカード */
+.purchase-character-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 2rem;
+  padding: 2.5rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.purchase-character-header {
+  margin-bottom: 2rem;
+}
+
+.purchase-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+  text-align: center;
+  justify-content: center;
+}
+
+.purchase-title-icon {
+  font-size: 2.5rem;
+}
+
+.purchase-character-content {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+/* キャラクター画像 */
+.purchase-character-image-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.purchase-character-image-container {
+  position: relative;
+  width: 200px;
+  height: 250px;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+.purchase-character-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.purchase-character-badge {
+  position: absolute;
+  top: 1rem;
+  right: -0.5rem;
+  z-index: 10;
+}
+
+.purchase-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.purchase-badge--premium {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  color: white;
+}
+
+/* キャラクター情報 */
+.purchase-character-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.purchase-character-name {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.purchase-character-description {
+  font-size: 1.125rem;
+  color: #4b5563;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* 性格タグ */
+.purchase-character-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.purchase-character-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+  color: #4338ca;
+  border-radius: 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: 1px solid #c7d2fe;
+}
+
+/* 特典リスト */
+.purchase-features {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  border: 1px solid #bae6fd;
+}
+
+.purchase-features-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #0369a1;
+  margin: 0 0 1rem 0;
+}
+
+.purchase-features-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.purchase-features-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #0369a1;
+  font-weight: 500;
+}
+
+/* 支払いカード */
+.purchase-payment-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 2rem;
+  padding: 2rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  height: fit-content;
+  position: sticky;
+  top: 2rem;
+}
+
+.purchase-payment-header {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.purchase-payment-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+}
+
+.purchase-payment-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* 価格詳細 */
+.purchase-price-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.purchase-price-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1rem;
+}
+
+.purchase-price-label {
+  color: #4b5563;
+  font-weight: 500;
+}
+
+.purchase-price-value {
+  color: #1f2937;
+  font-weight: 600;
+}
+
+.purchase-price-divider {
+  height: 1px;
+  background: #e5e7eb;
+  margin: 0.5rem 0;
+}
+
+.purchase-price-total {
+  font-size: 1.25rem;
+  font-weight: 700;
+  padding-top: 0.5rem;
+  border-top: 2px solid #e5e7eb;
+}
+
+.purchase-price-total .purchase-price-value {
+  color: #8b5cf6;
+  font-size: 1.5rem;
+}
+
+/* 注意事項 */
+.purchase-payment-note {
+  display: flex;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border: 1px solid #fbbf24;
+  border-radius: 1rem;
+  align-items: flex-start;
+}
+
+.purchase-note-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.purchase-note-text {
+  font-size: 0.875rem;
+  color: #92400e;
+  line-height: 1.5;
+}
+
+/* エラーメッセージ */
+.purchase-error-message {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  border: 1px solid #f87171;
+  border-radius: 1rem;
+  color: #dc2626;
+  font-weight: 500;
+}
+
+/* アクションボタン */
+.purchase-payment-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.purchase-primary-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  color: white;
+  border: none;
+  border-radius: 1.5rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
+}
+
+.purchase-primary-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 35px rgba(139, 92, 246, 0.4);
+}
+
+.purchase-primary-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.purchase-cancel-button {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  background: rgba(107, 114, 128, 0.1);
+  color: #374151;
+  border: 2px solid #d1d5db;
+  border-radius: 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.purchase-cancel-button:hover:not(:disabled) {
+  background: rgba(107, 114, 128, 0.2);
+  border-color: #9ca3af;
+}
+
+.purchase-button-icon {
+  font-size: 1.25rem;
+}
+
+/* スピナー */
+.purchase-button-spinner,
+.purchase-loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ローディング状態 */
+.purchase-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 1rem;
+  color: white;
+  font-size: 1.25rem;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.purchase-loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top: 3px solid white;
+}
+
+/* エラー状態 */
+.purchase-error,
+.purchase-already-owned {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 1.5rem;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 2rem;
+  padding: 3rem 2rem;
+  margin: 2rem auto;
+  max-width: 500px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.purchase-error-icon,
+.purchase-success-icon {
+  font-size: 4rem;
+}
+
+.purchase-error-title,
+.purchase-success-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+}
+
+.purchase-error-message,
+.purchase-success-message {
+  font-size: 1rem;
+  color: #4b5563;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.purchase-back-button {
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+  color: white;
+  border: none;
+  border-radius: 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.purchase-back-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(107, 114, 128, 0.3);
+}
+
+/* レスポンシブ */
+@media (max-width: 768px) {
+  .purchase-container {
+    padding: 1rem;
+  }
+  
+  .purchase-content {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .purchase-character-content {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  
+  .purchase-character-image-container {
+    width: 160px;
+    height: 200px;
+    margin: 0 auto;
+  }
+  
+  .purchase-title {
+    font-size: 1.5rem;
+  }
+  
+  .purchase-character-name {
+    font-size: 1.5rem;
+  }
+  
+  .purchase-payment-card {
+    position: static;
+  }
+  
+  .purchase-payment-actions {
+    flex-direction: column-reverse;
+  }
+}
+
+@media (max-width: 480px) {
+  .purchase-header {
+    padding: 1.5rem 1rem 1rem;
+  }
+  
+  .purchase-character-card,
+  .purchase-payment-card {
+    padding: 1.5rem;
+  }
+  
+  .purchase-title {
+    font-size: 1.25rem;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .purchase-character-image-container {
+    width: 140px;
+    height: 175px;
+  }
+}
