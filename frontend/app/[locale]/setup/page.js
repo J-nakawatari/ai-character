@@ -390,66 +390,120 @@ export default function Setup({ params }) {
 
   return (
     <div className="setup--root">
-      <canvas ref={canvasRef} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: -1 }}></canvas>
-      <form className="setup--form" onSubmit={handleSubmit(onSubmit)}>
-        {/* エラー表示 */}
-        {serverError && (
+      <canvas ref={canvasRef} className="setup--background-canvas"></canvas>
+      
+      {/* ヘッダー */}
+      <div className="setup--header">
+        <div className="setup--header-content">
+          <h1 className="setup--title">
+            <span className="setup--title-icon">🎭</span>
+            {t('title')}
+          </h1>
+          <p className="setup--subtitle">
+            お気に入りのAIキャラクターを選んで、特別な体験を始めましょう
+          </p>
+        </div>
+      </div>
+
+      {/* エラー表示 */}
+      {serverError && (
+        <div className="setup--error-container">
           <ErrorMessage
             message={serverError}
             type="toast"
             className="setup-error-message"
           />
-        )}
-        <h1 class="mypage__title">{t('title')}</h1>
-        <div className="setup--main">
-          <div className="setup--card-list">
-            {characters.map((character, idx) => {
-              const characterName = character.name && typeof character.name === 'object' 
-                ? (character.name[locale] || character.name.ja || character.name) 
-                : character.name;
-              
-              const characterDesc = character.description && typeof character.description === 'object'
-                ? (character.description[locale] || character.description.ja || character.description)
-                : character.description;
-              
-              const buttonProps = getButtonProps(character);
-              const characterAffinity = affinityData[character._id];
+        </div>
+      )}
 
-              return (
-                <div
-                  key={character._id}
-                  className="setup--character-card"
-                >
-                  <div className="setup--character-img-wrapper">
-                    <img
-                      className="setup--character-img"
-                      src={character.imageCharacterSelect || '/images/default.png'}
-                      alt={characterName}
-                    />
-                    <img
-                      className="voiceicon"
-                      src="/images/voice.svg"
-                      alt="ボイス"
-                      style={{ cursor: 'pointer' }}
-                      onClick={() => {
-                        if (audioRef.current) {
-                          audioRef.current.pause();
-                          audioRef.current.currentTime = 0;
-                        }
-                        const audioSrc = character.sampleVoiceUrl || `/voice/voice_0${idx + 1}.wav`;
-                        const audio = new Audio(audioSrc);
-                        audioRef.current = audio;
-                        audio.play();
-                      }}
-                    />
-                  </div>
-                  <div className="setup--character-name">{characterName}</div>
-                  {characterAffinity && (
-                    <AffinityInfo 
-                      level={characterAffinity.level} 
-                      description={characterAffinity.description}
-                    />
+      {/* メインコンテンツ */}
+      <div className="setup--main">
+        <div className="setup--character-grid">
+          {characters.map((character, idx) => {
+            const characterName = character.name && typeof character.name === 'object' 
+              ? (character.name[locale] || character.name.ja || character.name) 
+              : character.name;
+            
+            const characterDesc = character.description && typeof character.description === 'object'
+              ? (character.description[locale] || character.description.ja || character.description)
+              : character.description;
+            
+            const buttonProps = getButtonProps(character);
+            const characterAffinity = affinityData[character._id];
+
+            return (
+              <div
+                key={character._id}
+                className="setup--character-card"
+              >
+                {/* アクセスタイプバッジ */}
+                <div className="setup--access-badge">
+                  {character.characterAccessType === 'free' && (
+                    <span className="setup--badge setup--badge--free">🆓 無料</span>
                   )}
+                  {character.characterAccessType === 'subscription' && (
+                    <span className="setup--badge setup--badge--premium">👑 プレミアム</span>
+                  )}
+                  {character.characterAccessType === 'purchaseOnly' && (
+                    <span className="setup--badge setup--badge--purchase">💎 購入</span>
+                  )}
+                </div>
+
+                {/* キャラクター画像 */}
+                <div className="setup--character-image-container">
+                  <img
+                    className="setup--character-image"
+                    src={character.imageCharacterSelect || '/images/default.png'}
+                    alt={characterName}
+                  />
+                  
+                  {/* 音声再生ボタン */}
+                  <button
+                    type="button"
+                    className="setup--voice-button"
+                    onClick={() => {
+                      if (audioRef.current) {
+                        audioRef.current.pause();
+                        audioRef.current.currentTime = 0;
+                      }
+                      const audioSrc = character.sampleVoiceUrl || `/voice/voice_0${idx + 1}.wav`;
+                      const audio = new Audio(audioSrc);
+                      audioRef.current = audio;
+                      audio.play();
+                    }}
+                  >
+                    🎵
+                  </button>
+
+                  {/* ロック状態のオーバーレイ */}
+                  {(character.characterAccessType === 'purchaseOnly' && !isCharacterPurchased(character)) && (
+                    <div className="setup--locked-overlay">
+                      <div className="setup--lock-icon">🔒</div>
+                    </div>
+                  )}
+                  {(character.characterAccessType === 'subscription' && 
+                    (user.membershipType !== 'subscription' || user.subscriptionStatus !== 'active')) && (
+                    <div className="setup--locked-overlay">
+                      <div className="setup--lock-icon">👑</div>
+                    </div>
+                  )}
+                </div>
+
+                {/* キャラクター情報 */}
+                <div className="setup--character-info">
+                  <h3 className="setup--character-name">{characterName}</h3>
+                  
+                  {/* 親密度情報 */}
+                  {characterAffinity && (
+                    <div className="setup--affinity-container">
+                      <AffinityInfo 
+                        level={characterAffinity.level} 
+                        description={characterAffinity.description}
+                      />
+                    </div>
+                  )}
+
+                  {/* 性格タグ */}
                   <div className="setup--character-tags">
                     {(character.personality || character.personalityPrompt) ?
                       ((() => {
@@ -461,18 +515,29 @@ export default function Setup({ params }) {
                             personalityText = character.personalityPrompt;
                           }
                         }
-                        return personalityText.split(/,| /).map((tag, idx) =>
+                        return personalityText.split(/,| /).slice(0, 3).map((tag, tagIdx) =>
                           tag.trim() && (
-                            <span className="setup--character-tag" key={idx}>{tag.trim()}</span>
+                            <span className="setup--character-tag" key={tagIdx}>{tag.trim()}</span>
                           )
                         );
                       })()) : []}
                   </div>
-                  <div className="setup--character-desc">{characterDesc}</div>
+
+                  {/* 説明 */}
+                  <p className="setup--character-desc">{characterDesc}</p>
+
+                  {/* 価格表示 */}
+                  {character.characterAccessType === 'purchaseOnly' && character.price && (
+                    <div className="setup--character-price">
+                      <span className="setup--price-icon">💰</span>
+                      ¥{character.price.toLocaleString()}
+                    </div>
+                  )}
+
+                  {/* 選択ボタン */}
                   <button
                     type="button"
-                    className="setup--select-btn"
-                    data-type={buttonProps.type}
+                    className={`setup--select-button setup--select-button--${buttonProps.type}`}
                     onClick={() => {
                       if (buttonProps.type === 'purchase') {
                         openPurchaseModal(character);
@@ -483,14 +548,19 @@ export default function Setup({ params }) {
                       }
                     }}
                   >
+                    <span className="setup--button-icon">
+                      {buttonProps.type === 'select' && '✨'}
+                      {buttonProps.type === 'purchase' && '🛒'}
+                      {buttonProps.type === 'upgrade' && '👑'}
+                    </span>
                     {buttonProps.text}
                   </button>
                 </div>
-              );
-            })}
-          </div>
+              </div>
+            );
+          })}
         </div>
-      </form>
+      </div>
       {/* 購入モーダル */}
       {showPurchaseModal && modalCharacter && (
         <div className="setup--modal-overlay" onClick={closePurchaseModal}>
