@@ -1,8 +1,13 @@
 {
-  "enableAllProjectMcpServers": false,
   "permissions": {
     "allow": [
+      "Bash(npm run build:*)",
+      "Bash(git checkout:*)",
+      "Bash(git pull:*)",
+      "Bash(git stash:*)",
+      "Bash(git add:*)",
       "Bash(git add:*)"
     ]
-  }
+  },
+  "enableAllProjectMcpServers": false
 }
