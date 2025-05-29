@@ -148,18 +148,18 @@ export default function Dashboard({ params }) {
 
   return (
     <div className={styles.dashboardRoot}>
+      <ImageSlider
+        images={[
+          { src: '/images/room_01.jpg', alt: 'ルーム画像1' },
+          { src: '/images/room_02.jpg', alt: 'ルーム画像2' },
+          { src: '/images/room_03.jpg', alt: 'ルーム画像3' },
+          { src: '/images/room_04.jpg', alt: 'ルーム画像4' }
+        ]}
+        interval={4000}
+      />
       <Card className={styles.dashboardCard}>
         <div className={styles.dashboardGrid}>
           <div className={styles.dashboardImageWrapper}>
-            <ImageSlider
-              images={[
-                { src: '/images/room_01.jpg', alt: 'ルーム画像1' },
-                { src: '/images/room_02.jpg', alt: 'ルーム画像2' },
-                { src: '/images/room_03.jpg', alt: 'ルーム画像3' },
-                { src: '/images/room_04.jpg', alt: 'ルーム画像4' }
-              ]}
-              interval={4000}
-            />
             {user.selectedCharacter?.imageDashboard ? (
               <img
                 src={user.selectedCharacter.imageDashboard}
