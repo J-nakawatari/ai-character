@@ -210,7 +210,7 @@ export default function Home({ params }) {
   
   useEffect(() => {
     setDisplayedText('');
-    if (!bubbleVisible) return;
+    if (!bubbleVisible || !chatMessages.length || !chatMessages[chatIndex]) return;
     let i = 0;
     function type() {
       setDisplayedText(chatMessages[chatIndex].slice(0, i + 1));
@@ -223,9 +223,10 @@ export default function Home({ params }) {
     }
     type();
     return () => clearTimeout(typingTimeout.current);
-  }, [chatIndex, bubbleVisible]);
+  }, [chatIndex, bubbleVisible, chatMessages]);
 
   useEffect(() => {
+    if (!chatMessages.length || !chatMessages[chatIndex]) return;
     setBubbleVisible(true);
     fadeTimeout.current = setTimeout(() => {
       setBubbleVisible(false);
@@ -235,7 +236,7 @@ export default function Home({ params }) {
       }, 600); // fade out duration
     }, 2500 + chatMessages[chatIndex].length * 50); // show time + typing time
     return () => clearTimeout(fadeTimeout.current);
-  }, [chatIndex]);
+  }, [chatIndex, chatMessages]);
   
   useLayoutEffect(() => {
     function updateBubblePos() {
