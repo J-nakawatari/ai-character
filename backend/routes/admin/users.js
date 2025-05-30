@@ -9,6 +9,14 @@ router.get('/', adminAuth, async (req, res) => {
     const users = await User.find()
       .select('-password')
       .populate('selectedCharacter')
+      .populate({
+        path: 'purchasedCharacters.character',
+        model: 'Character'
+      })
+      .populate({
+        path: 'affinities.character',
+        model: 'Character'
+      })
       .sort({ createdAt: -1 });
     
     res.json(users);
@@ -22,7 +30,16 @@ router.get('/:id', adminAuth, async (req, res) => {
   try {
     const user = await User.findById(req.params.id)
       .select('-password')
-      .populate('selectedCharacter');
+      .populate('selectedCharacter')
+      .populate({
+        path: 'purchasedCharacters.character',
+        model: 'Character'
+      })
+      .populate({
+        path: 'affinities.character',
+        model: 'Character'
+      })
+      .populate('addOnSubscriptions');
     
     if (!user) {
       return res.status(404).json({ msg: 'ユーザーが見つかりません' });
