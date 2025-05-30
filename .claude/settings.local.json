@@ -29,7 +29,9 @@
       "Bash(mongo:*)",
       "Bash(ss:*)",
       "Bash(ls:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(npm run lint)",
+      "Bash(npm start)"
     ]
   },
   "enableAllProjectMcpServers": false
