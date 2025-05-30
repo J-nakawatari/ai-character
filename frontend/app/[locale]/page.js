@@ -260,11 +260,14 @@ export default function Home({ params }) {
   }, [displayedText]);
   
   useEffect(() => {
+    if (!chatMessages.length) return;
+    
     let isLeft = true;
     let currentIndex = 0;
     let leftTimeout, rightTimeout;
 
     function showLeft() {
+      if (!chatMessages[currentIndex]) return;
       setLeftText('');
       setLeftVisible(true);
       setRightVisible(false);
@@ -289,6 +292,7 @@ export default function Home({ params }) {
     }
 
     function showRight() {
+      if (!chatMessages[currentIndex]) return;
       setRightText('');
       setLeftVisible(false);
       setRightVisible(true);
@@ -317,7 +321,7 @@ export default function Home({ params }) {
       clearTimeout(leftTimeout);
       clearTimeout(rightTimeout);
     };
-  }, []);
+  }, [chatMessages]);
   
   if (loading) {
     return <GlobalLoading text={t('loading', '読み込み中...')} />;
