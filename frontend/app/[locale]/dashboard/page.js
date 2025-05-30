@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, use, useState } from 'react';
+import { useEffect, use, useState, useCallback } from 'react';
 import { useRouter, usePathname, useParams } from 'next/navigation';
 import Image from 'next/image';
 import useRequireAuth from '../../utils/useRequireAuth';
@@ -31,6 +31,29 @@ export default function Dashboard({ params }) {
   const [modalInitialIndex, setModalInitialIndex] = useState(0);
   const [affinityData, setAffinityData] = useState(null);
   const [personalityTags, setPersonalityTags] = useState([]);
+  
+  // 性格タグ生成関数
+  const generatePersonalityTags = useCallback((availableTags) => {
+    if (!user?.selectedCharacter?.personalityPrompt || !availableTags.length) {
+      setPersonalityTags([]);
+      return;
+    }
+    
+    let text = user.selectedCharacter.personalityPrompt;
+    if (typeof text === 'object') {
+      text = text[locale] || text.ja || text.en || '';
+    }
+    text = (text || '').toLowerCase();
+    
+    const matchedTags = [];
+    availableTags.forEach(tag => {
+      if (text.includes(tag.name.toLowerCase())) {
+        matchedTags.push(tag);
+      }
+    });
+    
+    setPersonalityTags(matchedTags.slice(0, 5));
+  }, [user?.selectedCharacter?.personalityPrompt, locale]);
   
   // 親密度情報と性格タグを取得
   useEffect(() => {
@@ -93,7 +116,7 @@ export default function Dashboard({ params }) {
     
     fetchAffinity();
     fetchPersonalityTags();
-  }, [user?.selectedCharacter?._id, locale]);
+  }, [user?.selectedCharacter?._id, locale, generatePersonalityTags]);
   
   const handleStartChat = async () => {
     try {
@@ -157,28 +180,6 @@ export default function Dashboard({ params }) {
     );
   }
   
-  const generatePersonalityTags = (availableTags) => {
-    if (!user.selectedCharacter?.personalityPrompt || !availableTags.length) {
-      setPersonalityTags([]);
-      return;
-    }
-    
-    let text = user.selectedCharacter.personalityPrompt;
-    if (typeof text === 'object') {
-      text = text[locale] || text.ja || text.en || '';
-    }
-    text = (text || '').toLowerCase();
-    
-    const matchedTags = [];
-    availableTags.forEach(tag => {
-      if (text.includes(tag.name.toLowerCase())) {
-        matchedTags.push(tag);
-      }
-    });
-    
-    setPersonalityTags(matchedTags.slice(0, 5));
-  };
-
   // キャラクターの購入状態をチェックする関数
   const isCharacterPurchased = (character) => {
     if (!character || !user.purchasedCharacters) return false;
