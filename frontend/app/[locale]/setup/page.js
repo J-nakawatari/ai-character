@@ -525,7 +525,7 @@ export default function Setup({ params }) {
                   <p className="setup--character-desc">{characterDesc}</p>
 
                   {/* 価格表示 */}
-                  {character.characterAccessType === 'purchaseOnly' && character.price && (
+                  {character.characterAccessType === 'purchaseOnly' && character.price && !isCharacterPurchased(character) && (
                     <div className="setup--character-price">
                       <span className="setup--price-icon">💰</span>
                       ¥{character.price.toLocaleString()}
