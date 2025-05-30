@@ -93,6 +93,28 @@ export default function AffinityBar({ level = 0, streak = 0, description }) {
           <span className={styles.streakText}>{streak}日連続訪問中！</span>
         </div>
       )}
+      
+      {/* 親密度のメリット説明 */}
+      <div className={styles.benefitsSection}>
+        <div className={styles.benefitsHeader}>
+          <span className={styles.benefitsIcon}>✨</span>
+          <span className={styles.benefitsTitle}>親密度の特典</span>
+        </div>
+        <div className={styles.benefitsList}>
+          <div className={styles.benefitItem}>
+            <span className={styles.benefitIcon}>💬</span>
+            <span className={styles.benefitText}>親密度が上がると話し方が徐々に変化</span>
+          </div>
+          <div className={styles.benefitItem}>
+            <span className={styles.benefitIcon}>🖼️</span>
+            <span className={styles.benefitText}>レベルアップで隠された画像を解放</span>
+          </div>
+          <div className={styles.benefitItem}>
+            <span className={styles.benefitIcon}>💎</span>
+            <span className={styles.benefitText}>親密度MAX時は特別なプレミアム画像が開放</span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

@@ -157,6 +157,56 @@
   font-weight: 500;
 }
 
+/* 親密度メリット説明 */
+.benefitsSection {
+  margin-top: 16px;
+  padding: 12px;
+  background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+  border-radius: 8px;
+  border: 1px solid #fdcb6e;
+}
+
+.benefitsHeader {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.benefitsIcon {
+  font-size: 16px;
+}
+
+.benefitsTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: #d63031;
+}
+
+.benefitsList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.benefitItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+.benefitIcon {
+  font-size: 14px;
+  min-width: 20px;
+}
+
+.benefitText {
+  font-size: 12px;
+  color: #2d3436;
+  line-height: 1.4;
+}
+
 /* レスポンシブ対応 */
 @media (max-width: 768px) {
   .affinityContainer {
@@ -170,5 +220,14 @@
   .levelDescription {
     font-size: 14px;
     padding: 3px 10px;
+  }
+  
+  .benefitsSection {
+    margin-top: 12px;
+    padding: 10px;
+  }
+  
+  .benefitText {
+    font-size: 11px;
   }
 }
