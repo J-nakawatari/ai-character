@@ -213,9 +213,6 @@ router.get('/me/affinity/:characterId', auth, async (req, res) => {
       return res.status(404).json({ msg: 'ユーザーが見つかりません' });
     }
     
-    // キャラクターの訪問で親密度を更新
-    await updateAffinity(user, characterId, 'visit');
-    await user.save();
     
     const affinity = user.affinities.find(
       a => a.character.toString() === characterId.toString()
