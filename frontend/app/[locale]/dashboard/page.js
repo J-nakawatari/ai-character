@@ -30,8 +30,9 @@ export default function Dashboard({ params }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalInitialIndex, setModalInitialIndex] = useState(0);
   const [affinityData, setAffinityData] = useState(null);
+  const [personalityTags, setPersonalityTags] = useState([]);
   
-  // 親密度情報を取得
+  // 親密度情報と性格タグを取得
   useEffect(() => {
     const fetchAffinity = async () => {
       if (user?.selectedCharacter?._id) {
@@ -51,8 +52,48 @@ export default function Dashboard({ params }) {
       }
     };
     
+    const fetchPersonalityTags = async () => {
+      try {
+        const response = await fetch(`/api/personality-tags?locale=${locale}`);
+        if (response.ok) {
+          const tags = await response.json();
+          generatePersonalityTags(tags);
+        }
+      } catch (err) {
+        console.error('Failed to fetch personality tags:', err);
+        // フォールバック: ハードコーディングされたタグを使用
+        const fallbackTags = [
+          { name: '明るい', color: '#FFB347' },
+          { name: '優しい', color: '#98D8C8' },
+          { name: '厳しい', color: '#F06292' },
+          { name: '真面目', color: '#6495ED' },
+          { name: '陽気', color: '#FFD700' },
+          { name: '冷静', color: '#87CEEB' },
+          { name: '情熱的', color: '#FF6347' },
+          { name: '穏やか', color: '#90EE90' },
+          { name: '活発', color: '#FF7F50' },
+          { name: '慎重', color: '#DDA0DD' },
+          { name: '大胆', color: '#DC143C' },
+          { name: '繊細', color: '#FFB6C1' },
+          { name: '強気', color: '#FF4500' },
+          { name: '優雅', color: '#DEB887' },
+          { name: '知的', color: '#4169E1' },
+          { name: '謙虚', color: '#8FBC8F' },
+          { name: '誠実', color: '#5F9EA0' },
+          { name: '勇敢', color: '#B22222' },
+          { name: '忠実', color: '#2E8B57' },
+          { name: '思いやり', color: '#DA70D6' },
+          { name: '几帳面', color: '#708090' },
+          { name: '自由', color: '#00CED1' },
+          { name: '創造的', color: '#9370DB' }
+        ];
+        generatePersonalityTags(fallbackTags);
+      }
+    };
+    
     fetchAffinity();
-  }, [user?.selectedCharacter?._id]);
+    fetchPersonalityTags();
+  }, [user?.selectedCharacter?._id, locale]);
   
   const handleStartChat = async () => {
     try {
@@ -116,14 +157,11 @@ export default function Dashboard({ params }) {
     );
   }
   
-  const generatePersonalityTags = () => {
-    if (!user.selectedCharacter?.personalityPrompt) return [];
-    
-    const personalityWords = [
-      '明るい', '優しい', '厳しい', '真面目', '陽気', '冷静', '情熱的', 
-      '穏やか', '活発', '慎重', '大胆', '繊細', '強気', '優雅', '知的',
-      '謙虚', '誠実', '勇敢', '忠実', '思いやり', '几帳面', '自由', '創造的'
-    ];
+  const generatePersonalityTags = (availableTags) => {
+    if (!user.selectedCharacter?.personalityPrompt || !availableTags.length) {
+      setPersonalityTags([]);
+      return;
+    }
     
     let text = user.selectedCharacter.personalityPrompt;
     if (typeof text === 'object') {
@@ -131,17 +169,15 @@ export default function Dashboard({ params }) {
     }
     text = (text || '').toLowerCase();
     
-    const tags = [];
-    personalityWords.forEach(word => {
-      if (text.includes(word.toLowerCase())) {
-        tags.push(word);
+    const matchedTags = [];
+    availableTags.forEach(tag => {
+      if (text.includes(tag.name.toLowerCase())) {
+        matchedTags.push(tag);
       }
     });
     
-    return tags.slice(0, 5);
+    setPersonalityTags(matchedTags.slice(0, 5));
   };
-  
-  const personalityTags = generatePersonalityTags();
 
   // キャラクターの購入状態をチェックする関数
   const isCharacterPurchased = (character) => {
@@ -316,8 +352,12 @@ export default function Dashboard({ params }) {
                   <div className={styles.personalitySection}>
                     <div className={styles.personalityTags}>
                       {personalityTags.map((tag, index) => (
-                        <span key={index} className={styles.personalityTag}>
-                          {tag}
+                        <span 
+                          key={index} 
+                          className={styles.personalityTag}
+                          style={{ backgroundColor: tag.color }}
+                        >
+                          {tag.name}
                         </span>
                       ))}
                     </div>
