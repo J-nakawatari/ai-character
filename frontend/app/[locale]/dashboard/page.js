@@ -327,12 +327,6 @@ export default function Dashboard({ params }) {
                       alt={user.selectedCharacter.name}
                       className={styles.characterImage}
                     />
-                    <div className={styles.imageOverlay}>
-                      <div className={styles.characterStatus}>
-                        <span className={styles.statusIcon}>🟢</span>
-                        <span className={styles.statusText}>オンライン</span>
-                      </div>
-                    </div>
                   </div>
                 ) : (
                   <div className={styles.imagePlaceholder}>
