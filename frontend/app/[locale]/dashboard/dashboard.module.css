@@ -22,17 +22,11 @@
 /* ダッシュボードコンテナ */
 .dashboardContainer {
   margin: 0 auto;
-  display: flex;
-  gap: 32px;
-  align-items: flex-start;
-  width: 100%;
-  max-width: 1400px;
 }
 
 /* 親密度コンテナ */
 .affinityContainer {
-  flex: 0 0 380px; /* 固定幅380px */
-  min-width: 380px;
+  margin-bottom: 32px;
   opacity: 0.95;
 }
 
@@ -41,8 +35,6 @@
   display: flex;
   flex-direction: column;
   gap: 32px;
-  flex: 1; /* 残りの幅を使用 */
-  min-width: 0; /* flexアイテムの縮小を許可 */
 }
 
 /* キャラクターカード */
@@ -349,31 +341,9 @@
 }
 
 /* レスポンシブ */
-@media (min-width: 769px) {
-  .dashboardContainer {
-    display: flex !important;
-    flex-direction: row !important;
-  }
-  
-  .affinityContainer {
-    flex: 0 0 380px !important;
-  }
-  
-  .dashboardContent {
-    flex: 1 !important;
-  }
-}
-
 @media (max-width: 768px) {
   .dashboardContainer {
     padding: 0 1rem 1rem;
-    flex-direction: column; /* モバイルでは縦並びに戻す */
-  }
-  
-  .affinityContainer {
-    flex: none; /* モバイルでは固定幅を解除 */
-    width: 100%;
-    min-width: unset;
   }
   
   .characterHeader {
