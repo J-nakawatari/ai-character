@@ -22,19 +22,29 @@
 /* ダッシュボードコンテナ */
 .dashboardContainer {
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* 上部セクション（親密度 + キャラクターカード） */
+.topSection {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
 }
 
 /* 親密度コンテナ */
 .affinityContainer {
-  margin-bottom: 32px;
+  flex: 0 0 380px;
+  min-width: 380px;
   opacity: 0.95;
 }
 
-/* ダッシュボードコンテンツ */
-.dashboardContent {
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
+/* キャラクターコンテナ */
+.characterContainer {
+  flex: 1;
+  min-width: 0;
 }
 
 /* キャラクターカード */
@@ -344,6 +354,20 @@
 @media (max-width: 768px) {
   .dashboardContainer {
     padding: 0 1rem 1rem;
+  }
+  
+  .topSection {
+    flex-direction: column;
+  }
+  
+  .affinityContainer {
+    flex: none;
+    min-width: unset;
+    width: 100%;
+  }
+  
+  .characterContainer {
+    width: 100%;
   }
   
   .characterHeader {

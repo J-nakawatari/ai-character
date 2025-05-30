@@ -264,19 +264,21 @@ export default function Dashboard({ params }) {
 
       {/* ダッシュボードコンテンツ */}
       <div className={styles.dashboardContainer}>
-        {/* 親密度バー */}
-        {affinityData && (
-          <div className={styles.affinityContainer}>
-            <AffinityBar
-              level={affinityData.level}
-              streak={affinityData.streak}
-              description={affinityData.description}
-            />
-          </div>
-        )}
+        {/* 上部セクション: 親密度 + キャラクターカード */}
+        <div className={styles.topSection}>
+          {/* 親密度バー */}
+          {affinityData && (
+            <div className={styles.affinityContainer}>
+              <AffinityBar
+                level={affinityData.level}
+                streak={affinityData.streak}
+                description={affinityData.description}
+              />
+            </div>
+          )}
 
-        {/* メインコンテンツ */}
-        <div className={styles.dashboardContent}>
+          {/* キャラクター情報カード */}
+          <div className={styles.characterContainer}>
           {/* キャラクター情報カード */}
           <Card className={styles.characterCard}>
             <div className={styles.characterHeader}>
@@ -361,8 +363,10 @@ export default function Dashboard({ params }) {
               </div>
             </div>
           </Card>
+          </div>
+        </div>
 
-          {/* 詳細情報グリッド */}
+        {/* 詳細情報グリッド */}
           <div className={styles.detailsGrid}>
             {/* 性格詳細 */}
             <Card className={styles.detailCard}>
@@ -420,7 +424,6 @@ export default function Dashboard({ params }) {
               </Card>
             )}
           </div>
-        </div>
       </div>
     </div>
   );
