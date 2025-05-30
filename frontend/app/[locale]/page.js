@@ -9,24 +9,7 @@ import { useTranslations } from 'next-intl';
 import styles from './page.module.css';
 import GlobalLoading from '../components/GlobalLoading';
 
-const chatMessages = [
-  '今日は何のお話をする？✨',
-  '久しぶり！また会えたね💕',
-  'どんな一日だった？🌟',
-  '一緒に遊びたいな🎮',
-  'お話ししようよ💭',
-  'また会えて嬉しい💖',
-  '今日も楽しく過ごそう🌈',
-  'あなたのことが大好き💝',
-];
-
 const orbitron = Orbitron({ weight: '700', subsets: ['latin'] });
-
-const videoFiles = [
-  '/videos/hero-videos_01.mp4',
-  '/videos/hero-videos_02.mp4',
-  '/videos/hero-videos_03.mp4',
-];
 
 export default function Home({ params }) {
   const auth = useAuth();
@@ -48,6 +31,9 @@ export default function Home({ params }) {
   const [arrowHover, setArrowHover] = useState(false);
   const [chatIndex, setChatIndex] = useState(0);
   const [displayedText, setDisplayedText] = useState('');
+  const [siteSettings, setSiteSettings] = useState({});
+  const [chatMessages, setChatMessages] = useState([]);
+  const [videoFiles, setVideoFiles] = useState([]);
   const [bubbleVisible, setBubbleVisible] = useState(true);
   const typingTimeout = useRef(null);
   const fadeTimeout = useRef(null);
@@ -67,6 +53,67 @@ export default function Home({ params }) {
   const t = useTranslations('app');
   const timeoutRef = useRef(null);
   
+  // サイト設定を取得
+  useEffect(() => {
+    const fetchSiteSettings = async () => {
+      try {
+        const response = await fetch('/api/settings');
+        if (response.ok) {
+          const settings = await response.json();
+          setSiteSettings(settings);
+          
+          // チャットメッセージを設定
+          if (settings.default_chat_messages) {
+            setChatMessages(settings.default_chat_messages);
+          } else {
+            // フォールバック
+            setChatMessages([
+              '今日は何のお話をする？✨',
+              '久しぶり！また会えたね💕',
+              'どんな一日だった？🌟',
+              '一緒に遊びたいな🎮',
+              'お話ししようよ💭',
+              'また会えて嬉しい💖',
+              '今日も楽しく過ごそう🌈',
+              'あなたのことが大好き💝',
+            ]);
+          }
+          
+          // ヒーロー動画を設定
+          if (settings.default_hero_videos) {
+            setVideoFiles(settings.default_hero_videos);
+          } else {
+            // フォールバック
+            setVideoFiles([
+              '/videos/hero-videos_01.mp4',
+              '/videos/hero-videos_02.mp4',
+              '/videos/hero-videos_03.mp4',
+            ]);
+          }
+        }
+      } catch (err) {
+        console.error('Failed to fetch site settings:', err);
+        // フォールバック値を設定
+        setChatMessages([
+          '今日は何のお話をする？✨',
+          '久しぶり！また会えたね💕',
+          'どんな一日だった？🌟',
+          '一緒に遊びたいな🎮',
+          'お話ししようよ💭',
+          'また会えて嬉しい💖',
+          '今日も楽しく過ごそう🌈',
+          'あなたのことが大好き💝',
+        ]);
+        setVideoFiles([
+          '/videos/hero-videos_01.mp4',
+          '/videos/hero-videos_02.mp4',
+          '/videos/hero-videos_03.mp4',
+        ]);
+      }
+    };
+    fetchSiteSettings();
+  }, []);
+
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth <= 768);
@@ -314,7 +361,9 @@ export default function Home({ params }) {
         <div className={styles['home-wrapper']}>
           <div className={styles['home-title-area']}>
             <div className={styles['home-title-block']}>
-              <div className={styles['home-logo']}>キャラクティア</div>
+              <div className={styles['home-logo']}>
+                {siteSettings.site_name || 'キャラクティア'}
+              </div>
               <h1 className={`${orbitron.className} ${styles.title}`} ref={titleRef}>
                 {t('title')}
               </h1>
@@ -335,7 +384,7 @@ export default function Home({ params }) {
               </div>
             </div>
             <p className={styles.subtitle}>
-              会いにきて...あなただけの愛(AI）。
+              {siteSettings.site_tagline || '会いにきて...あなただけの愛(AI）。'}
             </p>
           </div>
           <p className={styles['description']}>

@@ -44,6 +44,8 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/characters', require('./routes/characters'));
 app.use('/api/users', require('./routes/users'));
 app.use('/api/chat', require('./routes/chat'));
+app.use('/api/settings', require('./routes/settings'));
+app.use('/api/personality-tags', require('./routes/personalityTags'));
 
 app.use('/api/admin/auth', require('./routes/admin/auth'));
 app.use('/api/admin/users', require('./routes/admin/users'));

@@ -35,6 +35,7 @@ export default function Setup({ params }) {
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   const [modalCharacter, setModalCharacter] = useState(null);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [siteSettings, setSiteSettings] = useState({});
 
   const {
     register,
@@ -101,6 +102,22 @@ export default function Setup({ params }) {
       setValue('name', user.name);
     }
   }, [user, setValue]);
+
+  // サイト設定を取得
+  useEffect(() => {
+    const fetchSiteSettings = async () => {
+      try {
+        const response = await fetch('/api/settings');
+        if (response.ok) {
+          const settings = await response.json();
+          setSiteSettings(settings);
+        }
+      } catch (err) {
+        console.error('Failed to fetch site settings:', err);
+      }
+    };
+    fetchSiteSettings();
+  }, []);
 
   useEffect(() => {
     if (!canvasRef.current) {
@@ -594,7 +611,9 @@ export default function Setup({ params }) {
               <div style={{ marginBottom: '12px' }}>{t('premium_modal_description')}</div>
               <div className="setup--modal-price setup--modal-price-center">
                 <span className="setup--modal-price-label">{t('premium_price_period', '月額')}</span>
-                <span className="setup--modal-price-value">980円</span>
+                <span className="setup--modal-price-value">
+                  {siteSettings.subscription_price ? `${siteSettings.subscription_price}円` : '980円'}
+                </span>
                 <span className="setup--modal-price-tax">（税込）</span>
               </div>
             </div>
