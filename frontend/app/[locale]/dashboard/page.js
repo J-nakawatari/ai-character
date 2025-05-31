@@ -33,28 +33,53 @@ export default function Dashboard({ params }) {
   const [personalityTags, setPersonalityTags] = useState([]);
   const [chatLimitInfo, setChatLimitInfo] = useState(null);
   
-  // 性格タグ生成関数
-  const generatePersonalityTags = useCallback((availableTags) => {
-    if (!user?.selectedCharacter?.personalityPrompt || !availableTags.length) {
+  // 性格タグ表示関数（新しいpersonalityTagsフィールド対応）
+  const generatePersonalityTags = useCallback(() => {
+    const character = user?.selectedCharacter;
+    if (!character) {
       setPersonalityTags([]);
       return;
     }
+
+    const tags = [];
     
-    let text = user.selectedCharacter.personalityPrompt;
-    if (typeof text === 'object') {
-      text = text[locale] || text.ja || text.en || '';
+    // 性格プリセットを追加
+    if (character.personalityPreset) {
+      tags.push({
+        name: character.personalityPreset,
+        color: '#8b5cf6', // 紫色
+        isPreset: true
+      });
     }
-    text = (text || '').toLowerCase();
     
-    const matchedTags = [];
-    availableTags.forEach(tag => {
-      if (text.includes(tag.name.toLowerCase())) {
-        matchedTags.push(tag);
+    // 性格タグを追加
+    if (character.personalityTags && Array.isArray(character.personalityTags)) {
+      character.personalityTags.forEach(tag => {
+        tags.push({
+          name: tag,
+          color: '#10b981', // 緑色
+          isPreset: false
+        });
+      });
+    }
+    
+    // 旧形式のpersonalityPromptからの生成（フォールバック）
+    if (tags.length === 0 && character.personalityPrompt) {
+      let text = character.personalityPrompt;
+      if (typeof text === 'object') {
+        text = text[locale] || text.ja || text.en || '';
       }
-    });
+      if (text && text.trim()) {
+        tags.push({
+          name: 'カスタム性格',
+          color: '#6b7280', // グレー
+          isPreset: false
+        });
+      }
+    }
     
-    setPersonalityTags(matchedTags.slice(0, 5));
-  }, [user?.selectedCharacter?.personalityPrompt, locale]);
+    setPersonalityTags(tags);
+  }, [user?.selectedCharacter, locale]);
   
   // 親密度情報と性格タグを取得
   useEffect(() => {
@@ -97,48 +122,11 @@ export default function Dashboard({ params }) {
       }
     };
     
-    const fetchPersonalityTags = async () => {
-      try {
-        const response = await fetch(`/api/personality-tags?locale=${locale}`);
-        if (response.ok) {
-          const tags = await response.json();
-          generatePersonalityTags(tags);
-        }
-      } catch (err) {
-        console.error('Failed to fetch personality tags:', err);
-        // フォールバック: ハードコーディングされたタグを使用
-        const fallbackTags = [
-          { name: '明るい', color: '#FFB347' },
-          { name: '優しい', color: '#98D8C8' },
-          { name: '厳しい', color: '#F06292' },
-          { name: '真面目', color: '#6495ED' },
-          { name: '陽気', color: '#FFD700' },
-          { name: '冷静', color: '#87CEEB' },
-          { name: '情熱的', color: '#FF6347' },
-          { name: '穏やか', color: '#90EE90' },
-          { name: '活発', color: '#FF7F50' },
-          { name: '慎重', color: '#DDA0DD' },
-          { name: '大胆', color: '#DC143C' },
-          { name: '繊細', color: '#FFB6C1' },
-          { name: '強気', color: '#FF4500' },
-          { name: '優雅', color: '#DEB887' },
-          { name: '知的', color: '#4169E1' },
-          { name: '謙虚', color: '#8FBC8F' },
-          { name: '誠実', color: '#5F9EA0' },
-          { name: '勇敢', color: '#B22222' },
-          { name: '忠実', color: '#2E8B57' },
-          { name: '思いやり', color: '#DA70D6' },
-          { name: '几帳面', color: '#708090' },
-          { name: '自由', color: '#00CED1' },
-          { name: '創造的', color: '#9370DB' }
-        ];
-        generatePersonalityTags(fallbackTags);
-      }
-    };
+    // 性格タグの生成（新しいフィールドベース）
+    generatePersonalityTags();
     
     if (!loading && user) {
       fetchAffinity();
-      fetchPersonalityTags();
       fetchChatLimitInfo();
     }
   }, [loading, user, locale, generatePersonalityTags]);
@@ -441,14 +429,17 @@ export default function Dashboard({ params }) {
                 
                 {personalityTags.length > 0 && (
                   <div className={styles.personalitySection}>
+                    <div className={styles.personalityHeader}>
+                      <span className={styles.personalityLabel}>🎭 性格</span>
+                    </div>
                     <div className={styles.personalityTags}>
                       {personalityTags.map((tag, index) => (
                         <span 
                           key={index} 
-                          className={styles.personalityTag}
+                          className={`${styles.personalityTag} ${tag.isPreset ? styles.personalityPreset : styles.personalityNormal}`}
                           style={{ backgroundColor: tag.color }}
                         >
-                          {tag.name}
+                          {tag.isPreset && '★'} {tag.name}
                         </span>
                       ))}
                     </div>

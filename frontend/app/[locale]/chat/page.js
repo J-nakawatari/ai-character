@@ -41,6 +41,11 @@ export default function Chat({ params }) {
   const [remainingChats, setRemainingChats] = useState(null);
   const [chatLimitReached, setChatLimitReached] = useState(false);
   const [limitMessage, setLimitMessage] = useState('');
+  // 新しいトークン制対応のstate
+  const [remainingFreeChats, setRemainingFreeChats] = useState(null);
+  const [tokenBalance, setTokenBalance] = useState(0);
+  const [tokensUsed, setTokensUsed] = useState(0);
+  const [isBaseCharacter, setIsBaseCharacter] = useState(false);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const canvasRef = useRef(null);
@@ -76,6 +81,17 @@ export default function Chat({ params }) {
             }
             if (res.data.remainingChats !== undefined) {
               setRemainingChats(res.data.remainingChats);
+            }
+            
+            // 新しいトークン制対応のフィールド処理
+            if (res.data.remainingFreeChats !== undefined) {
+              setRemainingFreeChats(res.data.remainingFreeChats);
+            }
+            if (res.data.tokenBalance !== undefined) {
+              setTokenBalance(res.data.tokenBalance);
+            }
+            if (res.data.isBaseCharacter !== undefined) {
+              setIsBaseCharacter(res.data.isBaseCharacter);
             }
             
             // 制限メッセージを設定（APIレスポンスから取得）
@@ -271,9 +287,23 @@ export default function Chat({ params }) {
           
           setMessages(prev => [...prev, aiMessage]);
           
-          // 残りチャット回数を更新
+          // 残りチャット回数を更新（旧API互換性）
           if (res.data.remainingChats !== null) {
             setRemainingChats(res.data.remainingChats);
+          }
+          
+          // 新しいトークン制対応フィールドを更新
+          if (res.data.remainingFreeChats !== undefined) {
+            setRemainingFreeChats(res.data.remainingFreeChats);
+          }
+          if (res.data.tokenBalance !== undefined) {
+            setTokenBalance(res.data.tokenBalance);
+          }
+          if (res.data.tokensUsed !== undefined) {
+            setTokensUsed(res.data.tokensUsed);
+          }
+          if (res.data.isBaseCharacter !== undefined) {
+            setIsBaseCharacter(res.data.isBaseCharacter);
           }
         }, 1000);
       } else {
@@ -286,7 +316,11 @@ export default function Chat({ params }) {
           setError(res.error.msg || 'チャット制限に達しました');
         } else {
           // 429ステータスコード（制限エラー）の場合も制限として扱う
-          if (res.error && res.error.msg && res.error.msg.includes('無料会員は1日1回まで')) {
+          if (res.error && res.error.msg && (
+            res.error.msg.includes('無料会員は1日1回まで') || 
+            res.error.msg.includes('無料キャラクターは1日5回まで') ||
+            res.error.msg.includes('トークンが不足しています')
+          )) {
             setChatLimitReached(true);
             setLimitMessage(res.error.msg);
             setError(res.error.msg);
@@ -441,12 +475,16 @@ export default function Chat({ params }) {
                     )}
                   </div>
                   <div className="chat-limit-text">
-                    <div className="chat-limit-subtitle">1日の無料チャット回数に達しました</div>
+                    <div className="chat-limit-subtitle">
+                      {isBaseCharacter ? '1日の無料チャット回数に達しました' : 'トークンが不足しています'}
+                    </div>
                     <div className="chat-limit-main-message">
                       {limitMessage ? (
                         <span>{limitMessage}</span>
-                      ) : (
+                      ) : isBaseCharacter ? (
                         <span>もっと私とお話ししませんか？プレミアム会員なら無制限でお話しできます♪</span>
+                      ) : (
+                        <span>トークンをチャージして会話を続けましょう♪</span>
                       )}
                     </div>
                   </div>
@@ -455,14 +493,40 @@ export default function Chat({ params }) {
                   className="chat-upgrade-button"
                   onClick={() => router.push(`/${locale}/purchase`)}
                 >
-                  🌟 プレミアム会員になる
+                  {isBaseCharacter ? '🌟 プレミアム会員になる' : '💎 トークンをチャージする'}
                 </button>
               </div>
             </div>
           )}
           
-          {/* 残りチャット回数表示（無料会員のみ） */}
-          {!chatLimitReached && user?.membershipType === 'free' && remainingChats !== null && (
+          {/* トークン残高・残り回数表示 */}
+          {!chatLimitReached && (
+            <div className="chat-status-display">
+              {isBaseCharacter ? (
+                /* 無料キャラクターの場合：残り回数表示 */
+                remainingFreeChats !== null && (
+                  <div className="chat-remaining-info chat-remaining-info--free">
+                    <span className="chat-remaining-text">
+                      🆓 今日の無料チャット: あと{remainingFreeChats}回
+                    </span>
+                  </div>
+                )
+              ) : (
+                /* 課金キャラクターの場合：トークン残高表示 */
+                <div className="chat-remaining-info chat-remaining-info--token">
+                  <span className="chat-remaining-text">
+                    💎 トークン残高: {tokenBalance.toLocaleString()}
+                    {tokensUsed > 0 && (
+                      <span className="chat-tokens-used"> (前回消費: {tokensUsed})</span>
+                    )}
+                  </span>
+                </div>
+              )}
+            </div>
+          )}
+          
+          {/* 旧互換性：無料会員の残りチャット回数表示 */}
+          {!chatLimitReached && user?.membershipType === 'free' && remainingChats !== null && remainingFreeChats === null && (
             <div className="chat-remaining-counter">
               💬 今日あと <strong>{remainingChats}</strong> 回チャットできます
               {remainingChats <= 2 && (
