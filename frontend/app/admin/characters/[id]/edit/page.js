@@ -89,6 +89,10 @@ export default function EditCharacter({ params }) {
   const fetchCharacter = async () => {
     try {
       const res = await api.get(`/admin/characters/${id}`);
+      console.log('===== FETCH CHARACTER DEBUG =====');
+      console.log('取得したキャラクターデータ:', res.data);
+      console.log('limitMessage:', res.data.limitMessage);
+      console.log('================================');
       setFormData(res.data);
       setError('');
     } catch (err) {
@@ -131,17 +135,22 @@ export default function EditCharacter({ params }) {
     setSaving(true);
 
     try {
+      console.log('===== SUBMIT FORM DEBUG =====');
+      console.log('送信前の formData:', formData);
+      console.log('formData.limitMessage:', formData.limitMessage);
+      console.log('============================');
+      
       const fd = new FormData();
-      fd.append('name', JSON.stringify(formData.name));
-      fd.append('description', JSON.stringify(formData.description));
-      fd.append('personalityPrompt', JSON.stringify(formData.personalityPrompt));
-      fd.append('adminPrompt', JSON.stringify(formData.adminPrompt));
+      fd.append('name', JSON.stringify(formData.name || { ja: '', en: '' }));
+      fd.append('description', JSON.stringify(formData.description || { ja: '', en: '' }));
+      fd.append('personalityPrompt', JSON.stringify(formData.personalityPrompt || { ja: '', en: '' }));
+      fd.append('adminPrompt', JSON.stringify(formData.adminPrompt || { ja: '', en: '' }));
       fd.append('characterAccessType', formData.characterAccessType);
       fd.append('price', formData.price);
       fd.append('purchaseType', formData.purchaseType);
       fd.append('voice', formData.voice);
-      fd.append('defaultMessage', JSON.stringify(formData.defaultMessage));
-      fd.append('limitMessage', JSON.stringify(formData.limitMessage));
+      fd.append('defaultMessage', JSON.stringify(formData.defaultMessage || { ja: '', en: '' }));
+      fd.append('limitMessage', JSON.stringify(formData.limitMessage || { ja: '', en: '' }));
       fd.append('themeColor', formData.themeColor);
       fd.append('isActive', formData.isActive);
       if (croppedImages.characterSelect) {

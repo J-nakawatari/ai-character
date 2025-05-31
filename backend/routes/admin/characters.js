@@ -151,10 +151,38 @@ router.put('/:id', adminAuth, uploadImage.single('image'), resizeImage(), async 
     } = req.body;
 
     // 多言語フィールドはJSON.parseで対応（フロント側でJSON.stringifyして送る）
-    if (name) character.name = JSON.parse(name);
-    if (description) character.description = JSON.parse(description);
-    if (personalityPrompt) character.personalityPrompt = JSON.parse(personalityPrompt);
-    if (adminPrompt) character.adminPrompt = JSON.parse(adminPrompt);
+    if (name !== undefined) {
+      try {
+        character.name = JSON.parse(name);
+      } catch (error) {
+        console.error('Failed to parse name:', error);
+        character.name = { ja: '', en: '' };
+      }
+    }
+    if (description !== undefined) {
+      try {
+        character.description = JSON.parse(description);
+      } catch (error) {
+        console.error('Failed to parse description:', error);
+        character.description = { ja: '', en: '' };
+      }
+    }
+    if (personalityPrompt !== undefined) {
+      try {
+        character.personalityPrompt = JSON.parse(personalityPrompt);
+      } catch (error) {
+        console.error('Failed to parse personalityPrompt:', error);
+        character.personalityPrompt = { ja: '', en: '' };
+      }
+    }
+    if (adminPrompt !== undefined) {
+      try {
+        character.adminPrompt = JSON.parse(adminPrompt);
+      } catch (error) {
+        console.error('Failed to parse adminPrompt:', error);
+        character.adminPrompt = { ja: '', en: '' };
+      }
+    }
     if (characterAccessType) {
       character.characterAccessType = characterAccessType;
       character.isPremium = characterAccessType === 'premium';
@@ -163,8 +191,24 @@ router.put('/:id', adminAuth, uploadImage.single('image'), resizeImage(), async 
     if (price) character.price = parseInt(price);
     if (purchaseType) character.purchaseType = purchaseType;
     if (voice) character.voice = voice;
-    if (defaultMessage) character.defaultMessage = JSON.parse(defaultMessage);
-    if (limitMessage) character.limitMessage = JSON.parse(limitMessage);
+    if (defaultMessage !== undefined) {
+      try {
+        character.defaultMessage = JSON.parse(defaultMessage);
+      } catch (error) {
+        console.error('Failed to parse defaultMessage:', error);
+        character.defaultMessage = { ja: '', en: '' };
+      }
+    }
+    if (limitMessage !== undefined) {
+      try {
+        const parsedLimitMessage = JSON.parse(limitMessage);
+        character.limitMessage = parsedLimitMessage;
+      } catch (error) {
+        console.error('Failed to parse limitMessage:', error);
+        // パースに失敗した場合は空のオブジェクトを設定
+        character.limitMessage = { ja: '', en: '' };
+      }
+    }
     if (themeColor) character.themeColor = themeColor;
     if (typeof isActive !== 'undefined') {
       character.isActive = typeof isActive === 'boolean' ? isActive : isActive === 'true';
@@ -190,6 +234,9 @@ router.put('/:id', adminAuth, uploadImage.single('image'), resizeImage(), async 
     }
 
     await character.save();
+    console.log('===== SAVE AFTER DEBUG =====');
+    console.log('保存後の character.limitMessage:', character.limitMessage);
+    console.log('============================');
     res.json(character);
   } catch (err) {
     console.error(err.message);
