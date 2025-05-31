@@ -151,10 +151,38 @@ router.put('/:id', adminAuth, uploadImage.single('image'), resizeImage(), async 
     } = req.body;
 
     // 多言語フィールドはJSON.parseで対応（フロント側でJSON.stringifyして送る）
-    if (name !== undefined) character.name = JSON.parse(name);
-    if (description !== undefined) character.description = JSON.parse(description);
-    if (personalityPrompt !== undefined) character.personalityPrompt = JSON.parse(personalityPrompt);
-    if (adminPrompt !== undefined) character.adminPrompt = JSON.parse(adminPrompt);
+    if (name !== undefined) {
+      try {
+        character.name = JSON.parse(name);
+      } catch (error) {
+        console.error('Failed to parse name:', error);
+        character.name = { ja: '', en: '' };
+      }
+    }
+    if (description !== undefined) {
+      try {
+        character.description = JSON.parse(description);
+      } catch (error) {
+        console.error('Failed to parse description:', error);
+        character.description = { ja: '', en: '' };
+      }
+    }
+    if (personalityPrompt !== undefined) {
+      try {
+        character.personalityPrompt = JSON.parse(personalityPrompt);
+      } catch (error) {
+        console.error('Failed to parse personalityPrompt:', error);
+        character.personalityPrompt = { ja: '', en: '' };
+      }
+    }
+    if (adminPrompt !== undefined) {
+      try {
+        character.adminPrompt = JSON.parse(adminPrompt);
+      } catch (error) {
+        console.error('Failed to parse adminPrompt:', error);
+        character.adminPrompt = { ja: '', en: '' };
+      }
+    }
     if (characterAccessType) {
       character.characterAccessType = characterAccessType;
       character.isPremium = characterAccessType === 'premium';
@@ -163,22 +191,23 @@ router.put('/:id', adminAuth, uploadImage.single('image'), resizeImage(), async 
     if (price) character.price = parseInt(price);
     if (purchaseType) character.purchaseType = purchaseType;
     if (voice) character.voice = voice;
-    if (defaultMessage !== undefined) character.defaultMessage = JSON.parse(defaultMessage);
+    if (defaultMessage !== undefined) {
+      try {
+        character.defaultMessage = JSON.parse(defaultMessage);
+      } catch (error) {
+        console.error('Failed to parse defaultMessage:', error);
+        character.defaultMessage = { ja: '', en: '' };
+      }
+    }
     if (limitMessage !== undefined) {
-      console.log('===== LIMIT MESSAGE DEBUG =====');
-      console.log('受信した limitMessage:', limitMessage);
-      console.log('limitMessage タイプ:', typeof limitMessage);
       try {
         const parsedLimitMessage = JSON.parse(limitMessage);
-        console.log('パース後 limitMessage:', parsedLimitMessage);
         character.limitMessage = parsedLimitMessage;
-        console.log('保存前の character.limitMessage:', character.limitMessage);
       } catch (error) {
-        console.log('JSON パースエラー:', error);
+        console.error('Failed to parse limitMessage:', error);
         // パースに失敗した場合は空のオブジェクトを設定
         character.limitMessage = { ja: '', en: '' };
       }
-      console.log('================================');
     }
     if (themeColor) character.themeColor = themeColor;
     if (typeof isActive !== 'undefined') {
