@@ -283,6 +283,9 @@ export default function Chat({ params }) {
         
         // チャット制限に達した場合の特別処理
         if (res.error && res.error.isLimitReached) {
+          console.log('===== CHAT LIMIT REACHED DEBUG =====');
+          console.log('Setting limitMessage from error:', res.error.msg);
+          console.log('====================================');
           setChatLimitReached(true);
           setLimitMessage(res.error.msg || 'チャット制限に達しました');
           setError(res.error.msg || 'チャット制限に達しました');
@@ -450,6 +453,9 @@ export default function Chat({ params }) {
                       ) : (
                         <span>もっと私とお話ししませんか？プレミアム会員なら無制限でお話しできます♪</span>
                       )}
+                      <div style={{fontSize: '10px', color: '#999', marginTop: '5px'}}>
+                        Debug: limitMessage = "{limitMessage}" (length: {limitMessage?.length || 0})
+                      </div>
                     </div>
                   </div>
                 </div>
