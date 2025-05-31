@@ -125,4 +125,32 @@ router.delete('/:id', adminAuth, async (req, res) => {
   }
 });
 
+router.put('/:id/reset-chat-count', adminAuth, async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    
+    if (!user) {
+      return res.status(404).json({ msg: 'ユーザーが見つかりません' });
+    }
+    
+    user.dailyChatCount = 0;
+    user.lastChatResetDate = new Date();
+    await user.save();
+    
+    res.json({ 
+      msg: 'チャット回数がリセットされました',
+      dailyChatCount: user.dailyChatCount,
+      lastChatResetDate: user.lastChatResetDate
+    });
+  } catch (err) {
+    console.error(err.message);
+    
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ msg: 'ユーザーが見つかりません' });
+    }
+    
+    res.status(500).send('サーバーエラー');
+  }
+});
+
 module.exports = router;

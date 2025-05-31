@@ -402,4 +402,55 @@
   margin-right: 0;
   text-align: left;
   font-weight: 500;
+}
+
+/* チャット制限メッセージ */
+.chat-limit-message {
+  margin-bottom: 16px;
+  padding: 16px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 12px;
+  text-align: center;
+}
+
+.chat-limit-content p {
+  color: #dc2626;
+  margin: 0 0 8px 0;
+  font-weight: 500;
+}
+
+.chat-limit-content p:last-of-type {
+  margin-bottom: 16px;
+}
+
+.chat-upgrade-button {
+  background: #dc2626;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+}
+
+.chat-upgrade-button:hover {
+  background: #b91c1c;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
+}
+
+/* 残りチャット回数表示 */
+.chat-remaining-counter {
+  margin-bottom: 12px;
+  padding: 8px 16px;
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-radius: 8px;
+  text-align: center;
+  color: #1d4ed8;
+  font-size: 14px;
+  font-weight: 500;
 } 

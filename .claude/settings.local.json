@@ -31,7 +31,9 @@
       "Bash(ls:*)",
       "Bash(grep:*)",
       "Bash(npm run lint)",
-      "Bash(npm start)"
+      "Bash(npm start)",
+      "Bash(git fetch:*)",
+      "Bash(rg:*)"
     ]
   },
   "enableAllProjectMcpServers": false

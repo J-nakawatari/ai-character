@@ -86,6 +86,14 @@ const UserSchema = new Schema({
     type: String,
     default: null
   },
+  dailyChatCount: {
+    type: Number,
+    default: 0
+  },
+  lastChatResetDate: {
+    type: Date,
+    default: Date.now
+  },
   affinities: [{
     character: {
       type: Schema.Types.ObjectId,
