@@ -132,6 +132,23 @@ export default function AdminUsers() {
     return { average, count: levels.length, maxLevel };
   };
 
+  // 使用GPTモデル判定
+  const getGPTModel = (user) => {
+    const isSubscriptionUser = user.membershipType === 'subscription' && user.subscriptionStatus === 'active';
+    return isSubscriptionUser ? 'GPT-4' : 'GPT-3.5-turbo';
+  };
+
+  // GPTモデルバッジの取得
+  const getGPTModelBadge = (user) => {
+    const model = getGPTModel(user);
+    const isGPT4 = model === 'GPT-4';
+    return (
+      <span className={`admin-badge ${isGPT4 ? 'admin-badge--success' : 'admin-badge--neutral'}`}>
+        {isGPT4 ? '🚀 GPT-4' : '⚡ GPT-3.5'}
+      </span>
+    );
+  };
+
   return (
     <>
     <div className="admin-content">
@@ -160,11 +177,12 @@ export default function AdminUsers() {
         <div className="admin-table-container">
           <table className="admin-table" style={{ tableLayout: 'fixed', width: '100%' }}>
             <colgroup>
-              <col style={{ width: '25%' }} />
+              <col style={{ width: '22%' }} />
+              <col style={{ width: '12%' }} />
               <col style={{ width: '15%' }} />
-              <col style={{ width: '15%' }} />
-              <col style={{ width: '20%' }} />
-              <col style={{ width: '15%' }} />
+              <col style={{ width: '12%' }} />
+              <col style={{ width: '17%' }} />
+              <col style={{ width: '12%' }} />
               <col style={{ width: '10%' }} />
             </colgroup>
             <thead>
@@ -172,6 +190,7 @@ export default function AdminUsers() {
                 <th>ユーザー情報</th>
                 <th>アカウント状態</th>
                 <th>会員種別</th>
+                <th>使用GPTモデル</th>
                 <th>親密度統計</th>
                 <th>最終活動</th>
                 <th>操作</th>
@@ -218,6 +237,14 @@ export default function AdminUsers() {
                             開始: {new Date(user.subscriptionStartDate).toLocaleDateString()}
                           </div>
                         )}
+                      </div>
+                    </td>
+                    <td>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--admin-space-2)', alignItems: 'center' }}>
+                        {getGPTModelBadge(user)}
+                        <div style={{ fontSize: 'var(--admin-font-size-xs)', color: 'var(--admin-gray-500)', textAlign: 'center' }}>
+                          {getGPTModel(user) === 'GPT-4' ? 'プレミアム品質' : '標準品質'}
+                        </div>
                       </div>
                     </td>
                     <td>
@@ -362,12 +389,16 @@ export default function AdminUsers() {
                     <h3 style={{ margin: '0', fontSize: 'var(--admin-font-size-lg)', fontWeight: '600' }}>
                       サブスクリプション情報
                     </h3>
+                    {/* GPTモデル表示 */}
+                    <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 'var(--admin-space-2)' }}>
+                      {getGPTModelBadge(selectedUser)}
+                    </div>
                     {/* チャット回数リセットボタン（無料会員のみ） */}
                     {selectedUser.membershipType === 'free' && (
                       <button
                         className="admin-btn admin-btn--warning admin-btn--sm"
                         onClick={() => handleResetChatCount(selectedUser._id)}
-                        style={{ marginLeft: 'auto', fontSize: 'var(--admin-font-size-xs)' }}
+                        style={{ fontSize: 'var(--admin-font-size-xs)' }}
                       >
                         チャット回数リセット
                       </button>
@@ -382,13 +413,25 @@ export default function AdminUsers() {
                         </span>
                       </div>
                     </div>
+                    <div>
+                      <div className="admin-form-label">使用GPTモデル</div>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--admin-space-1)' }}>
+                        {getGPTModelBadge(selectedUser)}
+                        <div style={{ fontSize: 'var(--admin-font-size-xs)', color: 'var(--admin-gray-500)' }}>
+                          {getGPTModel(selectedUser) === 'GPT-4' ? 
+                            '高度な推論・創造性 | 最大200トークン' : 
+                            '標準的な対話品質 | 最大150トークン'
+                          }
+                        </div>
+                      </div>
+                    </div>
                     {/* 無料会員のチャット制限情報 */}
                     {selectedUser.membershipType === 'free' && (
                       <>
                         <div>
                           <div className="admin-form-label">今日のチャット回数</div>
                           <div style={{ fontSize: 'var(--admin-font-size-sm)', color: 'var(--admin-gray-700)', fontWeight: '500' }}>
-                            {selectedUser.dailyChatCount || 0} / 5回
+                            {selectedUser.dailyChatCount || 0} / 1回
                           </div>
                         </div>
                         <div>
