@@ -33,8 +33,8 @@ export default function AdminDashboard() {
         
         // ユーザー統計の計算
         const activeUsers = users.filter(user => user.isActive).length;
-        const premiumUsers = users.filter(user => 
-          user.membershipType === 'subscription' && user.subscriptionStatus === 'active'
+        const paidUsers = users.filter(user => 
+          user.tokenBalance && user.tokenBalance > 0
         ).length;
         
         // 親密度統計の計算
@@ -72,7 +72,7 @@ export default function AdminDashboard() {
           userCount: users.length,
           characterCount: characters.length,
           activeUsers,
-          premiumUsers,
+          paidUsers,
           totalChats: Math.floor(Math.random() * 10000) + 5000, // ダミーデータ
           todayChats: Math.floor(Math.random() * 500) + 100, // ダミーデータ
           avgAffinity,
@@ -139,13 +139,13 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* プレミアムユーザー */}
+        {/* トークチケット保有ユーザー */}
         <div className="admin-stats-card">
           <div className="admin-stats-icon admin-stats-icon--warning">
             💎
           </div>
-          <div className="admin-stats-value">{stats.premiumUsers.toLocaleString()}</div>
-          <div className="admin-stats-label">プレミアムユーザー</div>
+          <div className="admin-stats-value">{stats.paidUsers.toLocaleString()}</div>
+          <div className="admin-stats-label">トークチケット保有ユーザー</div>
           <div className="admin-stats-change admin-stats-change--positive">
             ↗ +15.7%
           </div>

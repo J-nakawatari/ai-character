@@ -187,7 +187,7 @@ export default function AdminUsers() {
               <tr>
                 <th>ユーザー情報</th>
                 <th>アカウント状態</th>
-                <th>会員種別</th>
+                <th>トークチケット残高</th>
                 <th>使用GPTモデル</th>
                 <th>親密度統計</th>
                 <th>最終活動</th>
@@ -222,19 +222,9 @@ export default function AdminUsers() {
                     </td>
                     <td>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--admin-space-2)' }}>
-                        <span className={`admin-badge ${user.membershipType === 'subscription' ? 'admin-badge--warning' : 'admin-badge--neutral'}`}>
-                          {user.membershipType === 'subscription' ? '🔥 プレミアム' : '🆓 無料'}
+                        <span className="admin-badge admin-badge--primary">
+                          💎 {user.tokenBalance || 0} トークチケット
                         </span>
-                        {user.membershipType === 'subscription' && (
-                          <div style={{ fontSize: 'var(--admin-font-size-xs)', color: 'var(--admin-gray-500)' }}>
-                            状態: {user.subscriptionStatus || 'unknown'}
-                          </div>
-                        )}
-                        {user.subscriptionStartDate && (
-                          <div style={{ fontSize: 'var(--admin-font-size-xs)', color: 'var(--admin-gray-500)' }}>
-                            開始: {new Date(user.subscriptionStartDate).toLocaleDateString()}
-                          </div>
-                        )}
                       </div>
                     </td>
                     <td>
@@ -380,34 +370,20 @@ export default function AdminUsers() {
                   </div>
                 </div>
 
-                {/* サブスクリプション情報 */}
+                {/* ユーザー詳細情報 */}
                 <div className="admin-card">
                   <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--admin-space-3)', marginBottom: 'var(--admin-space-4)' }}>
-                    <span style={{ fontSize: '1.5rem' }}>💳</span>
+                    <span style={{ fontSize: '1.5rem' }}>📊</span>
                     <h3 style={{ margin: '0', fontSize: 'var(--admin-font-size-lg)', fontWeight: '600' }}>
-                      サブスクリプション情報
+                      ユーザー詳細情報
                     </h3>
-                    {/* GPTモデル表示 */}
-                    <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 'var(--admin-space-2)' }}>
-                      {getGPTModelBadge(selectedUser)}
-                    </div>
-                    {/* チャット回数リセットボタン（無料会員のみ） */}
-                    {selectedUser.membershipType === 'free' && (
-                      <button
-                        className="admin-btn admin-btn--warning admin-btn--sm"
-                        onClick={() => handleResetChatCount(selectedUser._id)}
-                        style={{ fontSize: 'var(--admin-font-size-xs)' }}
-                      >
-                        チャット回数リセット
-                      </button>
-                    )}
                   </div>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 'var(--admin-space-4)' }}>
                     <div>
-                      <div className="admin-form-label">会員種別</div>
+                      <div className="admin-form-label">トークチケット残高</div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--admin-space-2)' }}>
-                        <span className={`admin-badge ${selectedUser.membershipType === 'subscription' ? 'admin-badge--warning' : 'admin-badge--neutral'}`}>
-                          {selectedUser.membershipType === 'subscription' ? '🔥 プレミアム' : '🆓 無料'}
+                        <span className="admin-badge admin-badge--primary">
+                          💎 {selectedUser.tokenBalance || 0} トークチケット
                         </span>
                       </div>
                     </div>
@@ -416,65 +392,8 @@ export default function AdminUsers() {
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--admin-space-1)' }}>
                         {getGPTModelBadge(selectedUser)}
                         <div style={{ fontSize: 'var(--admin-font-size-xs)', color: 'var(--admin-gray-500)' }}>
-                          {selectedUser.membershipType === 'subscription' && selectedUser.subscriptionStatus === 'active' ? 
-                            '標準的な対話品質 | 最大200トークン' : 
-                            '標準的な対話品質 | 最大150トークン'
-                          }
+                          標準的な対話品質 | トークチケット消費
                         </div>
-                      </div>
-                    </div>
-                    {/* 無料会員のチャット制限情報 */}
-                    {selectedUser.membershipType === 'free' && (
-                      <>
-                        <div>
-                          <div className="admin-form-label">今日のチャット回数</div>
-                          <div style={{ fontSize: 'var(--admin-font-size-sm)', color: 'var(--admin-gray-700)', fontWeight: '500' }}>
-                            {selectedUser.dailyChatCount || 0} / 1回
-                          </div>
-                        </div>
-                        <div>
-                          <div className="admin-form-label">最終リセット日</div>
-                          <div style={{ fontSize: 'var(--admin-font-size-sm)', color: 'var(--admin-gray-700)' }}>
-                            {selectedUser.lastChatResetDate ? 
-                              new Date(selectedUser.lastChatResetDate).toLocaleDateString('ja-JP', {
-                                year: 'numeric', month: 'short', day: 'numeric'
-                              }) : '-'}
-                          </div>
-                        </div>
-                      </>
-                    )}
-                    <div>
-                      <div className="admin-form-label">サブスク状態</div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--admin-space-2)' }}>
-                        <span className={`admin-badge ${
-                          selectedUser.subscriptionStatus === 'active' ? 'admin-badge--success' :
-                          selectedUser.subscriptionStatus === 'expired' ? 'admin-badge--error' :
-                          selectedUser.subscriptionStatus === 'canceled' ? 'admin-badge--warning' :
-                          'admin-badge--neutral'
-                        }`}>
-                          {selectedUser.subscriptionStatus === 'active' ? '✅ 有効' :
-                           selectedUser.subscriptionStatus === 'expired' ? '⏰ 期限切れ' :
-                           selectedUser.subscriptionStatus === 'canceled' ? '❌ キャンセル済み' :
-                           '⚪ 無効'}
-                        </span>
-                      </div>
-                    </div>
-                    <div>
-                      <div className="admin-form-label">開始日</div>
-                      <div style={{ fontSize: 'var(--admin-font-size-sm)', color: 'var(--admin-gray-700)' }}>
-                        {selectedUser.subscriptionStartDate ? 
-                          new Date(selectedUser.subscriptionStartDate).toLocaleDateString('ja-JP', {
-                            year: 'numeric', month: 'short', day: 'numeric'
-                          }) : '-'}
-                      </div>
-                    </div>
-                    <div>
-                      <div className="admin-form-label">終了日</div>
-                      <div style={{ fontSize: 'var(--admin-font-size-sm)', color: 'var(--admin-gray-700)' }}>
-                        {selectedUser.subscriptionEndDate ? 
-                          new Date(selectedUser.subscriptionEndDate).toLocaleDateString('ja-JP', {
-                            year: 'numeric', month: 'short', day: 'numeric'
-                          }) : '-'}
                       </div>
                     </div>
                     {selectedUser.stripeCustomerId && (
