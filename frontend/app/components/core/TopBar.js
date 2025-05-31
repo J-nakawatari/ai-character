@@ -18,12 +18,32 @@ const TopBar = ({
 }) => {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
 
+  // 多言語対応の名前取得関数
+  const getCharacterName = (characterName) => {
+    if (!characterName) return 'チャット';
+    if (typeof characterName === 'string') return characterName;
+    if (typeof characterName === 'object') {
+      return characterName[locale] || characterName.ja || characterName.en || 'チャット';
+    }
+    return 'チャット';
+  };
+
+  // 安全な文字列取得関数
+  const getSafeString = (value, fallback = '') => {
+    if (!value) return fallback;
+    if (typeof value === 'string') return value;
+    if (typeof value === 'object') {
+      return value[locale] || value.ja || value.en || fallback;
+    }
+    return String(value) || fallback;
+  };
+
   // コンテキストに応じたタイトルとアクション
   const getContextInfo = () => {
     switch (currentContext) {
       case 'chat':
         return {
-          title: user?.selectedCharacter?.name || 'チャット',
+          title: getCharacterName(user?.selectedCharacter?.name),
           subtitle: 'AIとの会話',
           actions: ['character-switch', 'settings']
         };
@@ -134,13 +154,13 @@ const TopBar = ({
           >
             <div className={styles.userAvatar}>
               {user?.avatar ? (
-                <img src={user.avatar} alt={user.name} />
+                <img src={user.avatar} alt={getSafeString(user.name, 'ユーザー')} />
               ) : (
-                <span>{user?.name?.[0]?.toUpperCase() || '👤'}</span>
+                <span>{getSafeString(user?.name, '👤')?.[0]?.toUpperCase() || '👤'}</span>
               )}
             </div>
             <div className={styles.userInfo}>
-              <span className={styles.userName}>{user?.name || 'ゲスト'}</span>
+              <span className={styles.userName}>{getSafeString(user?.name, 'ゲスト')}</span>
               <span className={styles.userRole}>
                 {isAdmin ? '管理者' : 'ユーザー'}
               </span>

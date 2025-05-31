@@ -19,6 +19,16 @@ const ContextPanel = ({
 }) => {
   const router = useRouter();
 
+  // 安全な文字列取得関数
+  const getSafeString = (value, fallback = '') => {
+    if (!value) return fallback;
+    if (typeof value === 'string') return value;
+    if (typeof value === 'object') {
+      return value[locale] || value.ja || value.en || fallback;
+    }
+    return String(value) || fallback;
+  };
+
   // ESCキーでパネルを閉じる
   useEffect(() => {
     const handleEsc = (e) => {
@@ -51,9 +61,7 @@ const ContextPanel = ({
                   </div>
                   <div className={styles.characterInfo}>
                     <p className={styles.characterName}>
-                      {typeof user.selectedCharacter.name === 'object' 
-                        ? user.selectedCharacter.name[locale] 
-                        : user.selectedCharacter.name}
+                      {getSafeString(user.selectedCharacter.name, 'キャラクター')}
                     </p>
                     <Link 
                       href={`/${locale}/setup?reselect=true`}
