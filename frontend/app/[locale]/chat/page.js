@@ -132,29 +132,30 @@ export default function Chat({ params }) {
     scrollToBottom();
   }, [messages]);
   
-  // 定期的にチャット制限状態をチェック（無料会員のみ）
+  // 定期的にチャット制限状態をチェック（無料会員のみ）- 一時的に無効化
   useEffect(() => {
-    if (user?.membershipType !== 'free') return;
+    // TODO: ログ無限ループ修正後に再有効化
+    // if (user?.membershipType !== 'free') return;
     
-    // 初回は短いインターバルで頻繁にチェック（管理者のリセット操作を早期検出）
-    const shortInterval = setInterval(() => {
-      reloadChatLimitStatus();
-    }, 5000); // 5秒ごと
+    // // 初回は短いインターバルで頻繁にチェック（管理者のリセット操作を早期検出）
+    // const shortInterval = setInterval(() => {
+    //   reloadChatLimitStatus();
+    // }, 5000); // 5秒ごと
     
-    // 60秒後に長いインターバルに切り替え
-    const longIntervalTimeout = setTimeout(() => {
-      clearInterval(shortInterval);
-      const longInterval = setInterval(() => {
-        reloadChatLimitStatus();
-      }, 30000); // 30秒ごと
+    // // 60秒後に長いインターバルに切り替え
+    // const longIntervalTimeout = setTimeout(() => {
+    //   clearInterval(shortInterval);
+    //   const longInterval = setInterval(() => {
+    //     reloadChatLimitStatus();
+    //   }, 30000); // 30秒ごと
       
-      return () => clearInterval(longInterval);
-    }, 60000);
+    //   return () => clearInterval(longInterval);
+    // }, 60000);
     
-    return () => {
-      clearInterval(shortInterval);
-      clearTimeout(longIntervalTimeout);
-    };
+    // return () => {
+    //   clearInterval(shortInterval);
+    //   clearTimeout(longIntervalTimeout);
+    // };
   }, [user?.membershipType, reloadChatLimitStatus]);
   
   // ウィンドウフォーカス時にチャット制限状態を再チェック
@@ -291,7 +292,7 @@ export default function Chat({ params }) {
           setError(res.error.msg || 'チャット制限に達しました');
         } else {
           // 429ステータスコード（制限エラー）の場合も制限として扱う
-          if (res.error && res.error.msg && res.error.msg.includes('無料会員は1日5回まで')) {
+          if (res.error && res.error.msg && res.error.msg.includes('無料会員は1日1回まで')) {
             setChatLimitReached(true);
             setLimitMessage(res.error.msg);
             setError(res.error.msg);
