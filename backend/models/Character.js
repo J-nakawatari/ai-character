@@ -51,6 +51,34 @@ const CharacterSchema = new Schema({
     enum: ['free', 'subscription', 'purchaseOnly'],
     default: 'free',
   },
+  // 新しいトークン制フィールド
+  isBaseCharacter: {
+    type: Boolean,
+    default: false
+  },
+  requiresUnlock: {
+    type: Boolean,
+    default: false
+  },
+  model: {
+    type: String,
+    enum: ['gpt-3.5-turbo', 'gpt-4'],
+    default: 'gpt-3.5-turbo'
+  },
+  gender: {
+    type: String,
+    enum: ['male', 'female', 'neutral'],
+    default: 'neutral'
+  },
+  personalityPreset: {
+    type: String,
+    enum: ['おっとり系', '元気系', 'クール系', '真面目系', 'セクシー系', '天然系', 'ボーイッシュ系', 'お姉さん系'],
+    default: 'おっとり系'
+  },
+  personalityTags: [{
+    type: String,
+    enum: ['明るい', 'よく笑う', '甘えん坊', '積極的', '大人っぽい', '静か', '天然', 'ボーイッシュ', 'ポジティブ', 'やや毒舌', '癒し系', '元気いっぱい', '知的', '優しい', '人懐っこい']
+  }],
   price: {
     type: Number,
     default: 0

@@ -40,6 +40,13 @@ router.post('/', adminAuth, uploadImage.single('image'), resizeImage(), async (r
       personalityPrompt,
       adminPrompt,
       characterAccessType,
+      // 新しいトークン制フィールド
+      isBaseCharacter,
+      requiresUnlock,
+      model,
+      gender,
+      personalityPreset,
+      personalityTags,
       price,
       purchaseType,
       voice,
@@ -76,6 +83,7 @@ router.post('/', adminAuth, uploadImage.single('image'), resizeImage(), async (r
       const parsedAdminPrompt = JSON.parse(adminPrompt || '{}');
       const parsedDefaultMessage = JSON.parse(defaultMessage || '{}');
       const parsedLimitMessage = JSON.parse(limitMessage || '{}');
+      const parsedPersonalityTags = JSON.parse(personalityTags || '[]');
 
       const character = new Character({
         name: parsedName,
@@ -84,6 +92,13 @@ router.post('/', adminAuth, uploadImage.single('image'), resizeImage(), async (r
         personalityPrompt: parsedPersonalityPrompt,
         adminPrompt: parsedAdminPrompt,
         characterAccessType,
+        // 新しいトークン制フィールド
+        isBaseCharacter: typeof isBaseCharacter === 'boolean' ? isBaseCharacter : isBaseCharacter === 'true',
+        requiresUnlock: typeof requiresUnlock === 'boolean' ? requiresUnlock : requiresUnlock === 'true',
+        model: model || 'gpt-3.5-turbo',
+        gender: gender || 'neutral',
+        personalityPreset: personalityPreset || 'おっとり系',
+        personalityTags: parsedPersonalityTags,
         price: parseInt(price) || 0,
         purchaseType,
         voice,
@@ -141,6 +156,13 @@ router.put('/:id', adminAuth, uploadImage.single('image'), resizeImage(), async 
       personalityPrompt,
       adminPrompt,
       characterAccessType,
+      // 新しいトークン制フィールド
+      isBaseCharacter,
+      requiresUnlock,
+      model,
+      gender,
+      personalityPreset,
+      personalityTags,
       price,
       purchaseType,
       voice,
@@ -188,6 +210,26 @@ router.put('/:id', adminAuth, uploadImage.single('image'), resizeImage(), async 
       character.isPremium = characterAccessType === 'premium';
       character.isLimited = characterAccessType === 'limited';
     }
+    
+    // 新しいトークン制フィールドの更新
+    if (typeof isBaseCharacter !== 'undefined') {
+      character.isBaseCharacter = typeof isBaseCharacter === 'boolean' ? isBaseCharacter : isBaseCharacter === 'true';
+    }
+    if (typeof requiresUnlock !== 'undefined') {
+      character.requiresUnlock = typeof requiresUnlock === 'boolean' ? requiresUnlock : requiresUnlock === 'true';
+    }
+    if (model) character.model = model;
+    if (gender) character.gender = gender;
+    if (personalityPreset) character.personalityPreset = personalityPreset;
+    if (personalityTags !== undefined) {
+      try {
+        character.personalityTags = JSON.parse(personalityTags);
+      } catch (error) {
+        console.error('Failed to parse personalityTags:', error);
+        character.personalityTags = [];
+      }
+    }
+    
     if (price) character.price = parseInt(price);
     if (purchaseType) character.purchaseType = purchaseType;
     if (voice) character.voice = voice;
