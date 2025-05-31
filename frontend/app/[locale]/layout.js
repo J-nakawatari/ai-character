@@ -2,6 +2,7 @@
 
 import { NextIntlClientProvider } from 'next-intl';
 import { AuthProvider, useAuth } from '../utils/auth';
+import { ChatContextProvider, useChatContext } from '../contexts/ChatContext';
 import AppShell from '../components/core/AppShell';
 import { usePathname, useRouter } from 'next/navigation';
 import { use } from 'react';
@@ -24,9 +25,11 @@ export default function LocaleLayout({ children, params }) {
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
       <AuthProvider>
-        <LocaleLayoutInner locale={locale}>
-          {children}
-        </LocaleLayoutInner>
+        <ChatContextProvider>
+          <LocaleLayoutInner locale={locale}>
+            {children}
+          </LocaleLayoutInner>
+        </ChatContextProvider>
       </AuthProvider>
     </NextIntlClientProvider>
   );
@@ -34,6 +37,7 @@ export default function LocaleLayout({ children, params }) {
 
 function LocaleLayoutInner({ children, locale }) {
   const { user, logout, loading } = useAuth();
+  const { chatInfo } = useChatContext();
   const pathname = usePathname();
   const router = useRouter();
   
@@ -126,6 +130,9 @@ function LocaleLayoutInner({ children, locale }) {
         onLogout={handleLogout}
         locale={locale}
         isAdmin={false}
+        tokenBalance={chatInfo.tokenBalance}
+        remainingFreeChats={chatInfo.remainingFreeChats}
+        isBaseCharacter={chatInfo.isBaseCharacter}
       >
         <div style={{
           position: 'absolute',

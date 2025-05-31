@@ -5,6 +5,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
 import useRequireAuth from '../../utils/useRequireAuth';
 import { apiGet, apiPost } from '../../utils/api';
+import { useChatContext } from '../../contexts/ChatContext';
 import Button from '../../components/Button';
 import ChatMessage from '../../components/ChatMessage';
 import '../../styles/chat.css';
@@ -27,6 +28,7 @@ function hexToRgba(hex, alpha = 0.1) {
 
 export default function Chat({ params }) {
   const { user, loading, element } = useRequireAuth();
+  const { updateChatInfo } = useChatContext();
   const router = useRouter();
   const pathname = usePathname();
   const { locale } = typeof params.then === 'function' ? use(params) : params;
@@ -91,6 +93,13 @@ export default function Chat({ params }) {
             if (res.data.isBaseCharacter !== undefined) {
               setIsBaseCharacter(res.data.isBaseCharacter);
             }
+            
+            // ChatContextを更新
+            updateChatInfo({
+              tokenBalance: res.data.tokenBalance,
+              remainingFreeChats: res.data.remainingFreeChats,
+              isBaseCharacter: res.data.isBaseCharacter
+            });
             
             // 制限メッセージを設定（APIレスポンスから取得）
             if (res.data.limitMessage !== undefined) {
@@ -289,6 +298,13 @@ export default function Chat({ params }) {
           if (res.data.isBaseCharacter !== undefined) {
             setIsBaseCharacter(res.data.isBaseCharacter);
           }
+          
+          // ChatContextを更新
+          updateChatInfo({
+            tokenBalance: res.data.tokenBalance,
+            remainingFreeChats: res.data.remainingFreeChats,
+            isBaseCharacter: res.data.isBaseCharacter
+          });
         }, 1000);
       } else {
         setIsTyping(false);
