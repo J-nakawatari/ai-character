@@ -134,17 +134,15 @@ export default function AdminUsers() {
 
   // 使用GPTモデル判定
   const getGPTModel = (user) => {
-    const isSubscriptionUser = user.membershipType === 'subscription' && user.subscriptionStatus === 'active';
-    return isSubscriptionUser ? 'GPT-4' : 'GPT-3.5-turbo';
+    return 'GPT-3.5-turbo';
   };
 
   // GPTモデルバッジの取得
   const getGPTModelBadge = (user) => {
     const model = getGPTModel(user);
-    const isGPT4 = model === 'GPT-4';
     return (
-      <span className={`admin-badge ${isGPT4 ? 'admin-badge--success' : 'admin-badge--neutral'}`}>
-        {isGPT4 ? '🚀 GPT-4' : '⚡ GPT-3.5'}
+      <span className="admin-badge admin-badge--neutral">
+        ⚡ GPT-3.5
       </span>
     );
   };
@@ -243,7 +241,7 @@ export default function AdminUsers() {
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--admin-space-2)', alignItems: 'center' }}>
                         {getGPTModelBadge(user)}
                         <div style={{ fontSize: 'var(--admin-font-size-xs)', color: 'var(--admin-gray-500)', textAlign: 'center' }}>
-                          {getGPTModel(user) === 'GPT-4' ? 'プレミアム品質' : '標準品質'}
+                          標準品質
                         </div>
                       </div>
                     </td>
@@ -418,8 +416,8 @@ export default function AdminUsers() {
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--admin-space-1)' }}>
                         {getGPTModelBadge(selectedUser)}
                         <div style={{ fontSize: 'var(--admin-font-size-xs)', color: 'var(--admin-gray-500)' }}>
-                          {getGPTModel(selectedUser) === 'GPT-4' ? 
-                            '高度な推論・創造性 | 最大200トークン' : 
+                          {selectedUser.membershipType === 'subscription' && selectedUser.subscriptionStatus === 'active' ? 
+                            '標準的な対話品質 | 最大200トークン' : 
                             '標準的な対話品質 | 最大150トークン'
                           }
                         </div>
