@@ -143,6 +143,77 @@ export default function Dashboard({ params }) {
     }
   }, [loading, user, locale, generatePersonalityTags]);
   
+  // 定期的にチャット制限状態をチェック（無料会員のみ）
+  useEffect(() => {
+    if (user?.membershipType !== 'free') return;
+    
+    const fetchLimitInfo = async () => {
+      if (user?.selectedCharacter?._id) {
+        try {
+          const response = await fetch(`/api/chat?characterId=${user.selectedCharacter._id}`, {
+            headers: {
+              'x-auth-token': localStorage.getItem('token')
+            }
+          });
+          if (response.ok) {
+            const data = await response.json();
+            setChatLimitInfo({
+              isLimitReached: data.isLimitReached,
+              remainingChats: data.remainingChats
+            });
+          }
+        } catch (err) {
+          console.error('Failed to refresh chat limit info:', err);
+        }
+      }
+    };
+    
+    // 初回は短いインターバルで頻繁にチェック（管理者のリセット操作を早期検出）
+    const shortInterval = setInterval(fetchLimitInfo, 5000); // 5秒ごと
+    
+    // 60秒後に長いインターバルに切り替え
+    const longIntervalTimeout = setTimeout(() => {
+      clearInterval(shortInterval);
+      const longInterval = setInterval(fetchLimitInfo, 30000); // 30秒ごと
+      
+      return () => clearInterval(longInterval);
+    }, 60000);
+    
+    return () => {
+      clearInterval(shortInterval);
+      clearTimeout(longIntervalTimeout);
+    };
+  }, [user?.membershipType, user?.selectedCharacter?._id]);
+  
+  // ウィンドウフォーカス時にチャット制限状態を再チェック
+  useEffect(() => {
+    if (user?.membershipType !== 'free') return;
+    
+    const handleFocus = async () => {
+      if (user?.selectedCharacter?._id) {
+        try {
+          const response = await fetch(`/api/chat?characterId=${user.selectedCharacter._id}`, {
+            headers: {
+              'x-auth-token': localStorage.getItem('token')
+            }
+          });
+          if (response.ok) {
+            const data = await response.json();
+            setChatLimitInfo({
+              isLimitReached: data.isLimitReached,
+              remainingChats: data.remainingChats
+            });
+          }
+        } catch (err) {
+          console.error('Failed to refresh chat limit info on focus:', err);
+        }
+      }
+    };
+    
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
+  }, [user?.membershipType, user?.selectedCharacter?._id]);
+  
   const handleStartChat = async () => {
     try {
       // キャラクターの購入状態をチェック
