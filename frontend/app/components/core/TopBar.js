@@ -118,11 +118,41 @@ const TopBar = ({
           <h1 className={styles.contextTitle}>{contextInfo.title}</h1>
           <p className={styles.contextSubtitle}>{contextInfo.subtitle}</p>
         </div>
+
+        {/* チャット画面でのキャラクター情報と親密度 */}
+        {currentContext === 'chat' && user?.selectedCharacter && (
+          <div className={styles.chatInfo}>
+            <div className={styles.characterAvatar}>
+              {user.selectedCharacter.imageChatAvatar ? (
+                <img 
+                  src={user.selectedCharacter.imageChatAvatar} 
+                  alt={getSafeString(user.selectedCharacter.name, 'キャラクター')}
+                  className={styles.characterImage}
+                />
+              ) : (
+                <span className={styles.characterEmoji}>🤖</span>
+              )}
+            </div>
+            <div className={styles.affinityDisplay}>
+              <div className={styles.affinityLevel}>
+                <span className={styles.affinityLabel}>親密度</span>
+                <span className={styles.affinityValue}>{user.selectedCharacter.affinity || 0}</span>
+                <span className={styles.affinityMax}>/100</span>
+              </div>
+              <div className={styles.affinityBar}>
+                <div 
+                  className={styles.affinityProgress}
+                  style={{ width: `${(user.selectedCharacter.affinity || 0)}%` }}
+                ></div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* 中央：管理者向けクイックナビ */}
+      {/* 中央：管理者向けクイックナビ / チャット画面では空 */}
       <div className={styles.centerSection}>
-        {isAdmin && (
+        {isAdmin && currentContext !== 'chat' && (
           <div className={styles.quickNav}>
             <Link href="/admin/dashboard" className={styles.quickNavItem}>
               📊 ダッシュボード

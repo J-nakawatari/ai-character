@@ -67,39 +67,6 @@ const ContextPanel = ({
         return (
           <>
             <div className={styles.section}>
-              <h4>現在のキャラクター</h4>
-              {user?.selectedCharacter ? (
-                <div className={styles.characterCard}>
-                  <div className={styles.characterAvatar}>
-                    {user.selectedCharacter.imageChatAvatar ? (
-                      <img src={user.selectedCharacter.imageChatAvatar} alt="キャラクター" />
-                    ) : (
-                      '🤖'
-                    )}
-                  </div>
-                  <div className={styles.characterInfo}>
-                    <p className={styles.characterName}>
-                      {getSafeString(user.selectedCharacter.name, 'キャラクター')}
-                    </p>
-                    <Link 
-                      href={`/${locale}/setup?reselect=true`}
-                      className={styles.changeCharacter}
-                    >
-                      キャラクター変更
-                    </Link>
-                  </div>
-                </div>
-              ) : (
-                <Link 
-                  href={`/${locale}/setup`}
-                  className={styles.selectCharacter}
-                >
-                  キャラクターを選択
-                </Link>
-              )}
-            </div>
-
-            <div className={styles.section}>
               <h4>チャット機能</h4>
               <div className={styles.actionGrid}>
                 <button className={styles.actionBtn}>💭 新しい会話</button>
@@ -108,6 +75,18 @@ const ContextPanel = ({
                 <button className={styles.actionBtn}>❤️ お気に入り</button>
               </div>
             </div>
+
+            {!user?.selectedCharacter && (
+              <div className={styles.section}>
+                <h4>キャラクター選択</h4>
+                <Link 
+                  href={`/${locale}/setup`}
+                  className={styles.selectCharacter}
+                >
+                  キャラクターを選択
+                </Link>
+              </div>
+            )}
           </>
         );
 
