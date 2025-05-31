@@ -262,7 +262,7 @@ export default function AdminUsers() {
                           }
                         </div>
                         <div style={{ fontSize: 'var(--admin-font-size-xs)', color: 'var(--admin-gray-400)' }}>
-                          {user.lastLoginAt ? new Date(user.lastLoginAt).toLocaleDateString() : '未記録'}
+                          最終ログイン: {user.lastLoginAt ? new Date(user.lastLoginAt).toLocaleDateString() : '未記録'}
                         </div>
                       </div>
                     </td>
@@ -364,7 +364,7 @@ export default function AdminUsers() {
                       <div style={{ fontSize: 'var(--admin-font-size-sm)', color: 'var(--admin-gray-700)' }}>
                         {selectedUser.lastLoginDate ? new Date(selectedUser.lastLoginDate).toLocaleDateString('ja-JP', {
                           year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
-                        }) : '未記録'}
+                        }) : 'データなし'}
                       </div>
                     </div>
                   </div>
