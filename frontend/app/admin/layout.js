@@ -3,8 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAdminAuth, AdminAuthProvider } from '@/utils/adminAuth';
-import Link from 'next/link';
-import SidebarShadcn from '@/components/SidebarShadcn';
+import DashboardLayout from '@/components/DashboardLayout';
 
 export default function AdminLayout({ children }) {
   return (
@@ -51,11 +50,13 @@ function AdminLayoutInner({ children }) {
   }
   
   return (
-    <div className="app-layout">
-      <SidebarShadcn onLogout={handleLogout} />
-      <main className="app-main">
-        {children}
-      </main>
-    </div>
+    <DashboardLayout
+      isAdmin={true}
+      user={admin}
+      onLogout={handleLogout}
+      locale="ja"
+    >
+      {children}
+    </DashboardLayout>
   );
 } 
