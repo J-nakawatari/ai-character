@@ -73,10 +73,13 @@ router.get('/', auth, async (req, res) => {
     
     // 制限に達した場合、制限メッセージをチャット履歴に追加
     if (isLimitReached && user.membershipType === 'free') {
-      const characterName = getString(character.name, user.preferredLanguage || 'ja');
+      const locale = user.preferredLanguage || 'ja';
+      // 管理画面で設定された制限メッセージを取得
+      const adminLimitMessage = getString(character.limitMessage, locale);
+      
       const limitMessage = {
         sender: 'ai',
-        content: `申し訳ありません…😢 無料会員の方は1日5回までしかお話しできないんです。\n\nでも、プレミアム会員になってくれたら、私と無制限でお話しできますよ！✨\n\n${characterName}と一緒にもっとたくさんお話ししませんか？ お待ちしています💕`,
+        content: adminLimitMessage || `申し訳ありませんが、無料会員の方は1日5回までしかチャットできません。プレミアム会員になると無制限でお話しできるようになります。`,
         timestamp: new Date(),
         isLimitMessage: true
       };
