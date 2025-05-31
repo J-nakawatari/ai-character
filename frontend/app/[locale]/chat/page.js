@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, use } from 'react';
+import { useState, useEffect, useRef, use, useCallback } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
 import useRequireAuth from '../../utils/useRequireAuth';
@@ -43,6 +43,21 @@ export default function Chat({ params }) {
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const canvasRef = useRef(null);
+  
+  // チャット制限状態をリロードする関数
+  const reloadChatLimitStatus = useCallback(async () => {
+    if (user?.selectedCharacter?._id && user?.membershipType === 'free') {
+      try {
+        const res = await apiGet(`/chat?characterId=${user.selectedCharacter._id}`);
+        if (res.success) {
+          setChatLimitReached(res.data.isLimitReached || false);
+          setRemainingChats(res.data.remainingChats || null);
+        }
+      } catch (err) {
+        console.error('Failed to reload chat limit status:', err);
+      }
+    }
+  }, [user?.selectedCharacter?._id, user?.membershipType]);
   
   useEffect(() => {
     const loadChatHistory = async () => {
@@ -107,6 +122,43 @@ export default function Chat({ params }) {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+  
+  // 定期的にチャット制限状態をチェック（無料会員のみ）
+  useEffect(() => {
+    if (user?.membershipType !== 'free') return;
+    
+    // 初回は短いインターバルで頻繁にチェック（管理者のリセット操作を早期検出）
+    const shortInterval = setInterval(() => {
+      reloadChatLimitStatus();
+    }, 5000); // 5秒ごと
+    
+    // 60秒後に長いインターバルに切り替え
+    const longIntervalTimeout = setTimeout(() => {
+      clearInterval(shortInterval);
+      const longInterval = setInterval(() => {
+        reloadChatLimitStatus();
+      }, 30000); // 30秒ごと
+      
+      return () => clearInterval(longInterval);
+    }, 60000);
+    
+    return () => {
+      clearInterval(shortInterval);
+      clearTimeout(longIntervalTimeout);
+    };
+  }, [user?.membershipType, reloadChatLimitStatus]);
+  
+  // ウィンドウフォーカス時にチャット制限状態を再チェック
+  useEffect(() => {
+    if (user?.membershipType !== 'free') return;
+    
+    const handleFocus = () => {
+      reloadChatLimitStatus();
+    };
+    
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
+  }, [user?.membershipType, reloadChatLimitStatus]);
   
   useEffect(() => {
     let animationId;
