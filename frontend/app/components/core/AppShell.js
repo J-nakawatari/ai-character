@@ -16,7 +16,10 @@ const AppShell = ({
   user, 
   isAdmin = false,
   onLogout,
-  locale = 'ja'
+  locale = 'ja',
+  tokenBalance,
+  remainingFreeChats,
+  isBaseCharacter
 }) => {
   const pathname = usePathname();
   const [contextPanelOpen, setContextPanelOpen] = useState(false);
@@ -51,6 +54,9 @@ const AppShell = ({
         currentContext={currentContext}
         onContextToggle={() => setContextPanelOpen(!contextPanelOpen)}
         locale={locale}
+        tokenBalance={tokenBalance}
+        remainingFreeChats={remainingFreeChats}
+        isBaseCharacter={isBaseCharacter}
       />
 
       {/* メインワークスペース */}

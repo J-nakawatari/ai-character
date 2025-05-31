@@ -216,6 +216,34 @@
   transform: scale(1.1);
 }
 
+/* トークン情報 */
+.tokenInfo {
+  margin-left: 16px;
+  flex-shrink: 0;
+}
+
+.tokenDisplay {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(248, 250, 252, 0.8);
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  backdrop-filter: blur(8px);
+}
+
+.tokenIcon {
+  font-size: 16px;
+}
+
+.tokenText {
+  font-size: 13px;
+  font-weight: 600;
+  color: #334155;
+  white-space: nowrap;
+}
+
 @keyframes affinityShine {
   0% { transform: translateX(-100%); }
   50% { transform: translateX(0%); }
@@ -488,6 +516,22 @@
 
   .affinityBar {
     height: 6px;
+  }
+
+  .tokenInfo {
+    margin-left: 8px;
+  }
+
+  .tokenDisplay {
+    padding: 4px 8px;
+  }
+
+  .tokenIcon {
+    font-size: 14px;
+  }
+
+  .tokenText {
+    font-size: 12px;
   }
 }
 
