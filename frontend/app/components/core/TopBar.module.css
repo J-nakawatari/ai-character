@@ -77,6 +77,106 @@
   text-overflow: ellipsis;
 }
 
+/* チャット画面のキャラクター情報と親密度 */
+.chatInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: 16px;
+  padding: 8px 12px;
+  background: rgba(248, 250, 252, 0.8);
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
+}
+
+.characterAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.characterImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.characterEmoji {
+  font-size: 18px;
+  color: white;
+}
+
+.affinityDisplay {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 120px;
+}
+
+.affinityLevel {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.affinityLabel {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.affinityValue {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.affinityMax {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.affinityBar {
+  width: 100%;
+  height: 4px;
+  background: #e2e8f0;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.affinityProgress {
+  height: 100%;
+  background: linear-gradient(90deg, #ff6b9d, #f8a5c2);
+  border-radius: 2px;
+  transition: width 0.6s ease;
+  position: relative;
+}
+
+.affinityProgress::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  animation: affinityShine 2s ease-in-out infinite;
+}
+
+@keyframes affinityShine {
+  0% { transform: translateX(-100%); }
+  50% { transform: translateX(0%); }
+  100% { transform: translateX(100%); }
+}
+
 /* 中央：ナビゲーション・検索 */
 .centerSection {
   flex: 1;
@@ -307,6 +407,28 @@
   
   .userInfo {
     display: none;
+  }
+
+  .chatInfo {
+    margin-left: 8px;
+    padding: 6px 8px;
+  }
+
+  .characterAvatar {
+    width: 32px;
+    height: 32px;
+  }
+
+  .characterEmoji {
+    font-size: 14px;
+  }
+
+  .affinityDisplay {
+    min-width: 100px;
+  }
+
+  .affinityValue {
+    font-size: 14px;
   }
 }
 
