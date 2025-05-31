@@ -457,3 +457,63 @@
   font-weight: 600;
   font-size: 0.9rem;
 }
+
+/* 性格セクションのスタイル */
+.personalitySection {
+  margin: 16px 0;
+}
+
+.personalityHeader {
+  margin-bottom: 8px;
+}
+
+.personalityLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: #6b7280;
+  display: inline-block;
+}
+
+.personalityTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.personalityTag {
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.personalityTag:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.personalityPreset {
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  font-weight: 600;
+  position: relative;
+}
+
+.personalityPreset::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  right: -1px;
+  bottom: -1px;
+  background: linear-gradient(45deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+  border-radius: 16px;
+  z-index: -1;
+}
+
+.personalityNormal {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}

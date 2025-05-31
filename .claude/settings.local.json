@@ -34,7 +34,9 @@
       "Bash(npm start)",
       "Bash(git fetch:*)",
       "Bash(rg:*)",
-      "Bash(/home/jun/.nvm/versions/node/v22.16.0/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/x64-linux/rg \"制限メッセージ|limitMessage\" /home/jun/projects/ai-character/backend/routes/chat.js -n)"
+      "Bash(/home/jun/.nvm/versions/node/v22.16.0/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/x64-linux/rg \"制限メッセージ|limitMessage\" /home/jun/projects/ai-character/backend/routes/chat.js -n)",
+      "Bash(/home/jun/.nvm/versions/node/v22.16.0/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/x64-linux/rg -n \"selectedCharacter|characterImage\" \"/home/jun/projects/ai-character/frontend/app/[locale]/chat/page.js\")",
+      "Bash(npm test)"
     ]
   },
   "enableAllProjectMcpServers": false

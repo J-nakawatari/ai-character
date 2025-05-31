@@ -1,0 +1,156 @@
+/* モダンボタンコンポーネント */
+.modernButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  font-family: inherit;
+}
+
+/* サイズ */
+.small {
+  padding: 8px 16px;
+  font-size: 14px;
+  height: 36px;
+}
+
+.medium {
+  padding: 12px 24px;
+  font-size: 16px;
+  height: 44px;
+}
+
+.large {
+  padding: 16px 32px;
+  font-size: 18px;
+  height: 52px;
+}
+
+/* バリエーション */
+.primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 2px 4px rgba(102, 126, 234, 0.2);
+}
+
+.primary:hover:not(.disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.secondary {
+  background: #f8fafc;
+  color: #374151;
+  border: 1px solid #e5e7eb;
+}
+
+.secondary:hover:not(.disabled) {
+  background: #f1f5f9;
+  border-color: #d1d5db;
+  transform: translateY(-1px);
+}
+
+.success {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
+}
+
+.success:hover:not(.disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.warning {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: white;
+  box-shadow: 0 2px 4px rgba(245, 158, 11, 0.2);
+}
+
+.warning:hover:not(.disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+.error {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
+}
+
+.error:hover:not(.disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.outline {
+  background: transparent;
+  color: #667eea;
+  border: 2px solid #667eea;
+}
+
+.outline:hover:not(.disabled) {
+  background: #667eea;
+  color: white;
+  transform: translateY(-1px);
+}
+
+.ghost {
+  background: transparent;
+  color: #6b7280;
+}
+
+.ghost:hover:not(.disabled) {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+/* 状態 */
+.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.loading {
+  cursor: wait;
+}
+
+.loadingText {
+  opacity: 0.7;
+}
+
+/* スピナー */
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* アクティブ状態 */
+.modernButton:active:not(.disabled) {
+  transform: translateY(0);
+}
+
+/* フォーカス状態 */
+.modernButton:focus {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+}

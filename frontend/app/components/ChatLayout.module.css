@@ -1,0 +1,247 @@
+/* チャット専用レイアウト */
+.chatLayout {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.chatContent {
+  width: 100%;
+  height: 100%;
+}
+
+/* フローティングナビゲーションボタン */
+.floatingNavBtn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  width: 56px;
+  height: 56px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 50%;
+  color: #374151;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.floatingNavBtn:hover {
+  background: #f9fafb;
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.floatingNavBtn:active {
+  transform: scale(0.95);
+}
+
+/* オーバーレイ */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.3s ease;
+}
+
+/* スライドメニュー */
+.slideMenu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 320px;
+  height: 100vh;
+  background: #ffffff;
+  border-right: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  z-index: 999;
+  animation: slideIn 0.3s ease;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+}
+
+/* メニューヘッダー */
+.menuHeader {
+  padding: 32px 24px;
+  border-bottom: 1px solid #f3f4f6;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.userAvatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.userAvatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.userDetails {
+  flex: 1;
+}
+
+.userName {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 4px;
+}
+
+.userRole {
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+/* メニューナビゲーション */
+.menuNav {
+  flex: 1;
+  padding: 24px 16px;
+  overflow-y: auto;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  margin-bottom: 8px;
+  border-radius: 12px;
+  color: #6b7280;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.menuItem:hover {
+  background: #f3f4f6;
+  color: #374151;
+  transform: translateX(8px);
+}
+
+.menuIcon {
+  font-size: 24px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.menuLabel {
+  font-weight: 600;
+}
+
+/* メニューフッター */
+.menuFooter {
+  padding: 24px 16px;
+  border-top: 1px solid #f3f4f6;
+}
+
+.menuLogoutBtn {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding: 16px 20px;
+  background: none;
+  border: none;
+  border-radius: 12px;
+  color: #dc2626;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.menuLogoutBtn:hover {
+  background: #fef2f2;
+  transform: translateX(8px);
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 640px) {
+  .slideMenu {
+    width: 100vw;
+  }
+  
+  .floatingNavBtn {
+    width: 48px;
+    height: 48px;
+    font-size: 18px;
+    top: 16px;
+    left: 16px;
+  }
+}
+
+/* アニメーション */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* メニューアイテムのスタガードアニメーション */
+.menuItem:nth-child(1) { animation-delay: 0.1s; }
+.menuItem:nth-child(2) { animation-delay: 0.2s; }
+.menuItem:nth-child(3) { animation-delay: 0.3s; }
+.menuItem:nth-child(4) { animation-delay: 0.4s; }
+
+.menuItem {
+  animation: slideInItem 0.4s ease forwards;
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+@keyframes slideInItem {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

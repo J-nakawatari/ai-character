@@ -2,7 +2,8 @@
 
 import { NextIntlClientProvider } from 'next-intl';
 import { AuthProvider, useAuth } from '../utils/auth';
-import DashboardLayout from '../components/DashboardLayout';
+import ModernLayout from '../components/ModernLayout';
+import ChatLayout from '../components/ChatLayout';
 import { usePathname, useRouter } from 'next/navigation';
 import { use } from 'react';
 
@@ -60,20 +61,25 @@ function LocaleLayoutInner({ children, locale }) {
 
   if (isChat) {
     return (
-      <div style={{ display: 'block', background: 'transparent', minHeight: '100vh' }}>
+      <ChatLayout
+        user={user}
+        onLogout={handleLogout}
+        locale={locale}
+      >
         {children}
-      </div>
+      </ChatLayout>
     );
   }
 
   return (
-    <DashboardLayout
+    <ModernLayout
       isAdmin={false}
       user={user}
       onLogout={handleLogout}
       locale={locale}
+      showSidebar={true}
     >
       {children}
-    </DashboardLayout>
+    </ModernLayout>
   );
 }

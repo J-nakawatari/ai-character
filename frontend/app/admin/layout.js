@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAdminAuth, AdminAuthProvider } from '@/utils/adminAuth';
-import DashboardLayout from '@/components/DashboardLayout';
+import ModernLayout from '@/components/ModernLayout';
 
 export default function AdminLayout({ children }) {
   return (
@@ -50,13 +50,14 @@ function AdminLayoutInner({ children }) {
   }
   
   return (
-    <DashboardLayout
+    <ModernLayout
       isAdmin={true}
       user={admin}
       onLogout={handleLogout}
       locale="ja"
+      showSidebar={true}
     >
       {children}
-    </DashboardLayout>
+    </ModernLayout>
   );
 } 
