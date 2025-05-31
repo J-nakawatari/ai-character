@@ -72,10 +72,31 @@ cd frontend && npm run lint
 - Admin pages (`/admin/*`): Japanese only - do NOT use `t()` or i18n
 - Translation files: `/frontend/messages/[locale].json`
 
-### Git Workflow
-- Always create new branches from `main` for any work
+### Git Workflow - 必須手順
+**新しい作業を開始する際は、必ず以下の手順を実行すること：**
+
+```bash
+# 1. mainブランチに切り替え
+git checkout main
+
+# 2. 最新情報を取得
+git pull origin main
+
+# 3. 新しい作業ブランチを作成（feature/[作業内容]の形式）
+git checkout -b feature/[作業内容]
+
+# 4. 作業実施後、プルリクエスト作成
+```
+
+**重要なルール：**
+- 必ず main ブランチから最新情報を取得してから新ブランチを作成
+- 既存ブランチでの作業は禁止（緊急修正や明示的な継続作業を除く）
 - Never commit directly to main
 - All communication in Japanese
+
+**例外：**
+- 緊急修正
+- ユーザーが明示的に既存ブランチでの継続作業を指示した場合のみ
 
 ### Code Conventions
 - Follow existing patterns in the codebase
