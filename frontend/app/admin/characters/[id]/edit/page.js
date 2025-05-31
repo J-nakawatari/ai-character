@@ -570,7 +570,7 @@ export default function EditCharacter({ params }) {
                   className={styles.radioInput}
                 />
                 <span className={styles.radioMark}></span>
-                <span className={styles.checkboxLabel}>サブスク会員用キャラクター</span>
+                <span className={styles.checkboxLabel}>有料キャラクター</span>
               </label>
               <label className={styles.customRadio}>
                 <input
