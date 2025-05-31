@@ -339,27 +339,6 @@ export default function Chat({ params }) {
 
   return (
     <div className="chat-container" style={{ '--theme-color': themeColor, '--user-bubble-bg': userBubbleBg, position: 'relative' }}>
-      {/* チャットヘッダー */}
-      <div className="chat-header">
-        <div className="chat-header-character-info">
-          {user.selectedCharacter?.imageChatAvatar && (
-            <img
-              src={user.selectedCharacter.imageChatAvatar}
-              alt={typeof user.selectedCharacter.name === 'object' 
-                ? (user.selectedCharacter.name[locale] || user.selectedCharacter.name.ja || user.selectedCharacter.name.en || 'AI Character') 
-                : (user.selectedCharacter.name || 'AI Character')}
-              className="chat-header-avatar"
-            />
-          )}
-          <div className="chat-header-details">
-            <h1 className="chat-header-title">
-              {typeof user.selectedCharacter?.name === 'object'
-                ? (user.selectedCharacter.name[locale] || user.selectedCharacter.name.ja || user.selectedCharacter.name.en || 'AIキャラクター')
-                : (user.selectedCharacter?.name || 'AIキャラクター')}
-            </h1>
-          </div>
-        </div>
-      </div>
 
       <main className="chat-main" style={{ background: chatMainBg }}>
         {error && (
