@@ -454,41 +454,6 @@ export default function Chat({ params }) {
             </div>
           )}
           
-          {/* トークン残高・残り回数表示 */}
-          {!chatLimitReached && (
-            <div className="chat-status-display">
-              {isBaseCharacter ? (
-                /* 無料キャラクターの場合：残り回数表示 */
-                remainingFreeChats !== null && (
-                  <div className="chat-remaining-info chat-remaining-info--free">
-                    <span className="chat-remaining-text">
-                      🆓 今日の無料チャット: あと{remainingFreeChats}回
-                    </span>
-                  </div>
-                )
-              ) : (
-                /* 課金キャラクターの場合：トークン残高表示 */
-                <div className="chat-remaining-info chat-remaining-info--token">
-                  <span className="chat-remaining-text">
-                    💎 トークン残高: {tokenBalance.toLocaleString()}
-                    {tokensUsed > 0 && (
-                      <span className="chat-tokens-used"> (前回消費: {tokensUsed})</span>
-                    )}
-                  </span>
-                </div>
-              )}
-            </div>
-          )}
-          
-          {/* 旧互換性：無料会員の残りチャット回数表示 */}
-          {!chatLimitReached && user?.membershipType === 'free' && remainingChats !== null && remainingFreeChats === null && (
-            <div className="chat-remaining-counter">
-              💬 今日あと <strong>{remainingChats}</strong> 回チャットできます
-              {remainingChats <= 2 && (
-                <span className="chat-remaining-warning"> • プレミアム会員で無制限に！</span>
-              )}
-            </div>
-          )}
           
           <div className="chat-input-form">
             <div className="chat-input-wrapper">

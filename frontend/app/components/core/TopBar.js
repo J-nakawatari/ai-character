@@ -14,7 +14,10 @@ const TopBar = ({
   onLogout, 
   currentContext, 
   onContextToggle,
-  locale 
+  locale,
+  tokenBalance,
+  remainingFreeChats,
+  isBaseCharacter
 }) => {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
 
@@ -204,6 +207,29 @@ const TopBar = ({
               <div className={styles.heartsContainer}>
                 {renderHearts(user.selectedCharacter.affinity || 0)}
               </div>
+            </div>
+            
+            {/* トークン残高・無料チャット回数表示 */}
+            <div className={styles.tokenInfo}>
+              {isBaseCharacter ? (
+                remainingFreeChats !== null && (
+                  <div className={styles.tokenDisplay}>
+                    <span className={styles.tokenIcon}>🆓</span>
+                    <span className={styles.tokenText}>
+                      残り {remainingFreeChats} 回
+                    </span>
+                  </div>
+                )
+              ) : (
+                tokenBalance !== undefined && (
+                  <div className={styles.tokenDisplay}>
+                    <span className={styles.tokenIcon}>💎</span>
+                    <span className={styles.tokenText}>
+                      {tokenBalance.toLocaleString()}
+                    </span>
+                  </div>
+                )
+              )}
             </div>
           </div>
         )}
