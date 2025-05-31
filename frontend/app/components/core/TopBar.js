@@ -162,9 +162,9 @@ const TopBar = ({
           <p className={styles.contextSubtitle}>{contextInfo.subtitle}</p>
         </div>
 
-        {/* チャット画面でのキャラクター情報と親密度 */}
+        {/* チャット画面での親密度表示 */}
         {currentContext === 'chat' && user?.selectedCharacter && (
-          <div className={styles.chatInfo}>
+          <div className={styles.affinitySection}>
             <div className={styles.characterAvatar}>
               {user.selectedCharacter.imageChatAvatar ? (
                 <img 
@@ -176,7 +176,7 @@ const TopBar = ({
                 <span className={styles.characterEmoji}>🤖</span>
               )}
             </div>
-            <div className={styles.affinityContainer}>
+            <div className={styles.affinityDetails}>
               <div className={styles.affinityHeader}>
                 <div className={styles.affinityLevel}>
                   <span className={styles.affinityLabel}>親密度</span>
