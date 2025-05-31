@@ -430,16 +430,31 @@ export default function Chat({ params }) {
           {chatLimitReached && (
             <div className="chat-limit-message">
               <div className="chat-limit-content">
-                <div className="chat-limit-icon">😅</div>
-                <h3 className="chat-limit-title">1日の無料チャット回数に達しました</h3>
-                {limitMessage ? (
-                  <p>{limitMessage}</p>
-                ) : (
-                  <>
-                    <p>プレミアム会員になると、もっとたくさん会話ができます。</p>
-                    <p>いつでもキャラクターと無制限でお話しできるように、ぜひプレミアム会員をご検討ください！</p>
-                  </>
-                )}
+                <div className="chat-limit-header">
+                  <div className="chat-limit-character-avatar">
+                    {user?.selectedCharacter?.characterImage ? (
+                      <Image
+                        src={user.selectedCharacter.characterImage}
+                        alt={user.selectedCharacter.name}
+                        width={60}
+                        height={60}
+                        className="character-avatar-img"
+                      />
+                    ) : (
+                      <div className="character-avatar-placeholder">💭</div>
+                    )}
+                  </div>
+                  <div className="chat-limit-text">
+                    <div className="chat-limit-subtitle">1日の無料チャット回数に達しました</div>
+                    <div className="chat-limit-main-message">
+                      {limitMessage ? (
+                        <span>{limitMessage}</span>
+                      ) : (
+                        <span>もっと私とお話ししませんか？プレミアム会員なら無制限でお話しできます♪</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
                 <button 
                   className="chat-upgrade-button"
                   onClick={() => router.push(`/${locale}/purchase`)}
