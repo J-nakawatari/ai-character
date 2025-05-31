@@ -86,8 +86,25 @@ const TopBar = ({
         </div>
       </div>
 
-      {/* 中央：クイック検索（必要に応じて） */}
+      {/* 中央：管理者向けクイックナビ */}
       <div className={styles.centerSection}>
+        {isAdmin && (
+          <div className={styles.quickNav}>
+            <Link href="/admin/dashboard" className={styles.quickNavItem}>
+              📊 ダッシュボード
+            </Link>
+            <Link href="/admin/characters" className={styles.quickNavItem}>
+              🤖 キャラクター
+            </Link>
+            <Link href="/admin/users" className={styles.quickNavItem}>
+              👥 ユーザー
+            </Link>
+            <Link href="/admin/settings" className={styles.quickNavItem}>
+              ⚙️ 設定
+            </Link>
+          </div>
+        )}
+        
         {(currentContext === 'character-management' || currentContext === 'user-management') && (
           <div className={styles.quickSearch}>
             <input 
