@@ -200,22 +200,14 @@ router.put('/:id', adminAuth, uploadImage.single('image'), resizeImage(), async 
       }
     }
     if (limitMessage !== undefined) {
-      console.log('===== LIMIT MESSAGE DEBUG START =====');
-      console.log('受信したlimitMessage:', limitMessage);
-      console.log('typeof limitMessage:', typeof limitMessage);
-      console.log('limitMessage.length:', limitMessage.length);
       try {
         const parsedLimitMessage = JSON.parse(limitMessage);
-        console.log('パース成功:', parsedLimitMessage);
         character.limitMessage = parsedLimitMessage;
-        console.log('character.limitMessage設定後:', character.limitMessage);
       } catch (error) {
         console.error('Failed to parse limitMessage:', error);
-        console.error('エラー詳細:', error.message);
         // パースに失敗した場合は空のオブジェクトを設定
         character.limitMessage = { ja: '', en: '' };
       }
-      console.log('===== LIMIT MESSAGE DEBUG END =====');
     }
     if (themeColor) character.themeColor = themeColor;
     if (typeof isActive !== 'undefined') {
@@ -242,9 +234,6 @@ router.put('/:id', adminAuth, uploadImage.single('image'), resizeImage(), async 
     }
 
     await character.save();
-    console.log('===== SAVE AFTER DEBUG =====');
-    console.log('保存後の character.limitMessage:', character.limitMessage);
-    console.log('============================');
     res.json(character);
   } catch (err) {
     console.error(err.message);
@@ -255,17 +244,13 @@ router.put('/:id', adminAuth, uploadImage.single('image'), resizeImage(), async 
 // 削除
 router.delete('/:id', adminAuth, async (req, res) => {
   try {
-    console.log('削除対象のキャラクターID:', req.params.id);
     const character = await Character.findById(req.params.id);
     if (!character) {
-      console.log('キャラクターが見つかりません');
       return res.status(404).json({ msg: 'キャラクターが見つかりません' });
     }
-    console.log('キャラクター情報:', character);
 
     // キャラクターを選択しているユーザーがいないか確認
     const usersWithCharacter = await User.find({ selectedCharacter: req.params.id });
-    console.log('選択しているユーザー:', usersWithCharacter);
     if (usersWithCharacter.length > 0) {
       return res.status(400).json({ 
         msg: 'このキャラクターを選択しているユーザーが存在するため、削除できません。先にユーザーの選択を解除してください。' 
@@ -276,7 +261,6 @@ router.delete('/:id', adminAuth, async (req, res) => {
     const usersWithPurchase = await User.find({
       'purchasedCharacters.character': req.params.id
     });
-    console.log('購入しているユーザー:', usersWithPurchase);
     if (usersWithPurchase.length > 0) {
       return res.status(400).json({ 
         msg: 'このキャラクターを購入しているユーザーが存在するため、削除できません。' 
@@ -284,7 +268,6 @@ router.delete('/:id', adminAuth, async (req, res) => {
     }
 
     await character.deleteOne();
-    console.log('キャラクターを削除しました');
     res.json({ msg: 'キャラクターを削除しました' });
   } catch (err) {
     console.error('キャラクター削除エラー:', err);

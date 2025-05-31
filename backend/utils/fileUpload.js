@@ -72,9 +72,6 @@ const resizeImage = (width = 512, height = 512) => async (req, res, next) => {
       .png()
       .toFile(tmpPath);
     await fs.promises.rename(tmpPath, req.file.path);
-    // Log image metadata for debugging transparency
-    const meta = await sharp(req.file.path).metadata();
-    console.log('[resizeImage] Saved:', req.file.path, 'format:', meta.format, 'hasAlpha:', meta.hasAlpha);
     next();
   } catch (err) {
     next(err);

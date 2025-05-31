@@ -89,10 +89,6 @@ export default function EditCharacter({ params }) {
   const fetchCharacter = async () => {
     try {
       const res = await api.get(`/admin/characters/${id}`);
-      console.log('===== FETCH CHARACTER DEBUG =====');
-      console.log('取得したキャラクターデータ:', res.data);
-      console.log('limitMessage:', res.data.limitMessage);
-      console.log('================================');
       setFormData(res.data);
       setError('');
     } catch (err) {
@@ -134,12 +130,8 @@ export default function EditCharacter({ params }) {
     setError('');
     setSaving(true);
 
+
     try {
-      console.log('===== SUBMIT FORM DEBUG =====');
-      console.log('送信前の formData:', formData);
-      console.log('formData.limitMessage:', formData.limitMessage);
-      console.log('============================');
-      
       const fd = new FormData();
       fd.append('name', JSON.stringify(formData.name || { ja: '', en: '' }));
       fd.append('description', JSON.stringify(formData.description || { ja: '', en: '' }));
@@ -150,7 +142,10 @@ export default function EditCharacter({ params }) {
       fd.append('purchaseType', formData.purchaseType);
       fd.append('voice', formData.voice);
       fd.append('defaultMessage', JSON.stringify(formData.defaultMessage || { ja: '', en: '' }));
-      fd.append('limitMessage', JSON.stringify(formData.limitMessage || { ja: '', en: '' }));
+      
+      const limitMessageString = JSON.stringify(formData.limitMessage || { ja: '', en: '' });
+      fd.append('limitMessage', limitMessageString);
+      
       fd.append('themeColor', formData.themeColor);
       fd.append('isActive', formData.isActive);
       if (croppedImages.characterSelect) {
@@ -296,6 +291,7 @@ export default function EditCharacter({ params }) {
         {error && (
           <div className={styles.errorContainer}>{error}</div>
         )}
+        
         <form onSubmit={handleSubmit}>
           {/* 基本情報セクション */}
           <div className={styles.formCard}>
