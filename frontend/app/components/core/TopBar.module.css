@@ -43,31 +43,12 @@
 }
 
 .hamburger {
-  width: 20px;
-  height: 2px;
-  background: #64748b;
-  border-radius: 1px;
-  position: relative;
-  transition: all 0.3s ease;
+  color: #64748b;
+  transition: all 0.2s ease;
 }
 
-.hamburger::before,
-.hamburger::after {
-  content: '';
-  position: absolute;
-  width: 20px;
-  height: 2px;
-  background: #64748b;
-  border-radius: 1px;
-  transition: all 0.3s ease;
-}
-
-.hamburger::before {
-  top: -6px;
-}
-
-.hamburger::after {
-  bottom: -6px;
+.contextToggle:hover .hamburger {
+  color: #0f172a;
 }
 
 .contextInfo {

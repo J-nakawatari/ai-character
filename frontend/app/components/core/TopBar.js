@@ -97,7 +97,21 @@ const TopBar = ({
           onClick={onContextToggle}
           title="メニューを開く"
         >
-          <span className={styles.hamburger}></span>
+          <svg 
+            className={styles.hamburger}
+            width="24" 
+            height="24" 
+            viewBox="0 0 24 24" 
+            fill="none"
+          >
+            <path 
+              d="M3 6h18M3 12h18M3 18h18" 
+              stroke="currentColor" 
+              strokeWidth="2" 
+              strokeLinecap="round" 
+              strokeLinejoin="round"
+            />
+          </svg>
         </button>
         
         <div className={styles.contextInfo}>
