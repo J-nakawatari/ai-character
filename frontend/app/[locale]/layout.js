@@ -133,6 +133,7 @@ function LocaleLayoutInner({ children, locale }) {
         tokenBalance={chatInfo.tokenBalance}
         remainingFreeChats={chatInfo.remainingFreeChats}
         isBaseCharacter={chatInfo.isBaseCharacter}
+        affinityData={chatInfo.affinityData}
       >
         <div style={{
           position: 'absolute',

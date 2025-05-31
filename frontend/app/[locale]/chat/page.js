@@ -46,6 +46,7 @@ export default function Chat({ params }) {
   const [tokenBalance, setTokenBalance] = useState(0);
   const [tokensUsed, setTokensUsed] = useState(0);
   const [isBaseCharacter, setIsBaseCharacter] = useState(false);
+  const [affinityData, setAffinityData] = useState(null);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const canvasRef = useRef(null);
@@ -64,6 +65,29 @@ export default function Chat({ params }) {
       }
     }
   }, [user?.selectedCharacter?._id, user?.membershipType]);
+
+  // 親密度データを取得する関数
+  const loadAffinityData = useCallback(async () => {
+    if (user?.selectedCharacter?._id) {
+      try {
+        const response = await fetch(`/api/users/me/affinity/${user.selectedCharacter._id}`, {
+          headers: {
+            'x-auth-token': localStorage.getItem('token')
+          }
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setAffinityData(data);
+          // ChatContextを更新
+          updateChatInfo({
+            affinityData: data
+          });
+        }
+      } catch (error) {
+        console.error('Failed to load affinity data:', error);
+      }
+    }
+  }, [user?.selectedCharacter?._id]);
   
   useEffect(() => {
     const loadChatHistory = async () => {
@@ -101,6 +125,9 @@ export default function Chat({ params }) {
               isBaseCharacter: res.data.isBaseCharacter
             });
             
+            // 親密度データも取得
+            loadAffinityData();
+            
             // 制限メッセージを設定（APIレスポンスから取得）
             if (res.data.limitMessage !== undefined) {
               setLimitMessage(res.data.limitMessage);
@@ -132,7 +159,7 @@ export default function Chat({ params }) {
     if (!loading && user) {
       loadChatHistory();
     }
-  }, [loading, user, t, locale]);
+  }, [loading, user, t, locale, loadAffinityData]);
   
   useEffect(() => {
     scrollToBottom();

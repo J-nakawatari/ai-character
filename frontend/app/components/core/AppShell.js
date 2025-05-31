@@ -19,7 +19,8 @@ const AppShell = ({
   locale = 'ja',
   tokenBalance,
   remainingFreeChats,
-  isBaseCharacter
+  isBaseCharacter,
+  affinityData
 }) => {
   const pathname = usePathname();
   const [contextPanelOpen, setContextPanelOpen] = useState(false);
@@ -57,6 +58,7 @@ const AppShell = ({
         tokenBalance={tokenBalance}
         remainingFreeChats={remainingFreeChats}
         isBaseCharacter={isBaseCharacter}
+        affinityData={affinityData}
       />
 
       {/* メインワークスペース */}

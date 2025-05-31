@@ -17,7 +17,8 @@ const TopBar = ({
   locale,
   tokenBalance,
   remainingFreeChats,
-  isBaseCharacter
+  isBaseCharacter,
+  affinityData
 }) => {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
 
@@ -183,29 +184,29 @@ const TopBar = ({
               <div className={styles.affinityHeader}>
                 <div className={styles.affinityLevel}>
                   <span className={styles.affinityLabel}>親密度</span>
-                  <span className={styles.affinityValue}>{user.selectedCharacter.affinity || 0}</span>
+                  <span className={styles.affinityValue}>{affinityData?.level || 0}</span>
                   <span className={styles.affinityMax}>/100</span>
                 </div>
                 <div 
                   className={styles.affinityDescription}
-                  style={{ color: getAffinityDescription(user.selectedCharacter.affinity || 0).color }}
+                  style={{ color: getAffinityDescription(affinityData?.level || 0).color }}
                 >
-                  {getAffinityDescription(user.selectedCharacter.affinity || 0).title}
+                  {getAffinityDescription(affinityData?.level || 0).title}
                 </div>
               </div>
               <div className={styles.affinityProgressContainer}>
                 <div className={styles.affinityBar}>
                   <div 
                     className={styles.affinityProgress}
-                    style={{ width: `${(user.selectedCharacter.affinity || 0)}%` }}
+                    style={{ width: `${(affinityData?.level || 0)}%` }}
                   ></div>
                 </div>
                 <div className={styles.affinityPercentage}>
-                  {user.selectedCharacter.affinity || 0}%
+                  {affinityData?.level || 0}%
                 </div>
               </div>
               <div className={styles.heartsContainer}>
-                {renderHearts(user.selectedCharacter.affinity || 0)}
+                {renderHearts(affinityData?.level || 0)}
               </div>
             </div>
             
