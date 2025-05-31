@@ -262,7 +262,7 @@ export default function AdminUsers() {
                           }
                         </div>
                         <div style={{ fontSize: 'var(--admin-font-size-xs)', color: 'var(--admin-gray-400)' }}>
-                          最終ログイン: {user.lastLoginAt ? new Date(user.lastLoginAt).toLocaleDateString() : '未記録'}
+                          最終ログイン: {user.lastLoginDate ? new Date(user.lastLoginDate).toLocaleDateString() : '未記録'}
                         </div>
                       </div>
                     </td>
