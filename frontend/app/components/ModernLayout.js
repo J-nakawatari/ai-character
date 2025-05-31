@@ -121,7 +121,7 @@ const ModernLayout = ({
             className={styles.collapseBtn}
             onClick={() => setIsCollapsed(!isCollapsed)}
           >
-            <span className={isCollapsed ? '→' : '←'}</span>
+            <span>{isCollapsed ? '→' : '←'}</span>
           </button>
         </div>
 
