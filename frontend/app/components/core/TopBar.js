@@ -150,12 +150,25 @@ const TopBar = ({
           {/* ドロップダウンメニュー */}
           {userMenuOpen && (
             <div className={styles.dropdown}>
-              <Link href={`/${locale}/mypage`} className={styles.dropdownItem}>
-                👤 プロフィール
-              </Link>
-              <Link href={`/${locale}/dashboard`} className={styles.dropdownItem}>
-                🏠 ダッシュボード
-              </Link>
+              {isAdmin ? (
+                <>
+                  <Link href="/admin/dashboard" className={styles.dropdownItem}>
+                    📊 管理ダッシュボード
+                  </Link>
+                  <Link href="/admin/settings" className={styles.dropdownItem}>
+                    ⚙️ システム設定
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link href={`/${locale}/mypage`} className={styles.dropdownItem}>
+                    👤 プロフィール
+                  </Link>
+                  <Link href={`/${locale}/dashboard`} className={styles.dropdownItem}>
+                    🏠 ダッシュボード
+                  </Link>
+                </>
+              )}
               <div className={styles.dropdownDivider}></div>
               <button 
                 className={styles.dropdownItem}

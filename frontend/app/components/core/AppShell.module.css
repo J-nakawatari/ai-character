@@ -24,13 +24,13 @@
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  transition: margin-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
 }
 
 /* コンテキストパネルが開いている時 */
 .workspace:has(.contextPanel.open) .contentArea {
-  margin-right: 360px;
+  margin-left: 360px;
 }
 
 /* スクロールバーのカスタマイズ */
@@ -54,7 +54,7 @@
 /* レスポンシブ対応 */
 @media (max-width: 1024px) {
   .workspace:has(.contextPanel.open) .contentArea {
-    margin-right: 0;
+    margin-left: 0;
   }
 }
 

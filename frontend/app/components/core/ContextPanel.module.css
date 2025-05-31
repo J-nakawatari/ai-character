@@ -15,17 +15,17 @@
 .contextPanel {
   position: fixed;
   top: 0;
-  right: 0;
+  left: 0;
   width: 360px;
   height: 100vh;
   background: #ffffff;
-  border-left: 1px solid #e2e8f0;
-  transform: translateX(100%);
+  border-right: 1px solid #e2e8f0;
+  transform: translateX(-100%);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 200;
   display: flex;
   flex-direction: column;
-  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 4px 0 12px rgba(0, 0, 0, 0.1);
 }
 
 .contextPanel.open {
