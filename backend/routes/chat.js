@@ -75,7 +75,12 @@ router.get('/', auth, async (req, res) => {
     if (isLimitReached && user.membershipType === 'free') {
       const locale = user.preferredLanguage || 'ja';
       // 管理画面で設定された制限メッセージを取得
+      console.log('===== CHAT LIMIT MESSAGE DEBUG =====');
+      console.log('character.limitMessage:', character.limitMessage);
+      console.log('locale:', locale);
       const adminLimitMessage = getString(character.limitMessage, locale);
+      console.log('取得した adminLimitMessage:', adminLimitMessage);
+      console.log('====================================');
       
       // 制限メッセージを作成（DBに設定されていない場合はデフォルト）
       const limitMessageContent = adminLimitMessage && adminLimitMessage.trim() 
@@ -155,7 +160,12 @@ router.post('/', auth, async (req, res) => {
       // 1日5回の制限をチェック
       if (user.dailyChatCount >= 5) {
         const locale = user.preferredLanguage || 'ja';
+        console.log('===== CHAT POST LIMIT MESSAGE DEBUG =====');
+        console.log('character.limitMessage:', character.limitMessage);
+        console.log('locale:', locale);
         const adminLimitMessage = getString(character.limitMessage, locale);
+        console.log('取得した adminLimitMessage:', adminLimitMessage);
+        console.log('========================================');
         
         // DBに制限メッセージが設定されている場合はそれを使用、なければデフォルトメッセージ
         const limitMsg = adminLimitMessage && adminLimitMessage.trim() 
