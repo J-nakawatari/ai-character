@@ -319,7 +319,8 @@ export default function Chat({ params }) {
           if (res.error && res.error.msg && (
             res.error.msg.includes('無料会員は1日1回まで') || 
             res.error.msg.includes('無料キャラクターは1日5回まで') ||
-            res.error.msg.includes('トークンが不足しています')
+            res.error.msg.includes('トークンが不足しています') ||
+            res.error.msg.includes('トークチケットが不足しています')
           )) {
             setChatLimitReached(true);
             setLimitMessage(res.error.msg);
@@ -427,6 +428,43 @@ export default function Chat({ params }) {
         </div>
         
         <div className="chat-input-container">
+          {/* トークチケット残高0の常時表示メッセージ */}
+          {!isBaseCharacter && tokenBalance === 0 && !chatLimitReached && (
+            <div className="chat-limit-message">
+              <div className="chat-limit-content">
+                <div className="chat-limit-header">
+                  <div className="chat-limit-character-avatar">
+                    {user?.selectedCharacter?.imageChatAvatar ? (
+                      <Image
+                        src={user.selectedCharacter.imageChatAvatar}
+                        alt={user.selectedCharacter.name}
+                        width={60}
+                        height={60}
+                        className="character-avatar-img"
+                      />
+                    ) : (
+                      <div className="character-avatar-placeholder">💭</div>
+                    )}
+                  </div>
+                  <div className="chat-limit-text">
+                    <div className="chat-limit-subtitle">
+                      トークチケットが不足しています
+                    </div>
+                    <div className="chat-limit-main-message">
+                      <span>トークチケットをチャージしてください。</span>
+                    </div>
+                  </div>
+                </div>
+                <button 
+                  className="chat-upgrade-button"
+                  onClick={() => router.push(`/${locale}/purchase`)}
+                >
+                  💎 トークチケットをチャージする
+                </button>
+              </div>
+            </div>
+          )}
+          
           {/* チャット制限メッセージ */}
           {chatLimitReached && (
             <div className="chat-limit-message">
@@ -447,7 +485,7 @@ export default function Chat({ params }) {
                   </div>
                   <div className="chat-limit-text">
                     <div className="chat-limit-subtitle">
-                      {isBaseCharacter ? '1日の無料チャット回数に達しました' : 'トークンが不足しています'}
+                      {isBaseCharacter ? '1日の無料チャット回数に達しました' : 'トークチケットが不足しています'}
                     </div>
                     <div className="chat-limit-main-message">
                       {limitMessage ? (
@@ -455,7 +493,7 @@ export default function Chat({ params }) {
                       ) : isBaseCharacter ? (
                         <span>もっと私とお話ししませんか？プレミアム会員なら無制限でお話しできます♪</span>
                       ) : (
-                        <span>トークンをチャージして会話を続けましょう♪</span>
+                        <span>トークチケットをチャージして会話を続けましょう♪</span>
                       )}
                     </div>
                   </div>
@@ -464,7 +502,7 @@ export default function Chat({ params }) {
                   className="chat-upgrade-button"
                   onClick={() => router.push(`/${locale}/purchase`)}
                 >
-                  {isBaseCharacter ? '🌟 プレミアム会員になる' : '💎 トークンをチャージする'}
+                  {isBaseCharacter ? '🌟 プレミアム会員になる' : '💎 トークチケットをチャージする'}
                 </button>
               </div>
             </div>
