@@ -78,11 +78,13 @@ export default function Chat({ params }) {
               setRemainingChats(res.data.remainingChats);
             }
             
-            // 制限メッセージをチェック（制限に達している場合、メッセージ履歴の最後にあるかも）
-            if (res.data.isLimitReached && historyMessages.length > 0) {
-              const lastMessage = historyMessages[historyMessages.length - 1];
-              if (lastMessage.isLimitMessage && lastMessage.content) {
-                setLimitMessage(lastMessage.content);
+            // 制限メッセージをチェック（制限に達している場合、メッセージ履歴に制限メッセージがあるかも）
+            if (res.data.isLimitReached) {
+              // 最新の制限メッセージを検索
+              const limitMessages = historyMessages.filter(msg => msg.isLimitMessage);
+              if (limitMessages.length > 0) {
+                const latestLimitMessage = limitMessages[limitMessages.length - 1];
+                setLimitMessage(latestLimitMessage.content);
               }
             }
             
@@ -287,7 +289,14 @@ export default function Chat({ params }) {
           setLimitMessage(res.error.msg || 'チャット制限に達しました');
           setError(res.error.msg || 'チャット制限に達しました');
         } else {
-          setError(t('failed_send', 'メッセージの送信に失敗しました'));
+          // 429ステータスコード（制限エラー）の場合も制限として扱う
+          if (res.error && res.error.msg && res.error.msg.includes('無料会員は1日5回まで')) {
+            setChatLimitReached(true);
+            setLimitMessage(res.error.msg);
+            setError(res.error.msg);
+          } else {
+            setError(t('failed_send', 'メッセージの送信に失敗しました'));
+          }
         }
         console.error(res.error);
       }

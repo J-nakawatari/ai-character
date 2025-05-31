@@ -14,6 +14,10 @@ const MessageSchema = new Schema({
   timestamp: {
     type: Date,
     default: Date.now
+  },
+  isLimitMessage: {
+    type: Boolean,
+    default: false
   }
 });
 

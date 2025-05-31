@@ -77,21 +77,30 @@ router.get('/', auth, async (req, res) => {
       // 管理画面で設定された制限メッセージを取得
       const adminLimitMessage = getString(character.limitMessage, locale);
       
-      // DBに制限メッセージが設定されている場合のみ表示
-      if (adminLimitMessage && adminLimitMessage.trim()) {
-        const limitMessage = {
-          sender: 'ai',
-          content: adminLimitMessage,
-          timestamp: new Date(),
-          isLimitMessage: true
-        };
-        
-        // 既に制限メッセージがある場合は追加しない
-        const hasLimitMessage = chat.messages.some(msg => msg.isLimitMessage);
-        if (!hasLimitMessage) {
-          chat.messages.push(limitMessage);
-          await chat.save();
-        }
+      // 制限メッセージを作成（DBに設定されていない場合はデフォルト）
+      const limitMessageContent = adminLimitMessage && adminLimitMessage.trim() 
+        ? adminLimitMessage 
+        : '無料会員は1日5回までチャットできます。プレミアム会員になると制限が解除されます。';
+      
+      const limitMessage = {
+        sender: 'ai',
+        content: limitMessageContent,
+        timestamp: new Date(),
+        isLimitMessage: true
+      };
+      
+      // 既に制限メッセージがある場合は追加しない（過去24時間以内）
+      const hasRecentLimitMessage = chat.messages.some(msg => {
+        if (!msg.isLimitMessage) return false;
+        const msgTime = new Date(msg.timestamp);
+        const now = new Date();
+        const hoursDiff = (now - msgTime) / (1000 * 60 * 60);
+        return hoursDiff < 24; // 24時間以内の制限メッセージがあるかチェック
+      });
+      
+      if (!hasRecentLimitMessage) {
+        chat.messages.push(limitMessage);
+        await chat.save();
       }
     }
     

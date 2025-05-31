@@ -42,7 +42,15 @@ export async function apiGet(url, config) {
     const res = await api.get(url, config);
     return { success: true, data: res.data };
   } catch (err) {
-    return { success: false, error: err.response?.data?.msg || err.message || 'API Error' };
+    // エラーレスポンスの完全なデータを保持
+    const errorData = err.response?.data || {};
+    return { 
+      success: false, 
+      error: {
+        msg: errorData.msg || err.message || 'API Error',
+        ...errorData // 追加プロパティを保持
+      }
+    };
   }
 }
 
@@ -51,7 +59,15 @@ export async function apiPost(url, data, config) {
     const res = await api.post(url, data, config);
     return { success: true, data: res.data };
   } catch (err) {
-    return { success: false, error: err.response?.data?.msg || err.message || 'API Error' };
+    // エラーレスポンスの完全なデータを保持
+    const errorData = err.response?.data || {};
+    return { 
+      success: false, 
+      error: {
+        msg: errorData.msg || err.message || 'API Error',
+        ...errorData // isLimitReached などの追加プロパティを保持
+      }
+    };
   }
 }
 
@@ -60,7 +76,15 @@ export async function apiPut(url, data, config) {
     const res = await api.put(url, data, config);
     return { success: true, data: res.data };
   } catch (err) {
-    return { success: false, error: err.response?.data?.msg || err.message || 'API Error' };
+    // エラーレスポンスの完全なデータを保持
+    const errorData = err.response?.data || {};
+    return { 
+      success: false, 
+      error: {
+        msg: errorData.msg || err.message || 'API Error',
+        ...errorData // 追加プロパティを保持
+      }
+    };
   }
 }
 
@@ -69,7 +93,15 @@ export async function apiDelete(url, config) {
     const res = await api.delete(url, config);
     return { success: true, data: res.data };
   } catch (err) {
-    return { success: false, error: err.response?.data?.msg || err.message || 'API Error' };
+    // エラーレスポンスの完全なデータを保持
+    const errorData = err.response?.data || {};
+    return { 
+      success: false, 
+      error: {
+        msg: errorData.msg || err.message || 'API Error',
+        ...errorData // 追加プロパティを保持
+      }
+    };
   }
 }
 
@@ -78,7 +110,15 @@ export async function apiPatch(url, data, config) {
     const res = await api.patch(url, data, config);
     return { success: true, data: res.data };
   } catch (err) {
-    return { success: false, error: err.response?.data?.msg || err.message || 'API Error' };
+    // エラーレスポンスの完全なデータを保持
+    const errorData = err.response?.data || {};
+    return { 
+      success: false, 
+      error: {
+        msg: errorData.msg || err.message || 'API Error',
+        ...errorData // 追加プロパティを保持
+      }
+    };
   }
 }
 
