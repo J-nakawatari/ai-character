@@ -251,6 +251,22 @@ export default function CharacterDetailPage() {
                     {character.defaultMessage?.en || '-'}
                   </div>
                 </div>
+                <div className={styles.fieldGroup}>
+                  <div className={styles.fieldLabel}>
+                    制限メッセージ（日本語）
+                  </div>
+                  <div className={styles.fieldTextArea}>
+                    {character.limitMessage?.ja || '-'}
+                  </div>
+                </div>
+                <div className={styles.fieldGroup}>
+                  <div className={styles.fieldLabel}>
+                    制限メッセージ（英語）
+                  </div>
+                  <div className={styles.fieldTextArea}>
+                    {character.limitMessage?.en || '-'}
+                  </div>
+                </div>
               </div>
             </div>
 
