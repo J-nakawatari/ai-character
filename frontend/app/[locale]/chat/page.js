@@ -432,9 +432,9 @@ export default function Chat({ params }) {
               <div className="chat-limit-content">
                 <div className="chat-limit-header">
                   <div className="chat-limit-character-avatar">
-                    {user?.selectedCharacter?.characterImage ? (
+                    {user?.selectedCharacter?.imageChatAvatar ? (
                       <Image
-                        src={user.selectedCharacter.characterImage}
+                        src={user.selectedCharacter.imageChatAvatar}
                         alt={user.selectedCharacter.name}
                         width={60}
                         height={60}
