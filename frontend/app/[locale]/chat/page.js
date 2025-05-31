@@ -78,14 +78,12 @@ export default function Chat({ params }) {
               setRemainingChats(res.data.remainingChats);
             }
             
-            // 制限メッセージをチェック（制限に達している場合、メッセージ履歴に制限メッセージがあるかも）
-            if (res.data.isLimitReached) {
-              // 最新の制限メッセージを検索
-              const limitMessages = historyMessages.filter(msg => msg.isLimitMessage);
-              if (limitMessages.length > 0) {
-                const latestLimitMessage = limitMessages[limitMessages.length - 1];
-                setLimitMessage(latestLimitMessage.content);
-              }
+            // 制限メッセージを設定（APIレスポンスから取得）
+            if (res.data.limitMessage !== undefined) {
+              console.log('===== LIMIT MESSAGE DEBUG (RELOAD) =====');
+              console.log('Setting limitMessage from API:', res.data.limitMessage);
+              console.log('========================================');
+              setLimitMessage(res.data.limitMessage);
             }
             
             if (historyMessages.length === 0 && user.selectedCharacter.defaultMessage) {
