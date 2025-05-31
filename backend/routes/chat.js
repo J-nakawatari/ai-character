@@ -77,18 +77,21 @@ router.get('/', auth, async (req, res) => {
       // 管理画面で設定された制限メッセージを取得
       const adminLimitMessage = getString(character.limitMessage, locale);
       
-      const limitMessage = {
-        sender: 'ai',
-        content: adminLimitMessage || `申し訳ありませんが、無料会員の方は1日5回までしかチャットできません。プレミアム会員になると無制限でお話しできるようになります。`,
-        timestamp: new Date(),
-        isLimitMessage: true
-      };
-      
-      // 既に制限メッセージがある場合は追加しない
-      const hasLimitMessage = chat.messages.some(msg => msg.isLimitMessage);
-      if (!hasLimitMessage) {
-        chat.messages.push(limitMessage);
-        await chat.save();
+      // DBに制限メッセージが設定されている場合のみ表示
+      if (adminLimitMessage && adminLimitMessage.trim()) {
+        const limitMessage = {
+          sender: 'ai',
+          content: adminLimitMessage,
+          timestamp: new Date(),
+          isLimitMessage: true
+        };
+        
+        // 既に制限メッセージがある場合は追加しない
+        const hasLimitMessage = chat.messages.some(msg => msg.isLimitMessage);
+        if (!hasLimitMessage) {
+          chat.messages.push(limitMessage);
+          await chat.save();
+        }
       }
     }
     
