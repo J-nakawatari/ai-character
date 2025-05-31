@@ -145,8 +145,16 @@ router.post('/', auth, async (req, res) => {
       
       // 1日5回の制限をチェック
       if (user.dailyChatCount >= 5) {
+        const locale = user.preferredLanguage || 'ja';
+        const adminLimitMessage = getString(character.limitMessage, locale);
+        
+        // DBに制限メッセージが設定されている場合はそれを使用、なければデフォルトメッセージ
+        const limitMsg = adminLimitMessage && adminLimitMessage.trim() 
+          ? adminLimitMessage 
+          : '無料会員は1日5回までチャットできます。プレミアム会員になると制限が解除されます。';
+          
         return res.status(429).json({ 
-          msg: '無料会員は1日5回までチャットできます。プレミアム会員になると制限が解除されます。',
+          msg: limitMsg,
           isLimitReached: true
         });
       }

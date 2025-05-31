@@ -39,6 +39,10 @@ export default function EditCharacter({ params }) {
       ja: '',
       en: ''
     },
+    limitMessage: {
+      ja: '',
+      en: ''
+    },
     themeColor: '#000000',
     isActive: true,
     imageCharacterSelect: '',
@@ -137,6 +141,7 @@ export default function EditCharacter({ params }) {
       fd.append('purchaseType', formData.purchaseType);
       fd.append('voice', formData.voice);
       fd.append('defaultMessage', JSON.stringify(formData.defaultMessage));
+      fd.append('limitMessage', JSON.stringify(formData.limitMessage));
       fd.append('themeColor', formData.themeColor);
       fd.append('isActive', formData.isActive);
       if (croppedImages.characterSelect) {
@@ -490,6 +495,40 @@ export default function EditCharacter({ params }) {
                 rows={3}
                 className={styles['admin-form-input']}
                 placeholder="Enter the character's first greeting message in English..."
+              />
+            </div>
+
+            {/* 制限メッセージ - 日本語 */}
+            <div className={styles['admin-form-group']}>
+              <label className={styles['admin-form-label']}>
+                <span className={styles.languageFlag}>🇯🇵</span>
+                制限メッセージ（日本語）
+              </label>
+              <textarea
+                id="limitMessage.ja"
+                name="limitMessage.ja"
+                value={formData.limitMessage.ja}
+                onChange={handleChange}
+                rows={3}
+                className={styles['admin-form-input']}
+                placeholder="1日のチャット制限に達した時に表示するメッセージを日本語で入力してください..."
+              />
+            </div>
+
+            {/* 制限メッセージ - 英語 */}
+            <div className={styles['admin-form-group']}>
+              <label className={styles['admin-form-label']}>
+                <span className={styles.languageFlag}>🇺🇸</span>
+                制限メッセージ（English）
+              </label>
+              <textarea
+                id="limitMessage.en"
+                name="limitMessage.en"
+                value={formData.limitMessage.en}
+                onChange={handleChange}
+                rows={3}
+                className={styles['admin-form-input']}
+                placeholder="Enter the message to display when daily chat limit is reached in English..."
               />
             </div>
           </div>

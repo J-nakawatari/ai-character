@@ -40,6 +40,7 @@ export default function Chat({ params }) {
   const [affinityData, setAffinityData] = useState(null);
   const [remainingChats, setRemainingChats] = useState(null);
   const [chatLimitReached, setChatLimitReached] = useState(false);
+  const [limitMessage, setLimitMessage] = useState('');
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const canvasRef = useRef(null);
@@ -75,6 +76,14 @@ export default function Chat({ params }) {
             }
             if (res.data.remainingChats !== undefined) {
               setRemainingChats(res.data.remainingChats);
+            }
+            
+            // 制限メッセージをチェック（制限に達している場合、メッセージ履歴の最後にあるかも）
+            if (res.data.isLimitReached && historyMessages.length > 0) {
+              const lastMessage = historyMessages[historyMessages.length - 1];
+              if (lastMessage.isLimitMessage && lastMessage.content) {
+                setLimitMessage(lastMessage.content);
+              }
             }
             
             if (historyMessages.length === 0 && user.selectedCharacter.defaultMessage) {
@@ -275,6 +284,7 @@ export default function Chat({ params }) {
         // チャット制限に達した場合の特別処理
         if (res.error && res.error.isLimitReached) {
           setChatLimitReached(true);
+          setLimitMessage(res.error.msg || 'チャット制限に達しました');
           setError(res.error.msg || 'チャット制限に達しました');
         } else {
           setError(t('failed_send', 'メッセージの送信に失敗しました'));
@@ -413,8 +423,14 @@ export default function Chat({ params }) {
               <div className="chat-limit-content">
                 <div className="chat-limit-icon">😅</div>
                 <h3 className="chat-limit-title">1日の無料チャット回数に達しました</h3>
-                <p>プレミアム会員になると、もっとたくさん会話ができます。</p>
-                <p>いつでもキャラクターと無制限でお話しできるように、ぜひプレミアム会員をご検討ください！</p>
+                {limitMessage ? (
+                  <p>{limitMessage}</p>
+                ) : (
+                  <>
+                    <p>プレミアム会員になると、もっとたくさん会話ができます。</p>
+                    <p>いつでもキャラクターと無制限でお話しできるように、ぜひプレミアム会員をご検討ください！</p>
+                  </>
+                )}
                 <button 
                   className="chat-upgrade-button"
                   onClick={() => router.push(`/${locale}/purchase`)}

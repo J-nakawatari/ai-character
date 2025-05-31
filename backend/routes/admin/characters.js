@@ -145,6 +145,7 @@ router.put('/:id', adminAuth, uploadImage.single('image'), resizeImage(), async 
       purchaseType,
       voice,
       defaultMessage,
+      limitMessage,
       themeColor,
       isActive
     } = req.body;
@@ -163,6 +164,7 @@ router.put('/:id', adminAuth, uploadImage.single('image'), resizeImage(), async 
     if (purchaseType) character.purchaseType = purchaseType;
     if (voice) character.voice = voice;
     if (defaultMessage) character.defaultMessage = JSON.parse(defaultMessage);
+    if (limitMessage) character.limitMessage = JSON.parse(limitMessage);
     if (themeColor) character.themeColor = themeColor;
     if (typeof isActive !== 'undefined') {
       character.isActive = typeof isActive === 'boolean' ? isActive : isActive === 'true';
