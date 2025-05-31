@@ -88,6 +88,49 @@ const TopBar = ({
 
   const contextInfo = getContextInfo();
 
+  // 親密度レベルの説明を取得
+  const getAffinityDescription = (level) => {
+    if (level >= 90) return { title: '特別な関係', color: '#e91e63' };
+    if (level >= 70) return { title: '親友', color: '#9c27b0' };
+    if (level >= 50) return { title: '仲間', color: '#3f51b5' };
+    if (level >= 30) return { title: '知り合い', color: '#2196f3' };
+    if (level >= 10) return { title: '顔見知り', color: '#00bcd4' };
+    return { title: '初対面', color: '#607d8b' };
+  };
+
+  // ハートの色を取得
+  const getHeartColor = (heartIndex, level) => {
+    const heartsToFill = Math.floor(level / 10);
+    const partialFill = level % 10;
+    
+    if (heartIndex < heartsToFill) {
+      return 'rgb(248, 144, 182)';
+    } else if (heartIndex === heartsToFill && partialFill > 0) {
+      return 'rgb(255, 229, 239)';
+    }
+    return '#E5E5E5';
+  };
+
+  // ハートのレンダリング
+  const renderHearts = (level) => {
+    const hearts = [];
+    for (let i = 0; i < 10; i++) {
+      hearts.push(
+        <svg 
+          key={i}
+          width="16" 
+          height="16" 
+          viewBox="0 0 24 24" 
+          className={styles.heartIcon}
+          style={{ fill: getHeartColor(i, level) }}
+        >
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        </svg>
+      );
+    }
+    return hearts;
+  };
+
   return (
     <header className={styles.topBar}>
       {/* 左側：コンテキスト情報 */}
@@ -133,17 +176,33 @@ const TopBar = ({
                 <span className={styles.characterEmoji}>🤖</span>
               )}
             </div>
-            <div className={styles.affinityDisplay}>
-              <div className={styles.affinityLevel}>
-                <span className={styles.affinityLabel}>親密度</span>
-                <span className={styles.affinityValue}>{user.selectedCharacter.affinity || 0}</span>
-                <span className={styles.affinityMax}>/100</span>
-              </div>
-              <div className={styles.affinityBar}>
+            <div className={styles.affinityContainer}>
+              <div className={styles.affinityHeader}>
+                <div className={styles.affinityLevel}>
+                  <span className={styles.affinityLabel}>親密度</span>
+                  <span className={styles.affinityValue}>{user.selectedCharacter.affinity || 0}</span>
+                  <span className={styles.affinityMax}>/100</span>
+                </div>
                 <div 
-                  className={styles.affinityProgress}
-                  style={{ width: `${(user.selectedCharacter.affinity || 0)}%` }}
-                ></div>
+                  className={styles.affinityDescription}
+                  style={{ color: getAffinityDescription(user.selectedCharacter.affinity || 0).color }}
+                >
+                  {getAffinityDescription(user.selectedCharacter.affinity || 0).title}
+                </div>
+              </div>
+              <div className={styles.affinityProgressContainer}>
+                <div className={styles.affinityBar}>
+                  <div 
+                    className={styles.affinityProgress}
+                    style={{ width: `${(user.selectedCharacter.affinity || 0)}%` }}
+                  ></div>
+                </div>
+                <div className={styles.affinityPercentage}>
+                  {user.selectedCharacter.affinity || 0}%
+                </div>
+              </div>
+              <div className={styles.heartsContainer}>
+                {renderHearts(user.selectedCharacter.affinity || 0)}
               </div>
             </div>
           </div>
