@@ -1,0 +1,242 @@
+/* QuickActions - フローティングアクションボタン */
+
+.quickActions {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  z-index: 100;
+}
+
+/* 背景オーバーレイ */
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.2);
+  z-index: -1;
+  animation: backdropAppear 0.3s ease-out;
+}
+
+/* メインアクション */
+.mainAction {
+  width: 64px;
+  height: 64px;
+  border: none;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.mainAction:hover {
+  transform: scale(1.1);
+  box-shadow: 0 12px 30px rgba(59, 130, 246, 0.5);
+}
+
+.mainAction.expanded {
+  background: #ef4444;
+  transform: rotate(45deg);
+}
+
+.mainAction.expanded:hover {
+  transform: rotate(45deg) scale(1.1);
+  box-shadow: 0 12px 30px rgba(239, 68, 68, 0.5);
+}
+
+.mainIcon {
+  font-size: 24px;
+  transition: all 0.3s ease;
+}
+
+.mainLabel {
+  position: absolute;
+  bottom: -32px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 200;
+}
+
+.mainAction:hover .mainLabel {
+  opacity: 1;
+}
+
+/* サブアクション */
+.subAction {
+  width: 48px;
+  height: 48px;
+  border: none;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #334155;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: absolute;
+  bottom: 0;
+  right: 8px;
+  border: 2px solid #f1f5f9;
+  animation: subActionAppear 0.3s ease-out forwards;
+  opacity: 0;
+  transform: translateY(0) scale(0.8);
+}
+
+.subAction:hover {
+  transform: translateY(-4px) scale(1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  background: #f8fafc;
+}
+
+.actionIcon {
+  font-size: 18px;
+}
+
+.actionLabel {
+  position: absolute;
+  right: 60px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 200;
+}
+
+.subAction:hover .actionLabel {
+  opacity: 1;
+}
+
+/* レスポンシブ */
+@media (max-width: 768px) {
+  .quickActions {
+    bottom: 24px;
+    right: 24px;
+  }
+  
+  .mainAction {
+    width: 56px;
+    height: 56px;
+  }
+  
+  .mainIcon {
+    font-size: 20px;
+  }
+  
+  .subAction {
+    width: 44px;
+    height: 44px;
+    right: 6px;
+  }
+  
+  .actionIcon {
+    font-size: 16px;
+  }
+  
+  .actionLabel {
+    right: 50px;
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+}
+
+@media (max-width: 640px) {
+  .quickActions {
+    bottom: 20px;
+    right: 20px;
+  }
+  
+  .mainAction {
+    width: 52px;
+    height: 52px;
+  }
+  
+  .subAction {
+    width: 40px;
+    height: 40px;
+  }
+  
+  /* モバイルではラベルを非表示 */
+  .mainLabel,
+  .actionLabel {
+    display: none;
+  }
+}
+
+/* アニメーション */
+@keyframes backdropAppear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes subActionAppear {
+  to {
+    opacity: 1;
+    transform: translateY(var(--translate-y, 0)) scale(1);
+  }
+}
+
+/* アクセシビリティ */
+.mainAction:focus,
+.subAction:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* ダークモード対応 */
+@media (prefers-color-scheme: dark) {
+  .subAction {
+    background: #1e293b;
+    color: #f1f5f9;
+    border-color: #334155;
+  }
+  
+  .subAction:hover {
+    background: #334155;
+  }
+  
+  .mainLabel,
+  .actionLabel {
+    background: rgba(30, 41, 59, 0.9);
+  }
+}
+
+/* 高コントラストモード */
+@media (prefers-contrast: high) {
+  .mainAction {
+    border: 2px solid #000000;
+  }
+  
+  .subAction {
+    border-width: 3px;
+  }
+}
