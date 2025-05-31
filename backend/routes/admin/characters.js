@@ -200,14 +200,22 @@ router.put('/:id', adminAuth, uploadImage.single('image'), resizeImage(), async 
       }
     }
     if (limitMessage !== undefined) {
+      console.log('===== LIMIT MESSAGE DEBUG START =====');
+      console.log('受信したlimitMessage:', limitMessage);
+      console.log('typeof limitMessage:', typeof limitMessage);
+      console.log('limitMessage.length:', limitMessage.length);
       try {
         const parsedLimitMessage = JSON.parse(limitMessage);
+        console.log('パース成功:', parsedLimitMessage);
         character.limitMessage = parsedLimitMessage;
+        console.log('character.limitMessage設定後:', character.limitMessage);
       } catch (error) {
         console.error('Failed to parse limitMessage:', error);
+        console.error('エラー詳細:', error.message);
         // パースに失敗した場合は空のオブジェクトを設定
         character.limitMessage = { ja: '', en: '' };
       }
+      console.log('===== LIMIT MESSAGE DEBUG END =====');
     }
     if (themeColor) character.themeColor = themeColor;
     if (typeof isActive !== 'undefined') {

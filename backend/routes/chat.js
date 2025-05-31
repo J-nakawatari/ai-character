@@ -85,7 +85,7 @@ router.get('/', auth, async (req, res) => {
       // 制限メッセージを作成（DBに設定されていない場合はデフォルト）
       const limitMessageContent = adminLimitMessage && adminLimitMessage.trim() 
         ? adminLimitMessage 
-        : '無料会員は1日5回までチャットできます。プレミアム会員になると制限が解除されます。';
+        : '無料会員は1日1回までチャットできます。プレミアム会員になると制限が解除されます。';
       
       const limitMessage = {
         sender: 'ai',
@@ -170,7 +170,7 @@ router.post('/', auth, async (req, res) => {
         // DBに制限メッセージが設定されている場合はそれを使用、なければデフォルトメッセージ
         const limitMsg = adminLimitMessage && adminLimitMessage.trim() 
           ? adminLimitMessage 
-          : '無料会員は1日5回までチャットできます。プレミアム会員になると制限が解除されます。';
+          : '無料会員は1日1回までチャットできます。プレミアム会員になると制限が解除されます。';
           
         return res.status(429).json({ 
           msg: limitMsg,
