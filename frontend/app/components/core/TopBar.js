@@ -225,7 +225,7 @@ const TopBar = ({
                   <div className={styles.tokenDisplay}>
                     <span className={styles.tokenIcon}>💎</span>
                     <span className={styles.tokenText}>
-                      {tokenBalance.toLocaleString()}
+                      トークチケット残高 {tokenBalance.toLocaleString()}
                     </span>
                   </div>
                 )
