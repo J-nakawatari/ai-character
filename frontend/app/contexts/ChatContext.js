@@ -8,7 +8,8 @@ export function ChatContextProvider({ children }) {
   const [chatInfo, setChatInfo] = useState({
     tokenBalance: undefined,
     remainingFreeChats: null,
-    isBaseCharacter: false
+    isBaseCharacter: false,
+    affinityData: null
   });
 
   const updateChatInfo = (info) => {
@@ -26,7 +27,7 @@ export function useChatContext() {
   const context = useContext(ChatContext);
   if (!context) {
     return {
-      chatInfo: { tokenBalance: undefined, remainingFreeChats: null, isBaseCharacter: false },
+      chatInfo: { tokenBalance: undefined, remainingFreeChats: null, isBaseCharacter: false, affinityData: null },
       updateChatInfo: () => {}
     };
   }
