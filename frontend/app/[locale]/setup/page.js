@@ -32,10 +32,6 @@ export default function Setup({ params }) {
   const t = useTranslations('setup');
   const appT = useTranslations('app');
   const { locale } = typeof params.then === 'function' ? use(params) : params;
-  const [showPurchaseModal, setShowPurchaseModal] = useState(false);
-  const [modalCharacter, setModalCharacter] = useState(null);
-  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
-  const [siteSettings, setSiteSettings] = useState({});
 
   const {
     register,
@@ -103,21 +99,6 @@ export default function Setup({ params }) {
     }
   }, [user, setValue]);
 
-  // サイト設定を取得
-  useEffect(() => {
-    const fetchSiteSettings = async () => {
-      try {
-        const response = await fetch('/api/settings');
-        if (response.ok) {
-          const settings = await response.json();
-          setSiteSettings(settings);
-        }
-      } catch (err) {
-        console.error('Failed to fetch site settings:', err);
-      }
-    };
-    fetchSiteSettings();
-  }, []);
 
   useEffect(() => {
     if (!canvasRef.current) {
@@ -268,29 +249,7 @@ export default function Setup({ params }) {
 
   const handleCharacterSelect = async (character) => {
     try {
-      // キャラクターの種類に応じたチェック
-      if (character.characterAccessType === 'purchaseOnly') {
-        const isPurchased = user.purchasedCharacters.some(
-          pc =>
-            (pc.character?._id?.toString?.() || pc.character?.toString?.()) === character._id?.toString() &&
-            pc.purchaseType === 'buy'
-        );
-        
-        if (!isPurchased) {
-          // 未購入の場合は購入モーダルを表示
-          setModalCharacter(character);
-          setShowPurchaseModal(true);
-          return;
-        }
-      } else if (character.characterAccessType === 'subscription') {
-        if (user.membershipType !== 'subscription' || user.subscriptionStatus !== 'active') {
-          // サブスク会員でない場合はアップグレードモーダルを表示
-          setShowUpgradeModal(true);
-          return;
-        }
-      }
-
-      // 購入済みまたは無料キャラクターの場合は選択を完了
+      // 新しいトークン制システムでは全てのキャラクターが選択可能
       setValue('characterId', character._id);
       setServerError('');
       const result = await completeSetup({
@@ -315,87 +274,16 @@ export default function Setup({ params }) {
     }
   };
 
-  // キャラクターの購入状態をチェックする関数
-  const isCharacterPurchased = (character) => {
-    if (!character || !user.purchasedCharacters) return false;
-    return user.purchasedCharacters.some(
-      pc =>
-        (pc.character?._id?.toString?.() || pc.character?.toString?.()) === character._id?.toString() &&
-        pc.purchaseType === 'buy'
-    );
-  };
-
-  const handleUpgrade = async () => {
-    const returnTo = window.location.href;
-    const res = await fetch('/api/subscribe', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: user.email, returnTo })
-    });
-    const data = await res.json();
-    window.location.href = data.url;
-  };
 
   // ボタンの表示テキストとタイプを取得する関数
   const getButtonProps = (character) => {
-    if (!user) {
-      return {
-        text: t('select_button', '選択する'),
-        type: 'select'
-      };
-    }
-    if (character.characterAccessType === 'purchaseOnly' && !isCharacterPurchased(character)) {
-      return {
-        text: t('purchase_character', '購入する'),
-        type: 'purchase'
-      };
-    } else if (
-      character.characterAccessType === 'subscription' &&
-      (user.membershipType !== 'subscription' || user.subscriptionStatus !== 'active')
-    ) {
-      return {
-        text: t('upgrade_to_premium', 'サブスクにアップグレード'),
-        type: 'upgrade',
-        onClick: handleUpgrade
-      };
-    }
+    // 新しいトークン制システムでは全てのキャラクターが選択可能
     return {
       text: t('select_button', '選択する'),
       type: 'select'
     };
   };
 
-  // 購入モーダルを開く
-  const openPurchaseModal = (character) => {
-    setModalCharacter(character);
-    setShowPurchaseModal(true);
-  };
-  // 購入モーダルを閉じる
-  const closePurchaseModal = () => {
-    setShowPurchaseModal(false);
-    setModalCharacter(null);
-  };
-
-  // 購入確定処理（仮実装）
-  const handleConfirmPurchase = async () => {
-    if (!modalCharacter) return;
-    // ここで購入APIを呼ぶ
-    // await api.post(`/purchase`, { characterId: modalCharacter._id });
-    closePurchaseModal();
-    window.location.reload();
-  };
-
-  const openUpgradeModal = () => {
-    setShowUpgradeModal(true);
-  };
-  const closeUpgradeModal = () => {
-    setShowUpgradeModal(false);
-  };
-  const handleConfirmUpgrade = async () => {
-    // ここでサブスクAPIを呼ぶ（仮実装）
-    closeUpgradeModal();
-    window.location.reload();
-  };
 
   if (element) return element;
   if (!user) return null;
@@ -451,16 +339,32 @@ export default function Setup({ params }) {
                 key={character._id}
                 className="setup--character-card"
               >
-                {/* アクセスタイプバッジ */}
+                {/* トークン制対応バッジ */}
                 <div className="setup--access-badge">
-                  {character.characterAccessType === 'free' && (
-                    <span className="setup--badge setup--badge--free">🆓 無料</span>
+                  {character.isBaseCharacter ? (
+                    <span className="setup--badge setup--badge--free">🆓 無料 (5回/日)</span>
+                  ) : (
+                    <div className="setup--badge-group">
+                      <span className="setup--badge setup--badge--token">💎 トークン制</span>
+                      {character.model === 'gpt-4' && (
+                        <span className="setup--badge setup--badge--premium">⚡ GPT-4</span>
+                      )}
+                    </div>
                   )}
-                  {character.characterAccessType === 'subscription' && (
-                    <span className="setup--badge setup--badge--premium">👑 プレミアム</span>
-                  )}
-                  {character.characterAccessType === 'purchaseOnly' && (
-                    <span className="setup--badge setup--badge--purchase">💎 購入</span>
+                  
+                  {/* 旧システム互換性（フォールバック） */}
+                  {!character.hasOwnProperty('isBaseCharacter') && (
+                    <>
+                      {character.characterAccessType === 'free' && (
+                        <span className="setup--badge setup--badge--free">🆓 無料</span>
+                      )}
+                      {character.characterAccessType === 'subscription' && (
+                        <span className="setup--badge setup--badge--premium">👑 プレミアム</span>
+                      )}
+                      {character.characterAccessType === 'purchaseOnly' && (
+                        <span className="setup--badge setup--badge--purchase">💎 購入</span>
+                      )}
+                    </>
                   )}
                 </div>
 
@@ -490,18 +394,6 @@ export default function Setup({ params }) {
                     🎵
                   </button>
 
-                  {/* ロック状態のオーバーレイ */}
-                  {(character.characterAccessType === 'purchaseOnly' && !isCharacterPurchased(character)) && (
-                    <div className="setup--locked-overlay">
-                      <div className="setup--lock-icon">🔒</div>
-                    </div>
-                  )}
-                  {(character.characterAccessType === 'subscription' && 
-                    (user.membershipType !== 'subscription' || user.subscriptionStatus !== 'active')) && (
-                    <div className="setup--locked-overlay">
-                      <div className="setup--lock-icon">👑</div>
-                    </div>
-                  )}
                 </div>
 
                 {/* キャラクター情報 */}
@@ -518,10 +410,33 @@ export default function Setup({ params }) {
                     </div>
                   )}
 
-                  {/* 性格タグ */}
+                  {/* 性格タグ（新しいフィールド対応） */}
                   <div className="setup--character-tags">
-                    {(character.personality || character.personalityPrompt) ?
-                      ((() => {
+                    {(() => {
+                      const tags = [];
+                      
+                      // 新しい性格プリセットを追加
+                      if (character.personalityPreset) {
+                        tags.push(
+                          <span key="preset" className="setup--character-tag setup--character-tag--preset">
+                            ★ {character.personalityPreset}
+                          </span>
+                        );
+                      }
+                      
+                      // 新しい性格タグを追加（最大2つ）
+                      if (character.personalityTags && Array.isArray(character.personalityTags)) {
+                        character.personalityTags.slice(0, 2).forEach((tag, tagIdx) => {
+                          tags.push(
+                            <span key={`tag-${tagIdx}`} className="setup--character-tag setup--character-tag--normal">
+                              {tag}
+                            </span>
+                          );
+                        });
+                      }
+                      
+                      // 旧形式のフォールバック
+                      if (tags.length === 0 && (character.personality || character.personalityPrompt)) {
                         let personalityText = character.personality || '';
                         if (!personalityText && character.personalityPrompt) {
                           if (typeof character.personalityPrompt === 'object') {
@@ -530,44 +445,32 @@ export default function Setup({ params }) {
                             personalityText = character.personalityPrompt;
                           }
                         }
-                        return personalityText.split(/,| /).slice(0, 3).map((tag, tagIdx) =>
-                          tag.trim() && (
-                            <span className="setup--character-tag" key={tagIdx}>{tag.trim()}</span>
-                          )
-                        );
-                      })()) : []}
+                        personalityText.split(/,| /).slice(0, 3).forEach((tag, tagIdx) => {
+                          if (tag.trim()) {
+                            tags.push(
+                              <span key={`old-${tagIdx}`} className="setup--character-tag setup--character-tag--old">
+                                {tag.trim()}
+                              </span>
+                            );
+                          }
+                        });
+                      }
+                      
+                      return tags;
+                    })()}
                   </div>
 
                   {/* 説明 */}
                   <p className="setup--character-desc">{characterDesc}</p>
 
-                  {/* 価格表示 */}
-                  {character.characterAccessType === 'purchaseOnly' && character.price && !isCharacterPurchased(character) && (
-                    <div className="setup--character-price">
-                      <span className="setup--price-icon">💰</span>
-                      ¥{character.price.toLocaleString()}
-                    </div>
-                  )}
 
                   {/* 選択ボタン */}
                   <button
                     type="button"
                     className={`setup--select-button setup--select-button--${buttonProps.type}`}
-                    onClick={() => {
-                      if (buttonProps.type === 'purchase') {
-                        openPurchaseModal(character);
-                      } else if (buttonProps.type === 'upgrade') {
-                        openUpgradeModal();
-                      } else {
-                        handleCharacterSelect(character);
-                      }
-                    }}
+                    onClick={() => handleCharacterSelect(character)}
                   >
-                    <span className="setup--button-icon">
-                      {buttonProps.type === 'select' && '✨'}
-                      {buttonProps.type === 'purchase' && '🛒'}
-                      {buttonProps.type === 'upgrade' && '👑'}
-                    </span>
+                    <span className="setup--button-icon">✨</span>
                     {buttonProps.text}
                   </button>
                 </div>
@@ -576,54 +479,6 @@ export default function Setup({ params }) {
           })}
         </div>
       </div>
-      {/* 購入モーダル */}
-      {showPurchaseModal && modalCharacter && (
-        <div className="setup--modal-overlay" onClick={closePurchaseModal}>
-          <div className="setup--modal-content" onClick={e => e.stopPropagation()}>
-            <button className="setup--modal-close" onClick={closePurchaseModal} aria-label="閉じる">×</button>
-            <h2 className="setup--modal-title">{modalCharacter.name[locale] || modalCharacter.name.ja || modalCharacter.name}</h2>
-            <img
-              src={modalCharacter.imageCharacterSelect || '/images/character-placeholder.png'}
-              alt={modalCharacter.name[locale] || modalCharacter.name.ja || modalCharacter.name}
-              className="setup--modal-img"
-            />
-            <div className="setup--modal-detail">
-              <div className="setup--modal-price">
-                <b>{t('price')}:</b>
-                <span className="setup--modal-price-value">¥{modalCharacter.price.toLocaleString()}</span>
-              </div>
-              <div className="setup--modal-type"><b>{t('type')}:</b> {modalCharacter.purchaseType === 'buy' ? t('buy_type_buy') : t('buy_type_rental')}</div>
-              <div className="setup--modal-desc">{modalCharacter.description[locale] || modalCharacter.description.ja || modalCharacter.description}</div>
-            </div>
-            <div className="setup--modal-buttons">
-              <button className="setup--modal-cancel" onClick={closePurchaseModal}>{t('cancel')}</button>
-              <button className="setup--modal-confirm" onClick={handleConfirmPurchase}>{t('confirm_purchase')}</button>
-            </div>
-          </div>
-        </div>
-      )}
-      {showUpgradeModal && (
-        <div className="setup--modal-overlay" onClick={closeUpgradeModal}>
-          <div className="setup--modal-content setup--modal-content-upgrade" onClick={e => e.stopPropagation()}>
-            <button className="setup--modal-close" onClick={closeUpgradeModal} aria-label="閉じる">×</button>
-            <h2 className="setup--modal-title">{t('upgrade_to_premium')}</h2>
-            <div className="setup--modal-detail">
-              <div style={{ marginBottom: '12px' }}>{t('premium_modal_description')}</div>
-              <div className="setup--modal-price setup--modal-price-center">
-                <span className="setup--modal-price-label">{t('premium_price_period', '月額')}</span>
-                <span className="setup--modal-price-value">
-                  {siteSettings.subscription_price ? `${siteSettings.subscription_price}円` : '980円'}
-                </span>
-                <span className="setup--modal-price-tax">（税込）</span>
-              </div>
-            </div>
-            <div className="setup--modal-buttons">
-              <button className="setup--modal-cancel" onClick={closeUpgradeModal}>{t('cancel')}</button>
-              <button className="setup--modal-confirm" data-type="upgrade" onClick={handleUpgrade}>{t('upgrade_to_premium')}</button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
