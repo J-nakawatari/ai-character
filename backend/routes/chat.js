@@ -23,6 +23,25 @@ router.get('/', auth, async (req, res) => {
       return res.status(404).json({ msg: 'User or character not found' });
     }
 
+    // 無料会員のチャット制限状態をチェック
+    let isLimitReached = false;
+    let remainingChats = null;
+    
+    if (user.membershipType === 'free') {
+      const today = new Date();
+      const lastResetDate = new Date(user.lastChatResetDate);
+      
+      // 日付が変わった場合はカウントをリセット
+      if (today.toDateString() !== lastResetDate.toDateString()) {
+        user.dailyChatCount = 0;
+        user.lastChatResetDate = today;
+        await user.save();
+      }
+      
+      isLimitReached = user.dailyChatCount >= 5;
+      remainingChats = Math.max(0, 5 - user.dailyChatCount);
+    }
+
     // キャラクターの種類に応じたチェック
     if (character.characterAccessType === 'subscription') {
       if (user.membershipType !== 'subscription' || user.subscriptionStatus !== 'active') {
@@ -52,7 +71,29 @@ router.get('/', auth, async (req, res) => {
       await chat.save();
     }
     
-    res.json(chat);
+    // 制限に達した場合、制限メッセージをチャット履歴に追加
+    if (isLimitReached && user.membershipType === 'free') {
+      const characterName = getString(character.name, user.preferredLanguage || 'ja');
+      const limitMessage = {
+        sender: 'ai',
+        content: `申し訳ありません…😢 無料会員の方は1日5回までしかお話しできないんです。\n\nでも、プレミアム会員になってくれたら、私と無制限でお話しできますよ！✨\n\n${characterName}と一緒にもっとたくさんお話ししませんか？ お待ちしています💕`,
+        timestamp: new Date(),
+        isLimitMessage: true
+      };
+      
+      // 既に制限メッセージがある場合は追加しない
+      const hasLimitMessage = chat.messages.some(msg => msg.isLimitMessage);
+      if (!hasLimitMessage) {
+        chat.messages.push(limitMessage);
+        await chat.save();
+      }
+    }
+    
+    res.json({
+      ...chat.toObject(),
+      isLimitReached,
+      remainingChats
+    });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');

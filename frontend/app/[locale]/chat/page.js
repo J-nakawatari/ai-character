@@ -53,6 +53,15 @@ export default function Chat({ params }) {
             const historyMessages = res.data.messages || [];
             setMessages(historyMessages);
             setChatId(res.data._id);
+            
+            // チャット制限状態を設定
+            if (res.data.isLimitReached !== undefined) {
+              setChatLimitReached(res.data.isLimitReached);
+            }
+            if (res.data.remainingChats !== undefined) {
+              setRemainingChats(res.data.remainingChats);
+            }
+            
             if (historyMessages.length === 0 && user.selectedCharacter.defaultMessage) {
               const defaultMessage = {
                 sender: 'ai',
@@ -350,13 +359,15 @@ export default function Chat({ params }) {
           {chatLimitReached && (
             <div className="chat-limit-message">
               <div className="chat-limit-content">
-                <p>無料会員は1日5回までチャットできます。</p>
-                <p>プレミアム会員になると制限が解除されます。</p>
+                <div className="chat-limit-icon">😅</div>
+                <h3 className="chat-limit-title">1日の無料チャット回数に達しました</h3>
+                <p>プレミアム会員になると、もっとたくさん会話ができます。</p>
+                <p>いつでもキャラクターと無制限でお話しできるように、ぜひプレミアム会員をご検討ください！</p>
                 <button 
                   className="chat-upgrade-button"
                   onClick={() => router.push(`/${locale}/purchase`)}
                 >
-                  プレミアム会員になる
+                  🌟 プレミアム会員になる
                 </button>
               </div>
             </div>
@@ -365,7 +376,10 @@ export default function Chat({ params }) {
           {/* 残りチャット回数表示（無料会員のみ） */}
           {!chatLimitReached && user?.membershipType === 'free' && remainingChats !== null && (
             <div className="chat-remaining-counter">
-              今日あと {remainingChats} 回チャットできます
+              💬 今日あと <strong>{remainingChats}</strong> 回チャットできます
+              {remainingChats <= 2 && (
+                <span className="chat-remaining-warning"> • プレミアム会員で無制限に！</span>
+              )}
             </div>
           )}
           

@@ -31,6 +31,7 @@ export default function Dashboard({ params }) {
   const [modalInitialIndex, setModalInitialIndex] = useState(0);
   const [affinityData, setAffinityData] = useState(null);
   const [personalityTags, setPersonalityTags] = useState([]);
+  const [chatLimitInfo, setChatLimitInfo] = useState(null);
   
   // 性格タグ生成関数
   const generatePersonalityTags = useCallback((availableTags) => {
@@ -74,6 +75,27 @@ export default function Dashboard({ params }) {
         }
       }
     };
+
+    const fetchChatLimitInfo = async () => {
+      if (user?.selectedCharacter?._id && user?.membershipType === 'free') {
+        try {
+          const response = await fetch(`/api/chat?characterId=${user.selectedCharacter._id}`, {
+            headers: {
+              'x-auth-token': localStorage.getItem('token')
+            }
+          });
+          if (response.ok) {
+            const data = await response.json();
+            setChatLimitInfo({
+              isLimitReached: data.isLimitReached,
+              remainingChats: data.remainingChats
+            });
+          }
+        } catch (err) {
+          console.error('Failed to fetch chat limit info:', err);
+        }
+      }
+    };
     
     const fetchPersonalityTags = async () => {
       try {
@@ -114,9 +136,12 @@ export default function Dashboard({ params }) {
       }
     };
     
-    fetchAffinity();
-    fetchPersonalityTags();
-  }, [user?.selectedCharacter?._id, locale, generatePersonalityTags]);
+    if (!loading && user) {
+      fetchAffinity();
+      fetchPersonalityTags();
+      fetchChatLimitInfo();
+    }
+  }, [loading, user, locale, generatePersonalityTags]);
   
   const handleStartChat = async () => {
     try {
@@ -455,6 +480,40 @@ export default function Dashboard({ params }) {
                     <span className={styles.statLabel}>連続日数</span>
                     <span className={styles.statValue}>{affinityData.streak}日</span>
                   </div>
+                </div>
+              </Card>
+            )}
+
+            {/* チャット制限情報（無料会員のみ） */}
+            {user?.membershipType === 'free' && chatLimitInfo && (
+              <Card className={styles.detailCard}>
+                <div className={styles.detailHeader}>
+                  <h3 className={styles.detailTitle}>
+                    <span className={styles.detailIcon}>💬</span>
+                    チャット制限
+                  </h3>
+                </div>
+                <div className={styles.detailContent}>
+                  {chatLimitInfo.isLimitReached ? (
+                    <div className={styles.limitReached}>
+                      <p className={styles.limitText}>
+                        😅 今日の無料チャット回数に達しました
+                      </p>
+                      <button
+                        onClick={() => router.push(`/${locale}/purchase`)}
+                        className={styles.upgradeButtonSmall}
+                      >
+                        🌟 プレミアム会員になる
+                      </button>
+                    </div>
+                  ) : (
+                    <p className={styles.remainingText}>
+                      💬 今日あと <strong>{chatLimitInfo.remainingChats}</strong> 回チャットできます
+                      {chatLimitInfo.remainingChats <= 2 && (
+                        <span className={styles.warningText}><br />プレミアム会員で無制限に！</span>
+                      )}
+                    </p>
+                  )}
                 </div>
               </Card>
             )}
