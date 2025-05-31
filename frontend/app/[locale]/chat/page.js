@@ -79,11 +79,16 @@ export default function Chat({ params }) {
             }
             
             // 制限メッセージを設定（APIレスポンスから取得）
+            console.log('===== LIMIT MESSAGE DEBUG (RELOAD) =====');
+            console.log('API Response limitMessage:', res.data.limitMessage);
+            console.log('API Response isLimitReached:', res.data.isLimitReached);
+            console.log('Full API response data:', res.data);
+            console.log('========================================');
             if (res.data.limitMessage !== undefined) {
-              console.log('===== LIMIT MESSAGE DEBUG (RELOAD) =====');
               console.log('Setting limitMessage from API:', res.data.limitMessage);
-              console.log('========================================');
               setLimitMessage(res.data.limitMessage);
+            } else {
+              console.log('No limitMessage in API response - keeping current state');
             }
             
             if (historyMessages.length === 0 && user.selectedCharacter.defaultMessage) {

@@ -109,10 +109,21 @@ router.get('/', auth, async (req, res) => {
       }
     }
     
+    // 制限メッセージを取得
+    let limitMessageContent = null;
+    if (isLimitReached && user.membershipType === 'free') {
+      const locale = user.preferredLanguage || 'ja';
+      const adminLimitMessage = getString(character.limitMessage, locale);
+      limitMessageContent = adminLimitMessage && adminLimitMessage.trim() 
+        ? adminLimitMessage 
+        : '無料会員は1日1回までチャットできます。プレミアム会員になると制限が解除されます。';
+    }
+
     res.json({
       ...chat.toObject(),
       isLimitReached,
-      remainingChats
+      remainingChats,
+      limitMessage: limitMessageContent
     });
   } catch (err) {
     console.error(err.message);
