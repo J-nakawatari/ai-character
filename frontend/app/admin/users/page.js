@@ -134,15 +134,18 @@ export default function AdminUsers() {
 
   // 使用GPTモデル判定
   const getGPTModel = (user) => {
-    return 'GPT-3.5-turbo';
+    // ユーザーの選択キャラクターからモデルを取得
+    return user.selectedCharacter?.model || 'gpt-3.5-turbo';
   };
 
   // GPTモデルバッジの取得
   const getGPTModelBadge = (user) => {
     const model = getGPTModel(user);
+    const isGPT4 = model.includes('gpt-4');
+    
     return (
-      <span className="admin-badge admin-badge--neutral">
-        ⚡ GPT-3.5
+      <span className={`admin-badge ${isGPT4 ? 'admin-badge--warning' : 'admin-badge--neutral'}`}>
+        ⚡ {isGPT4 ? 'GPT-4' : 'GPT-3.5'}
       </span>
     );
   };
@@ -231,7 +234,11 @@ export default function AdminUsers() {
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--admin-space-2)', alignItems: 'center' }}>
                         {getGPTModelBadge(user)}
                         <div style={{ fontSize: 'var(--admin-font-size-xs)', color: 'var(--admin-gray-500)', textAlign: 'center' }}>
-                          標準品質
+                          {(() => {
+                            const model = getGPTModel(user);
+                            const isGPT4 = model.includes('gpt-4');
+                            return isGPT4 ? '高品質対話 | 300トークン' : '標準品質 | 150トークン';
+                          })()}
                         </div>
                       </div>
                     </td>
@@ -392,7 +399,11 @@ export default function AdminUsers() {
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--admin-space-1)' }}>
                         {getGPTModelBadge(selectedUser)}
                         <div style={{ fontSize: 'var(--admin-font-size-xs)', color: 'var(--admin-gray-500)' }}>
-                          標準的な対話品質 | トークチケット消費
+                          {(() => {
+                            const model = getGPTModel(selectedUser);
+                            const isGPT4 = model.includes('gpt-4');
+                            return isGPT4 ? '高品質対話 | 300トークン消費' : '標準品質 | 150トークン消費';
+                          })()}
                         </div>
                       </div>
                     </div>

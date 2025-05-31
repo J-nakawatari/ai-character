@@ -68,13 +68,17 @@ export default function AdminDashboard() {
         const topCharacter = topCharacterId ? 
           characters.find(char => char._id === topCharacterId) : null;
 
+        // チャット統計を取得
+        const chatsRes = await api.get('/admin/stats/chats');
+        const { totalChats, todayChats } = chatsRes.data || { totalChats: 0, todayChats: 0 };
+
         setStats({
           userCount: users.length,
           characterCount: characters.length,
           activeUsers,
           paidUsers,
-          totalChats: Math.floor(Math.random() * 10000) + 5000, // ダミーデータ
-          todayChats: Math.floor(Math.random() * 500) + 100, // ダミーデータ
+          totalChats,
+          todayChats,
           avgAffinity,
           topCharacter
         });
@@ -122,9 +126,6 @@ export default function AdminDashboard() {
           </div>
           <div className="admin-stats-value">{stats.userCount.toLocaleString()}</div>
           <div className="admin-stats-label">総ユーザー数</div>
-          <div className="admin-stats-change admin-stats-change--positive">
-            ↗ +12.5%
-          </div>
         </div>
 
         {/* アクティブユーザー */}
@@ -134,9 +135,6 @@ export default function AdminDashboard() {
           </div>
           <div className="admin-stats-value">{stats.activeUsers.toLocaleString()}</div>
           <div className="admin-stats-label">アクティブユーザー</div>
-          <div className="admin-stats-change admin-stats-change--positive">
-            ↗ +8.2%
-          </div>
         </div>
 
         {/* トークチケット保有ユーザー */}
@@ -146,9 +144,6 @@ export default function AdminDashboard() {
           </div>
           <div className="admin-stats-value">{stats.paidUsers.toLocaleString()}</div>
           <div className="admin-stats-label">トークチケット保有ユーザー</div>
-          <div className="admin-stats-change admin-stats-change--positive">
-            ↗ +15.7%
-          </div>
         </div>
 
         {/* キャラクター数 */}
@@ -158,9 +153,6 @@ export default function AdminDashboard() {
           </div>
           <div className="admin-stats-value">{stats.characterCount.toLocaleString()}</div>
           <div className="admin-stats-label">AIキャラクター数</div>
-          <div className="admin-stats-change admin-stats-change--positive">
-            ↗ +2.1%
-          </div>
         </div>
 
         {/* 総チャット数 */}
@@ -170,9 +162,6 @@ export default function AdminDashboard() {
           </div>
           <div className="admin-stats-value">{stats.totalChats.toLocaleString()}</div>
           <div className="admin-stats-label">総チャット数</div>
-          <div className="admin-stats-change admin-stats-change--positive">
-            ↗ +24.3%
-          </div>
         </div>
 
         {/* 今日のチャット */}
@@ -182,9 +171,6 @@ export default function AdminDashboard() {
           </div>
           <div className="admin-stats-value">{stats.todayChats.toLocaleString()}</div>
           <div className="admin-stats-label">今日のチャット数</div>
-          <div className="admin-stats-change admin-stats-change--positive">
-            ↗ +18.9%
-          </div>
         </div>
 
         {/* 平均親密度 */}
@@ -194,9 +180,6 @@ export default function AdminDashboard() {
           </div>
           <div className="admin-stats-value">{stats.avgAffinity}</div>
           <div className="admin-stats-label">平均親密度レベル</div>
-          <div className="admin-stats-change admin-stats-change--positive">
-            ↗ +5.4%
-          </div>
         </div>
 
         {/* 人気キャラクター */}
@@ -208,36 +191,9 @@ export default function AdminDashboard() {
             {stats.topCharacter ? (stats.topCharacter.name?.ja || stats.topCharacter.name || 'Unknown') : 'N/A'}
           </div>
           <div className="admin-stats-label">人気No.1キャラクター</div>
-          <div className="admin-stats-change admin-stats-change--positive">
-            🔥 トレンド
-          </div>
         </div>
       </div>
 
-      {/* Charts Section */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: 'var(--admin-space-6)' }}>
-        {/* ユーザー成長チャート（ダミー） */}
-        <div className="admin-chart-container">
-          <div className="admin-chart-header">
-            <div className="admin-chart-title">ユーザー登録推移</div>
-            <div className="admin-badge admin-badge--success">+24% 今月</div>
-          </div>
-          <div style={{ height: '200px', background: 'var(--admin-gray-50)', borderRadius: 'var(--admin-radius-lg)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--admin-gray-500)' }}>
-            📊 グラフエリア（Chart.js等で実装予定）
-          </div>
-        </div>
-
-        {/* 親密度分布チャート（ダミー） */}
-        <div className="admin-chart-container">
-          <div className="admin-chart-header">
-            <div className="admin-chart-title">親密度レベル分布</div>
-            <div className="admin-badge admin-badge--primary">リアルタイム</div>
-          </div>
-          <div style={{ height: '200px', background: 'var(--admin-gray-50)', borderRadius: 'var(--admin-radius-lg)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--admin-gray-500)' }}>
-            🥧 円グラフエリア（Chart.js等で実装予定）
-          </div>
-        </div>
-      </div>
 
       {/* システム状態 */}
       <div style={{ marginTop: 'var(--admin-space-8)' }}>
