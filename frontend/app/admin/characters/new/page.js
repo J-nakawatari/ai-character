@@ -17,6 +17,13 @@ const initialState = {
   personalityPrompt: { ja: '', en: '' },
   adminPrompt: { ja: '', en: '' },
   characterAccessType: 'free',
+  // 新しいトークン制フィールド
+  isBaseCharacter: false,
+  requiresUnlock: false,
+  model: 'gpt-3.5-turbo',
+  gender: 'neutral',
+  personalityPreset: 'おっとり系',
+  personalityTags: [],
   price: 0,
   purchaseType: 'buy',
   voice: '',
@@ -44,6 +51,19 @@ const initialState = {
   galleryImage10: '',
 };
 
+// 性格プリセットの選択肢
+const personalityPresets = [
+  'おっとり系', '元気系', 'クール系', '真面目系', 'セクシー系', 
+  '天然系', 'ボーイッシュ系', 'お姉さん系'
+];
+
+// 性格タグの選択肢
+const personalityTags = [
+  '明るい', 'よく笑う', '甘えん坊', '積極的', '大人っぽい', 
+  '静か', '天然', 'ボーイッシュ', 'ポジティブ', 'やや毒舌', 
+  '癒し系', '元気いっぱい', '知的', '優しい', '人懐っこい'
+];
+
 export default function CharacterNewPage() {
   const [form, setForm] = useState(initialState);
   const [loading, setLoading] = useState(false);
@@ -58,6 +78,16 @@ export default function CharacterNewPage() {
   const [showCropper, setShowCropper] = useState(false);
   const [previewUrl, setPreviewUrl] = useState('');
   const router = useRouter();
+
+  // 性格タグの変更処理
+  const handlePersonalityTagChange = (tag) => {
+    setForm(prev => ({
+      ...prev,
+      personalityTags: prev.personalityTags.includes(tag)
+        ? prev.personalityTags.filter(t => t !== tag)
+        : [...prev.personalityTags, tag]
+    }));
+  };
 
   useEffect(() => {
     return () => {
@@ -91,6 +121,13 @@ export default function CharacterNewPage() {
       fd.append('personalityPrompt', JSON.stringify(form.personalityPrompt));
       fd.append('adminPrompt', JSON.stringify(form.adminPrompt));
       fd.append('characterAccessType', form.characterAccessType);
+      // 新しいトークン制フィールド
+      fd.append('isBaseCharacter', form.isBaseCharacter);
+      fd.append('requiresUnlock', form.requiresUnlock);
+      fd.append('model', form.model);
+      fd.append('gender', form.gender);
+      fd.append('personalityPreset', form.personalityPreset);
+      fd.append('personalityTags', JSON.stringify(form.personalityTags));
       fd.append('price', form.price);
       fd.append('purchaseType', form.purchaseType);
       fd.append('voice', form.voice);
@@ -331,12 +368,115 @@ export default function CharacterNewPage() {
                 </div>
               </div>
             </Card>
+
+            {/* 性格・特徴設定セクション */}
+            <Card>
+              <div className="space-y-6">
+                <div className="admin-stats-title-rapper border-b border-gray-200 pb-4">
+                  <h2 className="admin-stats-title">性格・特徴設定</h2>
+                  <p className="mt-1 text-sm text-gray-500">キャラクターの性格とAIプロンプト自動生成の設定を行います</p>
+                </div>
+                
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                  <div className={styles['admin-form-group']}>
+                    <label htmlFor="gender" className={styles['admin-form-label']}>性別</label>
+                    <select
+                      id="gender"
+                      name="gender"
+                      value={form.gender}
+                      onChange={handleChange}
+                      className={styles['admin-form-input']}
+                    >
+                      <option value="neutral">中性</option>
+                      <option value="female">女性</option>
+                      <option value="male">男性</option>
+                    </select>
+                  </div>
+                  
+                  <div className={styles['admin-form-group']}>
+                    <label htmlFor="personalityPreset" className={styles['admin-form-label']}>性格プリセット</label>
+                    <select
+                      id="personalityPreset"
+                      name="personalityPreset"
+                      value={form.personalityPreset}
+                      onChange={handleChange}
+                      className={styles['admin-form-input']}
+                    >
+                      {personalityPresets.map(preset => (
+                        <option key={preset} value={preset}>{preset}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div className={styles['admin-form-group']}>
+                  <label className={styles['admin-form-label']}>性格タグ（複数選択可）</label>
+                  <div className="grid grid-cols-3 gap-2 mt-2">
+                    {personalityTags.map(tag => (
+                      <label key={tag} className="flex items-center space-x-2 text-sm">
+                        <input
+                          type="checkbox"
+                          checked={form.personalityTags.includes(tag)}
+                          onChange={() => handlePersonalityTagChange(tag)}
+                          className="rounded"
+                        />
+                        <span>{tag}</span>
+                      </label>
+                    ))}
+                  </div>
+                  {form.personalityTags.length > 0 && (
+                    <div className="mt-2 text-sm text-gray-600">
+                      選択中: {form.personalityTags.join('、')}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </Card>
+
+            {/* トークン制設定セクション */}
+            <Card>
+              <div className="space-y-6">
+                <div className="admin-stats-title-rapper border-b border-gray-200 pb-4">
+                  <h2 className="admin-stats-title">トークン制設定</h2>
+                  <p className="mt-1 text-sm text-gray-500">新しいトークン制に関する設定を行います</p>
+                </div>
+                
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                  <div className={styles['admin-form-group']}>
+                    <label className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        name="isBaseCharacter"
+                        checked={form.isBaseCharacter}
+                        onChange={handleChange}
+                      />
+                      <span className={styles['admin-form-label']}>無料キャラクター（1日5回まで）</span>
+                    </label>
+                  </div>
+                  
+                  <div className={styles['admin-form-group']}>
+                    <label htmlFor="model" className={styles['admin-form-label']}>使用AIモデル</label>
+                    <select
+                      id="model"
+                      name="model"
+                      value={form.model}
+                      onChange={handleChange}
+                      className={styles['admin-form-input']}
+                    >
+                      <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+                      <option value="gpt-4">GPT-4</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </Card>
+
             {/* 会話設定セクション */}
             <Card>
               <div className="space-y-6">
                 <div className="admin-stats-title-rapper border-b border-gray-200 pb-4">
                   <h2 className="admin-stats-title">会話設定</h2>
-                  <p className="mt-1 text-sm text-gray-500">キャラクターの会話に関する設定を行います</p>
+                  <p className="mt-1 text-sm text-gray-500">キャラクターの会話に関する設定を行います（性格設定と併用）</p>
                 </div>
                 <div className={styles['admin-form-group']}>
                   <label htmlFor="personalityPrompt.ja" className={styles['admin-form-label']}>性格プロンプト（日本語）</label>

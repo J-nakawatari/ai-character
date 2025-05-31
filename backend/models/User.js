@@ -94,6 +94,19 @@ const UserSchema = new Schema({
     type: Date,
     default: Date.now
   },
+  // トークン制フィールド
+  tokenBalance: {
+    type: Number,
+    default: 0
+  },
+  dailyFreeChatCount: {
+    type: Number,
+    default: 0
+  },
+  lastFreeChatResetAt: {
+    type: Date,
+    default: null
+  },
   affinities: [{
     character: {
       type: Schema.Types.ObjectId,

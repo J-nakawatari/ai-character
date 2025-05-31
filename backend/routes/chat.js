@@ -6,6 +6,7 @@ const User = require('../models/User');
 const Character = require('../models/Character');
 const OpenAI = require('openai');
 const { updateAffinity, getToneStyle } = require('../utils/affinity');
+const { generatePersonalityPrompt } = require('../utils/personalityPrompt');
 
 router.get('/', auth, async (req, res) => {
   try {
@@ -23,39 +24,27 @@ router.get('/', auth, async (req, res) => {
       return res.status(404).json({ msg: 'User or character not found' });
     }
 
-    // 無料会員のチャット制限状態をチェック
+    // 新しいトークン制での制限状態をチェック
     let isLimitReached = false;
-    let remainingChats = null;
+    let remainingFreeChats = null;
+    let tokenBalance = user.tokenBalance;
     
-    if (user.membershipType === 'free') {
-      const today = new Date();
-      const lastResetDate = new Date(user.lastChatResetDate);
-      
-      // 日付が変わった場合はカウントをリセット
-      if (today.toDateString() !== lastResetDate.toDateString()) {
-        user.dailyChatCount = 0;
-        user.lastChatResetDate = today;
-        await user.save();
-      }
-      
-      isLimitReached = user.dailyChatCount >= 1;
-      remainingChats = Math.max(0, 1 - user.dailyChatCount);
+    const today = new Date();
+    const lastResetDate = user.lastFreeChatResetAt ? new Date(user.lastFreeChatResetAt) : null;
+    
+    // 日付が変わった場合は無料チャット回数をリセット
+    if (!lastResetDate || today.toDateString() !== lastResetDate.toDateString()) {
+      user.dailyFreeChatCount = 0;
+      user.lastFreeChatResetAt = today;
+      await user.save();
+    }
+    
+    if (character.isBaseCharacter) {
+      isLimitReached = user.dailyFreeChatCount >= 5;
+      remainingFreeChats = Math.max(0, 5 - user.dailyFreeChatCount);
     }
 
-    // キャラクターの種類に応じたチェック
-    if (character.characterAccessType === 'subscription') {
-      if (user.membershipType !== 'subscription' || user.subscriptionStatus !== 'active') {
-        return res.status(403).json({ msg: 'このキャラクターは有料会員限定です' });
-      }
-    } else if (character.characterAccessType === 'purchaseOnly') {
-      const isPurchased = user.purchasedCharacters.some(
-        pc => pc.character.toString() === characterId && pc.purchaseType === 'buy'
-      );
-      
-      if (!isPurchased) {
-        return res.status(403).json({ msg: 'このキャラクターは購入が必要です' });
-      }
-    }
+    // 旧来の制限チェックは残しつつ、新しいトークン制と併用
     
     let chat = await Chat.findOne({ 
       userId: req.user.id,
@@ -72,7 +61,7 @@ router.get('/', auth, async (req, res) => {
     }
     
     // 制限に達した場合、制限メッセージをチャット履歴に追加
-    if (isLimitReached && user.membershipType === 'free') {
+    if (isLimitReached && character.isBaseCharacter) {
       const locale = user.preferredLanguage || 'ja';
       // 管理画面で設定された制限メッセージを取得
       const adminLimitMessage = getString(character.limitMessage, locale);
@@ -80,7 +69,7 @@ router.get('/', auth, async (req, res) => {
       // 制限メッセージを作成（DBに設定されていない場合はデフォルト）
       const limitMessageContent = adminLimitMessage && adminLimitMessage.trim() 
         ? adminLimitMessage 
-        : '無料会員は1日1回までチャットできます。プレミアム会員になると制限が解除されます。';
+        : '無料キャラクターは1日5回までチャットできます。';
       
       const limitMessage = {
         sender: 'ai',
@@ -106,19 +95,21 @@ router.get('/', auth, async (req, res) => {
     
     // 制限メッセージを取得
     let limitMessageContent = null;
-    if (isLimitReached && user.membershipType === 'free') {
+    if (isLimitReached && character.isBaseCharacter) {
       const locale = user.preferredLanguage || 'ja';
       const adminLimitMessage = getString(character.limitMessage, locale);
       limitMessageContent = adminLimitMessage && adminLimitMessage.trim() 
         ? adminLimitMessage 
-        : '無料会員は1日1回までチャットできます。プレミアム会員になると制限が解除されます。';
+        : '無料キャラクターは1日5回までチャットできます。';
     }
 
     res.json({
       ...chat.toObject(),
       isLimitReached,
-      remainingChats,
-      limitMessage: limitMessageContent
+      remainingFreeChats,
+      tokenBalance,
+      limitMessage: limitMessageContent,
+      isBaseCharacter: character.isBaseCharacter
     });
   } catch (err) {
     console.error(err.message);
@@ -151,47 +142,44 @@ router.post('/', auth, async (req, res) => {
       return res.status(404).json({ msg: 'User or character not found' });
     }
 
-    // 無料会員の1日チャット制限をチェック
-    if (user.membershipType === 'free') {
-      const today = new Date();
-      const lastResetDate = new Date(user.lastChatResetDate);
-      
-      // 日付が変わった場合はカウントをリセット
-      if (today.toDateString() !== lastResetDate.toDateString()) {
-        user.dailyChatCount = 0;
-        user.lastChatResetDate = today;
-        await user.save();
-      }
-      
-      // 1日1回の制限をチェック
-      if (user.dailyChatCount >= 1) {
+    // 新しいトークン制ロジック
+    const today = new Date();
+    const lastResetDate = user.lastFreeChatResetAt ? new Date(user.lastFreeChatResetAt) : null;
+    
+    // 日付が変わった場合は無料チャット回数をリセット
+    if (!lastResetDate || today.toDateString() !== lastResetDate.toDateString()) {
+      user.dailyFreeChatCount = 0;
+      user.lastFreeChatResetAt = today;
+      await user.save();
+    }
+
+    // キャラクターのタイプに応じた制限チェック
+    if (character.isBaseCharacter) {
+      // 無料キャラクター：1日5回まで
+      if (user.dailyFreeChatCount >= 5) {
         const locale = user.preferredLanguage || 'ja';
         const adminLimitMessage = getString(character.limitMessage, locale);
         
-        // DBに制限メッセージが設定されている場合はそれを使用、なければデフォルトメッセージ
         const limitMsg = adminLimitMessage && adminLimitMessage.trim() 
           ? adminLimitMessage 
-          : '無料会員は1日1回までチャットできます。プレミアム会員になると制限が解除されます。';
+          : '無料キャラクターは1日5回までチャットできます。';
           
         return res.status(429).json({ 
           msg: limitMsg,
-          isLimitReached: true
+          isLimitReached: true,
+          remainingFreeChats: 0
         });
       }
-    }
-
-    // キャラクターの種類に応じたチェック
-    if (character.characterAccessType === 'subscription') {
-      if (user.membershipType !== 'subscription' || user.subscriptionStatus !== 'active') {
-        return res.status(403).json({ msg: 'このキャラクターは有料会員限定です' });
-      }
-    } else if (character.characterAccessType === 'purchaseOnly') {
-      const isPurchased = user.purchasedCharacters.some(
-        pc => pc.character.toString() === characterId && pc.purchaseType === 'buy'
-      );
+    } else {
+      // 課金キャラクター：トークン必要（暫定で150トークン消費と仮定）
+      const requiredTokens = character.model === 'gpt-4' ? 300 : 150;
       
-      if (!isPurchased) {
-        return res.status(403).json({ msg: 'このキャラクターは購入が必要です' });
+      if (user.tokenBalance < requiredTokens) {
+        return res.status(402).json({ 
+          msg: 'トークンが不足しています。チャージしてください。',
+          requiredTokens,
+          currentBalance: user.tokenBalance
+        });
       }
     }
 
@@ -235,17 +223,14 @@ router.post('/', auth, async (req, res) => {
     
     // localeの取得
     const locale = user.preferredLanguage || 'ja';
-    // システムメッセージの文字列化
-    const systemPrompt = getString(character.personalityPrompt, locale);
     
-    // 親密度に応じたプロンプトを追加
-    const enhancedPrompt = `${systemPrompt}\n\n現在の親密度レベル: ${affinityLevel}/100\n話し方: ${toneStyle}`;
+    // 新しい性格ベースプロンプト生成
+    const enhancedPrompt = generatePersonalityPrompt(character, locale, affinityLevel, toneStyle);
 
-    // ユーザー会員タイプに応じてモデルとパラメータを選択
-    const isSubscriptionUser = user.membershipType === 'subscription' && user.subscriptionStatus === 'active';
+    // キャラクターのモデル設定に応じて選択
     const modelConfig = {
-      model: "gpt-3.5-turbo",
-      max_tokens: isSubscriptionUser ? 200 : 150,
+      model: character.model || "gpt-3.5-turbo",
+      max_tokens: character.isBaseCharacter ? 150 : 200,
       temperature: 0.7
     };
 
@@ -264,6 +249,7 @@ router.post('/', auth, async (req, res) => {
     });
     
     const aiReply = completion.choices[0].message.content;
+    const tokensUsed = completion.usage?.total_tokens || 0;
     
     // AIの応答を保存
     chat.messages.push({
@@ -274,11 +260,22 @@ router.post('/', auth, async (req, res) => {
     
     await chat.save();
     
-    // 無料会員のチャット回数をカウントアップ
-    if (user.membershipType === 'free') {
-      user.dailyChatCount += 1;
-      await user.save();
+    // トークン消費とカウント処理
+    let remainingFreeChats = null;
+    let tokenBalance = user.tokenBalance;
+    
+    if (character.isBaseCharacter) {
+      // 無料キャラクター：回数をカウントアップ
+      user.dailyFreeChatCount += 1;
+      remainingFreeChats = Math.max(0, 5 - user.dailyFreeChatCount);
+    } else {
+      // 課金キャラクター：実際のトークン消費
+      const actualTokenCost = Math.max(tokensUsed, 50); // 最低50トークンは消費
+      user.tokenBalance = Math.max(0, user.tokenBalance - actualTokenCost);
+      tokenBalance = user.tokenBalance;
     }
+    
+    await user.save();
     
     res.json({ 
       reply: aiReply,
@@ -286,7 +283,10 @@ router.post('/', auth, async (req, res) => {
         level: affinityLevel,
         streak: affinity ? affinity.lastVisitStreak : 0
       },
-      remainingChats: user.membershipType === 'free' ? Math.max(0, 1 - user.dailyChatCount) : null
+      remainingFreeChats,
+      tokenBalance,
+      tokensUsed: character.isBaseCharacter ? 0 : tokensUsed,
+      isBaseCharacter: character.isBaseCharacter
     });
   } catch (err) {
     console.error(err.message);
