@@ -66,10 +66,34 @@
   flex: 1;
   overflow-y: auto;
   padding: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .contextContent {
   padding: 24px 20px;
+}
+
+/* 共通セクション（上段） */
+.commonSection {
+  padding: 24px 20px 16px 20px;
+  border-bottom: 1px solid #f1f5f9;
+  background: #fafbfc;
+  flex-shrink: 0;
+}
+
+/* コンテキストセクション（下段） */
+.contextSection {
+  flex: 1;
+  padding: 0 20px 24px 20px;
+  overflow-y: auto;
+}
+
+/* セクション区切り線 */
+.sectionDivider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, #e2e8f0 50%, transparent 100%);
+  margin: 16px 0 24px 0;
 }
 
 /* セクション */

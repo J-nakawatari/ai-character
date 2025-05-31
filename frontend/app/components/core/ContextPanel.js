@@ -6,8 +6,9 @@ import { useRouter } from 'next/navigation';
 import styles from './ContextPanel.module.css';
 
 /**
- * ContextPanel - 状況に応じて変化するサイドパネル
- * 従来の固定サイドバーではなく、現在の作業に最適化された機能を提供
+ * ContextPanel - 階層化された状況認識型サイドパネル
+ * 上段：全画面共通のナビゲーション
+ * 下段：現在のページに固有の機能
  */
 const ContextPanel = ({ 
   isOpen, 
@@ -40,14 +41,31 @@ const ContextPanel = ({
     }
   }, [isOpen, onClose]);
 
-  // コンテキストに応じた内容を生成
-  const renderContextContent = () => {
+  // 共通ナビゲーションの取得
+  const getCommonNavigation = () => {
+    if (isAdmin) {
+      return [
+        { href: '/admin/dashboard', icon: '📊', label: 'ダッシュボード' },
+        { href: '/admin/users', icon: '👥', label: 'ユーザー管理' },
+        { href: '/admin/characters', icon: '🤖', label: 'キャラクター管理' },
+        { href: '/admin/settings', icon: '⚙️', label: 'システム設定' }
+      ];
+    } else {
+      return [
+        { href: `/${locale}/dashboard`, icon: '🏠', label: 'ホーム' },
+        { href: `/${locale}/chat`, icon: '💬', label: 'チャット' },
+        { href: `/${locale}/setup`, icon: '✨', label: 'キャラクター選択' },
+        { href: `/${locale}/mypage`, icon: '👤', label: 'マイページ' }
+      ];
+    }
+  };
+
+  // ページ固有機能の取得
+  const getContextSpecificContent = () => {
     switch (context) {
       case 'chat':
         return (
-          <div className={styles.contextContent}>
-            <h3 className={styles.sectionTitle}>チャット機能</h3>
-            
+          <>
             <div className={styles.section}>
               <h4>現在のキャラクター</h4>
               {user?.selectedCharacter ? (
@@ -82,7 +100,7 @@ const ContextPanel = ({
             </div>
 
             <div className={styles.section}>
-              <h4>クイックアクション</h4>
+              <h4>チャット機能</h4>
               <div className={styles.actionGrid}>
                 <button className={styles.actionBtn}>💭 新しい会話</button>
                 <button className={styles.actionBtn}>📝 会話履歴</button>
@@ -90,50 +108,12 @@ const ContextPanel = ({
                 <button className={styles.actionBtn}>❤️ お気に入り</button>
               </div>
             </div>
-          </div>
+          </>
         );
 
       case 'overview':
         return (
-          <div className={styles.contextContent}>
-            <h3 className={styles.sectionTitle}>
-              {isAdmin ? '管理機能' : 'ナビゲーション'}
-            </h3>
-            
-            <div className={styles.navigation}>
-              {isAdmin ? (
-                <>
-                  <Link href="/admin/dashboard" className={styles.navItem}>
-                    📊 ダッシュボード
-                  </Link>
-                  <Link href="/admin/users" className={styles.navItem}>
-                    👥 ユーザー管理
-                  </Link>
-                  <Link href="/admin/characters" className={styles.navItem}>
-                    🤖 キャラクター管理
-                  </Link>
-                  <Link href="/admin/settings" className={styles.navItem}>
-                    ⚙️ システム設定
-                  </Link>
-                </>
-              ) : (
-                <>
-                  <Link href={`/${locale}/dashboard`} className={styles.navItem}>
-                    🏠 ホーム
-                  </Link>
-                  <Link href={`/${locale}/chat`} className={styles.navItem}>
-                    💬 チャット
-                  </Link>
-                  <Link href={`/${locale}/setup`} className={styles.navItem}>
-                    ✨ キャラクター選択
-                  </Link>
-                  <Link href={`/${locale}/mypage`} className={styles.navItem}>
-                    👤 マイページ
-                  </Link>
-                </>
-              )}
-            </div>
-
+          <>
             {!isAdmin && (
               <div className={styles.section}>
                 <h4>最近の活動</h4>
@@ -149,19 +129,15 @@ const ContextPanel = ({
                 </div>
               </div>
             )}
-          </div>
+          </>
         );
 
       case 'character-management':
       case 'user-management':
         return (
-          <div className={styles.contextContent}>
-            <h3 className={styles.sectionTitle}>
-              {context === 'character-management' ? 'キャラクター管理' : 'ユーザー管理'}
-            </h3>
-            
+          <>
             <div className={styles.section}>
-              <h4>アクション</h4>
+              <h4>{context === 'character-management' ? 'キャラクター管理' : 'ユーザー管理'}</h4>
               <div className={styles.actionGrid}>
                 <button className={styles.actionBtn}>➕ 新規作成</button>
                 <button className={styles.actionBtn}>📁 インポート</button>
@@ -187,14 +163,12 @@ const ContextPanel = ({
                 </label>
               </div>
             </div>
-          </div>
+          </>
         );
 
       case 'character-selection':
         return (
-          <div className={styles.contextContent}>
-            <h3 className={styles.sectionTitle}>キャラクター選択</h3>
-            
+          <>
             <div className={styles.section}>
               <h4>フィルター</h4>
               <div className={styles.filterTags}>
@@ -214,47 +188,39 @@ const ContextPanel = ({
                 <button className={styles.categoryItem}>📚 学習サポート</button>
               </div>
             </div>
-          </div>
+          </>
         );
 
       case 'profile':
         return (
-          <div className={styles.contextContent}>
-            <h3 className={styles.sectionTitle}>プロフィール設定</h3>
-            
-            <div className={styles.navigation}>
-              <Link href={`/${locale}/mypage`} className={styles.navItem}>
-                👤 基本情報
-              </Link>
-              <Link href={`/${locale}/mypage#security`} className={styles.navItem}>
-                🔒 セキュリティ
-              </Link>
-              <Link href={`/${locale}/mypage#preferences`} className={styles.navItem}>
-                ⚙️ 設定
-              </Link>
-              <Link href={`/${locale}/mypage#billing`} className={styles.navItem}>
-                💳 請求情報
-              </Link>
+          <>
+            <div className={styles.section}>
+              <h4>プロフィール設定</h4>
+              <div className={styles.navigation}>
+                <Link href={`/${locale}/mypage`} className={styles.navItem}>
+                  👤 基本情報
+                </Link>
+                <Link href={`/${locale}/mypage#security`} className={styles.navItem}>
+                  🔒 セキュリティ
+                </Link>
+                <Link href={`/${locale}/mypage#preferences`} className={styles.navItem}>
+                  ⚙️ 設定
+                </Link>
+                <Link href={`/${locale}/mypage#billing`} className={styles.navItem}>
+                  💳 請求情報
+                </Link>
+              </div>
             </div>
-          </div>
+          </>
         );
 
       default:
-        return (
-          <div className={styles.contextContent}>
-            <h3 className={styles.sectionTitle}>メニュー</h3>
-            <div className={styles.navigation}>
-              <Link href={`/${locale}/dashboard`} className={styles.navItem}>
-                🏠 ホーム
-              </Link>
-              <Link href={`/${locale}/chat`} className={styles.navItem}>
-                💬 チャット
-              </Link>
-            </div>
-          </div>
-        );
+        return null;
     }
   };
+
+  const commonNavigation = getCommonNavigation();
+  const contextContent = getContextSpecificContent();
 
   return (
     <>
@@ -278,7 +244,27 @@ const ContextPanel = ({
         </div>
 
         <div className={styles.panelContent}>
-          {renderContextContent()}
+          {/* 上段：共通ナビゲーション */}
+          <div className={styles.commonSection}>
+            <h3 className={styles.sectionTitle}>
+              {isAdmin ? '管理機能' : 'メニュー'}
+            </h3>
+            <div className={styles.navigation}>
+              {commonNavigation.map((item, index) => (
+                <Link key={index} href={item.href} className={styles.navItem}>
+                  {item.icon} {item.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* 下段：ページ固有機能 */}
+          {contextContent && (
+            <div className={styles.contextSection}>
+              <div className={styles.sectionDivider}></div>
+              {contextContent}
+            </div>
+          )}
         </div>
       </div>
     </>
