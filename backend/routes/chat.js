@@ -38,8 +38,8 @@ router.get('/', auth, async (req, res) => {
         await user.save();
       }
       
-      isLimitReached = user.dailyChatCount >= 5;
-      remainingChats = Math.max(0, 5 - user.dailyChatCount);
+      isLimitReached = user.dailyChatCount >= 1;
+      remainingChats = Math.max(0, 1 - user.dailyChatCount);
     }
 
     // キャラクターの種類に応じたチェック
@@ -157,8 +157,8 @@ router.post('/', auth, async (req, res) => {
         await user.save();
       }
       
-      // 1日5回の制限をチェック
-      if (user.dailyChatCount >= 5) {
+      // 1日1回の制限をチェック
+      if (user.dailyChatCount >= 1) {
         const locale = user.preferredLanguage || 'ja';
         console.log('===== CHAT POST LIMIT MESSAGE DEBUG =====');
         console.log('character.limitMessage:', character.limitMessage);
@@ -277,7 +277,7 @@ router.post('/', auth, async (req, res) => {
         level: affinityLevel,
         streak: affinity ? affinity.lastVisitStreak : 0
       },
-      remainingChats: user.membershipType === 'free' ? Math.max(0, 5 - user.dailyChatCount) : null
+      remainingChats: user.membershipType === 'free' ? Math.max(0, 1 - user.dailyChatCount) : null
     });
   } catch (err) {
     console.error(err.message);
