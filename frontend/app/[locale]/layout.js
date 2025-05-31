@@ -1,18 +1,13 @@
 'use client';
 
 import { NextIntlClientProvider } from 'next-intl';
-import { AuthProvider } from '../utils/auth';
-import Sidebar from '../components/Sidebar';
-import { usePathname } from 'next/navigation';
+import { AuthProvider, useAuth } from '../utils/auth';
+import DashboardLayout from '../components/DashboardLayout';
+import { usePathname, useRouter } from 'next/navigation';
 import { use } from 'react';
 
 export default function LocaleLayout({ children, params }) {
   const { locale } = typeof params.then === 'function' ? use(params) : params;
-  const pathname = usePathname();
-  const hideSidebar = pathname === `/${locale}` ||
-                      pathname.startsWith(`/${locale}/login`) || 
-                      pathname.startsWith(`/${locale}/register`);
-  const isHome = pathname === `/${locale}`;
   
   let messages;
   try {
@@ -25,17 +20,60 @@ export default function LocaleLayout({ children, params }) {
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
       <AuthProvider>
-        <div className={`app-layout${isHome ? ' home-main' : ''}`}>
-          {!hideSidebar && <Sidebar />}
-          {isHome ? (
-            children
-          ) : (
-            <main className={`app-main${hideSidebar ? ' full-width' : ''}`}>
-              {children}
-            </main>
-          )}
-        </div>
+        <LocaleLayoutInner locale={locale}>
+          {children}
+        </LocaleLayoutInner>
       </AuthProvider>
     </NextIntlClientProvider>
+  );
+}
+
+function LocaleLayoutInner({ children, locale }) {
+  const { user, logout } = useAuth();
+  const pathname = usePathname();
+  const router = useRouter();
+  
+  const hideSidebar = pathname === `/${locale}` ||
+                      pathname.startsWith(`/${locale}/login`) || 
+                      pathname.startsWith(`/${locale}/register`);
+  const isHome = pathname === `/${locale}`;
+  const isChat = pathname.startsWith(`/${locale}/chat`);
+
+  const handleLogout = async () => {
+    await logout();
+    router.push(`/${locale}/login`);
+  };
+
+  if (hideSidebar || isHome) {
+    return (
+      <div className={`app-layout${isHome ? ' home-main' : ''}`}>
+        {isHome ? (
+          children
+        ) : (
+          <main className="app-main full-width">
+            {children}
+          </main>
+        )}
+      </div>
+    );
+  }
+
+  if (isChat) {
+    return (
+      <div style={{ display: 'block', background: 'transparent', minHeight: '100vh' }}>
+        {children}
+      </div>
+    );
+  }
+
+  return (
+    <DashboardLayout
+      isAdmin={false}
+      user={user}
+      onLogout={handleLogout}
+      locale={locale}
+    >
+      {children}
+    </DashboardLayout>
   );
 }
