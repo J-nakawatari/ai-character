@@ -84,6 +84,27 @@ router.post('/', auth, async (req, res) => {
       return res.status(404).json({ msg: 'User or character not found' });
     }
 
+    // 無料会員の1日チャット制限をチェック
+    if (user.membershipType === 'free') {
+      const today = new Date();
+      const lastResetDate = new Date(user.lastChatResetDate);
+      
+      // 日付が変わった場合はカウントをリセット
+      if (today.toDateString() !== lastResetDate.toDateString()) {
+        user.dailyChatCount = 0;
+        user.lastChatResetDate = today;
+        await user.save();
+      }
+      
+      // 1日5回の制限をチェック
+      if (user.dailyChatCount >= 5) {
+        return res.status(429).json({ 
+          msg: '無料会員は1日5回までチャットできます。プレミアム会員になると制限が解除されます。',
+          isLimitReached: true
+        });
+      }
+    }
+
     // キャラクターの種類に応じたチェック
     if (character.characterAccessType === 'subscription') {
       if (user.membershipType !== 'subscription' || user.subscriptionStatus !== 'active') {
@@ -170,12 +191,19 @@ router.post('/', auth, async (req, res) => {
     
     await chat.save();
     
+    // 無料会員のチャット回数をカウントアップ
+    if (user.membershipType === 'free') {
+      user.dailyChatCount += 1;
+      await user.save();
+    }
+    
     res.json({ 
       reply: aiReply,
       affinity: {
         level: affinityLevel,
         streak: affinity ? affinity.lastVisitStreak : 0
-      }
+      },
+      remainingChats: user.membershipType === 'free' ? Math.max(0, 5 - user.dailyChatCount) : null
     });
   } catch (err) {
     console.error(err.message);

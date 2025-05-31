@@ -70,6 +70,36 @@ export default function AdminUsers() {
     setDetailError('');
   };
 
+  const handleResetChatCount = async (userId) => {
+    if (!confirm('このユーザーのチャット回数をリセットしますか？')) {
+      return;
+    }
+    try {
+      const res = await api.put(`/admin/users/${userId}/reset-chat-count`);
+      
+      // 選択中のユーザーを更新
+      if (selectedUser && selectedUser._id === userId) {
+        setSelectedUser({
+          ...selectedUser,
+          dailyChatCount: res.data.dailyChatCount,
+          lastChatResetDate: res.data.lastChatResetDate
+        });
+      }
+      
+      // ユーザー一覧も更新
+      setUsers(users.map(user => 
+        user._id === userId 
+          ? { ...user, dailyChatCount: res.data.dailyChatCount, lastChatResetDate: res.data.lastChatResetDate }
+          : user
+      ));
+      
+      alert('チャット回数がリセットされました');
+    } catch (err) {
+      console.error('チャット回数のリセットに失敗:', err);
+      alert('チャット回数のリセットに失敗しました');
+    }
+  };
+
   if (loading) {
     return <GlobalLoading text="読み込み中..." />;
   }
@@ -332,6 +362,16 @@ export default function AdminUsers() {
                     <h3 style={{ margin: '0', fontSize: 'var(--admin-font-size-lg)', fontWeight: '600' }}>
                       サブスクリプション情報
                     </h3>
+                    {/* チャット回数リセットボタン（無料会員のみ） */}
+                    {selectedUser.membershipType === 'free' && (
+                      <button
+                        className="admin-btn admin-btn--warning admin-btn--sm"
+                        onClick={() => handleResetChatCount(selectedUser._id)}
+                        style={{ marginLeft: 'auto', fontSize: 'var(--admin-font-size-xs)' }}
+                      >
+                        チャット回数リセット
+                      </button>
+                    )}
                   </div>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 'var(--admin-space-4)' }}>
                     <div>
@@ -342,6 +382,26 @@ export default function AdminUsers() {
                         </span>
                       </div>
                     </div>
+                    {/* 無料会員のチャット制限情報 */}
+                    {selectedUser.membershipType === 'free' && (
+                      <>
+                        <div>
+                          <div className="admin-form-label">今日のチャット回数</div>
+                          <div style={{ fontSize: 'var(--admin-font-size-sm)', color: 'var(--admin-gray-700)', fontWeight: '500' }}>
+                            {selectedUser.dailyChatCount || 0} / 5回
+                          </div>
+                        </div>
+                        <div>
+                          <div className="admin-form-label">最終リセット日</div>
+                          <div style={{ fontSize: 'var(--admin-font-size-sm)', color: 'var(--admin-gray-700)' }}>
+                            {selectedUser.lastChatResetDate ? 
+                              new Date(selectedUser.lastChatResetDate).toLocaleDateString('ja-JP', {
+                                year: 'numeric', month: 'short', day: 'numeric'
+                              }) : '-'}
+                          </div>
+                        </div>
+                      </>
+                    )}
                     <div>
                       <div className="admin-form-label">サブスク状態</div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--admin-space-2)' }}>

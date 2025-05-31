@@ -38,6 +38,8 @@ export default function Chat({ params }) {
   const [chatId, setChatId] = useState(null);
   const [error, setError] = useState('');
   const [affinityData, setAffinityData] = useState(null);
+  const [remainingChats, setRemainingChats] = useState(null);
+  const [chatLimitReached, setChatLimitReached] = useState(false);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const canvasRef = useRef(null);
@@ -200,10 +202,22 @@ export default function Chat({ params }) {
           };
           
           setMessages(prev => [...prev, aiMessage]);
+          
+          // 残りチャット回数を更新
+          if (res.data.remainingChats !== null) {
+            setRemainingChats(res.data.remainingChats);
+          }
         }, 1000);
       } else {
-        setError(t('failed_send', 'メッセージの送信に失敗しました'));
         setIsTyping(false);
+        
+        // チャット制限に達した場合の特別処理
+        if (res.error && res.error.isLimitReached) {
+          setChatLimitReached(true);
+          setError(res.error.msg || 'チャット制限に達しました');
+        } else {
+          setError(t('failed_send', 'メッセージの送信に失敗しました'));
+        }
         console.error(res.error);
       }
     } catch (err) {
@@ -332,21 +346,45 @@ export default function Chat({ params }) {
         </div>
         
         <div className="chat-input-container">
+          {/* チャット制限メッセージ */}
+          {chatLimitReached && (
+            <div className="chat-limit-message">
+              <div className="chat-limit-content">
+                <p>無料会員は1日5回までチャットできます。</p>
+                <p>プレミアム会員になると制限が解除されます。</p>
+                <button 
+                  className="chat-upgrade-button"
+                  onClick={() => router.push(`/${locale}/purchase`)}
+                >
+                  プレミアム会員になる
+                </button>
+              </div>
+            </div>
+          )}
+          
+          {/* 残りチャット回数表示（無料会員のみ） */}
+          {!chatLimitReached && user?.membershipType === 'free' && remainingChats !== null && (
+            <div className="chat-remaining-counter">
+              今日あと {remainingChats} 回チャットできます
+            </div>
+          )}
+          
           <div className="chat-input-form">
             <div className="chat-input-wrapper">
               <textarea
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder={t('input_placeholder', 'メッセージを入力...')}
+                placeholder={chatLimitReached ? 'チャット制限に達しました' : t('input_placeholder', 'メッセージを入力...')}
                 className="chat-input"
                 ref={inputRef}
                 rows={1}
+                disabled={chatLimitReached}
               />
               <button
                 type="submit"
                 className="chat-send-button"
-                disabled={isTyping || !message.trim()}
+                disabled={isTyping || !message.trim() || chatLimitReached}
                 onClick={handleSendMessage}
               >
                 {t('send', '送信')}
