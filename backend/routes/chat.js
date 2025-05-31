@@ -244,7 +244,7 @@ router.post('/', auth, async (req, res) => {
     // ユーザー会員タイプに応じてモデルとパラメータを選択
     const isSubscriptionUser = user.membershipType === 'subscription' && user.subscriptionStatus === 'active';
     const modelConfig = {
-      model: isSubscriptionUser ? "gpt-4" : "gpt-3.5-turbo",
+      model: "gpt-3.5-turbo",
       max_tokens: isSubscriptionUser ? 200 : 150,
       temperature: 0.7
     };
